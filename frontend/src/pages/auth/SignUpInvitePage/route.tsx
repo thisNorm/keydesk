@@ -43,7 +43,7 @@ export const Route = createFileRoute("/_restrict-login-signup/signupinvite")({
 
       if (!result.token) {
         createNotification({
-          text: "Invitation accepted. Please login into your account",
+          text: "초대를 수락했습니다. 계정에 로그인하세요.",
           type: "success"
         });
       }
@@ -87,7 +87,7 @@ export const Route = createFileRoute("/_restrict-login-signup/signupinvite")({
       // Verification failed — pass error to the page
       return {
         inviteEmail: email,
-        error: message || "This invitation link is invalid or has expired."
+        error: message || "올바르지 않거나 만료된 초대 링크입니다."
       };
     }
   }

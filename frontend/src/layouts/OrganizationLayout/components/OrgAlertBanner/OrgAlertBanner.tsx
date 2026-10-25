@@ -40,7 +40,7 @@ export const OrgAlertBanner = ({
             target="_blank"
             className="inline-flex items-center gap-1 underline underline-offset-2 hover:text-warning"
           >
-            Configuration documentation
+            설정 안내
             <ExternalLinkIcon className="size-3" />
           </a>
         )}
@@ -49,7 +49,7 @@ export const OrgAlertBanner = ({
       {isDismissible && (
         <IconButton
           className="-my-1 -mr-1"
-          aria-label="Dismiss warning"
+          aria-label="알림 닫기"
           variant="ghost-muted"
           size="xs"
           onClick={onDismiss ?? setIsDismissed.on}

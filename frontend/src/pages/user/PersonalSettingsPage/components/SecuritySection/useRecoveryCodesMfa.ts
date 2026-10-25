@@ -35,7 +35,7 @@ export const useRecoveryCodesMfa = () => {
         },
         {
           onSuccess: (result) => showCodes(result, false),
-          errorText: "Failed to load recovery codes."
+          errorText: "복구 코드를 불러오지 못했습니다."
         }
       ),
     [runWithMfa, showCodes]
@@ -55,11 +55,11 @@ export const useRecoveryCodesMfa = () => {
           onSuccess: (result) => {
             createNotification({
               type: "success",
-              text: "Generated new recovery codes. Your previous codes no longer work."
+              text: "새 복구 코드를 만들었습니다. 이전 코드는 더 이상 사용할 수 없습니다."
             });
             showCodes(result, true);
           },
-          errorText: "Failed to load recovery codes."
+          errorText: "복구 코드를 불러오지 못했습니다."
         }
       ),
     [runWithMfa, showCodes]

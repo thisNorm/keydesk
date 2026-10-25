@@ -70,21 +70,21 @@ export const MfaMethodsCard = () => {
   const handleRemoveTotp = () => removeTotp(() => setIsRemoveTotpOpen(false));
 
   return (
-    <section aria-label="Two-factor authentication methods">
+    <section aria-label="2단계 인증 방식">
       <div className="divide-y divide-border">
         <MethodRow
           icon={MFA_METHOD_ICONS[MfaMethod.EMAIL]}
           title={MFA_METHOD_LABELS[MfaMethod.EMAIL]}
           description={
             isEmailMfaAvailable
-              ? "Receive one-time codes at your account email address to complete sign-in."
-              : "Unavailable because SMTP is not configured for this instance. Use an authenticator app or passkey instead."
+              ? "계정 이메일로 일회용 코드를 받아 로그인을 완료하세요."
+              : "이 서버는 SMTP가 설정되지 않아 사용할 수 없습니다. 인증 앱이나 패스키를 사용하세요."
           }
           badge={
             isEmailMfaAvailable ? (
-              <Badge variant="success">Configured</Badge>
+              <Badge variant="success">설정됨</Badge>
             ) : (
-              <Badge variant="neutral">Unavailable</Badge>
+              <Badge variant="neutral">사용 불가</Badge>
             )
           }
           action={null}
@@ -93,22 +93,22 @@ export const MfaMethodsCard = () => {
         <MethodRow
           icon={MFA_METHOD_ICONS[MfaMethod.TOTP]}
           title={MFA_METHOD_LABELS[MfaMethod.TOTP]}
-          description="Use a TOTP authenticator app to get one-time codes when prompted at sign-in."
+          description="로그인할 때 TOTP 인증 앱에서 일회용 코드를 확인하세요."
           badge={
             isTotpConfigured ? (
-              <Badge variant="success">Configured</Badge>
+              <Badge variant="success">설정됨</Badge>
             ) : (
-              <Badge variant="neutral">None</Badge>
+              <Badge variant="neutral">없음</Badge>
             )
           }
           action={
             isTotpConfigured ? (
               <Button variant="outline" size="sm" onClick={() => setIsRemoveTotpOpen(true)}>
-                Remove
+                삭제
               </Button>
             ) : (
               <Button variant="outline" size="sm" onClick={() => setSetupMethod(MfaMethod.TOTP)}>
-                Set up
+                설정
               </Button>
             )
           }
@@ -116,18 +116,18 @@ export const MfaMethodsCard = () => {
 
         <MethodRow
           icon={MFA_METHOD_ICONS[MfaMethod.WEBAUTHN]}
-          title="Passkeys"
-          description="Passkeys use Face ID, Touch ID, a security key, or your device to sign in."
+          title="패스키"
+          description="패스키로 Face ID, Touch ID, 보안 키 또는 기기를 사용해 로그인할 수 있습니다."
           badge={
             passkeyCount > 0 ? (
-              <Badge variant="success">{`${passkeyCount} registered`}</Badge>
+              <Badge variant="success">{`${passkeyCount}개 등록됨`}</Badge>
             ) : (
-              <Badge variant="neutral">None</Badge>
+              <Badge variant="neutral">없음</Badge>
             )
           }
           action={
             <Button variant="outline" size="sm" onClick={() => setIsPasskeyManagerOpen(true)}>
-              Manage
+              관리
             </Button>
           }
         />
@@ -147,13 +147,13 @@ export const MfaMethodsCard = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove authenticator app?</AlertDialogTitle>
+            <AlertDialogTitle>인증 앱을 삭제하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              You&apos;ll need to set it up again to use it as a second factor.
+              다시 2단계 인증에 사용하려면 재설정해야 합니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel isDisabled={isRemovingTotp}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel isDisabled={isRemovingTotp}>취소</AlertDialogCancel>
             <AlertDialogAction
               variant="danger"
               isPending={isRemovingTotp}
@@ -162,7 +162,7 @@ export const MfaMethodsCard = () => {
                 handleRemoveTotp();
               }}
             >
-              Remove
+              삭제
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

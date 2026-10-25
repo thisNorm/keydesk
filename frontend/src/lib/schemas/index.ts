@@ -5,11 +5,11 @@ export * from "./slugSchema";
 export const GenericResourceNameSchema = z
   .string()
   .trim()
-  .min(1, { message: "Name must be at least 1 character" })
-  .max(64, { message: "Name must be 64 or fewer characters" })
+  .min(1, { message: "이름은 1자 이상 입력하세요." })
+  .max(64, { message: "이름은 64자 이내로 입력하세요." })
   .regex(
     /^[a-zA-Z0-9\-_\s]+$/,
-    "Name can only contain alphanumeric characters, dashes, underscores, and spaces"
+    "이름에는 영문, 숫자, 하이픈(-), 밑줄(_), 공백만 사용할 수 있습니다."
   );
 
 export const BaseSecretNameSchema = z.string().trim().min(1);

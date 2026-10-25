@@ -21,12 +21,12 @@ export const LoginPage = ({ isAdmin }: { isAdmin?: boolean }) => {
       bottomContent={
         shouldDisplayLoginMethod(LoginMethod.EMAIL) ? (
           <div className="text-xs text-label">
-            Help me{" "}
+            계정에 접근할 수 없나요?{" "}
             <Link
               to="/account-recovery"
               className="underline underline-offset-2 transition-colors duration-200 hover:text-foreground hover:decoration-project/45"
             >
-              recover my account
+              계정 복구
             </Link>
           </div>
         ) : undefined

@@ -65,6 +65,7 @@ import { Route as organizationOauthApplicationsPageRouteImport } from './pages/o
 import { Route as organizationIntegrationsPageRouteImport } from './pages/organization/IntegrationsPage/route'
 import { Route as organizationBillingPageRouteImport } from './pages/organization/BillingPage/route'
 import { Route as organizationAuditLogsPageRouteImport } from './pages/organization/AuditLogsPage/route'
+import { Route as organizationApiVaultPageRouteImport } from './pages/organization/ApiVaultPage/route'
 import { Route as organizationAccessManagementPageRouteImport } from './pages/organization/AccessManagementPage/route'
 import { Route as redirectsGithubManifestCallbackRedirectImport } from './pages/redirects/github-manifest-callback-redirect'
 import { Route as redirectsOauthCallbackRedirectImport } from './pages/redirects/oauth-callback-redirect'
@@ -873,6 +874,14 @@ const organizationAuditLogsPageRouteRoute =
   organizationAuditLogsPageRouteImport.update({
     id: '/audit-logs',
     path: '/audit-logs',
+    getParentRoute: () =>
+      AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdRoute,
+  } as any)
+
+const organizationApiVaultPageRouteRoute =
+  organizationApiVaultPageRouteImport.update({
+    id: '/api-vault',
+    path: '/api-vault',
     getParentRoute: () =>
       AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdRoute,
   } as any)
@@ -3090,6 +3099,13 @@ declare module '@tanstack/react-router' {
       path: '/access-management'
       fullPath: '/organizations/$orgId/access-management'
       preLoaderRoute: typeof organizationAccessManagementPageRouteImport
+      parentRoute: typeof AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdImport
+    }
+    '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/api-vault': {
+      id: '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/api-vault'
+      path: '/api-vault'
+      fullPath: '/organizations/$orgId/api-vault'
+      preLoaderRoute: typeof organizationApiVaultPageRouteImport
       parentRoute: typeof AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdImport
     }
     '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/audit-logs': {
@@ -5970,6 +5986,7 @@ const AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdSecretManagerProjec
 
 interface AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdRouteChildren {
   organizationAccessManagementPageRouteRoute: typeof organizationAccessManagementPageRouteRoute
+  organizationApiVaultPageRouteRoute: typeof organizationApiVaultPageRouteRoute
   organizationAuditLogsPageRouteRoute: typeof organizationAuditLogsPageRouteRoute
   organizationBillingPageRouteRoute: typeof organizationBillingPageRouteRoute
   organizationIntegrationsPageRouteRoute: typeof organizationIntegrationsPageRouteRoute
@@ -5995,6 +6012,7 @@ const AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdRouteChildren: Auth
   {
     organizationAccessManagementPageRouteRoute:
       organizationAccessManagementPageRouteRoute,
+    organizationApiVaultPageRouteRoute: organizationApiVaultPageRouteRoute,
     organizationAuditLogsPageRouteRoute: organizationAuditLogsPageRouteRoute,
     organizationBillingPageRouteRoute: organizationBillingPageRouteRoute,
     organizationIntegrationsPageRouteRoute:
@@ -6298,6 +6316,7 @@ export interface FileRoutesByFullPath {
   '/admin/integrations': typeof adminIntegrationsPageRouteRoute
   '/organizations/$orgId': typeof AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdRouteWithChildren
   '/organizations/$orgId/access-management': typeof organizationAccessManagementPageRouteRoute
+  '/organizations/$orgId/api-vault': typeof organizationApiVaultPageRouteRoute
   '/organizations/$orgId/audit-logs': typeof organizationAuditLogsPageRouteRoute
   '/organizations/$orgId/billing': typeof organizationBillingPageRouteRoute
   '/organizations/$orgId/integrations': typeof organizationIntegrationsPageRouteRoute
@@ -6591,6 +6610,7 @@ export interface FileRoutesByTo {
   '/admin/integrations': typeof adminIntegrationsPageRouteRoute
   '/organizations/$orgId': typeof AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdRouteWithChildren
   '/organizations/$orgId/access-management': typeof organizationAccessManagementPageRouteRoute
+  '/organizations/$orgId/api-vault': typeof organizationApiVaultPageRouteRoute
   '/organizations/$orgId/audit-logs': typeof organizationAuditLogsPageRouteRoute
   '/organizations/$orgId/billing': typeof organizationBillingPageRouteRoute
   '/organizations/$orgId/integrations': typeof organizationIntegrationsPageRouteRoute
@@ -6869,6 +6889,7 @@ export interface FileRoutesById {
   '/_authenticate/_inject-org-details/admin/_admin-layout/integrations': typeof adminIntegrationsPageRouteRoute
   '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId': typeof AuthenticateInjectOrgDetailsOrgLayoutOrganizationsOrgIdRouteWithChildren
   '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/access-management': typeof organizationAccessManagementPageRouteRoute
+  '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/api-vault': typeof organizationApiVaultPageRouteRoute
   '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/audit-logs': typeof organizationAuditLogsPageRouteRoute
   '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/billing': typeof organizationBillingPageRouteRoute
   '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/integrations': typeof organizationIntegrationsPageRouteRoute
@@ -7174,6 +7195,7 @@ export interface FileRouteTypes {
     | '/admin/integrations'
     | '/organizations/$orgId'
     | '/organizations/$orgId/access-management'
+    | '/organizations/$orgId/api-vault'
     | '/organizations/$orgId/audit-logs'
     | '/organizations/$orgId/billing'
     | '/organizations/$orgId/integrations'
@@ -7466,6 +7488,7 @@ export interface FileRouteTypes {
     | '/admin/integrations'
     | '/organizations/$orgId'
     | '/organizations/$orgId/access-management'
+    | '/organizations/$orgId/api-vault'
     | '/organizations/$orgId/audit-logs'
     | '/organizations/$orgId/billing'
     | '/organizations/$orgId/integrations'
@@ -7742,6 +7765,7 @@ export interface FileRouteTypes {
     | '/_authenticate/_inject-org-details/admin/_admin-layout/integrations'
     | '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId'
     | '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/access-management'
+    | '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/api-vault'
     | '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/audit-logs'
     | '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/billing'
     | '/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/integrations'
@@ -8311,6 +8335,7 @@ export const routeTree = rootRoute
       "parent": "/_authenticate/_inject-org-details/_org-layout",
       "children": [
         "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/access-management",
+        "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/api-vault",
         "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/audit-logs",
         "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/billing",
         "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/integrations",
@@ -8334,6 +8359,10 @@ export const routeTree = rootRoute
     },
     "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/access-management": {
       "filePath": "organization/AccessManagementPage/route.tsx",
+      "parent": "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId"
+    },
+    "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/api-vault": {
+      "filePath": "organization/ApiVaultPage/route.tsx",
       "parent": "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId"
     },
     "/_authenticate/_inject-org-details/_org-layout/organizations/$orgId/audit-logs": {

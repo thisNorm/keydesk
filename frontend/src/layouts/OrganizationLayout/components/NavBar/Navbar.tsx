@@ -101,6 +101,7 @@ import {
 } from "@app/layouts/ProjectLayout/components/ProjectSelect";
 import { TypeSelect } from "@app/layouts/ProjectLayout/components/TypeSelect";
 import { navigateUserToOrg } from "@app/pages/auth/LoginPage/Login.utils";
+import { PersonalBrand } from "@app/pages/organization/ApiVaultPage/PersonalBrand";
 
 import { ServerAdminsPanel } from "../ServerAdminsPanel/ServerAdminsPanel";
 import { NavbarPageBreadcrumbs } from "./NavbarPageBreadcrumbs";
@@ -145,6 +146,14 @@ export const INFISICAL_SUPPORT_OPTIONS = [
   [Mail, "Email Support", getFormattedSupportEmailLink],
   [Users, "Instance Admins", () => "server-admins"]
 ] as const;
+
+const SUPPORT_OPTION_LABELS = {
+  "Support Forum": "지원 포럼",
+  "Read Docs": "문서",
+  "GitHub Issues": "GitHub 이슈",
+  "Email Support": "이메일 지원",
+  "Instance Admins": "서버 관리자"
+} as const;
 
 export const Navbar = () => {
   const { user } = useUser();
@@ -307,11 +316,14 @@ export const Navbar = () => {
       await window.navigator.clipboard.writeText(getAuthToken());
       createNotification({
         type: "success",
-        text: "Copied current login session token to clipboard"
+        text: "현재 로그인 세션 토큰을 클립보드에 복사했습니다."
       });
     } catch (error) {
       console.log(error);
-      createNotification({ type: "error", text: "Failed to copy user token to clipboard" });
+      createNotification({
+        type: "error",
+        text: "세션 토큰을 복사하지 못했습니다. 클립보드 권한을 확인하세요."
+      });
     }
   };
 
@@ -367,7 +379,7 @@ export const Navbar = () => {
   return (
     <div
       className={twMerge(
-        "z-10 flex min-h-12 items-center border-b border-border-soft bg-gradient-to-br to-transparent in-data-[theme=light]:bg-none",
+        "z-10 flex min-h-12 items-center border-b border-border-soft bg-background bg-gradient-to-br to-transparent in-data-[theme=light]:bg-none",
         isServerAdminPanel && "from-admin/5",
         !isServerAdminPanel && isPamScope && "from-product-pam/5",
         !isServerAdminPanel && isAgentVaultScope && "from-product-av/5",
@@ -381,6 +393,14 @@ export const Navbar = () => {
       )}
     >
       <SidebarTrigger variant="ghost" className="ml-2 lg:hidden" />
+      <Link
+        to="/organizations/$orgId/api-vault"
+        params={{ orgId: currentOrg.id }}
+        aria-label="Keydesk API 보관함"
+        className="hidden shrink-0 items-center border-r border-border px-4 py-2 outline-none focus-visible:ring-2 focus-visible:ring-ring md:inline-flex"
+      >
+        <PersonalBrand />
+      </Link>
       <div className="mr-auto flex h-full min-w-34 items-center">
         {isServerAdminPanel ? (
           <div className="flex h-full items-center">
@@ -395,14 +415,14 @@ export const Navbar = () => {
                   <OrgIcon className="size-3.5" />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Back to organization</TooltipContent>
+              <TooltipContent side="bottom">조직으로 돌아가기</TooltipContent>
             </Tooltip>
             <Link
               to="/admin"
               className="group flex cursor-pointer items-center gap-2 pl-4 text-sm text-foreground-inverse transition-all duration-100"
             >
               <InstanceIcon className="size-3.5 text-admin" />
-              <div className="whitespace-nowrap">Server Console</div>
+              <div className="whitespace-nowrap">서버 관리</div>
             </Link>
           </div>
         ) : (
@@ -449,7 +469,7 @@ export const Navbar = () => {
                         variant={isSubOrganization ? "sub-org" : "org"}
                         className="hidden lg:inline-flex"
                       >
-                        {isSubOrganization ? "Sub" : "Org"}
+                        {isSubOrganization ? "하위 조직" : "조직"}
                       </Badge>
                     )}
                   </button>
@@ -461,26 +481,23 @@ export const Navbar = () => {
                         </div>
                       </TooltipTrigger>
                       <TooltipContent className="max-w-xs">
-                        Your payment could not be processed
+                        결제를 처리하지 못했습니다
                         {subscription.cardDeclinedReason
                           ? `: ${subscription.cardDeclinedReason}`
                           : ""}
-                        . Please update your payment method to continue enjoying premium features.
+                        . 유료 기능을 계속 사용하려면 결제 수단을 확인하세요.
                       </TooltipContent>
                     </Tooltip>
                   )}
                 </div>
-                <NavbarSwitcherTrigger aria-label="switch-org" />
+                <NavbarSwitcherTrigger aria-label="조직 전환" />
                 <NavbarSwitcherContent className="w-96">
                   <Command>
-                    <CommandInput
-                      aria-label="Search organizations"
-                      placeholder="Search organizations..."
-                    />
+                    <CommandInput aria-label="조직 검색" placeholder="조직 검색…" />
                     <CommandList>
-                      <CommandEmpty>No organizations found.</CommandEmpty>
+                      <CommandEmpty>검색한 조직이 없습니다.</CommandEmpty>
                       {/* Current Organization */}
-                      <CommandGroup heading="Current Organization">
+                      <CommandGroup heading="현재 조직">
                         <CommandItem
                           value={rootOrg.id}
                           keywords={[rootOrg.name]}
@@ -507,7 +524,7 @@ export const Navbar = () => {
                             className="mb-3 ml-4.5 border-l border-border pt-0 pl-3 [&_[cmdk-group-heading]]:pt-0"
                             heading={
                               <div className="flex items-center justify-between">
-                                <span>Sub-Organizations</span>
+                                <span>하위 조직</span>
                                 <OrgPermissionCan
                                   I={OrgPermissionSubOrgActions.Edit}
                                   a={OrgPermissionSubjects.SubOrganization}
@@ -519,7 +536,7 @@ export const Navbar = () => {
                                           <IconButton
                                             variant="ghost-muted"
                                             size="xs"
-                                            aria-label="Sub-Organization Settings"
+                                            aria-label="하위 조직 설정"
                                             className="-mr-1 size-5"
                                             onClick={() => {
                                               setIsOrgSelectOpen(false);
@@ -533,7 +550,7 @@ export const Navbar = () => {
                                             <Settings className="size-3.5!" />
                                           </IconButton>
                                         </TooltipTrigger>
-                                        <TooltipContent>Sub-Organization Settings</TooltipContent>
+                                        <TooltipContent>하위 조직 설정</TooltipContent>
                                       </Tooltip>
                                     ) : null
                                   }
@@ -576,7 +593,7 @@ export const Navbar = () => {
                                     }}
                                   >
                                     <Plus />
-                                    <span>New Sub-Organization</span>
+                                    <span>하위 조직 만들기</span>
                                   </CommandItem>
                                 ) : null
                               }
@@ -587,7 +604,7 @@ export const Navbar = () => {
                       )}
                       {/* Other Organizations */}
                       {otherOrgs.length > 0 && (
-                        <CommandGroup heading="Other Organizations">
+                        <CommandGroup heading="다른 조직">
                           {otherOrgs.map((org) => (
                             <CommandItem
                               key={org.id}
@@ -612,7 +629,7 @@ export const Navbar = () => {
                         onClick={logOutUser}
                       >
                         <LogOut className="size-4" />
-                        <span>Log Out</span>
+                        <span>로그아웃</span>
                       </button>
                     </div>
                   </Command>
@@ -636,7 +653,7 @@ export const Navbar = () => {
         <Button variant="outline" size="xs" className="mt-px mr-2" asChild>
           <Link to="/admin" onClick={handleNavigateToAdminConsole}>
             <InstanceIcon />
-            <span className="hidden md:inline">Server Console</span>
+            <span className="hidden md:inline">서버 관리</span>
           </Link>
         </Button>
       )}
@@ -654,7 +671,7 @@ export const Navbar = () => {
                   }}
                 >
                   <UserPlus />
-                  <span className="hidden md:inline">Invite Users</span>
+                  <span className="hidden md:inline">사용자 초대</span>
                 </Link>
               </Button>
             ) : null
@@ -664,7 +681,7 @@ export const Navbar = () => {
       <ButtonGroup className="mr-2">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <IconButton variant="outline" size="sm" aria-label="Help">
+            <IconButton variant="outline" size="sm" aria-label="도움말">
               <CircleHelp />
             </IconButton>
           </DropdownMenuTrigger>
@@ -686,7 +703,7 @@ export const Navbar = () => {
                 return (
                   <DropdownMenuItem key="server-admins" onSelect={() => setShowAdminsModal(true)}>
                     <Icon className="size-4" />
-                    {text}
+                    {SUPPORT_OPTION_LABELS[text]}
                   </DropdownMenuItem>
                 );
               }
@@ -695,7 +712,7 @@ export const Navbar = () => {
                 <DropdownMenuItem key={url as string} asChild>
                   <a target="_blank" rel="noopener noreferrer" href={String(url)}>
                     <Icon />
-                    {text}
+                    {SUPPORT_OPTION_LABELS[text]}
                   </a>
                 </DropdownMenuItem>
               );
@@ -705,7 +722,7 @@ export const Navbar = () => {
                 <DropdownMenuSeparator />
                 <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted">
                   <Info className="size-3.5" />
-                  Version: {envConfig.PLATFORM_VERSION}
+                  버전: {envConfig.PLATFORM_VERSION}
                   {serverConfig.latestAvailableVersion && (
                     <a
                       href="https://upgrade.infisical.com/"
@@ -713,7 +730,7 @@ export const Navbar = () => {
                       rel="noopener noreferrer"
                       className="text-info hover:underline"
                     >
-                      (v{serverConfig.latestAvailableVersion} available)
+                      (v{serverConfig.latestAvailableVersion} 사용 가능)
                     </a>
                   )}
                 </div>
@@ -729,19 +746,19 @@ export const Navbar = () => {
               variant="outline"
               size="sm"
               className="hidden sm:inline-flex"
-              aria-label={`Switch to ${resolvedTheme === "dark" ? "light" : "dark"} theme`}
+              aria-label={`${resolvedTheme === "dark" ? "밝은" : "어두운"} 테마로 변경`}
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark", "navbar-toggle")}
             >
               {resolvedTheme === "dark" ? <Sun /> : <Moon />}
             </IconButton>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            Switch to {resolvedTheme === "dark" ? "light" : "dark"} theme
+            {resolvedTheme === "dark" ? "밝은" : "어두운"} 테마로 변경
           </TooltipContent>
         </Tooltip>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <IconButton variant="outline" size="sm" aria-label="User menu">
+            <IconButton variant="outline" size="sm" aria-label="사용자 메뉴">
               <User />
             </IconButton>
           </DropdownMenuTrigger>
@@ -760,7 +777,7 @@ export const Navbar = () => {
             <DropdownMenuItem asChild>
               <Link to="/personal-settings">
                 <Settings className="size-4" />
-                Personal Settings
+                개인 설정
               </Link>
             </DropdownMenuItem>
             <OrgPermissionCan
@@ -779,29 +796,29 @@ export const Navbar = () => {
                       }}
                     >
                       <UserPlus />
-                      Invite Users
+                      사용자 초대
                     </Link>
                   </DropdownMenuItem>
                 ) : null
               }
             </OrgPermissionCan>
             <DropdownMenuSeparator />
-            <DropdownMenuLabel>Theme</DropdownMenuLabel>
+            <DropdownMenuLabel>테마</DropdownMenuLabel>
             <DropdownMenuRadioGroup
               value={theme}
               onValueChange={(value) => setTheme(value as Theme, "profile-menu")}
             >
               <DropdownMenuRadioItem value="system" className="gap-2">
                 <Monitor className="size-4" />
-                System
+                시스템 설정
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="dark" className="gap-2">
                 <Moon className="size-4" />
-                Dark
+                어둡게
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="light" className="gap-2">
                 <Sun className="size-4" />
-                Light
+                밝게
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
             <DropdownMenuSeparator />
@@ -812,35 +829,35 @@ export const Navbar = () => {
                 rel="noopener noreferrer"
               >
                 <Book />
-                Documentation
+                문서
                 <ExternalLink className="ml-auto size-3.5 opacity-50" />
               </a>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <a href="https://community.infisical.com" target="_blank" rel="noopener noreferrer">
                 <MessagesSquare />
-                Join Community
+                커뮤니티
                 <ExternalLink className="ml-auto size-3.5 opacity-50" />
               </a>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={handleCopyToken}>
               <Clipboard />
-              Copy Token
+              세션 토큰 복사
               <Tooltip>
                 <TooltipTrigger>
                   <Info className="size-3.5 opacity-50" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
-                  This token is linked to your current login session and can only access resources
-                  within the organization you&apos;re currently logged into.
+                  현재 로그인 세션에 연결된 토큰입니다. 현재 로그인한 조직의 리소스에만 접근할 수
+                  있습니다.
                 </TooltipContent>
               </Tooltip>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={logOutUser}>
               <LogOut />
-              Log Out
+              로그아웃
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -856,22 +873,22 @@ export const Navbar = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FontAwesomeIcon icon={faExclamationTriangle} className="text-lg text-warning" />
-              Your payment could not be processed.
+              결제를 처리하지 못했습니다.
             </DialogTitle>
             <DialogDescription>
-              We were unable to process your last payment
-              {subscription.cardDeclinedReason ? `: ${subscription.cardDeclinedReason}` : ""}.
-              Please update your payment information to continue using premium features.
+              최근 결제를 처리하지 못했습니다
+              {subscription.cardDeclinedReason ? `: ${subscription.cardDeclinedReason}` : ""}. 유료
+              기능을 계속 사용하려면 결제 정보를 확인하세요.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             {!isModalIntrusive && (
               <Button variant="outline" onClick={() => setShowCardDeclinedModal(false)}>
-                Dismiss
+                닫기
               </Button>
             )}
             <Button variant="org" onClick={handleNavigateToRootOrgBilling}>
-              Update Payment Method
+              결제 수단 수정
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -884,8 +901,8 @@ export const Navbar = () => {
       <Dialog open={showAdminsModal} onOpenChange={setShowAdminsModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Server Administrators</DialogTitle>
-            <DialogDescription>View all server administrators</DialogDescription>
+            <DialogTitle>서버 관리자</DialogTitle>
+            <DialogDescription>이 서버의 관리자 목록을 확인하세요.</DialogDescription>
           </DialogHeader>
           <DialogBody className="flex flex-col overflow-visible">
             <ServerAdminsPanel />

@@ -23,7 +23,7 @@ const NavAlertIcon = ({ variant }: { variant: NonNullable<NavItem["alertVariant"
     ) : (
       <TriangleAlertIcon aria-hidden className="size-3.5! text-warning!" />
     )}
-    <span className="sr-only">Needs attention</span>
+    <span className="sr-only">확인 필요</span>
   </span>
 );
 

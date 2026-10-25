@@ -21,7 +21,7 @@ import { useUser } from "@app/context";
 import { useRenameUser } from "@app/hooks/api/users/queries";
 
 const formSchema = z.object({
-  name: z.string().trim().min(1, "Enter your name.")
+  name: z.string().trim().min(1, "이름을 입력하세요.")
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -49,12 +49,12 @@ export const UserNameSection = (): JSX.Element => {
       await mutateAsync({ newName: name });
       reset({ name });
       createNotification({
-        text: "Name updated.",
+        text: "이름을 변경했습니다.",
         type: "success"
       });
     } catch {
       createNotification({
-        text: "Failed to update name.",
+        text: "이름을 변경하지 못했습니다.",
         type: "error"
       });
     }
@@ -64,15 +64,15 @@ export const UserNameSection = (): JSX.Element => {
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <Card className="gap-0 overflow-hidden p-0">
         <CardHeader className="p-6">
-          <CardTitle className="font-alliance">Profile</CardTitle>
-          <CardDescription>Update the name shown across Infisical.</CardDescription>
+          <CardTitle className="font-alliance">프로필</CardTitle>
+          <CardDescription>Infisical에 표시되는 이름을 변경하세요.</CardDescription>
         </CardHeader>
         <CardContent className="max-w-md px-6 pb-6">
           <Controller
             defaultValue=""
             render={({ field, fieldState: { error } }) => (
               <Field data-invalid={Boolean(error)}>
-                <FieldLabel htmlFor="personal-settings-name">Name</FieldLabel>
+                <FieldLabel htmlFor="personal-settings-name">이름</FieldLabel>
                 <Input id="personal-settings-name" aria-invalid={Boolean(error)} {...field} />
                 <FieldError errors={[error]} />
               </Field>
@@ -89,7 +89,7 @@ export const UserNameSection = (): JSX.Element => {
             isPending={isPending}
             isDisabled={!isDirty}
           >
-            Save changes
+            변경 저장
           </Button>
         </CardFooter>
       </Card>

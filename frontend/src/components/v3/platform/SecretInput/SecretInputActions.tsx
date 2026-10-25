@@ -25,7 +25,7 @@ type SecretInputActionProps = {
 
 const SecretInputSaveAction = ({
   isDisabled,
-  label = "Save and Commit",
+  label = "저장 및 커밋",
   onClick
 }: SecretInputActionProps) => (
   <div>
@@ -48,7 +48,7 @@ const SecretInputSaveAction = ({
 
 const SecretInputUndoAction = ({
   isDisabled,
-  label = "Undo changes",
+  label = "변경 취소",
   onClick
 }: SecretInputActionProps) => (
   <div>

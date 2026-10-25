@@ -107,10 +107,10 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
   const isCodeComplete = mfaCode.length === getExpectedCodeLength();
 
   const getRecoveryToggleLabel = () => {
-    if (!showRecoveryCodeInput) return "Use a recovery code";
-    if (method === MfaMethod.WEBAUTHN) return "Use passkey instead";
-    if (method === MfaMethod.EMAIL) return "Use email code";
-    return "Use authenticator code";
+    if (!showRecoveryCodeInput) return "복구 코드 사용";
+    if (method === MfaMethod.WEBAUTHN) return "패스키 사용";
+    if (method === MfaMethod.EMAIL) return "이메일 코드 사용";
+    return "인증 앱 코드 사용";
   };
 
   const completeLogin = async () => {
@@ -143,7 +143,7 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
         return;
       } catch {
         createNotification({
-          text: "Your identity was verified, but two-factor setup couldn't be completed. You can set up recovery codes later from your account security settings.",
+          text: "신원 인증은 완료했지만 2단계 인증 설정을 마치지 못했습니다. 개인 보안 설정에서 복구 코드를 설정할 수 있습니다.",
           type: "error"
         });
       }
@@ -174,7 +174,7 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
         setTriesLeft(newTriesLeft);
         if (newTriesLeft <= 0) {
           createNotification({
-            text: "User is temporary locked due to multiple failed login attempts. Try again later. You can also reset your password now to proceed.",
+            text: "로그인 실패가 반복되어 계정이 일시적으로 잠겼습니다. 잠시 후 다시 시도하거나 비밀번호를 재설정하세요.",
             type: "error"
           });
           SecurityClient.setMfaToken("");
@@ -247,9 +247,9 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
     } catch (error: any) {
       console.error("WebAuthn verification failed:", error);
 
-      let errorMessage = "Failed to verify passkey";
+      let errorMessage = "패스키를 인증하지 못했습니다.";
       if (error.name === "NotAllowedError") {
-        errorMessage = "Passkey verification was cancelled or timed out";
+        errorMessage = "패스키 인증을 취소했거나 시간이 초과되었습니다.";
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -266,7 +266,7 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
         setTriesLeft(newTriesLeft);
         if (newTriesLeft <= 0) {
           createNotification({
-            text: "User is temporary locked due to multiple failed login attempts. Try again later.",
+            text: "로그인 실패가 반복되어 계정이 일시적으로 잠겼습니다. 잠시 후 다시 시도하세요.",
             type: "error"
           });
           SecurityClient.setMfaToken("");
@@ -300,7 +300,7 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
             acknowledgment={{
               isAcknowledged: hasSavedRecoveryCodes,
               onAcknowledgedChange: setHasSavedRecoveryCodes,
-              confirmLabel: "Continue",
+              confirmLabel: "계속",
               isConfirmPending: isLoading,
               labelClassName: "text-foreground-soft",
               onConfirm: async () => {
@@ -333,20 +333,20 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
     );
   }
 
-  let headerTitle = "Two-factor authentication";
+  let headerTitle = "2단계 인증";
   let headerDescription: string | undefined;
   let headerRecipient: string | undefined;
 
   if (showRecoveryCodeInput) {
-    headerDescription = "Enter one of your backup recovery codes.";
+    headerDescription = "백업 복구 코드 중 하나를 입력하세요.";
   } else if (method === MfaMethod.EMAIL) {
     headerTitle = String(t("mfa.step2-message"));
     headerRecipient = email;
   } else if (method === MfaMethod.TOTP) {
-    headerDescription = "Enter the verification code from your authenticator app.";
+    headerDescription = "인증 앱에 표시된 인증 코드를 입력하세요.";
   } else if (method === MfaMethod.WEBAUTHN) {
-    headerTitle = "Passkey authentication";
-    headerDescription = "Use your registered passkey to continue.";
+    headerTitle = "패스키 인증";
+    headerDescription = "등록한 패스키로 계속 진행하세요.";
   }
 
   const recoveryActions = (
@@ -355,25 +355,24 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
         <Tooltip>
           <TooltipTrigger asChild>
             <span className="cursor-help text-label transition-colors duration-200 hover:text-foreground">
-              Lost your recovery codes?
+              복구 코드를 잃어버렸나요?
             </span>
           </TooltipTrigger>
           <TooltipContent side="bottom">
             <div className="max-w-xs text-center text-xs">
               {isInfisicalCloud() ? (
                 <>
-                  <div className="mb-2">Account Recovery Required</div>
+                  <div className="mb-2">계정 복구 필요</div>
                   <div className="mb-2 text-accent">
-                    Contact support with valid proof of account ownership to initiate recovery
+                    계정 소유권을 증명할 자료와 함께 지원팀에 복구를 요청하세요.
                   </div>
                   <div className="mt-1">support@infisical.com</div>
                 </>
               ) : (
                 <>
-                  <div className="mb-2">Account Recovery Required</div>
+                  <div className="mb-2">계정 복구 필요</div>
                   <div className="text-accent">
-                    Contact your instance administrator with valid proof of account ownership to
-                    initiate recovery
+                    계정 소유권을 증명할 자료와 함께 서버 관리자에게 복구를 요청하세요.
                   </div>
                 </>
               )}
@@ -412,12 +411,12 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
           action={
             onChangeAccount ? (
               <button
-                aria-label={`Sign out ${email}`}
+                aria-label={`${email} 로그아웃`}
                 className="shrink-0 cursor-pointer text-sm text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
                 onClick={onChangeAccount}
                 type="button"
               >
-                Sign out
+                로그아웃
               </button>
             ) : undefined
           }
@@ -441,7 +440,7 @@ export const Mfa = ({ successCallback, closeMfa, email, method, onChangeAccount 
                 isPending={isLoading}
                 isDisabled={typeof triesLeft === "number" && triesLeft <= 0}
               >
-                Authenticate with passkey
+                패스키로 인증
               </Button>
               {recoveryActions}
             </div>

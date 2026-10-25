@@ -44,7 +44,7 @@ const COMMUNITY_LINKS: {
     icon: SiGithub
   },
   {
-    label: "Discussions",
+    label: "토론",
     isNew: true,
     href: "https://community.infisical.com/latest",
     resource: "discussions",
@@ -73,7 +73,7 @@ export default function SignupCompleteStep({
     })),
     {
       value: ORG_OVERVIEW as LaunchTarget,
-      name: "Organization Overview",
+      name: "조직 개요",
       icon: LayoutGrid,
       iconClassName: "text-muted"
     }
@@ -95,20 +95,20 @@ export default function SignupCompleteStep({
         };
       }
     }
-    return { to: "/organizations/$orgId/projects" as const, params: { orgId } };
+    return { to: "/organizations/$orgId/api-vault" as const, params: { orgId } };
   };
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center justify-center">
       <AuthPagePanel className="gap-6">
         <CardHeader className="gap-2">
-          <CardDescription className="ml-0.5 text-base">Your organization is ready</CardDescription>
+          <CardDescription className="ml-0.5 text-base">조직이 준비되었습니다.</CardDescription>
           <CardTitle className="ml-0.5 font-alliance text-2xl font-normal text-foreground">
-            Choose where to go next.
+            이동할 화면을 선택하세요.
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
-          <nav aria-label="Open your workspace">
+          <nav aria-label="보관함 열기">
             <ul className="flex flex-col gap-2">
               {destinations.map((destination) => {
                 const Icon = destination.icon;
@@ -148,7 +148,7 @@ export default function SignupCompleteStep({
             </ul>
           </nav>
           <div className="flex flex-col gap-2">
-            <p className="text-sm text-muted">Additional resources</p>
+            <p className="text-sm text-muted">추가 자료</p>
             <div className="flex flex-wrap gap-2">
               {COMMUNITY_LINKS.map((link) => (
                 <Button key={link.label} asChild variant="outline" size="sm">

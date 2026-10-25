@@ -51,7 +51,7 @@ export const CliRedirectPage = () => {
   return (
     <AuthPageLayout variant="focused">
       <Helmet>
-        <title>Infisical CLI | Login Successful!</title>
+        <title>Infisical CLI | 로그인 성공</title>
         <link rel="icon" href="/infisical.ico" />
       </Helmet>
       {cliToken ? (
@@ -64,13 +64,13 @@ export const CliRedirectPage = () => {
               <KeyRoundIcon className="size-5" strokeWidth={1.75} />
             </div>
             <CardTitle className="justify-center text-center font-alliance text-2xl font-normal">
-              Unable to reach CLI
+              CLI에 연결하지 못했습니다.
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <p className="text-sm text-label">
-              Your login was successful, but Infisical couldn&apos;t automatically push your login
-              token to the CLI. Please copy the token below and manually provide it to your CLI.
+              로그인했지만 CLI에 토큰을 자동으로 전달하지 못했습니다. 아래 토큰을 복사해 CLI에
+              입력하세요.
             </p>
             <InputGroup>
               <SecretInput
@@ -82,7 +82,7 @@ export const CliRedirectPage = () => {
               />
               <InputGroupAddon align="inline-end">
                 <InputGroupButton
-                  aria-label={isTokenVisible ? "Hide token" : "Reveal token"}
+                  aria-label={isTokenVisible ? "토큰 숨기기" : "토큰 표시"}
                   onClick={() => setIsTokenVisible((current) => !current)}
                 >
                   {isTokenVisible ? <EyeOffIcon /> : <EyeIcon />}
@@ -105,17 +105,15 @@ export const CliRedirectPage = () => {
               <TerminalIcon className="size-5" strokeWidth={1.75} />
             </div>
             <CardTitle className="justify-center text-center font-alliance text-2xl font-normal">
-              Head back to your terminal
+              터미널로 돌아가세요.
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <p className="text-sm text-label">
-              You&apos;ve successfully logged in to the Infisical CLI
-            </p>
+            <p className="text-sm text-label">Infisical CLI에 로그인했습니다.</p>
             {dashboardOrgId && (
               <Button asChild variant="outline" className="self-center">
-                <Link to="/organizations/$orgId/projects" params={{ orgId: dashboardOrgId }}>
-                  Open Infisical Dashboard
+                <Link to="/organizations/$orgId/api-vault" params={{ orgId: dashboardOrgId }}>
+                  Infisical 보관함 열기
                 </Link>
               </Button>
             )}

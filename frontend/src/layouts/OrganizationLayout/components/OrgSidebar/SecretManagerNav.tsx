@@ -16,19 +16,19 @@ export const SecretManagerNav = ({
 
   const generalItems: NavItem[] = [
     {
-      label: "Secrets",
+      label: "시크릿",
       icon: ProjectIcon,
       pathSuffix: "overview",
       activeMatch: /\/secrets\//
     },
     {
-      label: "Access Control",
+      label: "접근 권한",
       icon: Shield,
       pathSuffix: "access-management",
       activeMatch: /\/groups\/|\/identities\/|\/members\/|\/roles\//
     },
     {
-      label: "Integrations",
+      label: "연동",
       icon: Blocks,
       pathSuffix: "integrations",
       // Keep highlighted on integration detail pages and the standalone app-connections page
@@ -48,14 +48,14 @@ export const SecretManagerNav = ({
   ];
 
   const administrationItems: NavItem[] = [
-    { label: "Audit Logs", icon: FileText, pathSuffix: "audit-logs" },
-    { label: "Settings", icon: Settings, pathSuffix: "settings", submenu: SM_SETTINGS_SUBMENU }
+    { label: "감사 로그", icon: FileText, pathSuffix: "audit-logs" },
+    { label: "설정", icon: Settings, pathSuffix: "settings", submenu: SM_SETTINGS_SUBMENU }
   ];
 
   return (
     <>
       <ProjectNavList items={generalItems} onSubmenuOpen={onSubmenuOpen} />
-      <SidebarCollapsibleGroup label="Administration">
+      <SidebarCollapsibleGroup label="관리">
         <ProjectNavList items={administrationItems} onSubmenuOpen={onSubmenuOpen} />
       </SidebarCollapsibleGroup>
     </>

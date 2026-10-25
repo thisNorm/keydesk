@@ -30,10 +30,10 @@ export const useRemovePasskey = () => {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: webAuthnKeys.credentials });
             queryClient.invalidateQueries({ queryKey: userKeys.getUser });
-            createNotification({ text: "Passkey removed", type: "success" });
+            createNotification({ text: "패스키를 삭제했습니다.", type: "success" });
             onRemoved?.();
           },
-          errorText: "Failed to remove passkey"
+          errorText: "패스키를 삭제하지 못했습니다."
         }
       ),
     [runWithMfa, queryClient]

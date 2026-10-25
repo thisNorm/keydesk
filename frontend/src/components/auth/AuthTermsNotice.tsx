@@ -8,47 +8,46 @@ interface AuthTermsNoticeProps {
 export const AuthTermsNotice = ({ showCaptchaNotice = false }: AuthTermsNoticeProps) => (
   <div className="flex flex-col gap-1 text-xs text-pretty text-label">
     <p>
-      By signing up, you agree to our{" "}
+      가입하면 다음 정책에 동의합니다:{" "}
       <a
         href="https://infisical.com/terms/cloud"
         target="_blank"
         rel="noopener noreferrer"
         className={linkClassName}
       >
-        Terms of Service
+        이용 약관
       </a>{" "}
-      and{" "}
+      및{" "}
       <a
         href="https://infisical.com/privacy"
         target="_blank"
         rel="noopener noreferrer"
         className={linkClassName}
       >
-        Privacy Policy
+        개인정보 처리방침
       </a>
       .
     </p>
     {showCaptchaNotice && (
       <p>
-        This site is protected by hCaptcha and its{" "}
+        이 사이트는 hCaptcha로 보호되며 다음 정책이 적용됩니다:{" "}
         <a
           href="https://www.hcaptcha.com/privacy"
           target="_blank"
           rel="noopener noreferrer"
           className={linkClassName}
         >
-          Privacy Policy
+          개인정보 처리방침
         </a>{" "}
-        and{" "}
+        및{" "}
         <a
           href="https://www.hcaptcha.com/terms"
           target="_blank"
           rel="noopener noreferrer"
           className={linkClassName}
         >
-          Terms of Service
+          이용 약관
         </a>{" "}
-        apply.
       </p>
     )}
   </div>

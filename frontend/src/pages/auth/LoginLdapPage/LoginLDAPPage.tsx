@@ -48,7 +48,7 @@ export const LoginLdapPage = () => {
 
       if (!nextUrl) {
         createNotification({
-          text: "Login unsuccessful. Double-check your credentials and try again.",
+          text: "로그인에 실패했습니다. 이메일과 비밀번호를 확인하고 다시 시도하세요.",
           type: "error"
         });
 
@@ -58,7 +58,7 @@ export const LoginLdapPage = () => {
       saveLastLogin({ method: LoginMethod.LDAP, organizationSlug });
 
       createNotification({
-        text: "Successfully logged in",
+        text: "로그인했습니다.",
         type: "success"
       });
 
@@ -66,7 +66,7 @@ export const LoginLdapPage = () => {
       window.close();
     } catch {
       createNotification({
-        text: "Login unsuccessful. Double-check your credentials and try again.",
+        text: "로그인에 실패했습니다. 이메일과 비밀번호를 확인하고 다시 시도하세요.",
         type: "error"
       });
     }
@@ -86,7 +86,7 @@ export const LoginLdapPage = () => {
           <CardHeader className="mb-4 gap-4">
             <div className="flex items-center gap-1.5">
               <IconButton
-                aria-label="Back to login"
+                aria-label="로그인으로 돌아가기"
                 variant="ghost-muted"
                 size="xs"
                 className="-ml-2"
@@ -95,7 +95,7 @@ export const LoginLdapPage = () => {
                 <ChevronLeft />
               </IconButton>
               <CardTitle className="ml-0.5 bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
-                LDAP Login
+                LDAP 로그인
               </CardTitle>
             </div>
           </CardHeader>
@@ -106,7 +106,7 @@ export const LoginLdapPage = () => {
                 value={organizationSlug}
                 onChange={(e) => setOrganizationSlug(e.target.value)}
                 type="text"
-                placeholder="Enter your organization slug..."
+                placeholder="조직 URL 식별자 입력..."
                 required
                 className="h-10"
               />
@@ -117,7 +117,7 @@ export const LoginLdapPage = () => {
               onChange={(e) => setUsername(e.target.value)}
               type="text"
               autoComplete="username"
-              placeholder="Enter your LDAP username..."
+              placeholder="LDAP 사용자 이름 입력..."
               required
               disabled={passedUsername !== undefined}
               className="h-10"
@@ -127,13 +127,13 @@ export const LoginLdapPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
-              placeholder="Enter your LDAP password..."
+              placeholder="LDAP 비밀번호 입력..."
               required
               autoComplete="current-password"
               className="h-10"
             />
             <Button type="submit" variant="project" size="lg" isFullWidth isDisabled={!isFormValid}>
-              Continue with LDAP
+              LDAP로 계속
             </Button>
           </CardContent>
         </AuthPagePanel>

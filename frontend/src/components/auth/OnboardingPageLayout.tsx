@@ -17,7 +17,7 @@ export const OnboardingProgress = ({
 }: Pick<Props, "currentStep" | "totalSteps">) => (
   <div
     role="progressbar"
-    aria-label={`Step ${currentStep} of ${totalSteps}`}
+    aria-label={`전체 ${totalSteps}단계 중 ${currentStep}단계`}
     aria-valuemin={1}
     aria-valuemax={totalSteps}
     aria-valuenow={currentStep}

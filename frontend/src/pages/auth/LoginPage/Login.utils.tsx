@@ -26,7 +26,7 @@ const navigateToOrg = (
   }
 
   return navigate({
-    to: navigateTo || ("/organizations/$orgId/projects" as const),
+    to: navigateTo || ("/organizations/$orgId/api-vault" as const),
     params: { orgId: organizationId },
     search: { subOrganization: undefined }
   });

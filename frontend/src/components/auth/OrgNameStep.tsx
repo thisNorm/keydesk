@@ -73,23 +73,23 @@ export default function OrgNameStep({ onComplete, callbackPort }: OrgNameStepPro
       <AuthPagePanel>
         <CardHeader className="mb-4 gap-2">
           <CardTitle className="bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
-            Name your organization
+            조직 이름 설정
           </CardTitle>
           <CardDescription className="text-sm text-label">
-            This is your team&apos;s shared home in Infisical. You can rename it anytime.
+            시크릿을 보관할 조직입니다. 이름은 언제든지 변경할 수 있습니다.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
             <Field data-invalid={Boolean(errors.organizationName)}>
               <FieldLabel className="sr-only" htmlFor="sso-organization-name">
-                Organization Name
+                조직 이름
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("organizationName")}
                 id="sso-organization-name"
-                placeholder="Organization Name"
+                placeholder="조직 이름"
                 maxLength={64}
                 autoComplete="organization"
                 isError={Boolean(errors.organizationName)}
@@ -100,15 +100,14 @@ export default function OrgNameStep({ onComplete, callbackPort }: OrgNameStepPro
             </Field>
             <Field>
               <FieldLabel htmlFor="signup-attribution-source">
-                Where did you hear about us?{" "}
-                <span className="font-normal text-muted">(optional)</span>
+                Infisical을 알게 된 경로 <span className="font-normal text-muted"> (선택)</span>
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("attributionSource")}
                 id="signup-attribution-source"
                 autoComplete="off"
-                placeholder="e.g. Hacker News, a friend, GitHub..."
+                placeholder="예: Hacker News, 지인, GitHub..."
                 maxLength={512}
               />
             </Field>
@@ -119,7 +118,7 @@ export default function OrgNameStep({ onComplete, callbackPort }: OrgNameStepPro
               isFullWidth
               isPending={isCreating || isSelecting}
             >
-              Continue
+              계속
             </Button>
           </form>
         </CardContent>

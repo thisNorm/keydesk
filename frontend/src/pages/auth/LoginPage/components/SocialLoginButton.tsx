@@ -16,7 +16,7 @@ export const SocialLoginButton = ({ icon, label, onClick, showLabel, showLastUse
     <Button aria-label={label} variant="outline" size="lg" isFullWidth onClick={onClick}>
       <FontAwesomeIcon icon={icon} />
       {showLabel && <span className="min-w-0 truncate">{label}</span>}
-      {showLastUsed && <ButtonBadge variant="project">Last used</ButtonBadge>}
+      {showLastUsed && <ButtonBadge variant="project">최근 사용</ButtonBadge>}
     </Button>
   </div>
 );

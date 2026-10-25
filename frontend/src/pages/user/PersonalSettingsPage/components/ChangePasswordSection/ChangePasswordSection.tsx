@@ -29,7 +29,7 @@ import { clearSession } from "@app/hooks/api/users/queries";
 
 const createSchema = (passwordPolicy: TPasswordPolicy) =>
   z.object({
-    oldPassword: z.string().min(1, "Current password is required"),
+    oldPassword: z.string().min(1, "현재 비밀번호를 입력하세요."),
     newPassword: createPasswordSchema(passwordPolicy)
   });
 
@@ -70,14 +70,14 @@ export const ChangePasswordSection = () => {
       if (latestBreachStatus === "breached") {
         setError("newPassword", {
           type: "validate",
-          message: "This password was found in a known data breach."
+          message: "알려진 유출 기록에서 발견된 비밀번호입니다."
         });
         return;
       }
 
       if (user.encryptionVersion !== UserEncryptionVersion.V2) {
         createNotification({
-          text: "Legacy encryption scheme not supported for changing password. Please contact support.",
+          text: "이전 암호화 방식은 비밀번호 변경을 지원하지 않습니다. 지원팀에 문의하세요.",
           type: "error"
         });
 
@@ -91,7 +91,7 @@ export const ChangePasswordSection = () => {
       clearSession();
 
       createNotification({
-        text: "Password changed.",
+        text: "비밀번호를 변경했습니다.",
         type: "success"
       });
 
@@ -99,7 +99,7 @@ export const ChangePasswordSection = () => {
       navigate({ to: "/login" });
     } catch {
       createNotification({
-        text: "Failed to change password.",
+        text: "비밀번호를 변경하지 못했습니다.",
         type: "error"
       });
     }
@@ -109,13 +109,13 @@ export const ChangePasswordSection = () => {
     try {
       await sendSetupPasswordEmail.mutateAsync();
       createNotification({
-        title: "Password setup email sent",
-        text: "Check your email to continue setting up a password.",
+        title: "비밀번호 설정 이메일을 보냈습니다.",
+        text: "이메일을 확인하고 비밀번호 설정을 계속하세요.",
         type: "info"
       });
     } catch {
       createNotification({
-        text: "Failed to send password setup email.",
+        text: "비밀번호 설정 이메일을 보내지 못했습니다.",
         type: "error"
       });
     }
@@ -125,10 +125,8 @@ export const ChangePasswordSection = () => {
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <Card className="gap-0 overflow-hidden p-0">
         <CardHeader className="p-6">
-          <CardTitle className="font-alliance">Change Password</CardTitle>
-          <CardDescription>
-            Changing your password signs this session out after the update succeeds.
-          </CardDescription>
+          <CardTitle className="font-alliance">비밀번호 변경</CardTitle>
+          <CardDescription>비밀번호를 변경하면 현재 세션에서 로그아웃됩니다.</CardDescription>
         </CardHeader>
         <CardContent className="max-w-md px-6 pb-6">
           <FieldGroup>
@@ -136,9 +134,7 @@ export const ChangePasswordSection = () => {
               defaultValue=""
               render={({ field, fieldState: { error } }) => (
                 <Field data-invalid={Boolean(error)}>
-                  <FieldLabel htmlFor="change-password-current-password">
-                    Current password
-                  </FieldLabel>
+                  <FieldLabel htmlFor="change-password-current-password">현재 비밀번호</FieldLabel>
                   <Input
                     id="change-password-current-password"
                     type="password"
@@ -154,7 +150,7 @@ export const ChangePasswordSection = () => {
             />
             <PasswordField
               id="change-password-new-password"
-              label="New password"
+              label="새 비밀번호"
               value={newPassword}
               policy={config.passwordPolicy}
               breachStatus={breachStatus}
@@ -172,7 +168,7 @@ export const ChangePasswordSection = () => {
             isPending={isSubmitting}
             isDisabled={breachStatus === "checking" || breachStatus === "breached"}
           >
-            Change password
+            비밀번호 변경
           </Button>
           <Button
             onClick={onSetupPassword}
@@ -181,7 +177,7 @@ export const ChangePasswordSection = () => {
             size="sm"
             isPending={sendSetupPasswordEmail.isPending}
           >
-            Email setup link
+            이메일 설정 링크
           </Button>
         </CardFooter>
       </Card>

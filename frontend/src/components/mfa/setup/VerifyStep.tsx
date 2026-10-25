@@ -49,18 +49,18 @@ const TotpVerify = ({
     setVerificationError(undefined);
     try {
       await enrollMfa({ method: MfaMethod.TOTP, totp: totp.trim() });
-      createNotification({ text: "Authenticator app configured", type: "success" });
+      createNotification({ text: "인증 앱을 설정했습니다.", type: "success" });
       await onVerified();
     } catch {
       // The mutation's global error handler already surfaces the (more detailed)
       // failure toast; keep a local signal so the manual Retry action appears.
-      setVerificationError("Invalid code. Please try again.");
+      setVerificationError("올바르지 않은 코드입니다. 다시 시도하세요.");
     }
   };
 
   if (isPending) {
     return (
-      <div className="space-y-4" aria-label="Loading authenticator setup">
+      <div className="space-y-4" aria-label="인증 앱 설정을 불러오는 중">
         <Skeleton className="mx-auto h-44 w-44" />
         <Skeleton className="h-9 w-full" />
       </div>
@@ -70,18 +70,18 @@ const TotpVerify = ({
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted">
-        Scan the QR code with an authenticator app, then enter the 6-digit code it generates.
+        인증 앱에서 QR 코드를 스캔한 후 표시되는 6자리 코드를 입력하세요.
       </p>
       <div className="flex items-center justify-center rounded-lg bg-white p-4">
         {qrCodeUrl ? (
-          <img src={qrCodeUrl} alt="Authenticator QR code" className="h-44 w-44" />
+          <img src={qrCodeUrl} alt="인증 앱 등록 QR 코드" className="h-44 w-44" />
         ) : (
           <div className="h-44 w-44" />
         )}
       </div>
       {manualSecret && (
         <p className="text-xs text-muted">
-          Can&apos;t scan? Enter this key manually:{" "}
+          스캔할 수 없다면 이 키를 직접 입력하세요:{" "}
           <code className="rounded border border-border bg-container px-2 py-0.5 font-mono text-foreground">
             {manualSecret}
           </code>
@@ -130,22 +130,22 @@ const WebAuthnVerify = ({
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted">
-        Register a passkey using Face ID, Touch ID, a security key, or your device. Optionally give
-        it a name so you can recognize it later.
+        Face ID, Touch ID, 보안 키 또는 기기로 패스키를 등록하세요. 나중에 구분할 수 있도록 이름을
+        지정할 수 있습니다.
       </p>
       <Field>
-        <FieldLabel htmlFor="mfa-passkey-name">Passkey name</FieldLabel>
+        <FieldLabel htmlFor="mfa-passkey-name">패스키 이름</FieldLabel>
         <Input
           id="mfa-passkey-name"
           variant="outlined"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Optional"
+          placeholder="선택"
         />
-        <FieldDescription>Use a name that helps you recognize this device.</FieldDescription>
+        <FieldDescription>기기를 구분할 수 있는 이름을 사용하세요.</FieldDescription>
       </Field>
       <Button variant={variant} isPending={isRegistering} onClick={handleRegister}>
-        <FingerprintIcon /> Register passkey
+        <FingerprintIcon /> 패스키 등록
       </Button>
     </div>
   );

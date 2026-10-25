@@ -56,15 +56,15 @@ export const SecretScanningNav = ({
 
   const administrationItems: NavItem[] = [
     {
-      label: "Access Control",
+      label: "접근 권한",
       icon: Shield,
       pathSuffix: "access-management",
       activeMatch: /\/groups\/|\/identities\/|\/members\/|\/roles\//,
       submenu: PROJECT_ACCESS_CONTROL_SUBMENU
     },
-    { label: "Audit Logs", icon: FileText, pathSuffix: "audit-logs" },
+    { label: "감사 로그", icon: FileText, pathSuffix: "audit-logs" },
     {
-      label: "Settings",
+      label: "설정",
       icon: Settings,
       pathSuffix: "settings",
       submenu: getSecretScanningSettingsSubmenu(Boolean(instanceState?.isMultiInstance))
@@ -74,7 +74,7 @@ export const SecretScanningNav = ({
   return (
     <>
       <ProjectNavList items={generalItems} onSubmenuOpen={onSubmenuOpen} />
-      <SidebarCollapsibleGroup label="Administration">
+      <SidebarCollapsibleGroup label="관리">
         <ProjectNavList items={administrationItems} onSubmenuOpen={onSubmenuOpen} />
       </SidebarCollapsibleGroup>
     </>

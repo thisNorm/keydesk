@@ -1,29 +1,22 @@
 import { initReactI18next } from "react-i18next";
 import i18n from "i18next";
-import Backend from "i18next-http-backend";
 
-i18n
-  // load translation using http -> see /public/locales (i.e. https://github.com/i18next/react-i18next/tree/master/example/react/public/locales)
-  // learn more: https://github.com/i18next/i18next-http-backend
-  // want your translations to be loaded from a professional CDN? => https://github.com/locize/react-tutorial#step-2---use-the-locize-cdn
-  .use(Backend)
-  // detect user language
-  // learn more: https://github.com/i18next/i18next-browser-languageDetector
-  // .use(LanguageDetector)
-  // pass the i18n instance to react-i18next.
-  .use(initReactI18next)
-  // init i18next
-  // for all options read: https://www.i18next.com/overview/configuration-options
-  .init({
-    lng: "en",
-    fallbackLng: "en",
-    // supportedLngs: ["en", "ko", "fr", "pt-BR", "pt-PT", "es"],
-    debug: process.env.NODE_ENV === "development",
-    detection: {
-      // lookupLocalStorage: "lang"
-    },
-    ns: ["translations"],
-    interpolation: {
-      escapeValue: false // not needed for react as it escapes by default
-    }
-  });
+import english from "../public/locales/en/translations.json";
+import korean from "../public/locales/ko/translations.json";
+
+i18n.use(initReactI18next).init({
+  resources: {
+    en: { translations: english },
+    ko: { translations: korean }
+  },
+  lng: "ko",
+  fallbackLng: "en",
+  supportedLngs: ["ko", "en"],
+  ns: ["translations"],
+  defaultNS: "translations",
+  interpolation: {
+    escapeValue: false
+  }
+});
+
+export default i18n;

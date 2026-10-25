@@ -26,10 +26,10 @@ export const ConfirmEmailStep = ({ onComplete }: Props) => {
   return (
     <div className="mx-auto flex w-full flex-col items-center justify-center">
       <h1 className="mb-2 bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text text-center text-xl font-normal text-transparent">
-        Confirm your email
+        이메일 확인
       </h1>
       <p className="mb-8 w-max justify-center text-center text-sm text-muted-cool">
-        Recover account for <span className="italic">{email}</span>.
+        계정 복구: <span className="italic">{email}</span>.
       </p>
       <div className="w-1/4 min-w-[21.2rem] rounded-md text-center md:min-w-[20.1rem] lg:w-1/6">
         <Button
@@ -56,7 +56,7 @@ export const ConfirmEmailStep = ({ onComplete }: Props) => {
           }}
           isPending={isVerifyPasswordResetLoading}
         >
-          Confirm Email
+          이메일 확인
         </Button>
       </div>
     </div>

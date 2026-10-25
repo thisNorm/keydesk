@@ -40,15 +40,15 @@ import { AuthPagePanel } from "./AuthPagePanel";
 const createUserInfoFormSchema = (isInvite: boolean, passwordPolicy: TPasswordPolicy) =>
   z
     .object({
-      firstName: z.string().trim().min(1, "First name is required"),
+      firstName: z.string().trim().min(1, "이름을 입력하세요."),
       lastName: z.string().trim().optional(),
       organizationName: isInvite ? z.string().optional() : GenericResourceNameSchema,
       attributionSource: z.string().trim().max(512).optional(),
       password: createPasswordSchema(passwordPolicy),
-      confirmPassword: z.string().min(1, "Please confirm your password")
+      confirmPassword: z.string().min(1, "비밀번호를 다시 입력하세요.")
     })
     .refine(({ password, confirmPassword }) => password === confirmPassword, {
-      message: "Passwords do not match",
+      message: "비밀번호가 일치하지 않습니다.",
       path: ["confirmPassword"]
     });
 
@@ -107,9 +107,9 @@ export default function UserInfoStep({
     passwordBreachStatus === "safe" || passwordBreachStatus === "unavailable";
   const canSubmit = isPasswordValidated && !isLoading;
   const normalizedInviteOrganizationName = inviteOrganizationName?.trim();
-  const inviteOrganizationLabel = normalizedInviteOrganizationName || "an organization";
+  const inviteOrganizationLabel = normalizedInviteOrganizationName || "조직";
   const stepTitle = t("signup.step3-message");
-  const submitLabel = isInvite ? String(t("signup.signup")) : "Continue";
+  const submitLabel = isInvite ? String(t("signup.signup")) : "계속";
 
   const onSubmit = async (formData: UserInfoFormData) => {
     const telemetry = new Telemetry().getInstance();
@@ -118,7 +118,7 @@ export default function UserInfoStep({
     if (latestBreachStatus === "breached") {
       setError("password", {
         type: "validate",
-        message: "This password was found in a known data breach."
+        message: "알려진 유출 기록에서 발견된 비밀번호입니다."
       });
       return;
     }
@@ -179,7 +179,7 @@ export default function UserInfoStep({
             {isInvite ? (
               <>
                 <span className="shrink-0 bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text text-transparent opacity-70">
-                  Join
+                  가입:
                 </span>
                 <span
                   className="min-w-0 truncate bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text text-transparent"
@@ -196,7 +196,7 @@ export default function UserInfoStep({
           </CardTitle>
           {isInvite ? (
             <CardDescription className="ml-0.5 font-sans text-base break-words text-accent">
-              Set up your Infisical account
+              Infisical 계정 설정
             </CardDescription>
           ) : null}
         </CardHeader>
@@ -204,13 +204,13 @@ export default function UserInfoStep({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field data-invalid={showDangerState && Boolean(errors.firstName)}>
               <FieldLabel className="sr-only" htmlFor="signup-first-name">
-                First Name
+                이름
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("firstName")}
                 id="signup-first-name"
-                placeholder="First Name"
+                placeholder="이름"
                 autoComplete="given-name"
                 isError={showDangerState && Boolean(errors.firstName)}
               />
@@ -220,13 +220,13 @@ export default function UserInfoStep({
             </Field>
             <Field data-invalid={showDangerState && Boolean(errors.lastName)}>
               <FieldLabel className="sr-only" htmlFor="signup-last-name">
-                Last Name
+                성
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("lastName")}
                 id="signup-last-name"
-                placeholder="Last Name"
+                placeholder="성"
                 autoComplete="family-name"
                 isError={showDangerState && Boolean(errors.lastName)}
               />
@@ -238,13 +238,13 @@ export default function UserInfoStep({
           {!isInvite && (
             <Field data-invalid={showOrganizationNameError}>
               <FieldLabel className="sr-only" htmlFor="signup-organization-name">
-                Organization Name
+                조직 이름
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("organizationName")}
                 id="signup-organization-name"
-                placeholder="Organization Name"
+                placeholder="조직 이름"
                 maxLength={64}
                 autoComplete="organization"
                 isError={showOrganizationNameError}
@@ -257,22 +257,21 @@ export default function UserInfoStep({
           {!isInvite && (
             <Field>
               <FieldLabel htmlFor="signup-attribution-source">
-                Where did you hear about us?{" "}
-                <span className="font-normal text-muted">(optional)</span>
+                Infisical을 알게 된 경로 <span className="font-normal text-muted"> (선택)</span>
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("attributionSource")}
                 id="signup-attribution-source"
                 autoComplete="off"
-                placeholder="e.g. Hacker News, a friend, GitHub..."
+                placeholder="예: Hacker News, 지인, GitHub..."
                 maxLength={512}
               />
             </Field>
           )}
           <Field className={isInvite ? undefined : "hidden"}>
             <FieldLabel className="sr-only" htmlFor="signup-email">
-              Email
+              이메일
             </FieldLabel>
             <Input
               variant="outlined"
@@ -300,7 +299,7 @@ export default function UserInfoStep({
             contentClassName={isPasswordValidated ? "overflow-visible" : undefined}
           >
             <Field data-invalid={showDangerState && Boolean(errors.confirmPassword)}>
-              <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+              <FieldLabel htmlFor="confirm-password">비밀번호 확인</FieldLabel>
               <InputGroup variant="outlined">
                 <InputGroupInput
                   {...register("confirmPassword")}
@@ -313,11 +312,7 @@ export default function UserInfoStep({
                 <InputGroupAddon align="inline-end">
                   <InputGroupButton
                     onClick={() => setShowConfirmPassword((current) => !current)}
-                    aria-label={
-                      showConfirmPassword
-                        ? "Hide password confirmation"
-                        : "Show password confirmation"
-                    }
+                    aria-label={showConfirmPassword ? "확인 비밀번호 숨기기" : "확인 비밀번호 표시"}
                   >
                     {showConfirmPassword ? <EyeOff /> : <Eye />}
                   </InputGroupButton>
@@ -331,7 +326,7 @@ export default function UserInfoStep({
                     <X className="mt-0.5 size-3.5 shrink-0 text-danger" />
                   )}
                   <span className={doPasswordsMatch ? "text-muted" : "text-danger"}>
-                    {doPasswordsMatch ? "Passwords match" : "Passwords do not match"}
+                    {doPasswordsMatch ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다."}
                   </span>
                 </div>
               </AnimatedCollapse>

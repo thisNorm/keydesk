@@ -76,9 +76,9 @@ export const ProjectNav = () => {
   });
   const hasMultipleSecretScanningProjects = Boolean(secretScanningInstance?.isMultiInstance);
   let projectLabel: string;
-  if (intermediateAvailable) projectLabel = "Projects";
+  if (intermediateAvailable) projectLabel = "프로젝트";
   else if (isSubOrganization) projectLabel = "Sub-Organization";
-  else projectLabel = "Organization";
+  else projectLabel = "조직";
   const NavComponent = PROJECT_NAV_COMPONENT[currentProject.type];
   // Products with a projects listing link Product Settings from there; the rest link it here.
   const showProductSettings =

@@ -3,7 +3,7 @@ export const AuthPageFooter = () => (
     <p className="text-[11px] text-muted">
       &copy; {new Date().getFullYear()} Infisical Inc. All rights reserved.
     </p>
-    <nav aria-label="Infisical social links" className="flex items-center justify-center gap-3">
+    <nav aria-label="Infisical 소셜 링크" className="flex items-center justify-center gap-3">
       <a
         href="https://x.com/infisical"
         target="_blank"

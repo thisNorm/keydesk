@@ -44,7 +44,7 @@ export const RecoveryCodesView = ({ recoveryCodes, onSaved, acknowledgment }: Pr
       onSaved?.();
     } catch {
       createNotification({
-        text: "Failed to copy recovery codes. Please download them instead.",
+        text: "복구 코드를 복사하지 못했습니다. 파일로 다운로드하세요.",
         type: "error"
       });
     }
@@ -64,10 +64,10 @@ export const RecoveryCodesView = ({ recoveryCodes, onSaved, acknowledgment }: Pr
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Button variant="neutral" isFullWidth onClick={handleDownload}>
-          <DownloadIcon /> Download
+          <DownloadIcon /> 다운로드
         </Button>
         <Button variant="outline" isFullWidth onClick={handleCopy}>
-          <CopyIcon /> {copied ? "Copied" : "Copy"}
+          <CopyIcon /> {copied ? "복사됨" : "복사"}
         </Button>
       </div>
       {acknowledgment && (
@@ -85,7 +85,7 @@ export const RecoveryCodesView = ({ recoveryCodes, onSaved, acknowledgment }: Pr
                 acknowledgment.labelClassName ?? "text-foreground"
               }`}
             >
-              I have saved my recovery codes in a safe place
+              복구 코드를 안전한 곳에 저장했습니다.
             </FieldLabel>
           </div>
           <Button

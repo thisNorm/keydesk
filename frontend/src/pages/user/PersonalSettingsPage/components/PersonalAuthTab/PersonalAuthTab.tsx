@@ -16,10 +16,10 @@ export const PersonalAuthTab = () => {
     return (
       <Alert variant="danger">
         <AlertCircleIcon />
-        <AlertTitle>Authentication settings could not be loaded</AlertTitle>
+        <AlertTitle>인증 설정을 불러오지 못했습니다.</AlertTitle>
         <AlertDescription>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
-            Retry
+            다시 시도
           </Button>
         </AlertDescription>
       </Alert>
@@ -28,7 +28,7 @@ export const PersonalAuthTab = () => {
 
   if (isPending || !user) {
     return (
-      <Card aria-label="Loading authentication settings">
+      <Card aria-label="인증 설정을 불러오는 중">
         <Skeleton className="h-6 w-56" />
         <Skeleton className="h-24 w-full" />
       </Card>

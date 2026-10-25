@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+!.env.example
+.local
+**/node_modules
+**/.next
+frontend/dist
+backend/frontend-build
+backend/bdd
+backend/e2e-test
+compose.personal.yml
+*-Infisical.cmd
+Infisical-CLI.cmd

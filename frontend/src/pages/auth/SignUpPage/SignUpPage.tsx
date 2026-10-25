@@ -86,7 +86,7 @@ export const SignUpPage = ({ invite }: SignUpPageProps) => {
   useEffect(() => {
     if (!isInvite && !config.allowSignUp) {
       createNotification({
-        text: "Sign up is disabled"
+        text: "가입이 비활성화되어 있습니다."
       });
       navigate({ to: "/login" });
     }
@@ -146,7 +146,7 @@ export const SignUpPage = ({ invite }: SignUpPageProps) => {
         }
 
         navigate({
-          to: "/organizations/$orgId/projects",
+          to: "/organizations/$orgId/api-vault",
           params: { orgId: inviteOrgId }
         });
       } else {
@@ -267,13 +267,13 @@ export const SignUpPage = ({ invite }: SignUpPageProps) => {
     if (section === SignupSection.VerifyCode) {
       return (
         <div className="flex items-center justify-center gap-1.5 text-sm">
-          <span className="text-label">Already have an account?</span>
+          <span className="text-label">이미 계정이 있나요?</span>
           <Link
             to="/login"
             search={{ callback_port: callbackPort }}
             className="text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
           >
-            Log in
+            로그인
           </Link>
         </div>
       );
@@ -327,7 +327,7 @@ export const SignUpPage = ({ invite }: SignUpPageProps) => {
       <div className="flex min-h-screen items-center justify-center bg-page" role="status">
         <div className="flex flex-col items-center gap-3 text-sm text-label">
           <LoaderCircle className="size-5 animate-spin text-project motion-reduce:animate-none" />
-          <span>Preparing sign up</span>
+          <span>가입 준비 중</span>
         </div>
       </div>
     );

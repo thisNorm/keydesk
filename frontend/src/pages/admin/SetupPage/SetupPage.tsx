@@ -58,13 +58,16 @@ const steps = [
 const setupFormId = "self-hosted-server-setup-form";
 
 const formSchema = z.object({
-  firstName: z.string().trim().min(1, "First name is required"),
+  firstName: z.string().trim().min(1, "이름을 입력하세요."),
   lastName: z.string().trim().optional(),
   organizationName: GenericResourceNameSchema,
-  organizationSlug: slugSchema({ field: "Organization slug" }),
+  organizationSlug: slugSchema({ field: "조직 URL 식별자" }),
   signUpMode: z.nativeEnum(SignUpMode),
   allowedSignUpDomain: allowedEmailDomainsSchema,
-  enabledLoginMethods: z.nativeEnum(LoginMethod).array().min(1, "Select at least one login method.")
+  enabledLoginMethods: z
+    .nativeEnum(LoginMethod)
+    .array()
+    .min(1, "로그인 방식을 하나 이상 선택하세요.")
 });
 
 type TSetupForm = z.infer<typeof formSchema>;
@@ -88,7 +91,7 @@ const loginMethods: Array<{
 }> = [
   {
     value: LoginMethod.EMAIL,
-    label: "Email",
+    label: "이메일",
     icon: Mail
   },
   {
@@ -117,20 +120,20 @@ const formatAllowedDomains = (domains: string) =>
 
 const stepContent = {
   [SetupStep.Account]: {
-    title: "Create a Super Admin account",
-    description: "This account will serve as an instance administrator."
+    title: "최고 관리자 계정 만들기",
+    description: "이 계정은 서버 관리자 권한을 갖습니다."
   },
   [SetupStep.Organization]: {
-    title: "Set up first org",
-    description: "Each instance can hold multiple orgs, this one is for you."
+    title: "첫 조직 설정",
+    description: "한 서버에 여러 조직을 만들 수 있습니다. 먼저 사용할 조직을 설정하세요."
   },
   [SetupStep.Access]: {
-    title: "Control who can join",
-    description: "Choose whether new users can create accounts on this instance."
+    title: "가입 권한 설정",
+    description: "이 서버에서 새 계정을 만들 수 있는 사용자를 정하세요."
   },
   [SetupStep.Review]: {
-    title: "Review your settings",
-    description: "Confirm the initial access and authentication configuration."
+    title: "설정 확인",
+    description: "초기 접근 권한과 로그인 설정을 확인하세요."
   }
 } satisfies Record<SetupStep, { title: string; description: string }>;
 
@@ -225,7 +228,7 @@ export const SetupPage = () => {
           error.response?.data?.error === SuperAdminErrorCode.AuthMethodLockout
         ) {
           setError("enabledLoginMethods", {
-            message: "Select at least one login method."
+            message: "로그인 방식을 하나 이상 선택하세요."
           });
           return;
         }
@@ -247,13 +250,13 @@ export const SetupPage = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field data-invalid={Boolean(errors.firstName)}>
               <FieldLabel className="sr-only" htmlFor="setup-first-name">
-                First Name
+                이름
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("firstName")}
                 id="setup-first-name"
-                placeholder="First Name"
+                placeholder="이름"
                 autoComplete="given-name"
                 autoFocus
                 isError={Boolean(errors.firstName)}
@@ -262,13 +265,13 @@ export const SetupPage = () => {
             </Field>
             <Field data-invalid={Boolean(errors.lastName)}>
               <FieldLabel className="sr-only" htmlFor="setup-last-name">
-                Last Name
+                성
               </FieldLabel>
               <Input
                 variant="outlined"
                 {...register("lastName")}
                 id="setup-last-name"
-                placeholder="Last Name"
+                placeholder="성"
                 autoComplete="family-name"
                 isError={Boolean(errors.lastName)}
               />
@@ -277,7 +280,7 @@ export const SetupPage = () => {
           </div>
           <Field>
             <FieldLabel className="sr-only" htmlFor="setup-email">
-              Email
+              이메일
             </FieldLabel>
             <Input
               variant="outlined"
@@ -288,7 +291,7 @@ export const SetupPage = () => {
               disabled
             />
             <FieldDescription>
-              Email changes require verification and can be managed later in Personal Settings.
+              이메일 변경에는 인증이 필요하며 나중에 개인 설정에서 변경할 수 있습니다.
             </FieldDescription>
           </Field>
         </FieldGroup>
@@ -300,14 +303,14 @@ export const SetupPage = () => {
         <FieldGroup>
           <Field data-invalid={Boolean(errors.organizationName)}>
             <FieldLabel className="sr-only" htmlFor="setup-organization-name">
-              Organization name
+              조직 이름
             </FieldLabel>
             <Input
               variant="outlined"
               {...register("organizationName")}
               id="setup-organization-name"
-              aria-label="Organization name"
-              placeholder="Organization name"
+              aria-label="조직 이름"
+              placeholder="조직 이름"
               autoComplete="organization"
               autoFocus
               isError={Boolean(errors.organizationName)}
@@ -319,7 +322,7 @@ export const SetupPage = () => {
             name="organizationSlug"
             render={({ field: { onChange, ...field }, fieldState: { error } }) => (
               <Field data-invalid={Boolean(error)}>
-                <FieldLabel htmlFor="setup-organization-slug">Organization slug</FieldLabel>
+                <FieldLabel htmlFor="setup-organization-slug">조직 URL 식별자</FieldLabel>
                 <Input
                   variant="outlined"
                   {...field}
@@ -332,7 +335,7 @@ export const SetupPage = () => {
                 />
                 <FieldFeedback
                   id="setup-organization-slug-feedback"
-                  description="Lowercase letters, numbers, and hyphens only. Spaces become hyphens."
+                  description="영문 소문자, 숫자, 하이픈만 사용할 수 있습니다. 공백은 하이픈으로 바뀝니다."
                   error={error?.message}
                 />
               </Field>
@@ -351,7 +354,7 @@ export const SetupPage = () => {
             render={({ field }) => (
               <Field>
                 <h3 className="font-alliance text-base font-normal text-foreground">
-                  Who can create accounts?
+                  계정을 만들 수 있는 사용자
                 </h3>
                 <RadioGroup
                   value={field.value}
@@ -361,8 +364,8 @@ export const SetupPage = () => {
                   <FieldLabel htmlFor="signup-disabled">
                     <Field orientation="horizontal">
                       <FieldContent>
-                        <FieldTitle className="font-sans text-base">Invite-only</FieldTitle>
-                        <FieldDescription>Recommended for most instances.</FieldDescription>
+                        <FieldTitle className="font-sans text-base">초대 전용</FieldTitle>
+                        <FieldDescription>대부분의 서버에 권장합니다.</FieldDescription>
                       </FieldContent>
                       <RadioGroupItem value={SignUpMode.Disabled} id="signup-disabled" />
                     </Field>
@@ -371,12 +374,14 @@ export const SetupPage = () => {
                     <Field orientation="horizontal">
                       <FieldContent>
                         <FieldTitle className="gap-1 font-sans text-base">
-                          Anyone
+                          누구나
                           <span aria-hidden="true" className="font-sans text-xs text-danger">
                             *
                           </span>
                         </FieldTitle>
-                        <FieldDescription>Optionally limit by source/domain</FieldDescription>
+                        <FieldDescription>
+                          필요하면 가입 경로·도메인을 제한할 수 있습니다.
+                        </FieldDescription>
                       </FieldContent>
                       <RadioGroupItem value={SignUpMode.Anyone} id="signup-anyone" />
                     </Field>
@@ -392,7 +397,7 @@ export const SetupPage = () => {
               <Field>
                 <div className="flex items-center gap-3">
                   <h3 className="shrink-0 font-alliance text-base font-normal text-foreground">
-                    Allowed authentication methods
+                    허용할 로그인 방식
                   </h3>
                   <Separator className="flex-1" />
                 </div>
@@ -446,7 +451,7 @@ export const SetupPage = () => {
                   })}
                 </div>
                 <FieldDescription>
-                  SAML, LDAP, and OIDC can be configured after onboarding in the Server Console.
+                  SAML, LDAP, OIDC는 초기 설정 후 서버 관리 화면에서 설정할 수 있습니다.
                 </FieldDescription>
                 <FieldError>{errors.enabledLoginMethods?.message}</FieldError>
               </Field>
@@ -468,9 +473,7 @@ export const SetupPage = () => {
                         *
                       </span>
                       Limit allowed email domains{" "}
-                      <span className="opacity-60">
-                        (recommended, applies to all sign-up methods)
-                      </span>
+                      <span className="opacity-60">(권장, 모든 가입 방식에 적용)</span>
                     </span>
                   </FieldLabel>
                   <Input
@@ -483,7 +486,7 @@ export const SetupPage = () => {
                   />
                   <FieldFeedback
                     id="allowed-signup-domain-feedback"
-                    description="Leave blank to allow any email domain."
+                    description="비워 두면 모든 이메일 도메인을 허용합니다."
                     error={error?.message}
                   />
                 </Field>
@@ -499,16 +502,16 @@ export const SetupPage = () => {
       .map(({ label }) => label)
       .join(", ");
     const allowedDomains = formatAllowedDomains(values.allowedSignUpDomain);
-    let signUpSummary = "Anyone can sign up";
+    let signUpSummary = "누구나 가입 가능";
     if (values.signUpMode === SignUpMode.Disabled) {
-      signUpSummary = "Invitation only";
+      signUpSummary = "초대 전용";
     } else if (allowedDomains) {
-      signUpSummary = `Signups limited to following domains: ${allowedDomains}`;
+      signUpSummary = `가입 허용 도메인: ${allowedDomains}`;
     }
     const reviewItems = [
       {
         step: SetupStep.Account,
-        title: "Super Admin account",
+        title: "최고 관리자 계정",
         description: [
           [values.firstName, values.lastName].filter(Boolean).join(" "),
           user.email ?? user.username
@@ -518,17 +521,17 @@ export const SetupPage = () => {
       },
       {
         step: SetupStep.Organization,
-        title: "Initial organization",
+        title: "첫 조직",
         description: `${values.organizationName} · ${values.organizationSlug}`
       },
       {
         step: SetupStep.Access,
-        title: "User access",
+        title: "사용자 접근 권한",
         description: signUpSummary
       },
       {
         step: SetupStep.Access,
-        title: "Login methods",
+        title: "로그인 방식",
         description: enabledMethodLabels
       }
     ];
@@ -570,7 +573,7 @@ export const SetupPage = () => {
           {activeStepIndex > 0 && (
             <Button type="button" variant="outline" onClick={back}>
               <ChevronLeft />
-              Back
+              이전
             </Button>
           )}
           <Button
@@ -580,13 +583,13 @@ export const SetupPage = () => {
             isPending={isSubmitting || isCompleting}
             className={cn(activeStepIndex === 0 && "ml-auto")}
           >
-            {activeStep === SetupStep.Review ? "Finish setup" : "Continue"}
+            {activeStep === SetupStep.Review ? "설정 완료" : "계속"}
           </Button>
         </div>
       }
     >
       <Helmet>
-        <title>Configure your instance | Infisical</title>
+        <title>서버 설정 | Infisical</title>
         <link rel="icon" href="/infisical.ico" />
       </Helmet>
       <AuthPagePanel>

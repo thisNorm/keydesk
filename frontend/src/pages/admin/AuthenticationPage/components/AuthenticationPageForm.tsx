@@ -114,7 +114,7 @@ export const AuthenticationPageForm = () => {
     if (!enabledMethods.length) {
       createNotification({
         type: "error",
-        text: "At least one login method should be enabled."
+        text: "로그인 방식을 하나 이상 활성화해야 합니다."
       });
       return;
     }
@@ -124,7 +124,7 @@ export const AuthenticationPageForm = () => {
     });
 
     createNotification({
-      text: "Login methods have been successfully updated.",
+      text: "로그인 방식을 변경했습니다.",
       type: "success"
     });
   };
@@ -132,9 +132,9 @@ export const AuthenticationPageForm = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Login Methods</CardTitle>
+        <CardTitle>로그인 방식</CardTitle>
         <CardDescription>
-          Select the login methods available to all users of this instance.
+          이 서버의 사용자가 사용할 수 있는 로그인 방식을 선택하세요.
         </CardDescription>
       </CardHeader>
       <CardContent>

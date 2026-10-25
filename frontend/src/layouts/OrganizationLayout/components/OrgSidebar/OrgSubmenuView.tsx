@@ -28,7 +28,7 @@ export const OrgSettingsSubmenuView = ({ onBack }: { onBack: () => void }) => {
 
   const items: OrgSettingsItem[] = [
     {
-      label: "General",
+      label: "일반",
       icon: Cog,
       pathSuffix: "settings",
       search: { selectedTab: "tab-org-general" },
@@ -47,19 +47,19 @@ export const OrgSettingsSubmenuView = ({ onBack }: { onBack: () => void }) => {
       hidden: isSubOrganization
     },
     {
-      label: "Networking",
+      label: "네트워크",
       icon: Network,
       pathSuffix: "networking"
     },
     {
-      label: "Security",
+      label: "보안",
       icon: Lock,
       pathSuffix: "settings",
       search: { selectedTab: "tab-org-security" },
       hidden: isSubOrganization
     },
     {
-      label: "Encryption",
+      label: "암호화",
       icon: KeyRound,
       pathSuffix: "settings",
       search: { selectedTab: "tab-org-encryption" }
@@ -71,7 +71,7 @@ export const OrgSettingsSubmenuView = ({ onBack }: { onBack: () => void }) => {
       search: { selectedTab: "product-settings" }
     },
     {
-      label: "Sub Organizations",
+      label: "하위 조직",
       icon: SubOrgIcon,
       pathSuffix: "settings",
       search: { selectedTab: "tab-sub-organizations" },
@@ -89,7 +89,7 @@ export const OrgSettingsSubmenuView = ({ onBack }: { onBack: () => void }) => {
           onClick={onBack}
         >
           <ChevronLeft />
-          <span>Settings</span>
+          <span>설정</span>
         </button>
       </SidebarGroupLabel>
       <SidebarMenu>

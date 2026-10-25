@@ -17,23 +17,19 @@ export const RequestNewInvitePage = () => {
   return (
     <AuthPageLayout variant="focused">
       <Helmet>
-        <title>{isAlreadyMember ? "Already a Member" : "Request a New Invite"}</title>
+        <title>{isAlreadyMember ? "이미 가입한 회원" : "새 초대 요청"}</title>
         <link rel="icon" href="/infisical.ico" />
       </Helmet>
       <AuthPagePanel>
         <CardHeader className="mb-6 gap-2 text-center">
-          <CardTitle>
-            {isAlreadyMember ? "Invite already accepted" : "Your invite has expired"}
-          </CardTitle>
+          <CardTitle>{isAlreadyMember ? "이미 수락한 초대" : "초대가 만료되었습니다."}</CardTitle>
           <CardDescription>
-            {isAlreadyMember
-              ? "You're already a member of this organization."
-              : "Ask your administrator to send you a new invitation."}
+            {isAlreadyMember ? "이미 이 조직의 회원입니다." : "관리자에게 새 초대를 요청하세요."}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button asChild variant="project" size="lg" isFullWidth>
-            <Link to="/login">Go to Login</Link>
+            <Link to="/login">로그인으로 이동</Link>
           </Button>
         </CardContent>
       </AuthPagePanel>

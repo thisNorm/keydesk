@@ -35,10 +35,10 @@ const createSchema = (passwordPolicy: TPasswordPolicy) =>
   z
     .object({
       password: createPasswordSchema(passwordPolicy),
-      confirmPassword: z.string().min(1, "Please confirm your password")
+      confirmPassword: z.string().min(1, "비밀번호를 다시 입력하세요.")
     })
     .refine(({ confirmPassword, password }) => confirmPassword === password, {
-      message: "Passwords do not match",
+      message: "비밀번호가 일치하지 않습니다.",
       path: ["confirmPassword"]
     });
 
@@ -78,7 +78,7 @@ export const PasswordSetupPage = () => {
     if (latestBreachStatus === "breached") {
       setError("password", {
         type: "validate",
-        message: "This password was found in a known data breach."
+        message: "알려진 유출 기록에서 발견된 비밀번호입니다."
       });
       return;
     }
@@ -88,8 +88,8 @@ export const PasswordSetupPage = () => {
       setIsRedirecting(true);
       createNotification({
         type: "success",
-        title: "Password successfully set",
-        text: "Redirecting to login..."
+        title: "비밀번호를 설정했습니다.",
+        text: "로그인 화면으로 이동 중..."
       });
 
       setTimeout(() => {
@@ -110,8 +110,8 @@ export const PasswordSetupPage = () => {
       <form className="w-full" onSubmit={handleSubmit(handleSetPassword)}>
         <AuthPagePanel>
           <CardHeader className="mb-6 gap-2">
-            <CardTitle>Set Password</CardTitle>
-            <CardDescription>Make sure to store your password somewhere safe.</CardDescription>
+            <CardTitle>비밀번호 설정</CardTitle>
+            <CardDescription>비밀번호를 안전한 곳에 보관하세요.</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <PasswordField
@@ -129,7 +129,7 @@ export const PasswordSetupPage = () => {
               contentClassName={isPasswordValidated ? "overflow-visible" : undefined}
             >
               <Field data-invalid={showDangerState && Boolean(errors.confirmPassword)}>
-                <FieldLabel htmlFor="password-setup-confirm-password">Confirm Password</FieldLabel>
+                <FieldLabel htmlFor="password-setup-confirm-password">비밀번호 확인</FieldLabel>
                 <InputGroup variant="outlined">
                   <InputGroupInput
                     {...register("confirmPassword")}
@@ -143,9 +143,7 @@ export const PasswordSetupPage = () => {
                     <InputGroupButton
                       onClick={() => setShowConfirmPassword((current) => !current)}
                       aria-label={
-                        showConfirmPassword
-                          ? "Hide password confirmation"
-                          : "Show password confirmation"
+                        showConfirmPassword ? "확인 비밀번호 숨기기" : "확인 비밀번호 표시"
                       }
                     >
                       {showConfirmPassword ? <EyeOff /> : <Eye />}
@@ -160,7 +158,9 @@ export const PasswordSetupPage = () => {
                       <X className="mt-0.5 size-3.5 shrink-0 text-danger" />
                     )}
                     <span className={doPasswordsMatch ? "text-muted" : "text-danger"}>
-                      {doPasswordsMatch ? "Passwords match" : "Passwords do not match"}
+                      {doPasswordsMatch
+                        ? "비밀번호가 일치합니다."
+                        : "비밀번호가 일치하지 않습니다."}
                     </span>
                   </div>
                 </AnimatedCollapse>
@@ -177,7 +177,7 @@ export const PasswordSetupPage = () => {
               isFullWidth
               isPending={isLoading}
             >
-              Submit
+              확인
             </Button>
           </CardContent>
         </AuthPagePanel>

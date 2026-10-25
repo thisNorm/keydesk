@@ -25,7 +25,7 @@ export const SignupPreviewLayout = ({
         <Button asChild variant="outline" size="sm">
           <a href="https://infisical.com/docs" target="_blank" rel="noopener noreferrer">
             <BookOpen />
-            <span className="hidden sm:inline">Documentation</span>
+            <span className="hidden sm:inline">문서</span>
           </a>
         </Button>
       </AuthPageHeader>

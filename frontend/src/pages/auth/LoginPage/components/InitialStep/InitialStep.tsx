@@ -42,8 +42,8 @@ import { OrgLoginButton } from "../OrgLoginButton";
 import { SocialLoginButton } from "../SocialLoginButton";
 
 const loginFormSchema = z.object({
-  email: z.string().email("Please enter a valid email").min(1, "Email is required"),
-  password: z.string().min(1, "Password is required")
+  email: z.string().email("올바른 이메일 주소를 입력하세요.").min(1, "이메일을 입력하세요."),
+  password: z.string().min(1, "비밀번호를 입력하세요.")
 });
 
 type LoginFormData = z.infer<typeof loginFormSchema>;
@@ -202,12 +202,12 @@ export const InitialStep = ({ isAdmin }: Props) => {
       {
         method: LoginMethod.GITHUB,
         icon: faGithub,
-        label: "Continue with GitHub"
+        label: "GitHub로 계속"
       },
       {
         method: LoginMethod.GITLAB,
         icon: faGitlab,
-        label: "Continue with GitLab"
+        label: "GitLab으로 계속"
       }
     ] satisfies { method: SocialLoginMethod; icon: typeof faGoogle; label: string }[]
   ).filter(({ method }) => shouldDisplayLoginMethod(method));
@@ -255,8 +255,8 @@ export const InitialStep = ({ isAdmin }: Props) => {
   const handleLoginFailure = () => {
     setLoginError(true);
     const errorMessage = callbackPort
-      ? "CLI login unsuccessful. Double-check your credentials and try again."
-      : "Login unsuccessful. Double-check your credentials and try again.";
+      ? "CLI 로그인에 실패했습니다. 이메일과 비밀번호를 확인하고 다시 시도하세요."
+      : "로그인에 실패했습니다. 이메일과 비밀번호를 확인하고 다시 시도하세요.";
 
     createNotification({
       text: errorMessage,
@@ -324,7 +324,7 @@ export const InitialStep = ({ isAdmin }: Props) => {
         <AuthPagePanel>
           <CardHeader className="mb-8 gap-2">
             <CardTitle className="bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
-              Log in to Infisical
+              Infisical 로그인
             </CardTitle>
             <CardAction>
               <RegionSelect compact />
@@ -353,10 +353,10 @@ export const InitialStep = ({ isAdmin }: Props) => {
       <AuthPagePanel>
         <CardHeader className="mb-6 gap-2">
           <CardTitle className="ml-0.5 bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
-            Welcome back
+            로그인
           </CardTitle>
           <CardDescription className="ml-0.5 text-base">
-            {isAdmin ? "Sign in to the Super Admin console" : "Sign in to your Infisical account"}
+            {isAdmin ? "최고 관리자 화면에 로그인하세요." : "Infisical 계정에 로그인하세요."}
           </CardDescription>
           <CardAction>
             <RegionSelect compact />
@@ -380,7 +380,7 @@ export const InitialStep = ({ isAdmin }: Props) => {
                           aria-expanded={areMoreLoginOptionsVisible}
                           onClick={() => setAreMoreLoginOptionsVisible(true)}
                         >
-                          + {moreLoginOptionsCount} more options
+                          + {moreLoginOptionsCount} 가지 다른 로그인 방식
                         </Button>
                       </div>
                     </AnimatedCollapse>
@@ -420,7 +420,7 @@ export const InitialStep = ({ isAdmin }: Props) => {
                           aria-expanded={areSsoOptionsVisible}
                           onClick={() => setAreSsoOptionsVisible(true)}
                         >
-                          View SSO options
+                          SSO 로그인 방식 보기
                         </Button>
                       </AnimatedCollapse>
                       <AnimatedCollapse id="sso-login-options" isOpen={areSsoOptionsVisible}>
@@ -437,7 +437,7 @@ export const InitialStep = ({ isAdmin }: Props) => {
             </div>
           )}
           {hasButtonLoginMethod && shouldDisplayLoginMethod(LoginMethod.EMAIL) && (
-            <FieldSeparator>or</FieldSeparator>
+            <FieldSeparator>또는</FieldSeparator>
           )}
           {shouldDisplayLoginMethod(LoginMethod.EMAIL) && (
             <div className="flex w-full flex-col gap-4">
@@ -446,6 +446,7 @@ export const InitialStep = ({ isAdmin }: Props) => {
                 {...register("email", { onChange: () => setLoginError(false) })}
                 type="email"
                 id="email"
+                aria-label="이메일"
                 placeholder="you@company.com"
                 autoComplete="username"
                 className="h-10"
@@ -459,13 +460,14 @@ export const InitialStep = ({ isAdmin }: Props) => {
                     placeholder="••••••••"
                     autoComplete="current-password"
                     id="current-password"
+                    aria-label="비밀번호"
                     aria-invalid={(showDangerState && Boolean(errors.password)) || loginError}
                     aria-describedby={isLoginErrorVisible ? "login-credentials-error" : undefined}
                   />
                   <InputGroupAddon align="inline-end">
                     <InputGroupButton
                       onClick={() => setShowPassword((prev) => !prev)}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
                     >
                       {showPassword ? <EyeOff /> : <Eye />}
                     </InputGroupButton>
@@ -493,9 +495,9 @@ export const InitialStep = ({ isAdmin }: Props) => {
                 isDisabled={!isValid || (shouldShowCaptcha && captchaToken === "") || isLoading}
                 isPending={isLoading}
               >
-                Continue with Email
+                이메일로 로그인
                 {isLastUsedMethod(LoginMethod.EMAIL) && (
-                  <ButtonBadge variant="project">Last used</ButtonBadge>
+                  <ButtonBadge variant="project">최근 사용</ButtonBadge>
                 )}
               </Button>
             </div>
@@ -508,13 +510,13 @@ export const InitialStep = ({ isAdmin }: Props) => {
           shouldDisplayLoginMethod(LoginMethod.GITHUB) ||
           shouldDisplayLoginMethod(LoginMethod.GITLAB)) && (
           <div className="mt-3 flex items-center justify-center gap-1.5 text-sm">
-            <span className="text-label">Don&apos;t have an account?</span>
+            <span className="text-label">아직 계정이 없으신가요?</span>
             <Link
               to="/signup"
               search={{ callback_port: callbackPort ? Number(callbackPort) : undefined }}
               className="text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
             >
-              Sign up
+              계정 만들기
             </Link>
           </div>
         )}

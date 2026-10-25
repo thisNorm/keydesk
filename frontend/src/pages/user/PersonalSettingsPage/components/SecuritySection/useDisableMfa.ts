@@ -32,12 +32,12 @@ export const useDisableMfa = () => {
             queryClient.invalidateQueries({ queryKey: userKeys.getUser });
             queryClient.invalidateQueries({ queryKey: userKeys.mfaRecoveryCodes });
             createNotification({
-              text: "Two-factor authentication disabled",
+              text: "2단계 인증을 비활성화했습니다.",
               type: "success"
             });
             onDisabled?.();
           },
-          errorText: "Failed to disable two-factor authentication"
+          errorText: "2단계 인증을 비활성화하지 못했습니다."
         }
       ),
     [runWithMfa, queryClient]

@@ -25,7 +25,7 @@ import type { Submenu } from "./types";
 // --- Shared submenu definitions ---
 
 export const PROJECT_ACCESS_CONTROL_SUBMENU: Submenu = {
-  title: "Access Control",
+  title: "접근 권한",
   pathSuffix: "access-management",
   defaultTab: "members",
   activeMatch: /\/members\/|\/groups\/|\/identities\/|\/roles\//,
@@ -43,7 +43,7 @@ export const PROJECT_ACCESS_CONTROL_SUBMENU: Submenu = {
 };
 
 export const CERT_MANAGER_ACCESS_CONTROL_SUBMENU: Submenu = {
-  title: "Access Control",
+  title: "접근 권한",
   pathSuffix: "access-management",
   defaultTab: "members",
   activeMatch: /\/members\/|\/groups\/|\/identities\//,
@@ -60,15 +60,15 @@ export const CERT_MANAGER_ACCESS_CONTROL_SUBMENU: Submenu = {
 };
 
 export const SM_SETTINGS_SUBMENU: Submenu = {
-  title: "Settings",
+  title: "설정",
   pathSuffix: "settings",
   defaultTab: "tab-project-general",
   items: [
-    { label: "General", icon: Cog, tab: "tab-project-general" },
+    { label: "일반", icon: Cog, tab: "tab-project-general" },
     { label: "Environments", icon: Layers, tab: "tab-secret-environments" },
     { label: "Tags", icon: Tag, tab: "tab-secret-tags" },
     { label: "Policies", icon: Shield, tab: "tab-secret-policies" },
-    { label: "Encryption", icon: Lock, tab: "tab-project-encryption" },
+    { label: "암호화", icon: Lock, tab: "tab-project-encryption" },
     { label: "Workflow Integrations", icon: Plug, tab: "tab-workflow-integrations" },
     { label: "Webhooks", icon: Webhook, tab: "tab-project-webhooks" }
   ]
@@ -109,7 +109,7 @@ export const CERT_APPROVALS_SUBMENU: Submenu = {
 };
 
 export const CERT_INTEGRATIONS_SUBMENU: Submenu = {
-  title: "Integrations",
+  title: "연동",
   pathSuffix: "integrations",
   defaultTab: "app-connections",
   items: [
@@ -121,18 +121,18 @@ export const CERT_INTEGRATIONS_SUBMENU: Submenu = {
 // --- Secret scanning submenus ---
 
 export const SECRET_SCANNING_SETTINGS_SUBMENU: Submenu = {
-  title: "Settings",
+  title: "설정",
   pathSuffix: "settings",
   defaultTab: "general",
   items: [
-    { label: "General", icon: Cog, tab: "general" },
+    { label: "일반", icon: Cog, tab: "general" },
     { label: "Scanning Settings", icon: ScanSearch, tab: "scanning-settings" }
   ]
 };
 
 // With a single project there is no project to rename or delete, so General is left out.
 const SECRET_SCANNING_SINGLE_PROJECT_SETTINGS_SUBMENU: Submenu = {
-  title: "Settings",
+  title: "설정",
   pathSuffix: "settings",
   defaultTab: "scanning-settings",
   items: [{ label: "Scanning Settings", icon: ScanSearch, tab: "scanning-settings" }]

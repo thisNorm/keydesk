@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { formatDistanceStrict } from "date-fns";
+import { ko } from "date-fns/locale";
 import { AlertCircleIcon, ServerIcon } from "lucide-react";
 
 import { createNotification } from "@app/components/notifications";
@@ -32,11 +34,10 @@ import {
   TooltipTrigger
 } from "@app/components/v3";
 import { useGetMySessions, useRevokeMySessionById } from "@app/hooks/api";
-import { timeAgo } from "@app/lib/fn/date";
 import { formatSessionUserAgent } from "@app/lib/fn/string";
 
 const formatLocalDateTime = (date: Date): string => {
-  return date.toLocaleString(undefined, {
+  return date.toLocaleString("ko-KR", {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -60,13 +61,13 @@ export const SessionsTable = () => {
     try {
       await revokeMySessionById(sessionId);
       createNotification({
-        text: "Session signed out.",
+        text: "세션을 로그아웃했습니다.",
         type: "success"
       });
       setSessionToRevoke(null);
     } catch {
       createNotification({
-        text: "Failed to sign out session.",
+        text: "세션을 로그아웃하지 못했습니다.",
         type: "error"
       });
     }
@@ -76,11 +77,11 @@ export const SessionsTable = () => {
     return (
       <Alert variant="danger">
         <AlertCircleIcon />
-        <AlertTitle>Sessions could not be loaded</AlertTitle>
+        <AlertTitle>세션을 불러오지 못했습니다.</AlertTitle>
         <AlertDescription>
-          <p>Check your connection and try again.</p>
+          <p>연결 상태를 확인하고 다시 시도하세요.</p>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
-            Retry
+            다시 시도
           </Button>
         </AlertDescription>
       </Alert>
@@ -94,10 +95,8 @@ export const SessionsTable = () => {
           <EmptyMedia variant="icon">
             <ServerIcon />
           </EmptyMedia>
-          <EmptyTitle>No active sessions</EmptyTitle>
-          <EmptyDescription>
-            Browser and CLI sessions will appear here after you sign in.
-          </EmptyDescription>
+          <EmptyTitle>활성 세션이 없습니다.</EmptyTitle>
+          <EmptyDescription>로그인한 브라우저와 CLI 세션이 여기에 표시됩니다.</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -108,11 +107,11 @@ export const SessionsTable = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>IP and session ID</TableHead>
-            <TableHead>Device</TableHead>
-            <TableHead>Last accessed</TableHead>
+            <TableHead>IP 및 세션 ID</TableHead>
+            <TableHead>기기</TableHead>
+            <TableHead>최근 접속</TableHead>
             <TableHead className="w-px">
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">작업</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -136,7 +135,7 @@ export const SessionsTable = () => {
               <TableRow key={`session-${id}`}>
                 <TableCell className="h-auto py-2">
                   <div className="flex min-w-44 flex-col">
-                    <span className="text-sm leading-5 font-medium">{ip || "Unknown IP"}</span>
+                    <span className="text-sm leading-5 font-medium">{ip || "알 수 없는 IP"}</span>
                     <span
                       className="max-w-64 truncate font-mono text-xs leading-4 text-muted"
                       title={id}
@@ -148,10 +147,10 @@ export const SessionsTable = () => {
                 <TableCell className="h-auto py-2">
                   <div className="flex flex-col">
                     <span className="text-sm leading-5 font-medium">
-                      {os || "Unknown operating system"}
+                      {os || "알 수 없는 운영 체제"}
                     </span>
                     <span className="text-xs leading-4 text-muted">
-                      {browser || "Unknown browser"}
+                      {browser || "알 수 없는 브라우저"}
                     </span>
                   </div>
                 </TableCell>
@@ -164,7 +163,10 @@ export const SessionsTable = () => {
                           className="w-fit cursor-help rounded-sm bg-transparent p-0 text-left text-sm leading-5 font-medium focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                         >
                           <time dateTime={lastUsedDate.toISOString()}>
-                            {timeAgo(lastUsedDate, new Date())}
+                            {formatDistanceStrict(lastUsedDate, new Date(), {
+                              addSuffix: true,
+                              locale: ko
+                            })}
                           </time>
                         </button>
                       </TooltipTrigger>
@@ -177,7 +179,11 @@ export const SessionsTable = () => {
                           className="w-fit cursor-help rounded-sm bg-transparent p-0 text-left text-xs leading-4 text-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                         >
                           <time dateTime={createdAtDate.toISOString()}>
-                            Created {timeAgo(createdAtDate, new Date())}
+                            생성:{" "}
+                            {formatDistanceStrict(createdAtDate, new Date(), {
+                              addSuffix: true,
+                              locale: ko
+                            })}
                           </time>
                         </button>
                       </TooltipTrigger>
@@ -191,7 +197,7 @@ export const SessionsTable = () => {
                     size="xs"
                     onClick={() => setSessionToRevoke({ id, ip, browser })}
                   >
-                    Sign out
+                    로그아웃
                   </Button>
                 </TableCell>
               </TableRow>
@@ -206,17 +212,17 @@ export const SessionsTable = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Sign out this session?</AlertDialogTitle>
+            <AlertDialogTitle>이 세션을 로그아웃하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
               {sessionToRevoke
                 ? `The ${sessionToRevoke.browser || "unknown browser"} session from ${
                     sessionToRevoke.ip || "an unknown IP"
                   } will lose access to your account.`
-                : "This session will lose access to your account."}
+                : "이 세션의 계정 접근 권한이 해제됩니다."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel isDisabled={isRevoking}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel isDisabled={isRevoking}>취소</AlertDialogCancel>
             <AlertDialogAction
               isPending={isRevoking}
               onClick={(event) => {
@@ -224,7 +230,7 @@ export const SessionsTable = () => {
                 if (sessionToRevoke) handleSignOut(sessionToRevoke.id);
               }}
             >
-              Sign out
+              로그아웃
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

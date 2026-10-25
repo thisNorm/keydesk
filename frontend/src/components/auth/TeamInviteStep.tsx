@@ -87,7 +87,7 @@ export default function TeamInviteStep({
       if (data.grantFailures) {
         createNotification({
           type: "warning",
-          text: "Invites were sent, but some product access could not be granted. Grant access from each product's Access Control page."
+          text: "초대했지만 일부 기능의 접근 권한을 부여하지 못했습니다. 각 기능의 접근 권한 화면에서 권한을 부여하세요."
         });
       } else {
         createNotification({
@@ -119,7 +119,7 @@ export default function TeamInviteStep({
         <CardContent className="flex flex-col gap-4">
           <Field data-invalid={Boolean(validationError)}>
             <EmailInput
-              aria-label="Teammate emails"
+              aria-label="초대할 팀원의 이메일"
               aria-describedby="signup-invite-feedback"
               value={emails}
               isDisabled={isSending}
@@ -147,11 +147,11 @@ export default function TeamInviteStep({
           </Field>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Button variant="neutral" onClick={onBack} isDisabled={isSending}>
-              Back
+              이전
             </Button>
             <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
               <Button onClick={() => onComplete()} isDisabled={isSending} variant="ghost">
-                Skip for now
+                나중에 하기
               </Button>
               <Button
                 onClick={() => {
@@ -165,7 +165,7 @@ export default function TeamInviteStep({
                 isPending={isSending}
                 isDisabled={!emails.length && !draft.trim()}
               >
-                Send invites
+                초대 보내기
               </Button>
             </div>
           </div>

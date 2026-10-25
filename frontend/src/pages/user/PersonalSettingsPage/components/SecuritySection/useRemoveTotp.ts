@@ -30,10 +30,10 @@ export const useRemoveTotp = () => {
             queryClient.invalidateQueries({ queryKey: userKeys.totpConfiguration });
             queryClient.removeQueries({ queryKey: userKeys.totpRegistration });
             queryClient.invalidateQueries({ queryKey: userKeys.getUser });
-            createNotification({ text: "Authenticator app removed", type: "success" });
+            createNotification({ text: "인증 앱을 삭제했습니다.", type: "success" });
             onRemoved?.();
           },
-          errorText: "Failed to remove authenticator app"
+          errorText: "인증 앱을 삭제하지 못했습니다."
         }
       ),
     [runWithMfa, queryClient]

@@ -236,7 +236,7 @@
       "current-wrong": "The current password may be wrong",
       "new": "New password",
       "validate-base": "Password should contain:",
-      "validate-tooShort": "at least 14 characters",
+      "validate-tooShort": "at least 10 characters",
       "validate-tooLong": "at most 100 characters",
       "validate-noLetterChar": "at least 1 letter character",
       "validate-noNumOrSpecialChar": "at least 1 number or special character",

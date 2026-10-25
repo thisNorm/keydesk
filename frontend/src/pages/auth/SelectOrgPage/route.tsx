@@ -198,7 +198,7 @@ export const Route = createFileRoute("/_restrict-login-signup/login/select-organ
         await context.queryClient.refetchQueries({ queryKey: authKeys.getAuthToken });
         await context.queryClient.refetchQueries({ queryKey: adminQueryKeys.serverConfig() });
 
-        createNotification({ text: "Successfully logged in", type: "success" });
+        createNotification({ text: "로그인했습니다.", type: "success" });
 
         if (search.redirect_to?.startsWith(`/organizations/${targetOrgId}/`)) {
           throw redirect({ href: search.redirect_to });
@@ -212,7 +212,7 @@ export const Route = createFileRoute("/_restrict-login-signup/login/select-organ
         }
 
         throw redirect({
-          to: "/organizations/$orgId/projects",
+          to: "/organizations/$orgId/api-vault",
           params: { orgId: targetOrgId }
         });
       }

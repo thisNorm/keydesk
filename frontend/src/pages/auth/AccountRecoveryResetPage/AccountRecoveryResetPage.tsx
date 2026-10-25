@@ -56,7 +56,7 @@ export const AccountRecoveryResetPage = () => {
     handlePopUpToggle("confirmEnableEmailAuth", false);
     createNotification({
       type: "success",
-      text: "Email authentication has been enabled for your account."
+      text: "계정에 이메일 로그인을 활성화했습니다."
     });
   };
 
@@ -94,11 +94,11 @@ export const AccountRecoveryResetPage = () => {
       <ConfirmationAlertDialog
         isOpen={popUp.confirmEnableEmailAuth.isOpen}
         confirmKey="enable"
-        title="Enable Email Authentication"
+        title="이메일 로그인 활성화"
         description={`Do you want to enable email authentication for your account (${email})? This will allow you to log in using your email and password in the future.`}
         onOpenChange={(isOpen) => handlePopUpToggle("confirmEnableEmailAuth", isOpen)}
         onConfirm={handleEnableEmailAuth}
-        confirmLabel="Enable"
+        confirmLabel="활성화"
         confirmVariant="neutral"
       />
     </AuthPageLayout>

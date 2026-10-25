@@ -79,44 +79,44 @@ export const PasskeyManagerDialog = ({ isOpen, onOpenChange }: Props) => {
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
         <SheetContent side="right" className="flex flex-col gap-0 sm:max-w-lg">
           <SheetHeader className="border-b">
-            <SheetTitle>Manage passkeys</SheetTitle>
+            <SheetTitle>패스키 관리</SheetTitle>
             <SheetDescription>
-              Passkeys use Face ID, Touch ID, a security key, or your device to sign in.
+              패스키로 Face ID, Touch ID, 보안 키 또는 기기를 사용해 로그인할 수 있습니다.
             </SheetDescription>
           </SheetHeader>
 
           <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4">
             <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-end">
               <Field className="flex-1">
-                <FieldLabel htmlFor="new-passkey-name">Passkey name</FieldLabel>
+                <FieldLabel htmlFor="new-passkey-name">패스키 이름</FieldLabel>
                 <Input
                   id="new-passkey-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="New passkey name (optional)"
+                  placeholder="새 패스키 이름 (선택)"
                 />
               </Field>
               <Button variant="neutral" isPending={isRegistering} onClick={handleAdd}>
-                <PlusIcon /> Add
+                <PlusIcon /> 추가
               </Button>
             </div>
 
             {hasSecurityKeyCredential && (
               <Alert variant="warning">
                 <TriangleAlertIcon />
-                <AlertTitle>Using a hardware security key?</AlertTitle>
+                <AlertTitle>하드웨어 보안 키를 사용하나요?</AlertTitle>
                 <AlertDescription>
                   <p>
-                    Previously added security keys (like YubiKey) may use a signing algorithm that
-                    fails two-factor authentication on some instances. If signing in with your
-                    security key fails, remove it here and add it again.
+                    이전에 등록한 YubiKey 등의 보안 키는 일부 서버에서 2단계 인증에 실패하는 서명
+                    방식을 사용할 수 있습니다. 보안 키 로그인이 실패하면 여기에서 키를 삭제한 후
+                    다시 등록하세요.
                   </p>
                 </AlertDescription>
               </Alert>
             )}
 
             {isPending && (
-              <div className="flex flex-col gap-2" aria-label="Loading passkeys">
+              <div className="flex flex-col gap-2" aria-label="패스키를 불러오는 중">
                 <Skeleton className="h-16 w-full" />
                 <Skeleton className="h-16 w-full" />
               </div>
@@ -124,10 +124,10 @@ export const PasskeyManagerDialog = ({ isOpen, onOpenChange }: Props) => {
             {!isPending && isError && (
               <Alert variant="danger">
                 <TriangleAlertIcon />
-                <AlertTitle>Passkeys could not be loaded</AlertTitle>
+                <AlertTitle>패스키를 불러오지 못했습니다.</AlertTitle>
                 <AlertDescription>
                   <Button size="sm" variant="outline" onClick={() => refetch()}>
-                    Retry
+                    다시 시도
                   </Button>
                 </AlertDescription>
               </Alert>
@@ -136,7 +136,7 @@ export const PasskeyManagerDialog = ({ isOpen, onOpenChange }: Props) => {
               <div className="flex flex-col gap-2">
                 {credentials.length === 0 && (
                   <p className="rounded-lg border border-border bg-container p-4 text-center text-sm text-muted">
-                    No passkeys registered yet.
+                    등록한 패스키가 없습니다.
                   </p>
                 )}
                 {credentials.map((credential) => (
@@ -148,12 +148,12 @@ export const PasskeyManagerDialog = ({ isOpen, onOpenChange }: Props) => {
                       <FingerprintIcon className="text-muted" />
                       <div className="min-w-0">
                         <p className="truncate text-sm text-foreground">
-                          {credential.name || "Unnamed passkey"}
+                          {credential.name || "이름 없는 패스키"}
                         </p>
                         <p className="text-xs text-muted">
-                          Added {new Date(credential.createdAt).toLocaleDateString()}
+                          등록: {new Date(credential.createdAt).toLocaleDateString("ko-KR")}
                           {credential.lastUsedAt &&
-                            ` · Last used ${new Date(credential.lastUsedAt).toLocaleDateString()}`}
+                            ` · 최근 사용: ${new Date(credential.lastUsedAt).toLocaleDateString("ko-KR")}`}
                         </p>
                       </div>
                     </div>
@@ -164,11 +164,11 @@ export const PasskeyManagerDialog = ({ isOpen, onOpenChange }: Props) => {
                       onClick={() =>
                         setCredentialToRemove({
                           id: credential.id,
-                          name: credential.name || "Unnamed passkey"
+                          name: credential.name || "이름 없는 패스키"
                         })
                       }
                     >
-                      <TrashIcon /> Remove
+                      <TrashIcon /> 삭제
                     </Button>
                   </div>
                 ))}
@@ -184,13 +184,13 @@ export const PasskeyManagerDialog = ({ isOpen, onOpenChange }: Props) => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove passkey?</AlertDialogTitle>
+            <AlertDialogTitle>패스키를 삭제하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              {`"${credentialToRemove?.name}" will no longer be usable as a second factor. You can register it again at any time.`}
+              {`"${credentialToRemove?.name}" 패스키를 2단계 인증에 사용할 수 없게 됩니다. 언제든지 다시 등록할 수 있습니다.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel isDisabled={isRemoving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel isDisabled={isRemoving}>취소</AlertDialogCancel>
             <AlertDialogAction
               variant="danger"
               isPending={isRemoving}
@@ -199,7 +199,7 @@ export const PasskeyManagerDialog = ({ isOpen, onOpenChange }: Props) => {
                 handleDelete();
               }}
             >
-              Remove
+              삭제
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -31,9 +31,9 @@ export const useChangePreferredMfa = () => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.getUser });
-            createNotification({ text: "Updated preferred 2FA method", type: "success" });
+            createNotification({ text: "기본 2단계 인증 방식을 변경했습니다.", type: "success" });
           },
-          errorText: "Failed to update preferred method"
+          errorText: "기본 인증 방식을 변경하지 못했습니다."
         }
       ),
     [runWithMfa, queryClient]

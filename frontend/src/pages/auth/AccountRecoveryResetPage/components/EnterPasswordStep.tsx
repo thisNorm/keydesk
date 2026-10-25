@@ -26,10 +26,10 @@ const createSchema = (passwordPolicy: TPasswordPolicy) =>
   z
     .object({
       password: createPasswordSchema(passwordPolicy),
-      confirmPassword: z.string().min(1, "Please confirm your password")
+      confirmPassword: z.string().min(1, "비밀번호를 다시 입력하세요.")
     })
     .refine(({ confirmPassword, password }) => confirmPassword === password, {
-      message: "Passwords do not match",
+      message: "비밀번호가 일치하지 않습니다.",
       path: ["confirmPassword"]
     });
 
@@ -68,7 +68,7 @@ export const EnterPasswordStep = ({ verificationToken, onComplete, onBack }: Pro
     if (latestBreachStatus === "breached") {
       setError("password", {
         type: "validate",
-        message: "This password was found in a known data breach."
+        message: "알려진 유출 기록에서 발견된 비밀번호입니다."
       });
       return;
     }
@@ -91,10 +91,10 @@ export const EnterPasswordStep = ({ verificationToken, onComplete, onBack }: Pro
       className="mx-auto flex w-full max-w-md flex-col items-center justify-center gap-y-4"
     >
       <h1 className="bg-gradient-to-b from-foreground-inverse to-foreground-soft bg-clip-text text-center text-xl font-normal text-transparent">
-        Enter new password
+        새 비밀번호 입력
       </h1>
       <p className="w-max justify-center text-center text-sm text-muted-cool">
-        Make sure you save it somewhere safe.
+        비밀번호를 안전한 곳에 보관하세요.
       </p>
       <div className="mt-8 w-full">
         <PasswordField
@@ -114,7 +114,7 @@ export const EnterPasswordStep = ({ verificationToken, onComplete, onBack }: Pro
         contentClassName={isPasswordValidated ? "overflow-visible" : undefined}
       >
         <Field data-invalid={showDangerState && Boolean(errors.confirmPassword)}>
-          <FieldLabel htmlFor="account-recovery-confirm-password">Confirm Password</FieldLabel>
+          <FieldLabel htmlFor="account-recovery-confirm-password">비밀번호 확인</FieldLabel>
           <InputGroup variant="outlined">
             <InputGroupInput
               {...register("confirmPassword")}
@@ -127,9 +127,7 @@ export const EnterPasswordStep = ({ verificationToken, onComplete, onBack }: Pro
             <InputGroupAddon align="inline-end">
               <InputGroupButton
                 onClick={() => setShowConfirmPassword((current) => !current)}
-                aria-label={
-                  showConfirmPassword ? "Hide password confirmation" : "Show password confirmation"
-                }
+                aria-label={showConfirmPassword ? "확인 비밀번호 숨기기" : "확인 비밀번호 표시"}
               >
                 {showConfirmPassword ? <EyeOff /> : <Eye />}
               </InputGroupButton>
@@ -143,7 +141,7 @@ export const EnterPasswordStep = ({ verificationToken, onComplete, onBack }: Pro
                 <X className="mt-0.5 size-3.5 shrink-0 text-danger" />
               )}
               <span className={doPasswordsMatch ? "text-muted" : "text-danger"}>
-                {doPasswordsMatch ? "Passwords match" : "Passwords do not match"}
+                {doPasswordsMatch ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다."}
               </span>
             </div>
           </AnimatedCollapse>
@@ -158,12 +156,12 @@ export const EnterPasswordStep = ({ verificationToken, onComplete, onBack }: Pro
         isPending={isLoading}
         isDisabled={isLoading || breachStatus === "checking" || breachStatus === "breached"}
       >
-        Change Password
+        비밀번호 변경
       </Button>
       <div>
         <Button type="button" variant="ghost" className="mt-6 text-label" onClick={onBack}>
           <ChevronLeft className="mr-2 h-4 w-4" />
-          <span className="text-sm">Back to recovery options</span>
+          <span className="text-sm">복구 방법으로 돌아가기</span>
         </Button>
       </div>
     </form>

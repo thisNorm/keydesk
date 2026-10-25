@@ -84,7 +84,7 @@ export const NotificationDropdown = () => {
         }}
       >
         <DropdownMenuTrigger asChild>
-          <IconButton variant="outline" size="sm" aria-label="Notifications" className="relative">
+          <IconButton variant="outline" size="sm" aria-label="알림" className="relative">
             {unreadCount > 0 ? <BellIcon className="text-warning" /> : <Bell />}
             {unreadCount > 0 && (
               <span
@@ -97,7 +97,7 @@ export const NotificationDropdown = () => {
         <DropdownMenuContent
           align="end"
           side="bottom"
-          className="flex h-[550px] w-[400px] overflow-hidden p-0"
+          className="flex h-[min(550px,calc(100dvh-5rem))] w-[min(400px,calc(100vw-2rem))] overflow-hidden p-0"
           onInteractOutside={(e) => {
             if (isClearAllOpen) e.preventDefault();
           }}
@@ -105,10 +105,10 @@ export const NotificationDropdown = () => {
           <div className="flex w-full flex-col">
             <div className="flex items-center justify-between border-b border-border px-3 py-2">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-foreground">Notifications</span>
+                <span className="font-medium text-foreground">알림</span>
                 {hasCritical && (
                   <Badge variant="danger">
-                    {criticalCount > 99 ? "99+" : criticalCount} Critical
+                    긴급 {criticalCount > 99 ? "99+" : criticalCount}개
                   </Badge>
                 )}
               </div>
@@ -123,7 +123,7 @@ export const NotificationDropdown = () => {
                 }}
                 disabled={!notifications?.length || isClearingAll}
               >
-                {unreadCount > 0 ? "Mark all as read" : "Clear All"}
+                {unreadCount > 0 ? "모두 읽음으로 표시" : "모두 지우기"}
               </button>
             </div>
             <div className="flex h-full w-full overflow-auto">
@@ -135,9 +135,9 @@ export const NotificationDropdown = () => {
               {!isLoading && notifications?.length === 0 && (
                 <div className="flex h-full w-full flex-col items-center justify-center">
                   <Bell className="size-10 text-muted" />
-                  <span className="mt-4 text-sm text-accent">No new notifications</span>
+                  <span className="mt-4 text-sm text-accent">새 알림이 없습니다</span>
                   <span className="text-xs text-muted">
-                    We&apos;ll let you know when something important happens.
+                    새 소식과 확인할 항목을 여기에 표시합니다.
                   </span>
                 </div>
               )}
@@ -164,7 +164,7 @@ export const NotificationDropdown = () => {
                         setVisibleNotificationCount((count) => count + NOTIFICATIONS_PER_PAGE);
                       }}
                     >
-                      Show More
+                      더 보기
                     </DropdownMenuItem>
                   )}
                 </div>
@@ -185,15 +185,15 @@ export const NotificationDropdown = () => {
           }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle>Clear All Notifications?</AlertDialogTitle>
+            <AlertDialogTitle>알림을 모두 지울까요?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove all your read notifications for this organization, including account
-              notifications. This cannot be undone.
+              계정 알림을 포함해 이 조직에서 읽은 알림이 모두 삭제됩니다. 삭제한 알림은 되돌릴 수
+              없습니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel variant="outline" disabled={isClearingAll}>
-              Cancel
+              취소
             </AlertDialogCancel>
             <AlertDialogAction
               variant="danger"
@@ -205,7 +205,7 @@ export const NotificationDropdown = () => {
                 });
               }}
             >
-              Clear All
+              모두 지우기
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

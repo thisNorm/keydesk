@@ -30,27 +30,35 @@
   "common": {
     "head-title": "{{title}} | Infisical",
     "error_project-already-exists": "동일한 이름을 가진 프로젝트가 이미 존재해요.",
-    "email": "메일",
+    "email": "이메일",
     "password": "비밀번호",
     "first-name": "이름",
     "last-name": "성",
     "logout": "로그아웃",
     "validate-required": "{{name}} 을/를 입력하세요.",
-    "maintenance-alert": "We are experiencing minor technical difficulties. We are working on solving it right now. Please come back in a few minutes.",
+    "maintenance-alert": "일시적인 기술 문제가 발생했습니다. 복구 중이니 잠시 후 다시 접속해 주세요.",
     "click-to-copy": "클릭하여 복사하기",
     "project-id": "프로젝트 ID",
     "save-changes": "변경사항 저장하기",
     "saved": "저장됨",
-    "drop-zone": ".env 파일을 이곳에 드래그 & 드롭 하세요.",
-    "drop-zone-keys": "이곳에 .env 파일을 드래그 & 드롭 하여 더 많은 키들을 추가하세요.",
-    "role": "Role",
-    "role_admin": "admin",
+    "drop-zone": ".env, .json, .csv, .yml 파일을 여기에 끌어다 놓으세요.",
+    "drop-zone-keys": ".env, .json, .csv, .yml 파일을 여기에 끌어다 놓아 시크릿을 추가하세요.",
+    "role": "역할",
+    "role_admin": "관리자",
     "display-name": "표시 이름",
     "environment": "환경",
     "expired-in": "만료 기한:",
     "language": "언어",
     "search": "검색하기...",
-    "note": "Note"
+    "note": "메모",
+    "view-more": "더 보기",
+    "end-of-history": "기록 끝",
+    "select-event": "이벤트 선택",
+    "event": "이벤트",
+    "user": "사용자",
+    "source": "출처",
+    "time": "시간",
+    "timestamp": "기록 시각"
   },
   "dashboard": {
     "title": "시크릿",
@@ -71,16 +79,21 @@
       "line2": "코드와 연결하는 사용하는 방법을 한번 알아보지 않을래요?"
     },
     "sidebar": {
-      "secret": "Secret",
-      "key": "Key",
-      "value": "Value",
-      "override": "Override value with a personal value",
-      "version-history": "Version History",
-      "comments": "Comments & Notes",
-      "personal-explanation": "This secret is personal. It is not shared with any of your teammates.",
-      "generate-random-hex": "Generate Random Hex",
-      "digits": "digits"
-    }
+      "secret": "시크릿",
+      "key": "키",
+      "value": "값",
+      "override": "개인 값으로 덮어쓰기",
+      "version-history": "버전 기록",
+      "comments": "댓글 및 메모",
+      "personal-explanation": "본인만 볼 수 있는 개인 시크릿입니다.",
+      "generate-random-hex": "임의의 16진수 생성",
+      "digits": "자리",
+      "delete-key-dialog": {
+        "title": "키 삭제",
+        "confirm-delete-message": "이 시크릿을 삭제하시겠습니까? 삭제한 시크릿은 복구할 수 없습니다."
+      }
+    },
+    "add-secret": "새 시크릿 추가"
   },
   "integrations": {
     "available": "사용 가능한 연동",
@@ -90,21 +103,26 @@
     "no-integrations1": "연동된 서비스가 없어요. 연동하게 된다면 이곳에서 표시돼요.",
     "no-integrations2": "시작하려면, 아래의 옵션을 클릭하세요. 대체로 5분 이내로 가능해요.",
     "title": "프로젝트 연동",
-    "cloud-integrations": "Cloud Integrations",
-    "framework-integrations": "Framework Integrations",
-    "click-to-start": "Click on an integration to begin syncing secrets to it.",
-    "click-to-setup": "Click on a framework to get the setup instructions.",
-    "grant-access-to-secrets": "Grant Infisical access to your secrets",
-    "why-infisical-needs-access": "Most cloud integrations require Infisical to be able to decrypt your secrets so they can be forwarded over.",
-    "grant-access-button": "Grant access"
+    "cloud-integrations": "기본 연동",
+    "framework-integrations": "프레임워크 연동",
+    "click-to-start": "연동할 서비스를 선택해 시크릿 동기화를 시작하세요.",
+    "click-to-setup": "프레임워크를 선택해 설정 방법을 확인하세요.",
+    "grant-access-to-secrets": "Infisical에 시크릿 접근 권한 부여",
+    "why-infisical-needs-access": "대부분의 클라우드 연동은 시크릿을 외부 서비스로 전송하기 위해 Infisical의 복호화 권한이 필요합니다.",
+    "grant-access-button": "접근 권한 부여"
   },
   "login": {
     "title": "로그인",
     "og-title": "Infisical에 로그인하기",
-    "og-description": "Infisical a simple end-to-end encrypted platform that enables teams to sync and manage their .env files.",
+    "og-description": "Infisical은 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다.",
     "login": "로그인",
     "need-account": "Infisical계정이 필요하신가요?",
-    "create-account": "회원가입 하기"
+    "create-account": "회원가입 하기",
+    "forgot-password": "비밀번호를 잊으셨나요?",
+    "error-login": "이메일 또는 비밀번호가 올바르지 않습니다.",
+    "continue-with-google": "Google로 계속",
+    "continue-with-email": "이메일로 계속",
+    "other-option": "다른 방법으로 로그인"
   },
   "mfa": {
     "title": "회원가입",
@@ -117,7 +135,7 @@
     "step1-start": "시작하기",
     "step1-privacy": "회원가입시 약관과 개인 정보 보호 정책을 읽고 동의한 것으로 간주합니다.",
     "step1-submit": "시작하기",
-    "step2-message": "<email>{{email}}</email><wrapper>로 인증 메일을 전송하였습니다</wrapper><email>{{email}}</email>",
+    "step2-message": "다음 이메일로 인증 코드를 보냈습니다.",
     "step2-code-error": "코드가 잘못된 것 같아요. 남은 시도:",
     "step2-spam-alert": "스팸함에 메일이 있지는 않은지 확인하세요",
     "step3-message": "거의다 끝났어요!",
@@ -125,7 +143,14 @@
     "step4-description1": "계정이 잠겼을 경우 비상 키트를 사용하여 로그인할 수 있어요.",
     "step4-description2": "다운로드 후 안전한 곳에 보관하는 것을 추천합니다.",
     "step4-description3": "분실시 접근하거나 복구할 수 없는 시크릿 키가 포함되어 있어요.",
-    "step4-download": "PDF 다운로드"
+    "step4-download": "PDF 다운로드",
+    "step2-resend-alert": "인증 코드가 보이지 않나요?",
+    "step2-resend-submit": "다시 보내기",
+    "step2-resend-progress": "다시 보내는 중...",
+    "step5-send-invites": "초대 보내기",
+    "step5-invite-team": "팀원 초대",
+    "step5-subtitle": "함께 사용할 팀원을 초대하세요.",
+    "step5-skip": "건너뛰기"
   },
   "nav": {
     "support": {
@@ -182,7 +207,7 @@
       "new": "새 비밀번호",
       "current-wrong": "현재 비밀번호가 잘못되었어요",
       "validate-base": "비밀번호는 다음을 포함해야 합니다:",
-      "validate-tooShort": "최소 14자",
+      "validate-tooShort": "최소 10자",
       "validate-tooLong": "최대 100자",
       "validate-noLetterChar": "최소 1개의 문자를 포함해야 합니다.",
       "validate-noNumOrSpecialChar": "최소 1개의 숫자 또는 특수 문자를 포함해야 합니다.",
@@ -203,6 +228,19 @@
       "add-new": "새 토큰 추가하기",
       "service-tokens": "서비스 토큰",
       "service-tokens-description": "모든 서비스 토큰은 프로젝트 및 환경에 따라 다릅니다."
+    },
+    "api-key": {
+      "api-keys": "서비스 토큰",
+      "api-keys-description": "서비스 토큰은 허용된 프로젝트, 환경, 경로 내의 리소스에만 접근할 수 있습니다.",
+      "add-new": "새 토큰 추가",
+      "add-dialog": {
+        "title": "API 키 추가",
+        "description": "이름과 만료 기간을 지정하세요. 생성한 API 키는 한 번만 표시되므로 안전한 곳에 저장하세요.",
+        "name": "API 키 이름",
+        "add": "API 키 추가",
+        "copy-service-token": "API 키 복사",
+        "copy-service-token-description": "이 창을 닫으면 API 키를 다시 확인할 수 없습니다."
+      }
     }
   },
   "settings": {
@@ -223,7 +261,12 @@
         "text2": "오직 마지막으로 발급한 긴급복구 키트만 사용 가능해요. 새로운 긴급복구 키트를 받으려면, 비밀번호를 입력하세요.",
         "download": "긴급복구 키트 다운로드"
       },
-      "change-language": "언어 변경하기"
+      "change-language": "언어 변경하기",
+      "api-keys": {
+        "title": "API 키",
+        "description": "Infisical API에 접근할 개인 API 키를 관리하세요.",
+        "add-new": "새로 추가"
+      }
     },
     "project": {
       "title": "프로젝트 설정",
@@ -236,7 +279,13 @@
       "docs": "Infisical 문서",
       "project-id-description": "다른 코드에서 Infisical과 환경변수를 연동하기 위해서는 프로젝트 ID가 필요해요.",
       "project-id-description2": "다양한 언어 및 프레임워크에 대한 가이드를 확인하고 싶다면, 다음을 확인하세요. ",
-      "project-to-delete": "삭제할 프로젝트"
+      "project-to-delete": "삭제할 프로젝트",
+      "enforce-capitalization": "대문자 키 사용",
+      "enforce-capitalization-description": "시크릿 키에 대문자를 사용하도록 설정합니다. 여기에서 해제할 수 있습니다."
+    },
+    "webhooks": {
+      "title": "웹훅",
+      "description": "외부 서비스의 배포를 실행할 웹훅을 관리하세요."
     }
   },
   "signup": {
@@ -250,7 +299,7 @@
     "step1-start": "시작하기",
     "step1-privacy": "회원가입시 약관과 개인 정보 보호 정책을 읽고 동의한 것으로 간주합니다.",
     "step1-submit": "시작하기",
-    "step2-message": "<email>{{email}}</email><wrapper>로 인증 메일을 전송하였습니다</wrapper><email>{{email}}</email>",
+    "step2-message": "다음 이메일로 인증 코드를 보냈습니다.",
     "step2-code-error": "코드가 잘못된 것 같아요. 다시 시도해주세요.",
     "step2-code-error-tries": "잘못된 코드입니다. {{triesLeft}}번 더 시도할 수 있습니다.",
     "step2-code-error-tries-singular": "잘못된 코드입니다. 1번 더 시도할 수 있습니다.",
@@ -261,6 +310,39 @@
     "step4-description1": "계정이 잠겼을 경우 비상 키트를 사용하여 로그인할 수 있어요.",
     "step4-description2": "다운로드 후 안전한 곳에 보관하는 것을 추천합니다.",
     "step4-description3": "분실시 접근하거나 복구할 수 없는 시크릿 키가 포함되어 있어요.",
-    "step4-download": "PDF 다운로드"
+    "step4-download": "PDF 다운로드",
+    "next": "다음",
+    "initial-title": "Infisical 계정 만들기",
+    "continue-with-google": "Google로 계속",
+    "continue-with-email": "이메일로 계속",
+    "create-policy": "가입하면 이용 약관 및 개인정보 처리방침에 동의한 것으로 간주합니다.",
+    "product-updates-notice": "Infisical 제품 업데이트와 안내 이메일을 보낼 수 있습니다. 언제든지 수신을 거부할 수 있습니다.",
+    "step2-resend-alert": "인증 코드가 보이지 않나요?",
+    "step2-resend-submit": "다시 보내기",
+    "step2-resend-progress": "다시 보내는 중...",
+    "step5-send-invites": "초대 보내기",
+    "step5-invite-team": "팀원 초대",
+    "step5-subtitle": "함께 사용할 팀원을 초대하세요.",
+    "step5-skip": "건너뛰기"
+  },
+  "activity": {
+    "title": "감사 로그",
+    "subtitle": "이 Infisical 프로젝트의 이벤트 기록입니다.",
+    "event": {
+      "readSecrets": "시크릿 조회",
+      "updateSecrets": "시크릿 수정",
+      "addSecrets": "시크릿 추가",
+      "deleteSecrets": "시크릿 삭제"
+    },
+    "ip-address": "IP 주소"
+  },
+  "approval": {
+    "title": "관리자 패널",
+    "og-title": "시크릿 변경 관리",
+    "og-description": "Infisical은 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다."
+  },
+  "admin": {
+    "signup-title": "관리자 계정 만들기",
+    "dashboard": "관리자 대시보드"
   }
 }

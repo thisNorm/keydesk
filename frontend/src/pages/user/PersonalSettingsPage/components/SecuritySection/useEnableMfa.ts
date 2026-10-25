@@ -41,7 +41,7 @@ export const useEnableMfa = () => {
             queryClient.invalidateQueries({ queryKey: userKeys.mfaRecoveryCodes });
             onEnabled(recoveryCodes);
           },
-          errorText: "Failed to enable two-factor authentication"
+          errorText: "2단계 인증을 활성화하지 못했습니다."
         }
       ),
     [runWithMfa, queryClient]

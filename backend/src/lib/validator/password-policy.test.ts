@@ -16,9 +16,18 @@ describe("PasswordPolicySchema", () => {
     expect(PasswordPolicySchema.safeParse(validPassword).success).toBe(true);
   });
 
+  test.each(["Abcdefgh7!", "가나다라마바사아7!"])("accepts a ten-character password: %s", (password) => {
+    expect(Array.from(password)).toHaveLength(10);
+    expect(PasswordPolicySchema.safeParse(password).success).toBe(true);
+  });
+
+  test.each(["Abcdefg7!", "가나다라마바사7!"])("rejects a nine-character password: %s", (password) => {
+    expect(Array.from(password)).toHaveLength(9);
+    expect(PasswordPolicySchema.safeParse(password).success).toBe(false);
+  });
+
   test.each([
     "Short-7",
-    validPassword.slice(0, -2),
     "a".repeat(101),
     "12345678901234!",
     "abcdefghijklmn",
@@ -48,12 +57,12 @@ describe("PasswordPolicySchema", () => {
   });
 
   test("counts astral Unicode characters as single password characters", () => {
-    const fewerThanFourteenCodePoints = "😀😃😄😁😆😅1a";
+    const fewerThanTenCodePoints = "😀😃😄😁😆😅1a";
     const fewerThanOneHundredCodePoints = `${"😀😃".repeat(24)}😀Aa7`;
 
-    expect(Array.from(fewerThanFourteenCodePoints)).toHaveLength(8);
-    expect(fewerThanFourteenCodePoints).toHaveLength(14);
-    expect(PasswordPolicySchema.safeParse(fewerThanFourteenCodePoints).success).toBe(false);
+    expect(Array.from(fewerThanTenCodePoints)).toHaveLength(8);
+    expect(fewerThanTenCodePoints).toHaveLength(14);
+    expect(PasswordPolicySchema.safeParse(fewerThanTenCodePoints).success).toBe(false);
 
     expect(Array.from(fewerThanOneHundredCodePoints)).toHaveLength(52);
     expect(fewerThanOneHundredCodePoints.length).toBeGreaterThan(100);
@@ -65,12 +74,12 @@ describe("PasswordPolicySchema", () => {
     expect(PASSWORD_POLICY.requirements[1].flags).toBe("u");
   });
 
-  test("preserves the public validation error copy", () => {
+  test("returns the Korean minimum-length validation message", () => {
     const result = PasswordPolicySchema.safeParse("Short-7");
 
     expect(result.success).toBe(false);
     if (result.success) throw new Error("Expected password validation to fail");
-    expect(result.error.issues[0]?.message).toBe("Password must contain at least 14 characters");
+    expect(result.error.issues[0]?.message).toBe("비밀번호는 10자 이상이어야 합니다");
   });
 
   test.each([validPassword, "Short-7", "密码安全-7", "Password!!!!7"])(
@@ -92,6 +101,12 @@ describe("PasswordPolicySchema", () => {
 });
 
 describe("Pkcs12PasswordSchema", () => {
+  test("keeps the fourteen-character minimum for PKCS12 passwords", () => {
+    expect(Pkcs12PasswordSchema.safeParse("Abcdefgh7!").success).toBe(false);
+    expect(Pkcs12PasswordSchema.safeParse("Abcdefghijk7!").success).toBe(false);
+    expect(Pkcs12PasswordSchema.safeParse("Abcdefghijkl7!").success).toBe(true);
+  });
+
   test.each(["Horse-Battery-7", "Keystore#Pass9x", "密码安全密码安全密码安全-7"])(
     "accepts a strong password: %s",
     (password) => {

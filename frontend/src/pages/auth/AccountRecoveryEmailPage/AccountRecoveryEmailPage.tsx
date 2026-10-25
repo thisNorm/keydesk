@@ -57,13 +57,13 @@ export const AccountRecoveryEmailPage = () => {
   return (
     <AuthPageLayout variant="focused">
       <Helmet>
-        <title>Account Recovery</title>
+        <title>계정 복구</title>
         <link rel="icon" href="/infisical.ico" />
         <meta property="og:image" content="/images/message.png" />
-        <meta property="og:title" content="Account Recovery in Infisical" />
+        <meta property="og:title" content="Infisical 계정 복구" />
         <meta
           name="og:description"
-          content="Infisical a simple end-to-end encrypted platform that enables teams to sync and manage their .env files."
+          content="Infisical은 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다."
         />
       </Helmet>
       <div className="flex flex-col items-center">
@@ -71,20 +71,16 @@ export const AccountRecoveryEmailPage = () => {
           <form onSubmit={onSubmit} className="w-full">
             <AuthPagePanel>
               <CardHeader className="mb-6 gap-2">
-                <CardTitle className="font-alliance text-2xl font-normal">
-                  Recover your account
-                </CardTitle>
+                <CardTitle className="font-alliance text-2xl font-normal">계정 복구</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <p className="text-sm text-label">
-                  Enter your email to receive recovery instructions.
-                </p>
+                <p className="text-sm text-label">복구 안내를 받을 이메일을 입력하세요.</p>
                 <Input
                   variant="outlined"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
-                  placeholder="Enter your email..."
+                  placeholder="이메일 입력..."
                   required
                   autoComplete="username"
                   className="h-10"
@@ -108,13 +104,13 @@ export const AccountRecoveryEmailPage = () => {
                   isPending={loading}
                   isDisabled={requiresCaptcha && !captchaToken}
                 >
-                  Continue
+                  계속
                 </Button>
                 <Link
                   to="/login"
                   className="self-center text-sm text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
                 >
-                  Back to login
+                  로그인으로 돌아가기
                 </Link>
               </CardContent>
             </AuthPagePanel>
@@ -130,20 +126,19 @@ export const AccountRecoveryEmailPage = () => {
                 <MailCheck className="size-5" strokeWidth={1.75} />
               </div>
               <CardTitle className="justify-center text-center font-alliance text-2xl font-normal">
-                Check your inbox
+                이메일 확인
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
               <p className="text-sm text-label">
-                If an account exists for{" "}
-                <span className="font-medium text-foreground">{email}</span>, you&apos;ll receive
-                recovery instructions shortly.
+                다음 이메일의 계정이 존재하면 복구 안내를 보냅니다:{" "}
+                <span className="font-medium text-foreground">{email}</span>
               </p>
               <Link
                 to="/login"
                 className="self-center text-sm text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
               >
-                Back to login
+                로그인으로 돌아가기
               </Link>
             </CardContent>
           </AuthPagePanel>

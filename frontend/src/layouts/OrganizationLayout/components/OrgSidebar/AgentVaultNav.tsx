@@ -28,7 +28,7 @@ export const AgentVaultNav = ({ onSubmenuOpen }: { onSubmenuOpen: (submenu: Subm
   const { subscription } = useSubscription();
 
   const accessItems: NavItem[] = [
-    { label: "Sessions", icon: IdCard, pathSuffix: "sessions" },
+    { label: "세션", icon: IdCard, pathSuffix: "sessions" },
     { label: "Access Bundles", icon: Package, pathSuffix: "access-bundles" },
     { label: "Variables", icon: Braces, pathSuffix: "variables", hidden: !isAdmin }
   ];
@@ -48,13 +48,13 @@ export const AgentVaultNav = ({ onSubmenuOpen }: { onSubmenuOpen: (submenu: Subm
   const administrationItems: NavItem[] = isAdmin
     ? [
         {
-          label: "Access Control",
+          label: "접근 권한",
           icon: Shield,
           pathSuffix: "access-management",
           activeMatch: /\/access-management|\/groups\/|\/identities\/|\/members\/|\/roles\//
         },
-        { label: "Audit Logs", icon: FileText, pathSuffix: "audit-logs" },
-        { label: "Settings", icon: Settings, pathSuffix: "settings", alertVariant: settingsAlert }
+        { label: "감사 로그", icon: FileText, pathSuffix: "audit-logs" },
+        { label: "설정", icon: Settings, pathSuffix: "settings", alertVariant: settingsAlert }
       ]
     : [];
 
@@ -65,7 +65,7 @@ export const AgentVaultNav = ({ onSubmenuOpen }: { onSubmenuOpen: (submenu: Subm
         <ProjectNavList items={infrastructureItems} onSubmenuOpen={onSubmenuOpen} />
       </SidebarCollapsibleGroup>
       {administrationItems.length > 0 && (
-        <SidebarCollapsibleGroup label="Administration">
+        <SidebarCollapsibleGroup label="관리">
           <ProjectNavList items={administrationItems} onSubmenuOpen={onSubmenuOpen} />
         </SidebarCollapsibleGroup>
       )}

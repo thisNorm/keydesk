@@ -41,12 +41,12 @@ type TOrganizationForm = z.infer<typeof organizationSchema>;
 
 const stepContent = {
   [BootstrapStep.Account]: {
-    title: "Create your Super Admin account",
-    description: "Use this account to manage your Infisical instance."
+    title: "최고 관리자 계정 만들기",
+    description: "이 계정으로 Infisical 서버를 관리하세요."
   },
   [BootstrapStep.Organization]: {
-    title: "Create your organization",
-    description: "Set up the first workspace for your projects, secrets, and team."
+    title: "조직 만들기",
+    description: "프로젝트와 시크릿을 보관할 첫 공간을 설정하세요."
   }
 } satisfies Record<BootstrapStep, { title: string; description: string }>;
 
@@ -101,14 +101,14 @@ export const SignUpPage = () => {
       const message = axios.isAxiosError<{ message?: string }>(error)
         ? error.response?.data?.message
         : undefined;
-      setFormError(message || "Unable to create the instance. Please try again.");
+      setFormError(message || "서버를 초기화하지 못했습니다. 다시 시도하세요.");
     }
   });
 
   return (
     <OnboardingPageLayout currentStep={activeStep + 1} totalSteps={4}>
       <Helmet>
-        <title>Set up your instance | Infisical</title>
+        <title>서버 초기 설정 | Infisical</title>
         <link rel="icon" href="/infisical.ico" />
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
@@ -136,8 +136,8 @@ export const SignUpPage = () => {
                   variant="outlined"
                   {...register("organizationName")}
                   id="admin-signup-organization"
-                  aria-label="Organization name"
-                  placeholder="Organization name"
+                  aria-label="조직 이름"
+                  placeholder="조직 이름"
                   autoComplete="organization"
                   autoFocus
                   isError={Boolean(errors.organizationName)}
@@ -153,10 +153,10 @@ export const SignUpPage = () => {
                   onClick={() => setActiveStep(BootstrapStep.Account)}
                 >
                   <ChevronLeft />
-                  Back
+                  이전
                 </Button>
                 <Button type="submit" variant="project" isPending={isPending}>
-                  Create organization
+                  조직 만들기
                 </Button>
               </div>
             </form>

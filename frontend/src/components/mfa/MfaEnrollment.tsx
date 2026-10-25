@@ -34,9 +34,9 @@ export const MfaEnrollment = ({ method, onComplete }: Props) => {
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-5 pt-4 pb-4">
       <div className="text-center">
-        <h2 className="text-xl font-normal text-foreground">Set up two-factor authentication</h2>
+        <h2 className="text-xl font-normal text-foreground">2단계 인증 설정</h2>
         <p className="mt-2 text-sm text-muted">
-          Your organization requires {MFA_METHOD_LABELS[method]} to be configured.
+          조직에서 {MFA_METHOD_LABELS[method]} 설정을 요구합니다.
         </p>
       </div>
 

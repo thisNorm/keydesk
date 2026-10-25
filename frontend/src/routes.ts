@@ -405,6 +405,7 @@ const pamAccessRoute = route(
 );
 
 const organizationRoutes = route("/organizations/$orgId", [
+  route("/api-vault", "organization/ApiVaultPage/route.tsx"),
   route("/projects", "organization/ProjectsPage/route.tsx"),
   route("/projects/$type", "organization/ProjectsPage/ProjectTypePage/route.tsx"),
   route("/projects/kms/kmip-servers", [

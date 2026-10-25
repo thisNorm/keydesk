@@ -62,7 +62,7 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
     if (latestBreachStatus === "breached") {
       setError("password", {
         type: "validate",
-        message: "This password was found in a known data breach."
+        message: "알려진 유출 기록에서 발견된 비밀번호입니다."
       });
       return;
     }
@@ -82,13 +82,13 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
         <div className="grid grid-cols-2 gap-4">
           <Field data-invalid={showDangerState && Boolean(errors.firstName)}>
             <FieldLabel className="sr-only" htmlFor="admin-signup-first-name">
-              First Name
+              이름
             </FieldLabel>
             <Input
               variant="outlined"
               {...register("firstName")}
               id="admin-signup-first-name"
-              placeholder="First Name"
+              placeholder="이름"
               autoComplete="given-name"
               isError={showDangerState && Boolean(errors.firstName)}
             />
@@ -98,13 +98,13 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
           </Field>
           <Field data-invalid={showDangerState && Boolean(errors.lastName)}>
             <FieldLabel className="sr-only" htmlFor="admin-signup-last-name">
-              Last Name
+              성
             </FieldLabel>
             <Input
               variant="outlined"
               {...register("lastName")}
               id="admin-signup-last-name"
-              placeholder="Last Name"
+              placeholder="성"
               autoComplete="family-name"
               isError={showDangerState && Boolean(errors.lastName)}
             />
@@ -115,14 +115,14 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
         </div>
         <Field data-invalid={showDangerState && Boolean(errors.email)}>
           <FieldLabel className="sr-only" htmlFor="admin-signup-email">
-            Email
+            이메일
           </FieldLabel>
           <Input
             variant="outlined"
             {...register("email")}
             id="admin-signup-email"
             type="email"
-            placeholder="Email"
+            placeholder="이메일"
             autoComplete="email"
             isError={showDangerState && Boolean(errors.email)}
           />
@@ -144,7 +144,7 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
           contentClassName={isPasswordValidated ? "overflow-visible" : undefined}
         >
           <Field data-invalid={showDangerState && Boolean(errors.confirmPassword)}>
-            <FieldLabel htmlFor="admin-signup-confirm-password">Confirm Password</FieldLabel>
+            <FieldLabel htmlFor="admin-signup-confirm-password">비밀번호 확인</FieldLabel>
             <InputGroup variant="outlined">
               <InputGroupInput
                 {...register("confirmPassword")}
@@ -157,11 +157,7 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
               <InputGroupAddon align="inline-end">
                 <InputGroupButton
                   onClick={() => setShowConfirmPassword((current) => !current)}
-                  aria-label={
-                    showConfirmPassword
-                      ? "Hide password confirmation"
-                      : "Show password confirmation"
-                  }
+                  aria-label={showConfirmPassword ? "확인 비밀번호 숨기기" : "확인 비밀번호 표시"}
                 >
                   {showConfirmPassword ? <EyeOff /> : <Eye />}
                 </InputGroupButton>
@@ -175,7 +171,7 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
                   <X className="mt-0.5 size-3.5 shrink-0 text-danger" />
                 )}
                 <span className={doPasswordsMatch ? "text-muted" : "text-danger"}>
-                  {doPasswordsMatch ? "Passwords match" : "Passwords do not match"}
+                  {doPasswordsMatch ? "비밀번호가 일치합니다." : "비밀번호가 일치하지 않습니다."}
                 </span>
               </div>
             </AnimatedCollapse>
@@ -193,7 +189,7 @@ export const AdminSignUpForm = ({ defaultValues, onContinue }: AdminSignUpFormPr
         isPending={isSubmitting}
         isDisabled={!canSubmit}
       >
-        Continue
+        계속
       </Button>
     </form>
   );

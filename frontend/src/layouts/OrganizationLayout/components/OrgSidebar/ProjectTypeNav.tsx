@@ -59,7 +59,7 @@ export const ProjectTypeNav = () => {
           className="cursor-pointer hover:bg-foreground/[0.025]"
         >
           <ChevronLeft />
-          <span>Organization</span>
+          <span>조직</span>
         </Link>
       </SidebarGroupLabel>
       <SidebarMenu>
@@ -75,14 +75,14 @@ export const ProjectTypeNav = () => {
               !isOnSecretManagementInsights &&
               !isOnProductSettings
             }
-            tooltip="Projects"
+            tooltip="프로젝트"
           >
             <Link
               to="/organizations/$orgId/projects/$type"
               params={{ orgId: resolvedOrgId, type: typeSlug ?? "" }}
             >
               <ProjectIcon className="size-4" />
-              <span>Projects</span>
+              <span>프로젝트</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

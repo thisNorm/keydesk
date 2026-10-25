@@ -76,7 +76,7 @@ const OrgCard = forwardRef<HTMLButtonElement, OrgCardProps>(
             <span className="block text-sm leading-relaxed text-muted">
               {label}
               {label && joinedAt && " · "}
-              {joinedAt && <>Member since {format(new Date(joinedAt), "MMM d, yyyy")}</>}
+              {joinedAt && <>Member since {format(new Date(joinedAt), "yyyy.MM.dd")}</>}
             </span>
           )}
         </span>
@@ -258,7 +258,7 @@ export const SelectOrgPage = () => {
         await handleLogout();
         return;
       }
-      const message = error?.response?.data?.message || "Failed to select organization.";
+      const message = error?.response?.data?.message || "조직을 선택하지 못했습니다.";
       createNotification({ text: message, type: "error" });
       return;
     }
@@ -279,7 +279,7 @@ export const SelectOrgPage = () => {
       let error: string | null = null;
 
       if (!user?.email) error = "User email not found";
-      if (!token) error = "No token found";
+      if (!token) error = "토큰이 없습니다.";
 
       if (error) {
         createNotification({ text: error, type: "error" });
@@ -304,7 +304,7 @@ export const SelectOrgPage = () => {
       navigate({ to: "/cli-redirect", search: { org_id: targetOrgId } });
     } else {
       setAuthToken(token);
-      createNotification({ text: "Successfully logged in", type: "success" });
+      createNotification({ text: "로그인했습니다.", type: "success" });
       if (redirectTo?.startsWith(`/organizations/${targetOrgId}/`)) {
         navigate({ href: redirectTo });
       } else {
@@ -350,7 +350,7 @@ export const SelectOrgPage = () => {
     }
 
     if (filteredOrgs.length === 0) {
-      return <p className="py-4 text-center text-sm text-muted">No organizations found</p>;
+      return <p className="py-4 text-center text-sm text-muted">조직이 없습니다.</p>;
     }
 
     const isSearching = Boolean(searchTerm.trim());
@@ -418,7 +418,7 @@ export const SelectOrgPage = () => {
         <OrgCard
           ref={rootOrgCardRef}
           name={selectedRootOrg.name}
-          label="Root organization"
+          label="최상위 조직"
           joinedAt={selectedRootOrg.userJoinedAt}
           onClick={() => handleSelectOrganization(selectedRootOrg)}
         />
@@ -426,7 +426,7 @@ export const SelectOrgPage = () => {
           Sub-organizations
         </p>
         {filteredSubOrgs.length === 0 ? (
-          <p className="py-4 text-center text-sm text-muted">No sub-organizations found</p>
+          <p className="py-4 text-center text-sm text-muted">하위 조직이 없습니다.</p>
         ) : (
           filteredSubOrgs.map((sub) => (
             <OrgCard
@@ -488,16 +488,16 @@ export const SelectOrgPage = () => {
       </Helmet>
       <AuthPagePanel>
         <VerificationCodeHeader
-          title="Choose your organization as"
+          title="로그인할 조직 선택:"
           recipient={user.username}
           action={
             <button
-              aria-label={`Sign out ${user.username}`}
+              aria-label={`${user.username} 로그아웃`}
               className="shrink-0 cursor-pointer text-sm text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
               onClick={handleLogout}
               type="button"
             >
-              Sign out
+              로그아웃
             </button>
           }
         />
@@ -510,10 +510,8 @@ export const SelectOrgPage = () => {
             <InputGroupInput
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={
-                selectedRootOrg ? "Search sub-organizations..." : "Search organizations..."
-              }
-              aria-label={selectedRootOrg ? "Search sub-organizations" : "Search organizations"}
+              placeholder={selectedRootOrg ? "하위 조직 검색..." : "조직 검색..."}
+              aria-label={selectedRootOrg ? "하위 조직 검색" : "조직 검색"}
             />
           </InputGroup>
 
@@ -546,7 +544,7 @@ export const SelectOrgPage = () => {
                                 setSearchTerm("");
                               }}
                             >
-                              All organizations
+                              모든 조직
                             </button>
                           </BreadcrumbLink>
                         </BreadcrumbItem>
@@ -572,7 +570,7 @@ export const SelectOrgPage = () => {
                   </div>
                 ) : (
                   <ScrollableContent
-                    aria-label="Your organizations"
+                    aria-label="내 조직"
                     edgeBehavior="fade"
                     outline={false}
                     containerClassName={listHeightClass}

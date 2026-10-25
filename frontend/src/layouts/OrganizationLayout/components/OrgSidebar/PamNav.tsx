@@ -34,7 +34,7 @@ export const PamNav = ({ onSubmenuOpen }: { onSubmenuOpen: (submenu: Submenu) =>
   ];
 
   const monitorItems: NavItem[] = [
-    ...(canViewSessions ? [{ label: "Sessions", icon: Video, pathSuffix: "sessions" }] : []),
+    ...(canViewSessions ? [{ label: "세션", icon: Video, pathSuffix: "sessions" }] : []),
     ...(isApprover
       ? [
           {
@@ -46,14 +46,14 @@ export const PamNav = ({ onSubmenuOpen }: { onSubmenuOpen: (submenu: Submenu) =>
           }
         ]
       : []),
-    ...(canViewAuditLogs ? [{ label: "Audit Logs", icon: FileText, pathSuffix: "audit-logs" }] : [])
+    ...(canViewAuditLogs ? [{ label: "감사 로그", icon: FileText, pathSuffix: "audit-logs" }] : [])
   ];
 
   const configureItems: NavItem[] = [
     ...(isProductAdmin
       ? [
           {
-            label: "Access Control",
+            label: "접근 권한",
             icon: Shield,
             pathSuffix: "access-management",
             activeMatch: /\/access-management|\/groups\/|\/identities\/|\/members\/|\/roles\//
@@ -66,7 +66,7 @@ export const PamNav = ({ onSubmenuOpen }: { onSubmenuOpen: (submenu: Submenu) =>
     <>
       <ProjectNavList items={accessItems} onSubmenuOpen={onSubmenuOpen} />
       {manageItems.length > 0 && (
-        <SidebarCollapsibleGroup label="Manage">
+        <SidebarCollapsibleGroup label="관리">
           <ProjectNavList items={manageItems} onSubmenuOpen={onSubmenuOpen} />
         </SidebarCollapsibleGroup>
       )}
@@ -76,7 +76,7 @@ export const PamNav = ({ onSubmenuOpen }: { onSubmenuOpen: (submenu: Submenu) =>
         </SidebarCollapsibleGroup>
       )}
       {configureItems.length > 0 && (
-        <SidebarCollapsibleGroup label="Configure">
+        <SidebarCollapsibleGroup label="설정">
           <ProjectNavList items={configureItems} onSubmenuOpen={onSubmenuOpen} />
         </SidebarCollapsibleGroup>
       )}

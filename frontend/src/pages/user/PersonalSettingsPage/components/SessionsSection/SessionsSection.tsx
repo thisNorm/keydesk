@@ -39,9 +39,9 @@ export const SessionsSection = () => {
     <>
       <Card className="gap-0 overflow-hidden p-0">
         <CardHeader className="p-6">
-          <CardTitle className="font-alliance">Sessions</CardTitle>
+          <CardTitle className="font-alliance">세션</CardTitle>
           <CardDescription>
-            Review browser and CLI sessions with access to your account.
+            계정에 접근할 수 있는 브라우저 및 CLI 세션을 확인하세요.
           </CardDescription>
         </CardHeader>
         <CardContent className="px-6 pb-6">
@@ -49,7 +49,7 @@ export const SessionsSection = () => {
         </CardContent>
         <CardFooter className="min-h-8 justify-end border-t border-neutral/15 bg-neutral/5 p-4">
           <Button variant="neutral" size="sm" onClick={() => setIsRevokeAllOpen(true)}>
-            Sign out everywhere
+            모든 기기에서 로그아웃
           </Button>
         </CardFooter>
       </Card>
@@ -60,14 +60,13 @@ export const SessionsSection = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Sign out everywhere?</AlertDialogTitle>
+            <AlertDialogTitle>모든 기기에서 로그아웃하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              This signs your account out of every browser and CLI, including this session. You will
-              need to sign in again.
+              현재 세션을 포함한 모든 브라우저와 CLI에서 로그아웃됩니다. 다시 로그인해야 합니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel isDisabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel isDisabled={isPending}>취소</AlertDialogCancel>
             <AlertDialogAction
               isPending={isPending}
               onClick={(event) => {
@@ -75,7 +74,7 @@ export const SessionsSection = () => {
                 onRevokeAllSessionsClick();
               }}
             >
-              Sign out everywhere
+              모든 기기에서 로그아웃
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

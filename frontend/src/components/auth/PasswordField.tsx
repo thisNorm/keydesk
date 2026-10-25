@@ -38,7 +38,7 @@ export const PasswordField = ({
   policy,
   breachStatus,
   registration,
-  label = "Password",
+  label = "비밀번호",
   placeholder,
   error,
   submitCount,
@@ -82,7 +82,7 @@ export const PasswordField = ({
         <InputGroupAddon align="inline-end">
           <InputGroupButton
             onClick={() => setShowPassword((current) => !current)}
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </InputGroupButton>
@@ -107,20 +107,21 @@ export const PasswordField = ({
           ))}
           {breachStatus === "checking" && (
             <FieldDescription className="flex items-center gap-2">
-              <LoaderCircle className="size-3.5 animate-spin" /> Checking known data breaches…
+              <LoaderCircle className="size-3.5 animate-spin" /> 알려진 유출 기록 확인 중…
             </FieldDescription>
           )}
           {breachStatus === "safe" && (
             <FieldDescription className="flex items-center gap-2 text-success">
-              <Check className="size-3.5" /> No known data breach matches found.
+              <Check className="size-3.5" /> 알려진 유출 기록에서 일치하는 비밀번호를 찾지
+              못했습니다.
             </FieldDescription>
           )}
           {breachStatus === "breached" && (
-            <FieldError>This password was found in a known data breach.</FieldError>
+            <FieldError>알려진 유출 기록에서 발견된 비밀번호입니다.</FieldError>
           )}
           {breachStatus === "unavailable" && (
             <FieldDescription>
-              Breach check unavailable. Other requirements still apply.
+              유출 여부를 확인할 수 없습니다. 다른 비밀번호 조건은 충족해야 합니다.
             </FieldDescription>
           )}
         </div>

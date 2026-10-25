@@ -83,3 +83,12 @@ __pycache__
 # Local Codex design QA artifacts
 /.design-qa/
 /design-qa.md
+
+# Personal machine configuration and credentials
+/.local/
+/compose.personal.yml
+/Start-Infisical.cmd
+/Stop-Infisical.cmd
+/Status-Infisical.cmd
+/Fix-Docker-Windows.cmd
+/Infisical-CLI.cmd

@@ -130,7 +130,7 @@ export const Route = createFileRoute("/_restrict-login-signup")({
         });
       }
       throw redirect({
-        to: "/organizations/$orgId/projects",
+        to: "/organizations/$orgId/api-vault",
         params: { orgId }
       });
     }

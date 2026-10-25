@@ -25,14 +25,12 @@ export const PersonalSettingsPage = () => {
         className="mb-6 inline-flex items-center gap-2 rounded-sm text-sm text-muted transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       >
         <ArrowLeftIcon className="size-4" />
-        Back to organization
+        보관함으로 돌아가기
       </Link>
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="grid gap-1">
-          <h1 className="font-alliance text-2xl font-normal text-foreground">Personal Settings</h1>
-          <p className="text-sm text-muted">
-            Manage your profile, authentication, and active sessions.
-          </p>
+          <h1 className="font-alliance text-2xl font-normal text-foreground">개인 설정</h1>
+          <p className="text-sm text-muted">프로필, 인증 방식, 활성 세션을 관리하세요.</p>
         </div>
         {!window.location.origin.includes("https://app.infisical.com") &&
           !window.location.origin.includes("https://gamma.infisical.com") && <WishForm />}

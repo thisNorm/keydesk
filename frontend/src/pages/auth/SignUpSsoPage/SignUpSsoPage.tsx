@@ -73,7 +73,7 @@ export const SignupSsoPage = () => {
     }
 
     createNotification({
-      text: "Successfully verified",
+      text: "인증했습니다.",
       type: "success"
     });
 
@@ -88,7 +88,7 @@ export const SignupSsoPage = () => {
         });
       } else if (organizationId) {
         navigate({
-          to: "/organizations/$orgId/projects",
+          to: "/organizations/$orgId/api-vault",
           params: { orgId: organizationId }
         });
       } else {
@@ -111,12 +111,12 @@ export const SignupSsoPage = () => {
       await sendEmailVerificationCode(token);
       resendDelay.restartDelay();
       createNotification({
-        text: "Successfully resent code",
+        text: "코드를 다시 보냈습니다.",
         type: "success"
       });
     } catch {
       createNotification({
-        text: "Failed to resend code",
+        text: "코드를 다시 보내지 못했습니다.",
         type: "error"
       });
     }
@@ -127,7 +127,7 @@ export const SignupSsoPage = () => {
       headerAction={
         <Button asChild variant="outline" size="sm">
           <Link to="/login" search={{ callback_port: callbackPort }}>
-            Log In
+            로그인
           </Link>
         </Button>
       }
@@ -142,7 +142,7 @@ export const SignupSsoPage = () => {
       <div className="mx-auto flex w-full flex-col items-center justify-center">
         <AuthPagePanel>
           <VerificationCodeHeader
-            title="We've sent a verification code to"
+            title="다음 이메일로 인증 코드를 보냈습니다."
             recipient={decoded.email}
           />
           <CardContent>
@@ -154,7 +154,7 @@ export const SignupSsoPage = () => {
               isPending={completeAccountSignup.isPending}
               error={
                 completeAccountSignup.isError
-                  ? "Oops. Your code is wrong. Please try again."
+                  ? "올바르지 않은 인증 코드입니다. 다시 시도하세요."
                   : undefined
               }
             >

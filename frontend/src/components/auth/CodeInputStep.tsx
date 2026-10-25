@@ -139,12 +139,12 @@ export default function CodeInputStep({
           recipient={email}
           action={
             <button
-              aria-label={`Change email address from ${email}`}
+              aria-label={`${email} 이메일 주소 변경`}
               className="shrink-0 cursor-pointer text-sm text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
               onClick={onChangeEmail}
               type="button"
             >
-              Change
+              변경
             </button>
           }
         />
@@ -159,7 +159,9 @@ export default function CodeInputStep({
           >
             {isCaptchaVisible && envConfig.CAPTCHA_SITE_KEY && (
               <div className="flex flex-col gap-2">
-                <p className="text-sm text-label">Complete the captcha to resend your code.</p>
+                <p className="text-sm text-label">
+                  코드를 다시 보내려면 보안 문자 인증을 완료하세요.
+                </p>
                 <div className="flex justify-center [&>div]:!w-full">
                   <HCaptcha
                     theme="dark"

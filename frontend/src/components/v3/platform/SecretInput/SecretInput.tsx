@@ -12,6 +12,15 @@ import { getInvisibleCharacterSummary, splitSuspiciousCharacters } from "./invis
 
 const REGEX = /(\${([@a-zA-Z0-9-_. ]+)})/g;
 
+const INVISIBLE_CHARACTER_LABELS: Record<string, string> = {
+  "Bidirectional control": "양방향 제어 문자",
+  "Control character": "제어 문자",
+  "Unicode space": "유니코드 공백",
+  "Line separator": "줄 구분 문자",
+  "Paragraph separator": "문단 구분 문자",
+  "Formatting character": "서식 문자"
+};
+
 const markInvisibleChars = (text: string, chunkKey: number) => {
   const nodes: ReactNode[] = [];
   let offset = 0;
@@ -57,11 +66,11 @@ const syntaxHighlight = (
 ) => {
   if (isLoadingValue) return HIDDEN_SECRET_VALUE;
   if (isErrorLoadingValue)
-    return <span className="ph-no-capture text-danger/75">Error loading secret value.</span>;
-  if (isImport && !content) return "EMPTY";
+    return <span className="ph-no-capture text-danger/75">비밀값을 불러오지 못했습니다.</span>;
+  if (isImport && !content) return "비어 있음";
   if (placeholder && (content === "" || !content)) return placeholder;
-  if (content === "") return "EMPTY";
-  if (!content) return "EMPTY";
+  if (content === "") return "비어 있음";
+  if (!content) return "비어 있음";
   if (!isVisible) return isMaskedPerCharacter ? maskPerCharacter(content) : HIDDEN_SECRET_VALUE;
 
   let skipNext = false;
@@ -286,7 +295,7 @@ export const SecretInput = forwardRef<HTMLTextAreaElement, Props>(
           <textarea
             placeholder={placeholder}
             style={{ whiteSpace: "break-spaces" }}
-            aria-label="secret value"
+            aria-label="비밀값"
             ref={ref}
             className={cn(
               "no-scrollbar absolute inset-0 block h-full resize-none overflow-hidden bg-transparent text-transparent focus:border-0",
@@ -328,7 +337,7 @@ export const SecretInput = forwardRef<HTMLTextAreaElement, Props>(
           <Tooltip>
             <TooltipTrigger asChild>
               <IconButton
-                aria-label="Value contains invisible characters"
+                aria-label="보이지 않는 문자 포함"
                 variant="ghost"
                 size="xs"
                 className={cn(
@@ -341,11 +350,11 @@ export const SecretInput = forwardRef<HTMLTextAreaElement, Props>(
               </IconButton>
             </TooltipTrigger>
             <TooltipContent className="max-w-72">
-              <p>This value contains invisible characters that can break it when used:</p>
+              <p>사용할 때 오류가 발생할 수 있는 보이지 않는 문자가 포함되어 있습니다.</p>
               <ul className="mt-1 list-disc pl-4">
                 {invisibleChars.map(({ codePoint, label, count }) => (
                   <li key={codePoint}>
-                    {count}x {label} ({codePoint})
+                    {count}개 · {INVISIBLE_CHARACTER_LABELS[label] ?? label} ({codePoint})
                   </li>
                 ))}
               </ul>

@@ -89,7 +89,7 @@ export default function InitialSignupStep({
       } catch {
         createNotification({
           type: "error",
-          text: "Captcha verification failed. Please try again."
+          text: "보안 문자 인증에 실패했습니다. 다시 시도하세요."
         });
         captchaRef.current?.resetCaptcha();
         return;
@@ -126,11 +126,9 @@ export default function InitialSignupStep({
       <AuthPagePanel>
         <CardHeader className="mb-6 gap-2">
           <CardTitle className="ml-0.5 bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
-            Sign up
+            계정 만들기
           </CardTitle>
-          <CardDescription className="ml-0.5 text-base">
-            Create your Infisical account
-          </CardDescription>
+          <CardDescription className="ml-0.5 text-base">Infisical 계정 만들기</CardDescription>
           <CardAction>
             <RegionSelect compact />
           </CardAction>
@@ -139,15 +137,15 @@ export default function InitialSignupStep({
           <div className="flex w-full flex-col gap-2">
             {shouldDisplaySignupMethod(LoginMethod.GITHUB) && (
               <Button
-                aria-label="Continue with GitHub"
+                aria-label="GitHub로 계속"
                 variant="outline"
                 size="lg"
                 isFullWidth
                 onClick={() => handleSocialSignup(LoginMethod.GITHUB)}
               >
                 <FontAwesomeIcon icon={faGithub} />
-                Continue with GitHub
-                <ButtonBadge variant="project">Recommended</ButtonBadge>
+                GitHub로 계속
+                <ButtonBadge variant="project">권장</ButtonBadge>
               </Button>
             )}
             {shouldDisplaySignupMethod(LoginMethod.GOOGLE) && (
@@ -164,19 +162,19 @@ export default function InitialSignupStep({
             )}
             {shouldDisplaySignupMethod(LoginMethod.GITLAB) && (
               <Button
-                aria-label="Continue with GitLab"
+                aria-label="GitLab으로 계속"
                 variant="outline"
                 size="lg"
                 isFullWidth
                 onClick={() => handleSocialSignup(LoginMethod.GITLAB)}
               >
                 <FontAwesomeIcon icon={faGitlab} />
-                Continue with GitLab
+                GitLab으로 계속
               </Button>
             )}
           </div>
           {hasSsoSignupMethod && shouldDisplaySignupMethod(LoginMethod.EMAIL) && (
-            <FieldSeparator>or</FieldSeparator>
+            <FieldSeparator>또는</FieldSeparator>
           )}
           {shouldDisplaySignupMethod(LoginMethod.EMAIL) && (
             <div className="flex w-full flex-col gap-4">
@@ -212,20 +210,20 @@ export default function InitialSignupStep({
                 isDisabled={!isEmailValid || isPending || isCaptchaPending || !isCaptchaReady}
                 isPending={isPending || isCaptchaPending}
               >
-                Continue with Email
+                이메일로 계속
               </Button>
             </div>
           )}
         </CardContent>
       </AuthPagePanel>
       <div className="mt-3 flex items-center justify-center gap-1.5 text-sm">
-        <span className="text-label">Already have an account?</span>
+        <span className="text-label">이미 계정이 있나요?</span>
         <Link
           to="/login"
           search={{ callback_port: callbackPort }}
           className="text-foreground/95 underline decoration-project/60 underline-offset-2 transition-colors duration-200 hover:decoration-project"
         >
-          Log in
+          로그인
         </Link>
       </div>
     </div>

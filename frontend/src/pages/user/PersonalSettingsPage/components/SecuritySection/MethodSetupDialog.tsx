@@ -22,9 +22,9 @@ export const MethodSetupDialog = ({ method, onOpenChange, onCompleted }: Props) 
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {method ? `Set up ${MFA_METHOD_LABELS[method]}` : "Set up method"}
+            {method ? `Set up ${MFA_METHOD_LABELS[method]}` : "인증 방식 설정"}
           </DialogTitle>
-          <DialogDescription>Configure this method as a second factor.</DialogDescription>
+          <DialogDescription>이 방식을 2단계 인증으로 설정하세요.</DialogDescription>
         </DialogHeader>
         <div className="max-h-96 overflow-y-auto">
           {method && (

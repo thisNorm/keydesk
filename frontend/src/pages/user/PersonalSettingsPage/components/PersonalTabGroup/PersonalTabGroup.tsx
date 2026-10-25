@@ -21,9 +21,9 @@ type Props = {
 };
 
 const tabs = [
-  { name: "General", key: "general" },
-  { name: "Authentication", key: "authentication" },
-  { name: "API Keys", key: "api-keys", icon: TriangleAlertIcon }
+  { name: "일반", key: "general" },
+  { name: "인증", key: "authentication" },
+  { name: "Infisical API 키", key: "api-keys", icon: TriangleAlertIcon }
 ] satisfies { name: string; key: PersonalSettingsTab; icon?: typeof TriangleAlertIcon }[];
 
 export const PersonalTabGroup = ({ selectedTab, onTabChange }: Props) => {
@@ -33,7 +33,7 @@ export const PersonalTabGroup = ({ selectedTab, onTabChange }: Props) => {
       onValueChange={(value) => onTabChange(value as PersonalSettingsTab)}
       className="mt-8"
     >
-      <TabsList variant="filled" aria-label="Personal settings sections">
+      <TabsList variant="filled" aria-label="개인 설정 항목">
         {tabs.map(({ name, key, icon: Icon }) => (
           <TabsTrigger value={key} key={key}>
             {Icon && <Icon aria-hidden className="text-danger" />}
@@ -50,17 +50,17 @@ export const PersonalTabGroup = ({ selectedTab, onTabChange }: Props) => {
       <TabsContent value="api-keys">
         <Alert variant="danger">
           <KeyRoundIcon />
-          <AlertTitle>API key authentication is no longer supported</AlertTitle>
+          <AlertTitle>Infisical API 키 인증은 더 이상 지원하지 않습니다.</AlertTitle>
           <AlertDescription>
             <p>
-              Existing keys no longer authenticate requests. Use machine identities for programmatic
-              access. See the{" "}
+              기존 키로는 요청을 인증할 수 없습니다. 프로그램에서 접근하려면 머신 ID를 사용하세요.
+              다음 문서를 확인하세요:{" "}
               <a
                 href="https://infisical.com/docs/documentation/platform/identities/overview"
                 target="_blank"
                 rel="noreferrer"
               >
-                machine identities documentation <ExternalLinkIcon className="inline size-3" />
+                머신 ID 문서 <ExternalLinkIcon className="inline size-3" />
               </a>
               .
             </p>

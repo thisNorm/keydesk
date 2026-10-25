@@ -87,7 +87,7 @@ export const LoginSsoPage = ({ type }: Props) => {
           <CardHeader className="mb-6 gap-2">
             <div className="flex items-center gap-1.5">
               <IconButton
-                aria-label="Back to login"
+                aria-label="로그인으로 돌아가기"
                 variant="ghost-muted"
                 size="xs"
                 className="-ml-2"
@@ -103,7 +103,7 @@ export const LoginSsoPage = ({ type }: Props) => {
           <CardContent className="flex flex-col gap-4">
             {!organizationSlug && (
               <Field>
-                <FieldLabel htmlFor={`${type.toLowerCase()}-work-email`}>Work Email</FieldLabel>
+                <FieldLabel htmlFor={`${type.toLowerCase()}-work-email`}>이메일</FieldLabel>
                 <Input
                   variant="outlined"
                   id={`${type.toLowerCase()}-work-email`}

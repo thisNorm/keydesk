@@ -42,13 +42,13 @@ export const getPasswordRequirements = (password: string, policy: TPasswordPolic
 export const createPasswordSchema = (policy: TPasswordPolicy) =>
   z
     .string()
-    .min(1, "Password is required")
+    .min(1, "비밀번호를 입력하세요")
     .superRefine((password, context) => {
       policy.requirements.forEach((requirement) => {
         if (!doesPasswordMeetRequirement(password, requirement)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: requirement.message
+            message: requirement.validationMessage
           });
         }
       });

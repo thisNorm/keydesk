@@ -94,9 +94,9 @@ export const MFASection = () => {
     return (
       <Alert variant="danger">
         <CircleAlertIcon />
-        <AlertTitle>Two-factor authentication settings could not be loaded</AlertTitle>
+        <AlertTitle>2단계 인증 설정을 불러오지 못했습니다.</AlertTitle>
         <AlertDescription>
-          <p>Check your connection and try again.</p>
+          <p>연결 상태를 확인하고 다시 시도하세요.</p>
           <Button
             size="sm"
             variant="outline"
@@ -110,7 +110,7 @@ export const MFASection = () => {
               ])
             }
           >
-            Retry
+            다시 시도
           </Button>
         </AlertDescription>
       </Alert>
@@ -119,7 +119,7 @@ export const MFASection = () => {
 
   if (isPending || !user) {
     return (
-      <Card aria-label="Loading two-factor authentication settings">
+      <Card aria-label="2단계 인증 설정을 불러오는 중">
         <Skeleton className="h-6 w-64" />
         <Skeleton className="h-4 w-full max-w-2xl" />
         <Skeleton className="h-24 w-full" />
@@ -135,11 +135,9 @@ export const MFASection = () => {
             id="two-factor-authentication-title"
             className="font-alliance text-lg leading-none font-normal"
           >
-            Two-Factor Authentication
+            2단계 인증
           </h2>
-          <CardDescription>
-            Two-factor authentication is managed by your identity provider for LDAP accounts.
-          </CardDescription>
+          <CardDescription>LDAP 계정의 2단계 인증은 ID 공급자에서 관리합니다.</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -184,18 +182,18 @@ export const MFASection = () => {
         Two-Factor Authentication
         {user.isMfaEnabled ? (
           <Badge variant="success">
-            <ShieldCheckIcon /> Enabled
+            <ShieldCheckIcon /> 활성화됨
           </Badge>
         ) : (
           <Badge variant="danger">
-            <CircleAlertIcon /> Not enabled
+            <CircleAlertIcon /> 비활성화됨
           </Badge>
         )}
       </h2>
       <CardDescription>
         {user.isMfaEnabled
-          ? "Manage your methods and recovery options."
-          : "Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to sign in."}
+          ? "인증 방식과 복구 방법을 관리하세요."
+          : "로그인할 때 비밀번호 외에 추가 인증을 요청하여 계정을 보호합니다."}
       </CardDescription>
     </CardHeader>
   );
@@ -208,11 +206,11 @@ export const MFASection = () => {
             id="preferred-2fa-method-title"
             className="shrink-0 font-alliance text-sm font-normal"
           >
-            Preferred 2FA method
+            기본 2단계 인증 방식
           </h3>
           <Separator className="flex-1" />
         </div>
-        <CardDescription>Set the method used first when signing in to Infisical.</CardDescription>
+        <CardDescription>Infisical에 로그인할 때 먼저 사용할 방식을 설정하세요.</CardDescription>
       </CardHeader>
       <div className="max-w-xs">
         <Select
@@ -221,7 +219,7 @@ export const MFASection = () => {
           disabled={isChangingPreferred || availableMethods.length === 0}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a method" />
+            <SelectValue placeholder="방식 선택" />
           </SelectTrigger>
           <SelectContent>
             {availableMethods.map((method) => {
@@ -242,15 +240,14 @@ export const MFASection = () => {
   );
 
   let footerDescription =
-    "Set up an authenticator app or passkey below to enable two-factor authentication. Email codes are unavailable because SMTP is not configured for this instance.";
+    "아래에서 인증 앱이나 패스키를 설정한 후 2단계 인증을 활성화하세요. 이 서버는 SMTP가 설정되지 않아 이메일 코드를 사용할 수 없습니다.";
 
   if (user.isMfaEnabled) {
     footerDescription = isMfaEnforced
-      ? "Your organization requires two-factor authentication, so it can't be disabled."
-      : "Turning this off keeps your configured methods, but your recovery codes are invalidated.";
+      ? "조직에서 2단계 인증을 요구하므로 비활성화할 수 없습니다."
+      : "비활성화하면 설정한 인증 방식은 유지되지만 복구 코드는 무효화됩니다.";
   } else if (canEnable) {
-    footerDescription =
-      "Choose your preferred method above, then enable two-factor authentication.";
+    footerDescription = "위에서 기본 인증 방식을 선택한 다음 2단계 인증을 활성화하세요.";
   }
 
   const footer = (
@@ -265,7 +262,7 @@ export const MFASection = () => {
             isDisabled={isMfaEnforced}
             onClick={() => setIsDisableOpen(true)}
           >
-            <PowerIcon /> Disable 2FA
+            <PowerIcon /> 2단계 인증 비활성화
           </Button>
         ) : (
           <Button
@@ -273,7 +270,7 @@ export const MFASection = () => {
             isDisabled={isEnabling || !canEnable}
             onClick={() => setIsEnableOpen(true)}
           >
-            <ShieldCheckIcon /> Enable two-factor authentication
+            <ShieldCheckIcon /> 2단계 인증 활성화
           </Button>
         )}
       </div>
@@ -299,17 +296,16 @@ export const MFASection = () => {
       <AlertDialog open={isEnableOpen} onOpenChange={setIsEnableOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Enable two-factor authentication?</AlertDialogTitle>
+            <AlertDialogTitle>2단계 인증을 활성화하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              This turns on two-factor authentication using {MFA_METHOD_LABELS[selectedMethod]} as
-              your preferred method. You&apos;ll be shown a set of recovery codes to save right
-              after.
+              {MFA_METHOD_LABELS[selectedMethod]}을(를) 기본 방식으로 2단계 인증을 활성화합니다.
+              다음 화면에 표시되는 복구 코드를 저장하세요.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>취소</AlertDialogCancel>
             <AlertDialogAction variant="neutral" isPending={isEnabling} onClick={handleEnable}>
-              Enable
+              활성화
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -321,15 +317,15 @@ export const MFASection = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Disable two-factor authentication?</AlertDialogTitle>
+            <AlertDialogTitle>2단계 인증을 비활성화하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              You will first be asked to verify with MFA. After that, you will no longer be prompted
-              for a second factor when signing in. Your configured methods are kept, but your
-              current recovery codes are invalidated. Re-enabling issues a fresh set.
+              먼저 2단계 인증을 진행합니다. 이후 로그인할 때 추가 인증을 요청하지 않습니다. 설정한
+              인증 방식은 유지되지만 현재 복구 코드는 무효화됩니다. 다시 활성화하면 새 복구 코드가
+              발급됩니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel isDisabled={isDisabling}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel isDisabled={isDisabling}>취소</AlertDialogCancel>
             <AlertDialogAction
               variant="danger"
               isPending={isDisabling}
@@ -338,7 +334,7 @@ export const MFASection = () => {
                 handleDisable();
               }}
             >
-              Disable
+              비활성화
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -357,10 +353,10 @@ export const MFASection = () => {
           onEscapeKeyDown={(e) => !hasAcknowledgedCodes && e.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle>Save your recovery codes</DialogTitle>
+            <DialogTitle>복구 코드 저장</DialogTitle>
             <DialogDescription>
-              Store these somewhere safe. Each code can only be used once, and this is the only time
-              they are shown.
+              안전한 곳에 보관하세요. 각 코드는 한 번만 사용할 수 있으며 이 화면을 닫으면 다시 볼 수
+              없습니다.
             </DialogDescription>
           </DialogHeader>
           <div className="max-h-80 overflow-y-auto">
@@ -369,7 +365,7 @@ export const MFASection = () => {
               acknowledgment={{
                 isAcknowledged: hasAcknowledgedCodes,
                 onAcknowledgedChange: setHasAcknowledgedCodes,
-                confirmLabel: "Done",
+                confirmLabel: "완료",
                 onConfirm: closeRecoveryCodesDialog
               }}
             />

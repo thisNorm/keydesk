@@ -1,16 +1,15 @@
 import { ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 import { BookOpen } from "lucide-react";
 
 import { Button } from "@app/components/v3";
 import { cn } from "@app/components/v3/utils";
+import { PersonalBrand } from "@app/pages/organization/ApiVaultPage/PersonalBrand";
 
-import { AuthPageBackground } from "./AuthPageBackground";
 import { AuthPageFooter } from "./AuthPageFooter";
-import { AuthPageHeader } from "./AuthPageHeader";
 
 type Props = {
   anchorBottomContent?: boolean;
-  /** Per-step overrides for the marketing panel copy; the headline stays fixed. */
   aside?: {
     eyebrow?: ReactNode;
     description?: ReactNode;
@@ -40,7 +39,7 @@ export const AuthPageLayout = ({
   return (
     <div
       className={cn(
-        "min-h-screen bg-linear-to-r from-card to-page-deep to-75%",
+        "min-h-screen bg-page",
         isSplit &&
           "lg:grid lg:grid-cols-[minmax(440px,44%)_minmax(0,1fr)] xl:grid-cols-[minmax(520px,40%)_minmax(0,1fr)]"
       )}
@@ -53,7 +52,16 @@ export const AuthPageLayout = ({
           isSplit && "lg:border-r lg:border-border"
         )}
       >
-        <AuthPageHeader>{headerAction}</AuthPageHeader>
+        <header className="relative z-10 flex h-16 w-full shrink-0 items-center justify-between px-5 sm:px-8 lg:px-10 xl:px-14">
+          <Link
+            to="/"
+            aria-label="Keydesk 홈"
+            className="rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          >
+            <PersonalBrand />
+          </Link>
+          {headerAction && <div className="flex items-center gap-2">{headerAction}</div>}
+        </header>
         <main
           className={cn(
             "flex flex-1 px-5 pt-10 pb-26 sm:px-8 lg:px-10 xl:px-14",
@@ -80,9 +88,11 @@ export const AuthPageLayout = ({
       </section>
 
       {isSplit && (
-        <aside className="relative hidden h-screen min-w-0 overflow-hidden lg:sticky lg:top-0 lg:flex lg:flex-col">
-          <AuthPageBackground />
-          <div className="relative z-10 flex h-16 items-center justify-end px-8 xl:px-12">
+        <aside className="relative hidden h-screen min-w-0 overflow-hidden bg-background lg:sticky lg:top-0 lg:flex lg:flex-col">
+          <div className="flex h-16 items-center justify-between gap-4 px-8 xl:px-12">
+            <span className="font-mono text-[10px] tracking-[0.12em] text-muted">
+              KEYDESK / PERSONAL WORKSPACE
+            </span>
             <Button asChild variant="outline" size="sm">
               <a
                 href="https://infisical.com/docs"
@@ -91,27 +101,47 @@ export const AuthPageLayout = ({
                 onClick={onDocumentationClick}
               >
                 <BookOpen />
-                Documentation
+                Infisical 문서
               </a>
             </Button>
           </div>
 
-          <div className="relative z-10 flex flex-1 items-center justify-center px-10 pb-16 xl:px-20">
-            <div className="max-w-xl">
-              <p className="mb-4 font-mono text-xs tracking-[0.02em] text-project uppercase">
-                {aside?.eyebrow ?? "Trusted by 400,000+ developers"}
+          <div className="flex flex-1 items-center justify-center px-10 py-10 xl:px-20">
+            <div className="w-full max-w-md">
+              <p className="mb-4 text-xs text-muted">
+                {aside?.eyebrow ?? "나의 개발 도구, 나의 API 기록"}
               </p>
-              <h2 className="font-alliance text-3xl leading-tight font-normal text-foreground xl:text-4xl">
-                <span className="block">
-                  Security <span className="text-highlight">infrastructure</span>
-                </span>
-                <span className="block">for developers and agents</span>
+              <h2 className="font-alliance text-2xl leading-relaxed font-normal text-foreground">
+                키와 사용처를,
+                <br />
+                한곳에.
               </h2>
-              <p className="mt-4 max-w-lg font-sans text-sm leading-relaxed text-label xl:text-base">
+              <p className="mt-3 text-[13px] leading-7 text-label">
                 {aside?.description ??
-                  "One place to audit every credential your apps and agents use."}
+                  "어디서 발급했는지, 어떤 프로젝트에 쓰는지. 키를 다시 찾을 때 필요한 정보를 함께 기록하세요."}
               </p>
+              <dl className="mt-8 divide-y divide-border border-y border-border">
+                {[
+                  ["01", "발급 위치", "제공사 사이트 · 관리 콘솔 · API 문서"],
+                  ["02", "사용 맥락", "API 용도 · 사용 프로젝트 · 관리 메모"],
+                  ["03", "관리 상태", "인증 키 · 만료일 · 요금제와 한도"]
+                ].map(([number, title, description]) => (
+                  <div key={number} className="flex items-start gap-4 py-4">
+                    <span className="pt-0.5 font-mono text-[10px] text-muted" aria-hidden>
+                      {number}
+                    </span>
+                    <div className="flex flex-col gap-1">
+                      <dt className="text-[13px] text-foreground">{title}</dt>
+                      <dd className="text-xs leading-relaxed text-muted">{description}</dd>
+                    </div>
+                  </div>
+                ))}
+              </dl>
             </div>
+          </div>
+          <div className="flex items-center justify-between gap-4 px-8 py-6 text-[10px] text-muted xl:px-12">
+            <span className="font-mono">by Norm / thisNorm</span>
+            <span>Infisical 기반</span>
           </div>
         </aside>
       )}

@@ -138,14 +138,14 @@ export default function ProductSelectionStep({
         type: "error",
         text: failedProduct
           ? `Could not set up ${failedProduct}. Please try again.`
-          : "Could not finish setting up your organization. Please try again."
+          : "조직 설정을 완료하지 못했습니다. 다시 시도하세요."
       });
       setIsSettingUp(false);
     }
   };
 
   const continueLabel = (() => {
-    if (isExploring) return "Explore all products";
+    if (isExploring) return "모든 기능 보기";
     if (orderedSelection.length === 1) {
       return `Continue with ${getSignupProduct(orderedSelection[0])?.name}`;
     }
@@ -157,16 +157,16 @@ export default function ProductSelectionStep({
       <AuthPagePanel className="gap-6">
         <CardHeader className="gap-2">
           <CardTitle className="bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
-            What brings you to Infisical?
+            사용할 기능을 선택하세요.
           </CardTitle>
           <CardDescription className="text-sm text-label">
-            Choose the products you&apos;d like to start with. You can add more later.
+            먼저 사용할 기능을 선택하세요. 나중에 더 추가할 수 있습니다.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div
             role="group"
-            aria-label="Product selection"
+            aria-label="기능 선택"
             className="flex flex-col space-y-2 divide-y divide-border"
           >
             {SIGNUP_PRODUCTS.map((product) => {

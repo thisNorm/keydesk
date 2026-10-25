@@ -18,10 +18,10 @@ export const RecoveryCodesStep = ({ recoveryCodes, onSaved, acknowledgment }: Pr
     <>
       <Alert variant="warning">
         <TriangleAlertIcon />
-        <AlertTitle>Save your recovery codes</AlertTitle>
+        <AlertTitle>복구 코드 저장</AlertTitle>
         <AlertDescription>
-          Store these somewhere safe. Each code works once and lets you sign in if you lose access
-          to your other methods.
+          안전한 곳에 보관하세요. 각 코드는 한 번만 사용할 수 있으며 다른 인증 방식을 사용할 수 없을
+          때 로그인할 수 있습니다.
         </AlertDescription>
       </Alert>
       <RecoveryCodesView

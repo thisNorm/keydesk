@@ -1,0 +1,32 @@
+ARG UPSTREAM_IMAGE=infisical/infisical:v0.167.2@sha256:cb971a75043b6fafdc738e9ca6d4f8a09b4f979a60b2b9ade39af5e095bcc5fb
+
+FROM node:26.12.1-trixie-slim AS frontend-dependencies
+WORKDIR /app
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci --ignore-scripts
+
+FROM frontend-dependencies AS frontend-build
+COPY frontend/ ./
+ENV NODE_OPTIONS=--max-old-space-size=8192
+ENV VITE_INFISICAL_PLATFORM_VERSION=0.167.2-personal-ko
+RUN npm test
+RUN npm exec vite build && npm exec tsc -- -b
+
+FROM ${UPSTREAM_IMAGE} AS backend-build
+USER root
+WORKDIR /backend
+RUN npm install --prefix /opt/personal-build --no-save --ignore-scripts tsdown@0.23.0 \
+    && ln -s /opt/personal-build/node_modules/tsdown /backend/node_modules/tsdown
+COPY backend/src/ ./src/
+COPY backend/tsconfig.json backend/tsconfig.dev.json backend/tsdown.config.ts ./
+ENV NODE_OPTIONS=--max-old-space-size=8192
+RUN /opt/personal-build/node_modules/.bin/tsdown
+
+FROM ${UPSTREAM_IMAGE} AS personal
+USER root
+COPY --from=backend-build --chown=1001:1001 /backend/dist/ /backend/dist/
+COPY --from=frontend-build --chown=1001:1001 /app/dist/ /backend/frontend-build/
+ENV INFISICAL_PLATFORM_VERSION=0.167.2-personal-ko
+LABEL org.opencontainers.image.title="Keydesk - Infisical Personal Korean"
+LABEL org.opencontainers.image.version="0.167.2-personal-ko"
+USER 1001

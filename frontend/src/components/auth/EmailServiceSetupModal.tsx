@@ -20,20 +20,19 @@ export const EmailServiceSetupModal = ({ isOpen, onOpenChange }: Props) => (
     <DialogContent>
       <DialogHeader>
         <DialogTitle className="flex items-center gap-2">
-          Email Service Not Configured
+          이메일 서비스 미설정
           <DocumentationLinkBadge
             variant="minified"
             href="https://infisical.com/docs/self-hosting/configuration/envars#email-service"
           />
         </DialogTitle>
         <DialogDescription>
-          An instance administrator must configure an email service provider before this action can
-          run.
+          이 작업을 실행하려면 서버 관리자가 이메일 서비스를 먼저 설정해야 합니다.
         </DialogDescription>
       </DialogHeader>
       <DialogFooter>
         <DialogClose asChild>
-          <Button variant="outline">Close</Button>
+          <Button variant="outline">닫기</Button>
         </DialogClose>
       </DialogFooter>
     </DialogContent>

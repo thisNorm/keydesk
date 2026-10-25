@@ -16,7 +16,7 @@ export const WelcomePage = ({ organizationId }: Props) => {
   return (
     <AuthPageLayout variant="focused" contentClassName="max-w-xl">
       <Helmet>
-        <title>Instance ready | Infisical</title>
+        <title>서버 준비 완료 | Infisical</title>
         <link rel="icon" href="/infisical.ico" />
       </Helmet>
       <AuthPagePanel>
@@ -26,10 +26,10 @@ export const WelcomePage = ({ organizationId }: Props) => {
             <span aria-hidden="true" className="absolute -top-1.5 -right-1.5 size-2 bg-project" />
           </div>
           <CardTitle className="font-alliance text-3xl leading-tight font-normal">
-            Your instance is ready.
+            서버가 준비되었습니다.
           </CardTitle>
           <CardDescription className="mt-2 max-w-lg font-sans text-base leading-relaxed">
-            Choose where you want to go next:
+            이동할 화면을 선택하세요.
           </CardDescription>
         </CardHeader>
 
@@ -40,7 +40,7 @@ export const WelcomePage = ({ organizationId }: Props) => {
               className="group grid min-h-18 cursor-pointer grid-cols-[minmax(0,1fr)_auto] items-center rounded-md border border-project/30 bg-project/25 p-4 text-left text-foreground transition-all select-none hover:border-project/35 hover:bg-project/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-0 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-50"
               onClick={() =>
                 navigate({
-                  to: "/organizations/$orgId/projects",
+                  to: "/organizations/$orgId/api-vault",
                   params: { orgId: organizationId }
                 })
               }
@@ -49,11 +49,11 @@ export const WelcomePage = ({ organizationId }: Props) => {
                 <span className="flex items-start gap-2">
                   <Building2 className="size-5 text-foreground" />
                   <span className="font-sans text-base font-medium text-foreground">
-                    Go to dashboard
+                    보관함 열기
                   </span>
                 </span>
                 <span className="block text-sm leading-relaxed text-foreground/70">
-                  Create projects, manage secrets, and invite your team.
+                  프로젝트를 만들고 시크릿을 보관하세요.
                 </span>
               </span>
               <ArrowRight className="size-4 text-foreground/70 transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" />
@@ -68,11 +68,11 @@ export const WelcomePage = ({ organizationId }: Props) => {
                 <span className="flex items-start gap-2">
                   <ServerCog className="size-5 text-foreground" />
                   <span className="font-sans text-base font-medium text-foreground">
-                    Access server console
+                    서버 관리 화면 열기
                   </span>
                 </span>
                 <span className="block text-sm leading-relaxed text-label">
-                  Make fine-grained adjustments to the instance configuration.
+                  서버의 세부 설정을 변경하세요.
                 </span>
               </span>
               <ArrowRight className="size-4 text-label transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" />
@@ -80,7 +80,7 @@ export const WelcomePage = ({ organizationId }: Props) => {
           </div>
 
           <p className="border-t border-border pt-6 text-xs leading-relaxed text-label">
-            You can always access the Server Console later from the app navigation header.
+            서버 관리 화면은 나중에 상단 메뉴에서도 열 수 있습니다.
           </p>
         </CardContent>
       </AuthPagePanel>

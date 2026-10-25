@@ -33,7 +33,7 @@ interface AuthMethodOption {
 }
 
 const authMethodOpts: AuthMethodOption[] = [
-  { label: "Email", value: AuthMethod.EMAIL, icon: MailIcon, loginMethod: LoginMethod.EMAIL },
+  { label: "이메일", value: AuthMethod.EMAIL, icon: MailIcon, loginMethod: LoginMethod.EMAIL },
   { label: "Google", value: AuthMethod.GOOGLE, icon: ChromeIcon, loginMethod: LoginMethod.GOOGLE },
   { label: "GitHub", value: AuthMethod.GITHUB, icon: GithubIcon, loginMethod: LoginMethod.GITHUB },
   { label: "GitLab", value: AuthMethod.GITLAB, icon: GitlabIcon, loginMethod: LoginMethod.GITLAB }
@@ -90,7 +90,7 @@ export const AuthMethodSection = () => {
 
       setValue("authMethods", newUser.authMethods);
       createNotification({
-        text: `${authMethodOpt.label} authentication ${value ? "enabled" : "disabled"}.`,
+        text: `${authMethodOpt.label} 로그인을 ${value ? "활성화했습니다" : "비활성화했습니다"}.`,
         type: "success"
       });
     } catch {
@@ -101,9 +101,9 @@ export const AuthMethodSection = () => {
   return (
     <Card className="gap-0 overflow-hidden p-0">
       <CardHeader className="p-6">
-        <CardTitle className="font-alliance">Authentication Methods</CardTitle>
+        <CardTitle className="font-alliance">인증 방식</CardTitle>
         <CardDescription>
-          Choose which providers can sign in to your Infisical account using the same email address.
+          같은 이메일로 Infisical에 로그인할 수 있는 서비스를 선택하세요.
         </CardDescription>
       </CardHeader>
       <CardContent className="divide-y divide-border px-6 pb-6">
@@ -139,13 +139,13 @@ export const AuthMethodSection = () => {
                       {authMethodOpt.label}
                     </FieldLabel>
                     {currentAuthMethod === authMethodOpt.value && (
-                      <Badge variant="neutral">Current session</Badge>
+                      <Badge variant="neutral">현재 세션</Badge>
                     )}
                   </div>
                   <FieldDescription id={descriptionId} className="col-start-2 row-start-2 text-sm">
                     {isOnlyMethod
-                      ? "Keep at least one authentication method enabled."
-                      : `Allow sign-in with ${authMethodOpt.label}.`}
+                      ? "최소 하나의 로그인 방식을 활성화해야 합니다."
+                      : `${authMethodOpt.label} 로그인을 허용합니다.`}
                   </FieldDescription>
                 </FieldContent>
                 <Toggle

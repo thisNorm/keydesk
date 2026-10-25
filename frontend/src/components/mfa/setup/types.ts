@@ -5,7 +5,7 @@ import { MfaMethod } from "@app/hooks/api/auth/types";
 const MFA_METHOD_OPTIONS: { value: MfaMethod; label: string; icon: LucideIcon }[] = [
   {
     value: MfaMethod.TOTP,
-    label: "Authenticator app",
+    label: "인증 앱",
     icon: SmartphoneIcon
   },
   {
@@ -15,7 +15,7 @@ const MFA_METHOD_OPTIONS: { value: MfaMethod; label: string; icon: LucideIcon }[
   },
   {
     value: MfaMethod.WEBAUTHN,
-    label: "Passkey",
+    label: "패스키",
     icon: FingerprintIcon
   }
 ];

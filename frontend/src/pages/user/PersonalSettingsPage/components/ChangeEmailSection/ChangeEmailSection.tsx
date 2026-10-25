@@ -37,7 +37,7 @@ import { AuthMethod } from "@app/hooks/api/users/types";
 
 const emailSchema = z
   .object({
-    newEmail: z.string().email("Please enter a valid email")
+    newEmail: z.string().email("올바른 이메일 주소를 입력하세요.")
   })
   .required();
 
@@ -101,7 +101,7 @@ export const ChangeEmailSection = () => {
   const handleEmailSubmit = async ({ newEmail }: EmailFormData) => {
     if (newEmail.toLowerCase() === user?.email?.toLowerCase()) {
       createNotification({
-        text: "New email must be different from current email",
+        text: "현재 이메일과 다른 주소를 입력하세요.",
         type: "error"
       });
       return;
@@ -114,7 +114,7 @@ export const ChangeEmailSection = () => {
     setOtpStep("currentEmail");
 
     createNotification({
-      text: "Verification code sent to your current email address.",
+      text: "현재 이메일 주소로 인증 코드를 보냈습니다.",
       type: "success"
     });
   };
@@ -122,7 +122,7 @@ export const ChangeEmailSection = () => {
   const handleCurrentOtpSubmit = async () => {
     if (typedOTP.length !== 6) {
       createNotification({
-        text: "Please enter the complete 6-digit verification code",
+        text: "6자리 인증 코드를 모두 입력하세요.",
         type: "error"
       });
       return;
@@ -141,7 +141,7 @@ export const ChangeEmailSection = () => {
     setOtpStep("newEmail");
 
     createNotification({
-      text: "Confirmed. Check the inbox of your new email address to continue.",
+      text: "확인했습니다. 새 이메일의 받은 편지함에서 계속 진행하세요.",
       type: "success"
     });
   };
@@ -149,7 +149,7 @@ export const ChangeEmailSection = () => {
   const handleNewOtpSubmit = async () => {
     if (typedOTP.length !== 6) {
       createNotification({
-        text: "Please enter the complete 6-digit verification code",
+        text: "6자리 인증 코드를 모두 입력하세요.",
         type: "error"
       });
       return;
@@ -163,7 +163,7 @@ export const ChangeEmailSection = () => {
     }
 
     createNotification({
-      text: "Email updated successfully. You will be redirected to login.",
+      text: "이메일을 변경했습니다. 로그인 화면으로 이동합니다.",
       type: "success"
     });
 
@@ -179,10 +179,9 @@ export const ChangeEmailSection = () => {
   const otpRecipient = otpStep === "currentEmail" ? (user?.email ?? "") : pendingEmail;
   const otpDescription =
     otpStep === "currentEmail"
-      ? "Enter the 6-digit code sent to your current email."
-      : "Enter the 6-digit code sent to your new email.";
-  const otpTitle =
-    otpStep === "currentEmail" ? "Confirm from current email" : "Confirm from new email";
+      ? "현재 이메일로 보낸 6자리 코드를 입력하세요."
+      : "새 이메일로 보낸 6자리 코드를 입력하세요.";
+  const otpTitle = otpStep === "currentEmail" ? "현재 이메일로 확인" : "새 이메일로 확인";
   const isOtpSubmitLoading = otpStep === "currentEmail" ? isVerifyingCurrent : isUpdatingEmail;
   const onOtpSubmit = otpStep === "currentEmail" ? handleCurrentOtpSubmit : handleNewOtpSubmit;
 
@@ -191,9 +190,9 @@ export const ChangeEmailSection = () => {
       <form onSubmit={emailForm.handleSubmit(handleEmailSubmit)}>
         <Card className="gap-0 overflow-hidden p-0">
           <CardHeader className="p-6">
-            <CardTitle className="font-alliance">Change Email</CardTitle>
+            <CardTitle className="font-alliance">이메일 변경</CardTitle>
             <CardDescription>
-              Verify both your current and new email addresses. A successful change signs you out.
+              현재 이메일과 새 이메일을 모두 인증하세요. 변경하면 로그아웃됩니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="max-w-md px-6 pb-6">
@@ -202,19 +201,19 @@ export const ChangeEmailSection = () => {
               name="newEmail"
               render={({ field, fieldState: { error } }) => (
                 <Field data-invalid={Boolean(error)}>
-                  <FieldLabel htmlFor="new-email-address">New email address</FieldLabel>
+                  <FieldLabel htmlFor="new-email-address">새 이메일 주소</FieldLabel>
                   <Input
                     id="new-email-address"
                     {...field}
-                    placeholder="Enter new email address"
+                    placeholder="새 이메일 주소 입력"
                     type="email"
                     autoComplete="email"
                     aria-invalid={Boolean(error)}
                   />
                   <FieldDescription>
                     {hasEmailAuth
-                      ? "Email authentication remains enabled after the change."
-                      : "Email authentication will be enabled automatically. You can change it after signing in with your new email."}
+                      ? "변경 후에도 이메일 로그인을 사용할 수 있습니다."
+                      : "이메일 로그인이 자동으로 활성화됩니다. 새 이메일로 로그인한 후 변경할 수 있습니다."}
                   </FieldDescription>
                   <FieldError errors={[error]} />
                 </Field>
@@ -229,7 +228,7 @@ export const ChangeEmailSection = () => {
               isPending={isRequestingOTP}
               isDisabled={!isEmailValid(watchedEmail) || isOtpModalOpen}
             >
-              Send verification code
+              인증 코드 보내기
             </Button>
           </CardFooter>
         </Card>
@@ -264,9 +263,8 @@ export const ChangeEmailSection = () => {
           >
             {otpStep === "newEmail" && (
               <p className="text-center text-xs text-muted">
-                Didn&apos;t get a code? If the new address already belongs to another Infisical
-                account, we&apos;ve sent it an email explaining why the change can&apos;t be
-                completed.
+                코드를 받지 못했나요? 새 주소가 이미 다른 Infisical 계정에 사용 중이면 해당 주소로
+                변경할 수 없는 이유를 안내했습니다.
               </p>
             )}
             <DialogFooter>
@@ -276,7 +274,7 @@ export const ChangeEmailSection = () => {
                 onClick={closeOtpModal}
                 isDisabled={isOtpSubmitLoading}
               >
-                Cancel
+                취소
               </Button>
             </DialogFooter>
           </VerificationCodeForm>

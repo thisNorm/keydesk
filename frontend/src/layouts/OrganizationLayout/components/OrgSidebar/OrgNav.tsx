@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
-import { Blocks, CreditCard, FileText, Settings, Shield } from "lucide-react";
+import { Blocks, CreditCard, FileText, KeyRound, Settings, Shield } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { OrgIcon, SidebarCollapsibleGroup, SubOrgIcon } from "@app/components/v3";
@@ -41,16 +41,21 @@ export const OrgNav = () => {
 
   const groups: OrgNavGroup[] = [
     {
-      label: "General",
+      label: "일반",
       collapsible: false,
       items: [
         {
-          label: "Home",
+          label: "내 API 보관함",
+          icon: KeyRound,
+          pathSuffix: "api-vault"
+        },
+        {
+          label: "전체 프로젝트",
           icon: isRootOrganization ? OrgIcon : SubOrgIcon,
           pathSuffix: "projects"
         },
         {
-          label: "Integrations",
+          label: "연동",
           icon: Blocks,
           pathSuffix: "integrations",
           // Keep highlighted on the app-connections OAuth/manifest callback pages
@@ -59,22 +64,22 @@ export const OrgNav = () => {
       ]
     },
     {
-      label: "Administration",
+      label: "관리",
       items: [
         {
-          label: "Access Control",
+          label: "접근 권한",
           icon: Shield,
           pathSuffix: "access-management",
           activeMatch: /organizations\/[^/]+\/(members|identities|groups|roles)/
         },
         {
-          label: "Usage & Billing",
+          label: "사용량 및 결제",
           icon: CreditCard,
           pathSuffix: "billing",
           hidden: !isRootOrganization
         },
-        { label: "Audit Logs", icon: FileText, pathSuffix: "audit-logs" },
-        { label: "Settings", icon: Settings, pathSuffix: "settings", opensSubmenu: true }
+        { label: "감사 로그", icon: FileText, pathSuffix: "audit-logs" },
+        { label: "설정", icon: Settings, pathSuffix: "settings", opensSubmenu: true }
       ]
     }
   ];

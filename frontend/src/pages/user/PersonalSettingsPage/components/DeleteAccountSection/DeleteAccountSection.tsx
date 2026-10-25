@@ -39,7 +39,7 @@ export const DeleteAccountSection = () => {
       await deleteUserMutateAsync();
 
       createNotification({
-        text: "Account deleted.",
+        text: "계정을 삭제했습니다.",
         type: "success"
       });
 
@@ -47,7 +47,7 @@ export const DeleteAccountSection = () => {
       navigate({ to: "/login" });
     } catch {
       createNotification({
-        text: "Failed to delete account.",
+        text: "계정을 삭제하지 못했습니다.",
         type: "error"
       });
     }
@@ -57,16 +57,15 @@ export const DeleteAccountSection = () => {
     <>
       <Card className="gap-0 overflow-hidden border-danger/25 p-0">
         <CardHeader className="p-6">
-          <CardTitle className="font-alliance">Delete Account</CardTitle>
+          <CardTitle className="font-alliance">계정 삭제</CardTitle>
           <CardDescription>
-            Permanently delete your account and revoke its access to Infisical. This cannot be
-            undone.
+            계정을 영구 삭제하고 Infisical 접근 권한을 해제합니다. 이 작업은 되돌릴 수 없습니다.
           </CardDescription>
         </CardHeader>
         <CardFooter className="min-h-8 justify-end border-t border-danger/15 bg-danger/5 p-4">
           <Button variant="danger" size="sm" onClick={() => setIsOpen(true)}>
             <Trash2Icon />
-            Delete account
+            계정 삭제
           </Button>
         </CardFooter>
       </Card>
@@ -81,14 +80,14 @@ export const DeleteAccountSection = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+            <AlertDialogTitle>계정을 삭제하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              Your account will permanently lose access to Infisical. This cannot be undone.
+              계정이 Infisical에 영구적으로 접근할 수 없게 됩니다. 이 작업은 되돌릴 수 없습니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <Field>
             <FieldLabel htmlFor="delete-account-confirmation">
-              Type <span className="font-mono">{DELETE_CONFIRMATION}</span> to continue
+              유형 <span className="font-mono">{DELETE_CONFIRMATION}</span> to continue
             </FieldLabel>
             <Input
               id="delete-account-confirmation"
@@ -96,10 +95,10 @@ export const DeleteAccountSection = () => {
               onChange={(event) => setConfirmation(event.target.value)}
               autoComplete="off"
             />
-            <FieldDescription>This confirmation is case-sensitive.</FieldDescription>
+            <FieldDescription>대소문자를 구분합니다.</FieldDescription>
           </Field>
           <AlertDialogFooter>
-            <AlertDialogCancel isDisabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel isDisabled={isPending}>취소</AlertDialogCancel>
             <AlertDialogAction
               variant="danger"
               isPending={isPending}
@@ -109,7 +108,7 @@ export const DeleteAccountSection = () => {
                 handleDeleteAccountSubmit();
               }}
             >
-              Delete account
+              계정 삭제
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

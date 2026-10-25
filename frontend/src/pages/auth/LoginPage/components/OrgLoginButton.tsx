@@ -22,8 +22,8 @@ export const OrgLoginButton = ({
   <div className={cn("min-w-0 flex-1", className)}>
     <Button variant="outline" size="lg" isFullWidth onClick={onClick}>
       {showLabel && <FontAwesomeIcon icon={faLock} />}
-      {showLabel ? `Continue with ${label}` : label}
-      {showLastUsed && <ButtonBadge variant="project">Last used</ButtonBadge>}
+      {showLabel ? `${label}로 계속` : label}
+      {showLastUsed && <ButtonBadge variant="project">최근 사용</ButtonBadge>}
     </Button>
   </div>
 );
