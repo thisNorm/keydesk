@@ -62,10 +62,10 @@ const FORM_STEPS: FormStep[] = [
     key: "configuration",
     shortDescription: "Connection and schedule",
     title: "Configure the rotation",
-    subtitle: "Choose the connection and decide when Infisical should rotate these credentials.",
+    subtitle: "Choose the connection and decide when Keydesk should rotate these credentials.",
     rightLabel: "Configuration",
     rightDescription:
-      "The connection identifies the provider account. The schedule controls how often Infisical replaces its active credentials.",
+      "The connection identifies the provider account. The schedule controls how often Keydesk replaces its active credentials.",
     fields: [
       "isAutoRotationEnabled",
       "environment",
@@ -82,7 +82,7 @@ const FORM_STEPS: FormStep[] = [
     subtitle: "Choose the provider resource and configure how its credentials should be rotated.",
     rightLabel: "Parameters",
     rightDescription:
-      "These settings are specific to the selected provider and determine which account or resource Infisical manages.",
+      "These settings are specific to the selected provider and determine which account or resource Keydesk manages.",
     // @ts-expect-error temporary parameters are only present on rotations that need setup credentials
     fields: ["parameters", "temporaryParameters"]
   },
@@ -91,7 +91,7 @@ const FORM_STEPS: FormStep[] = [
     key: "secretsMapping",
     shortDescription: "Generated secret keys",
     title: "Map generated credentials",
-    subtitle: "Choose the Infisical secret keys that will receive each generated credential.",
+    subtitle: "Choose the Keydesk secret keys that will receive each generated credential.",
     rightLabel: "Mappings",
     rightDescription:
       "Each generated value is written to the mapped secret key in the selected environment and path.",

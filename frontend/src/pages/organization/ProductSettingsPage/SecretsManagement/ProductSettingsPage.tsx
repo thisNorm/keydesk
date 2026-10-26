@@ -78,8 +78,8 @@ export const ProductSettingsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Product Settings | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Product Settings | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <div>
         <div className="mx-auto w-full max-w-8xl bg-page text-foreground-inverse">

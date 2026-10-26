@@ -82,11 +82,11 @@ export const CriblProviderAuditLogStreamForm = ({ auditLogStream, onSubmit }: Pr
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
                     To derive your Stream URL: Obtain your Cribl hostname (e.g. cribl.example.com),
-                    Infisical HTTP data source port (e.g. 20000), and HTTP event API path (e.g.
+                    Keydesk HTTP data source port (e.g. 20000), and HTTP event API path (e.g.
                     /infisical).
                     <br />
                     <br />
-                    If your Infisical Data Source has TLS enabled, then use the https protocol.
+                    If your Keydesk Data Source has TLS enabled, then use the https protocol.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>

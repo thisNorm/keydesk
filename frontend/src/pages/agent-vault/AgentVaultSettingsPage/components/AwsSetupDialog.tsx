@@ -76,8 +76,8 @@ const Steps = ({ items }: { items: string[] }) => (
 
 export const HostBlockedMessage = ({ host }: { host: string }) => (
   <>
-    Your browser can&apos;t reach <span className="font-mono">{host}</span>, because this Infisical
-    instance doesn&apos;t allow it. Ask whoever runs Infisical to allow that host.
+    Your browser can&apos;t reach <span className="font-mono">{host}</span>, because this Keydesk
+    instance doesn&apos;t allow it. Ask whoever runs Keydesk to allow that host.
   </>
 );
 
@@ -142,8 +142,8 @@ export const AwsSetupDialog = ({
           <DialogTitle>AWS Setup</DialogTitle>
           <DialogDescription>
             {isUnsaved
-              ? "Saving with session logs on checks that Infisical can write to the bucket, so attach the IAM policy first. The CORS rule lets your browser read records back."
-              : "Two things to set up in AWS so Infisical can write records, and so your browser can read them back."}
+              ? "Saving with session logs on checks that Keydesk can write to the bucket, so attach the IAM policy first. The CORS rule lets your browser read records back."
+              : "Two things to set up in AWS so Keydesk can write records, and so your browser can read them back."}
           </DialogDescription>
         </DialogHeader>
 

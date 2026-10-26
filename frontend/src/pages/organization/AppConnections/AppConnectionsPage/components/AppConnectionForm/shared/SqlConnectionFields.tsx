@@ -45,8 +45,8 @@ export const SqlConnectionFields = ({
         className="mb-4"
       >
         <TabsList variant={scopeVariant}>
-          <TabsTrigger value={CONFIGURATION_TAB}>Configuration</TabsTrigger>
-          <TabsTrigger value={SSL_TAB}>SSL ({sslEnabled ? "Enabled" : "Disabled"})</TabsTrigger>
+          <TabsTrigger value={CONFIGURATION_TAB}>구성</TabsTrigger>
+          <TabsTrigger value={SSL_TAB}>SSL ({sslEnabled ? "켜짐" : "꺼짐"})</TabsTrigger>
         </TabsList>
         <TabsContent value={CONFIGURATION_TAB}>
           <div className="flex items-start gap-2">
@@ -55,7 +55,7 @@ export const SqlConnectionFields = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="flex-1">
-                  <FieldLabel htmlFor="sql-host">Host</FieldLabel>
+                  <FieldLabel htmlFor="sql-host">호스트</FieldLabel>
                   <Input
                     id="sql-host"
                     {...field}
@@ -71,7 +71,7 @@ export const SqlConnectionFields = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="flex-1">
-                  <FieldLabel htmlFor="sql-database">Database Name</FieldLabel>
+                  <FieldLabel htmlFor="sql-database">데이터베이스 이름</FieldLabel>
                   <Input
                     id="sql-database"
                     {...field}
@@ -87,7 +87,7 @@ export const SqlConnectionFields = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="w-28">
-                  <FieldLabel htmlFor="sql-port">Port</FieldLabel>
+                  <FieldLabel htmlFor="sql-port">포트</FieldLabel>
                   <Input
                     id="sql-port"
                     type="number"
@@ -106,7 +106,7 @@ export const SqlConnectionFields = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="flex-1">
-                  <FieldLabel htmlFor="sql-username">Username</FieldLabel>
+                  <FieldLabel htmlFor="sql-username">사용자 이름</FieldLabel>
                   <Input
                     id="sql-username"
                     {...field}
@@ -123,7 +123,7 @@ export const SqlConnectionFields = ({
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="flex-1">
                   <FieldLabel htmlFor="app-connection-sql-connection-fields-password">
-                    Password
+                    비밀번호
                   </FieldLabel>
                   <SecretInput
                     aria-describedby={
@@ -152,7 +152,7 @@ export const SqlConnectionFields = ({
               <Field className="mb-4">
                 <Field orientation="horizontal">
                   <FieldContent>
-                    <Label htmlFor="ssl-enabled">Enable SSL</Label>
+                    <Label htmlFor="ssl-enabled">SSL 사용</Label>
                   </FieldContent>
                   <Toggle
                     aria-invalid={Boolean(error)}
@@ -173,7 +173,7 @@ export const SqlConnectionFields = ({
             render={({ field, fieldState: { error } }) => (
               <Field className={sslEnabled ? "mb-4" : "mb-4 opacity-50"}>
                 <FieldLabel htmlFor="ssl-certificate">
-                  SSL Certificate <span className="text-muted">(optional)</span>
+                  SSL 인증서 <span className="text-muted">(선택 사항)</span>
                 </FieldLabel>
                 <TextArea
                   id="ssl-certificate"
@@ -193,10 +193,10 @@ export const SqlConnectionFields = ({
               <Field className={sslEnabled ? undefined : "opacity-50"}>
                 <Field orientation="horizontal">
                   <FieldContent>
-                    <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                    <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                     <FieldDescription>
-                      If enabled, Infisical will only connect to the server if it has a valid,
-                      trusted SSL certificate.
+                      켜면 서버가 유효하고 신뢰할 수 있는 SSL 인증서를 제공할 때만 Keydesk가
+                      연결합니다.
                     </FieldDescription>
                   </FieldContent>
                   <Toggle
@@ -222,10 +222,10 @@ export const SqlConnectionFields = ({
             <Field>
               <Field orientation="horizontal">
                 <FieldContent>
-                  <Label htmlFor="platform-managed">Platform Managed Credentials</Label>
+                  <Label htmlFor="platform-managed">플랫폼 관리 인증 정보</Label>
                   <FieldDescription>
-                    If enabled, Infisical will manage the credentials of this App Connection by
-                    updating the password on creation.
+                    켜면 연결 생성 시 Keydesk가 비밀번호를 변경하고 이 앱 연결의 인증 정보를
+                    관리합니다.
                   </FieldDescription>
                 </FieldContent>
                 <Toggle

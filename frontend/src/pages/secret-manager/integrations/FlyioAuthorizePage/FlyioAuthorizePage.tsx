@@ -86,7 +86,7 @@ export const FlyioAuthorizePage = () => {
           </CardTitle>
           <CardDescription>
             After adding your access token, you will be prompted to set up an integration for a
-            particular Infisical project and environment.
+            particular Keydesk project and environment.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>

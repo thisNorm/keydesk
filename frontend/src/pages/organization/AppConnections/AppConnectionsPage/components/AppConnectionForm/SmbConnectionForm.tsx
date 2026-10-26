@@ -45,43 +45,42 @@ const formSchema = genericAppConnectionFieldsSchema.extend({
     host: z
       .string()
       .trim()
-      .min(1, "Host required")
-      .max(SMB_VALIDATION_LIMITS.MAX_HOST_LENGTH, "Host too long")
+      .min(1, "호스트를 입력하세요")
+      .max(SMB_VALIDATION_LIMITS.MAX_HOST_LENGTH, "호스트가 너무 깁니다")
       .refine((val) => SMB_HOSTNAME_REGEX.test(val), {
-        message: "Host can only contain alphanumeric characters, dots, and hyphens"
+        message: "호스트에는 영문자, 숫자, 점, 하이픈만 사용할 수 있습니다"
       })
       .refine((val) => !val.startsWith("-") && !val.startsWith("."), {
-        message: "Host cannot start with a hyphen or period"
+        message: "호스트는 하이픈이나 점으로 시작할 수 없습니다"
       }),
-    port: z.coerce.number().int().min(1).max(65535, "Port must be between 1 and 65535"),
+    port: z.coerce.number().int().min(1).max(65535, "포트는 1~65535 사이여야 합니다"),
     domain: z
       .string()
       .trim()
-      .max(SMB_VALIDATION_LIMITS.MAX_DOMAIN_LENGTH, "Domain too long")
+      .max(SMB_VALIDATION_LIMITS.MAX_DOMAIN_LENGTH, "도메인이 너무 깁니다")
       .refine((val) => val === "" || SMB_DOMAIN_REGEX.test(val), {
-        message: "Domain can only contain alphanumeric characters, dots, hyphens, and underscores"
+        message: "도메인에는 영문자, 숫자, 점, 하이픈, 밑줄만 사용할 수 있습니다"
       })
       .refine((val) => val === "" || (!val.startsWith("-") && !val.startsWith(".")), {
-        message: "Domain cannot start with a hyphen or period"
+        message: "도메인은 하이픈이나 점으로 시작할 수 없습니다"
       })
       .optional(),
     username: z
       .string()
       .trim()
-      .min(1, "Username required")
-      .max(SMB_VALIDATION_LIMITS.MAX_ADMIN_USERNAME_LENGTH, "Username too long")
+      .min(1, "사용자 이름을 입력하세요")
+      .max(SMB_VALIDATION_LIMITS.MAX_ADMIN_USERNAME_LENGTH, "사용자 이름이 너무 깁니다")
       .refine((val) => SMB_USERNAME_REGEX.test(val), {
-        message:
-          "Username can only contain alphanumeric characters, underscores, hyphens, and periods"
+        message: "사용자 이름에는 영문자, 숫자, 밑줄, 하이픈, 점만 사용할 수 있습니다"
       })
       .refine((val) => !val.startsWith("-") && !val.startsWith(".") && !val.endsWith("."), {
-        message: "Username cannot start with a hyphen or period, and cannot end with a period"
+        message: "사용자 이름은 하이픈이나 점으로 시작할 수 없으며 점으로 끝날 수 없습니다"
       }),
     password: z
       .string()
-      .min(1, "Password required")
+      .min(1, "비밀번호를 입력하세요")
       .refine((val) => validateSmbPassword(val), {
-        message: "Password cannot contain: semicolons, spaces, quotes, or pipes"
+        message: "비밀번호에는 세미콜론, 공백, 따옴표, 파이프를 사용할 수 없습니다"
       })
   })
 });
@@ -147,15 +146,14 @@ export const SmbConnectionForm = ({ appConnection, onSubmit }: Props) => {
 
               return (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="gateway">Gateway</FieldLabel>
+                  <FieldLabel htmlFor="gateway">게이트웨이</FieldLabel>
                   {isAllowed ? (
                     picker
                   ) : (
                     <Tooltip>
                       <TooltipTrigger asChild>{picker}</TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        Restricted access. You don&apos;t have permission to attach gateways to
-                        resources.
+                        접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                       </TooltipContent>
                     </Tooltip>
                   )}
@@ -169,11 +167,11 @@ export const SmbConnectionForm = ({ appConnection, onSubmit }: Props) => {
           control={control}
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="host">Host</FieldLabel>
+              <FieldLabel htmlFor="host">호스트</FieldLabel>
               <Input
                 id="host"
                 {...field}
-                placeholder="Hostname or IP address of Windows server"
+                placeholder="Windows 서버의 호스트 이름 또는 IP 주소"
                 isError={Boolean(error?.message)}
               />
               <FieldError errors={[error]} />
@@ -185,7 +183,7 @@ export const SmbConnectionForm = ({ appConnection, onSubmit }: Props) => {
           control={control}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="port">Port</FieldLabel>
+              <FieldLabel htmlFor="port">포트</FieldLabel>
               <Input
                 id="port"
                 type="number"
@@ -204,12 +202,12 @@ export const SmbConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="domain">
-                Domain <span className="text-muted">(optional)</span>
+                도메인 <span className="text-muted">(선택 사항)</span>
               </FieldLabel>
               <Input
                 id="domain"
                 {...field}
-                placeholder="e.g., MYDOMAIN (for domain-joined servers)"
+                placeholder="예: MYDOMAIN(도메인에 가입된 서버)"
                 isError={Boolean(error?.message)}
               />
               <FieldError errors={[error]} />
@@ -221,11 +219,11 @@ export const SmbConnectionForm = ({ appConnection, onSubmit }: Props) => {
           control={control}
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="username">Username</FieldLabel>
+              <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
               <Input
                 id="username"
                 {...field}
-                placeholder="Administrator"
+                placeholder="관리자"
                 isError={Boolean(error?.message)}
               />
               <FieldError errors={[error]} />
@@ -237,7 +235,7 @@ export const SmbConnectionForm = ({ appConnection, onSubmit }: Props) => {
           control={control}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <FieldLabel htmlFor="password">비밀번호</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "password-error" : undefined}
                 id="password"
@@ -251,9 +249,7 @@ export const SmbConnectionForm = ({ appConnection, onSubmit }: Props) => {
         />
         <AppConnectionFormFooter
           submitLabel={
-            isUpdate
-              ? "Update Credentials"
-              : `Connect to ${APP_CONNECTION_MAP[AppConnection.SMB].name}`
+            isUpdate ? "인증 정보 수정" : `연결 대상: ${APP_CONNECTION_MAP[AppConnection.SMB].name}`
           }
         />
       </form>

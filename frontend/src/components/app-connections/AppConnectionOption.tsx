@@ -38,7 +38,7 @@ export const AppConnectionOptionContent = ({
           className={`flex items-center gap-x-1 ${isOnlyOption ? "text-foreground" : "text-accent"}`}
         >
           <PlusIcon className="size-4" />
-          <span className="mr-auto">{createLabel ?? "Create New Connection"}</span>
+          <span className="mr-auto">{createLabel ?? "새 연결 만들기"}</span>
         </div>
       ) : (
         <>
@@ -51,18 +51,18 @@ export const AppConnectionOptionContent = ({
                   {isSubOrganization ? (
                     <Badge variant="sub-org">
                       <SubOrgIcon />
-                      Sub-Organization
+                      하위 조직
                     </Badge>
                   ) : (
                     <Badge variant="org">
                       <OrgIcon />
-                      Organization
+                      조직
                     </Badge>
                   )}
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                This connection belongs to your {isSubOrganization ? "sub-" : ""}organization.
+                이 연결의 소속: {isSubOrganization ? "sub-" : ""}조직입니다.
               </TooltipContent>
             </Tooltip>
           )}

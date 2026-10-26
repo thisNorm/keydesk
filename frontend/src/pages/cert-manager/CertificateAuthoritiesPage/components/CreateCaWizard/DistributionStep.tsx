@@ -50,7 +50,7 @@ export const DistributionStep = ({ form }: Props) => {
                       <Badge variant="info">Enterprise</Badge>
                     </TooltipTrigger>
                     <TooltipContent className="max-w-xs">
-                      OCSP is available on Infisical&apos;s Enterprise plan.
+                      OCSP를 사용하려면 해당 기능이 포함된 라이선스가 필요합니다.
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -78,7 +78,7 @@ export const DistributionStep = ({ form }: Props) => {
             <FieldContent>
               <FieldLabel>Disable managed CRL URL</FieldLabel>
               <FieldDescription>
-                When enabled, the Infisical-managed CRL endpoint is not embedded in issued
+                When enabled, the Keydesk-managed CRL endpoint is not embedded in issued
                 certificates. Only the custom URLs below are included.
               </FieldDescription>
             </FieldContent>
@@ -133,7 +133,7 @@ export const DistributionStep = ({ form }: Props) => {
           <FieldDescription>
             {canAddCrlUrls
               ? `Backup CRL URLs embedded in issued certificates. Up to ${MAX_INTERNAL_CA_DISTRIBUTION_POINT_URLS}.`
-              : "Custom CRL distribution points are available on Infisical's Enterprise plan."}
+              : "사용자 지정 CRL 배포 지점을 사용하려면 해당 기능이 포함된 라이선스가 필요합니다."}
           </FieldDescription>
         </FieldContent>
       </Field>

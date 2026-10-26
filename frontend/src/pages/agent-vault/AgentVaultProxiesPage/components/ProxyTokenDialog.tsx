@@ -27,7 +27,7 @@ const systemdEnvFile = (token: string) => `INFISICAL_AGENT_VAULT_PROXY_TOKEN=${t
 
 const systemdUnit = (siteUrl: string) =>
   `[Unit]
-Description=Infisical Agent Vault proxy
+Description=Keydesk Agent Vault proxy
 After=network-online.target
 Wants=network-online.target
 

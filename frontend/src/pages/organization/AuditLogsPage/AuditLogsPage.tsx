@@ -56,8 +56,8 @@ export const AuditLogsPage = () => {
   return (
     <div className="bg-page">
       <Helmet>
-        <title>Infisical | Audit Logs</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Keydesk | Audit Logs</title>
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <div className="flex w-full justify-center bg-page pb-6 text-foreground-inverse">

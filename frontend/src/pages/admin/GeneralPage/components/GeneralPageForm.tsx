@@ -152,7 +152,7 @@ const SignUpSettingsCard = ({ allowSignUp, allowedSignUpDomain }: SignUpSettings
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <GeneralSettingsCard
         title="Allow User Signups"
-        description="Choose whether users can sign up for this Infisical instance."
+        description="Choose whether users can sign up for this Keydesk instance."
         isSubmitting={isSubmitting}
         isDirty={isDirty}
       >

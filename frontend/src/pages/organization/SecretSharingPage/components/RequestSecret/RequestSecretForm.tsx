@@ -240,7 +240,7 @@ export const RequestSecretForm = () => {
                 </SelectContent>
               </Select>
               <FieldDescription>
-                Restricting to your organization requires the sender to sign in to Infisical.
+                Restricting to your organization requires the sender to sign in to Keydesk.
               </FieldDescription>
               {error && <FieldError>{error.message}</FieldError>}
             </Field>

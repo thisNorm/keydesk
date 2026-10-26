@@ -26,9 +26,9 @@ export const EditWorkflowIntegrationSheet = ({ isOpen, onClose, integration }: P
       <SheetContent className="sm:max-w-lg">
         <div className="flex h-full min-h-0 flex-col">
           <SheetHeader>
-            <SheetTitle>Edit {platformLabel} Integration</SheetTitle>
+            <SheetTitle>수정 {platformLabel} 연동</SheetTitle>
             <SheetDescription>
-              Choose which events send notifications to {platformLabel}.
+              다음으로 알림을 보낼 이벤트를 선택하세요: {platformLabel}.
             </SheetDescription>
           </SheetHeader>
           {integration === WorkflowIntegrationPlatform.SLACK && (

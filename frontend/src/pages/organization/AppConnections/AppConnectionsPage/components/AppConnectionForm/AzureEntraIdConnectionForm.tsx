@@ -38,9 +38,9 @@ const formSchema = genericAppConnectionFieldsSchema.extend({
   app: z.literal(AppConnection.AzureEntraId),
   method: z.literal(AzureEntraIdConnectionMethod.ClientSecret),
   credentials: z.object({
-    tenantId: z.string().trim().min(1, "Tenant ID is required"),
-    clientId: z.string().trim().min(1, "Client ID is required"),
-    clientSecret: z.string().trim().min(1, "Client Secret is required"),
+    tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
+    clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+    clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요"),
     clientSecretKeyId: z.string().trim().optional()
   })
 });
@@ -114,21 +114,20 @@ export const AzureEntraIdConnectionForm = ({ appConnection, onSubmit }: Props) =
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.AzureEntraId].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.AzureEntraId].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AzureEntraIdConnectionMethod).map((method) => {
@@ -151,13 +150,13 @@ export const AzureEntraIdConnectionForm = ({ appConnection, onSubmit }: Props) =
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials.tenantId">
-                Tenant ID
+                테넌트 ID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Azure Active Directory (Entra ID) Tenant ID.
+                    Azure Active Directory(Entra ID)의 테넌트 ID입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -178,13 +177,13 @@ export const AzureEntraIdConnectionForm = ({ appConnection, onSubmit }: Props) =
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials.clientId">
-                Client ID
+                클라이언트 ID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Application (Client) ID of the Azure App Registration.
+                    Azure 앱 등록의 애플리케이션(클라이언트) ID입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -205,13 +204,13 @@ export const AzureEntraIdConnectionForm = ({ appConnection, onSubmit }: Props) =
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials.clientSecret">
-                Client Secret
+                클라이언트 시크릿
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The client secret of the Azure App Registration.
+                    Azure 앱 등록의 클라이언트 시크릿입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -234,15 +233,15 @@ export const AzureEntraIdConnectionForm = ({ appConnection, onSubmit }: Props) =
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
                 <FieldLabel htmlFor="credentials.clientSecretKeyId">
-                  Client Secret Key ID
+                  클라이언트 시크릿 키 ID
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Info />
                     </TooltipTrigger>
                     <TooltipContent className="max-w-sm">
-                      The Key ID of the client secret provided above. Found in Azure Portal under
-                      App Registrations &gt; Certificates &amp; Secrets. Required so Infisical can
-                      revoke the original secret after rotation.
+                      위에서 입력한 클라이언트 시크릿의 키 ID입니다. Azure Portal의 App
+                      Registrations &gt; Certificates &amp; Secrets에서 확인할 수 있습니다. 교체 후
+                      Keydesk가 기존 시크릿을 폐기하는 데 필요합니다.
                     </TooltipContent>
                   </Tooltip>
                 </FieldLabel>
@@ -265,10 +264,10 @@ export const AzureEntraIdConnectionForm = ({ appConnection, onSubmit }: Props) =
             isPending={isSubmitting}
             isDisabled={isSubmitting || (!isUpdate && !isDirty)}
           >
-            {isUpdate ? "Reconnect to Azure" : "Connect to Azure"}
+            {isUpdate ? "Azure에 다시 연결" : "Azure에 연결"}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel} isDisabled={isSubmitting}>
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

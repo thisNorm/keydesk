@@ -209,7 +209,7 @@ export const EditHsmConnectorSheet = ({ connector, onClose }: Props) => {
                           isError={Boolean(error)}
                         />
                         <FieldDescription>
-                          The Infisical Gateway (or pool) that will reach the HSM over PKCS#11.
+                          The Keydesk Gateway (or pool) that will reach the HSM over PKCS#11.
                         </FieldDescription>
                         <FieldError errors={[error]} />
                       </FieldContent>
@@ -242,7 +242,7 @@ export const EditHsmConnectorSheet = ({ connector, onClose }: Props) => {
                       <FieldContent>
                         <Input {...field} value={field.value ?? ""} isError={Boolean(error)} />
                         <FieldDescription>
-                          Prepended to the label of every key Infisical creates on this HSM.
+                          Prepended to the label of every key Keydesk creates on this HSM.
                         </FieldDescription>
                         <FieldError errors={[error]} />
                       </FieldContent>
@@ -269,7 +269,7 @@ export const EditHsmConnectorSheet = ({ connector, onClose }: Props) => {
                         />
                         <FieldDescription>
                           {routingChanged
-                            ? "Required because you are changing the Gateway. Re-enter the PIN so Infisical can verify it against the new route."
+                            ? "Required because you are changing the Gateway. Re-enter the PIN so Keydesk can verify it against the new route."
                             : "Leave blank to keep the current PIN. Type a new value to rotate it."}
                         </FieldDescription>
                         <FieldError errors={[error]} />
@@ -301,8 +301,8 @@ export const EditHsmConnectorSheet = ({ connector, onClose }: Props) => {
                   </li>
                 </ul>
                 <div className="mt-6 rounded-md border border-border bg-surface-raised p-3 text-xs text-muted">
-                  If you change the PIN, slot, or Gateway, Infisical re-runs a Verify against the
-                  HSM before saving. A bad PIN or unreachable Gateway will surface here.
+                  If you change the PIN, slot, or Gateway, Keydesk re-runs a Verify against the HSM
+                  before saving. A bad PIN or unreachable Gateway will surface here.
                 </div>
               </div>
             </aside>

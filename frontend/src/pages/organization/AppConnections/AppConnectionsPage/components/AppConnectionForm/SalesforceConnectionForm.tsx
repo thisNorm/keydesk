@@ -38,9 +38,9 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(SalesforceConnectionMethod.ClientCredentials),
     credentials: z.object({
-      instanceUrl: z.string().trim().min(1, "Instance URL required"),
-      consumerKey: z.string().trim().min(1, "Consumer Key required"),
-      consumerSecret: z.string().trim().min(1, "Consumer Secret required")
+      instanceUrl: z.string().trim().min(1, "인스턴스 URL을 입력하세요"),
+      consumerKey: z.string().trim().min(1, "컨슈머 키를 입력하세요"),
+      consumerSecret: z.string().trim().min(1, "컨슈머 시크릿을 입력하세요")
     })
   })
 ]);
@@ -71,13 +71,13 @@ export const SalesforceConnectionForm = ({ appConnection, onSubmit }: Props) => 
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL
+                인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Your Salesforce My Domain URL (e.g. my-org.my.salesforce.com).
+                    Salesforce My Domain URL입니다(예: my-org.my.salesforce.com).
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -97,7 +97,7 @@ export const SalesforceConnectionForm = ({ appConnection, onSubmit }: Props) => 
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="consumer-key">Consumer Key</FieldLabel>
+              <FieldLabel htmlFor="consumer-key">컨슈머 키</FieldLabel>
               <Input
                 id="consumer-key"
                 {...field}
@@ -114,7 +114,7 @@ export const SalesforceConnectionForm = ({ appConnection, onSubmit }: Props) => 
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="consumer-secret">Consumer Secret</FieldLabel>
+              <FieldLabel htmlFor="consumer-secret">컨슈머 시크릿</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "consumer-secret-error" : undefined}
                 id="consumer-secret"
@@ -126,9 +126,7 @@ export const SalesforceConnectionForm = ({ appConnection, onSubmit }: Props) => 
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Salesforce"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Salesforce에 연결"} />
       </form>
     </FormProvider>
   );

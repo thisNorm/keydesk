@@ -113,7 +113,7 @@ export const HsmConnectorsTab = () => {
           <div className="mb-3 text-2xl">&#x1f6e1;&#xfe0f;</div>
           <h4 className="mb-2 text-lg font-normal text-foreground">Enterprise Feature</h4>
           <p className="mx-auto mb-4 max-w-md text-sm text-label">
-            HSM Connectors let Infisical use keys backed by a Hardware Security Module. Every
+            HSM Connectors let Keydesk use keys backed by a Hardware Security Module. Every
             cryptographic operation is routed through your HSM.
           </p>
           <Button onClick={() => setUpgradeOpen(true)}>Upgrade to Enterprise</Button>
@@ -179,7 +179,7 @@ export const HsmConnectorsTab = () => {
           HSM Connectors
           <DocumentationLinkBadge href={PkiDocsUrls.settings.hsmConnectors} />
         </CardTitle>
-        <CardDescription>Connect hardware security modules to Infisical.</CardDescription>
+        <CardDescription>Connect hardware security modules to Keydesk.</CardDescription>
         <CardAction>
           <ProjectPermissionCan
             I={ProjectPermissionHsmConnectorActions.Create}

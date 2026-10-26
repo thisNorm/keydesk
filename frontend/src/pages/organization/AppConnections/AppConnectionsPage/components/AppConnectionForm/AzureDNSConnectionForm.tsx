@@ -43,10 +43,10 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(AzureDNSConnectionMethod.ClientSecret),
     credentials: z.object({
-      tenantId: z.string().trim().min(1, "Tenant ID required"),
-      clientId: z.string().trim().min(1, "Client ID required"),
-      clientSecret: z.string().trim().min(1, "Client Secret required"),
-      subscriptionId: z.string().trim().min(1, "Subscription ID required"),
+      tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
+      clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+      clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요"),
+      subscriptionId: z.string().trim().min(1, "구독 ID를 입력하세요"),
       clientSecretKeyId: z.string().trim().optional()
     })
   })
@@ -99,21 +99,21 @@ export const AzureDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.AzureDNS].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AzureDNSConnectionMethod).map((method) => {
@@ -135,7 +135,7 @@ export const AzureDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="tenant-id">Tenant ID</FieldLabel>
+              <FieldLabel htmlFor="tenant-id">테넌트 ID</FieldLabel>
               <Input
                 id="tenant-id"
                 value={value}
@@ -153,7 +153,7 @@ export const AzureDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="client-id">Client ID</FieldLabel>
+              <FieldLabel htmlFor="client-id">클라이언트 ID</FieldLabel>
               <Input
                 id="client-id"
                 value={value}
@@ -171,7 +171,7 @@ export const AzureDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="client-secret">Client Secret</FieldLabel>
+              <FieldLabel htmlFor="client-secret">클라이언트 시크릿</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "client-secret-error" : undefined}
                 id="client-secret"
@@ -190,7 +190,7 @@ export const AzureDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="subscription-id">Subscription ID</FieldLabel>
+              <FieldLabel htmlFor="subscription-id">구독 ID</FieldLabel>
               <Input
                 id="subscription-id"
                 value={value}
@@ -209,15 +209,15 @@ export const AzureDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
                 <FieldLabel htmlFor="credentials.clientSecretKeyId">
-                  Client Secret Key ID
+                  클라이언트 시크릿 키 ID
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Info />
                     </TooltipTrigger>
                     <TooltipContent className="max-w-sm">
-                      The Key ID of the client secret provided above. Found in Azure Portal under
-                      App Registrations &gt; Certificates &amp; Secrets. Required so Infisical can
-                      revoke the original secret after rotation.
+                      위에서 입력한 클라이언트 시크릿의 키 ID입니다. Azure Portal의 App
+                      Registrations &gt; Certificates &amp; Secrets에서 확인할 수 있습니다. 교체 후
+                      Keydesk가 기존 시크릿을 폐기하는 데 필요합니다.
                     </TooltipContent>
                   </Tooltip>
                 </FieldLabel>
@@ -233,9 +233,7 @@ export const AzureDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
             )}
           />
         </CredentialRotationForm>
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Azure DNS"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Azure DNS에 연결"} />
       </form>
     </FormProvider>
   );

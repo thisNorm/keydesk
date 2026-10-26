@@ -40,7 +40,7 @@ const ProviderCard = ({ app, onClick }: { app: AppConnection; onClick: () => voi
     >
       <div className="flex items-start justify-between gap-2">
         <div className="relative flex h-9 w-9 items-center justify-center rounded-md bg-surface-hover">
-          <ProviderIcon icon={image} alt={`${name} logo`} className="h-6 w-6 object-contain" />
+          <ProviderIcon icon={image} alt={`${name} 로고`} className="h-6 w-6 object-contain" />
           {AppIcon && <AppIcon className="absolute -right-1 -bottom-1 size-3.5 text-project" />}
         </div>
         <span className="text-[10px] font-medium tracking-wider text-muted uppercase">
@@ -114,7 +114,7 @@ export const AppConnectionsSelect = ({ onSelect, projectType }: Props) => {
     return (
       <div className="flex h-full flex-col items-center justify-center py-10">
         <Loader2Icon className="size-8 animate-spin text-accent" />
-        <p className="mt-4 text-sm text-muted">Loading options...</p>
+        <p className="mt-4 text-sm text-muted">옵션을 불러오는 중...</p>
       </div>
     );
   }
@@ -128,7 +128,7 @@ export const AppConnectionsSelect = ({ onSelect, projectType }: Props) => {
         <InputGroupInput
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search apps (e.g. AWS, GitHub, Postgres, Vault)"
+          placeholder="앱 검색(예: AWS, GitHub, Postgres, Vault)"
         />
       </InputGroup>
 
@@ -150,8 +150,8 @@ export const AppConnectionsSelect = ({ onSelect, projectType }: Props) => {
                 <EmptyMedia variant="icon">
                   <Search />
                 </EmptyMedia>
-                <EmptyTitle>No matching apps</EmptyTitle>
-                <EmptyDescription>Try a different search term.</EmptyDescription>
+                <EmptyTitle>일치하는 앱이 없습니다</EmptyTitle>
+                <EmptyDescription>다른 검색어를 입력하세요.</EmptyDescription>
               </EmptyHeader>
             </Empty>
           )}
@@ -160,7 +160,7 @@ export const AppConnectionsSelect = ({ onSelect, projectType }: Props) => {
         <>
           {popularOptions.length > 0 && (
             <section>
-              <SectionLabel>Popular</SectionLabel>
+              <SectionLabel>자주 사용하는 앱</SectionLabel>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {popularOptions.map((option) => (
                   <ProviderCard
@@ -173,7 +173,7 @@ export const AppConnectionsSelect = ({ onSelect, projectType }: Props) => {
             </section>
           )}
           <section>
-            <SectionLabel>All apps</SectionLabel>
+            <SectionLabel>전체 앱</SectionLabel>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {visibleOptions.map((option) => (
                 <ProviderCard
@@ -188,23 +188,23 @@ export const AppConnectionsSelect = ({ onSelect, projectType }: Props) => {
       )}
 
       <p className="text-xs text-muted">
-        Don&apos;t see the app you&apos;re looking for?{" "}
+        찾으시는 앱이 없나요?{" "}
         <a
           target="_blank"
           rel="noopener noreferrer"
           href="https://community.infisical.com"
           className="underline underline-offset-2 hover:text-foreground"
         >
-          Let us know in the community forum
+          커뮤니티 포럼에 알려 주세요
         </a>{" "}
-        or{" "}
+        또는{" "}
         <a
           target="_blank"
           rel="noopener noreferrer"
           href="https://github.com/Infisical/infisical/discussions"
           className="underline underline-offset-2 hover:text-foreground"
         >
-          request it on GitHub
+          GitHub에서 요청하세요
         </a>
         .
       </p>

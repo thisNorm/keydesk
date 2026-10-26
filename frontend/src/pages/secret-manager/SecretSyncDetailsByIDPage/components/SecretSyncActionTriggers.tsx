@@ -172,7 +172,7 @@ export const SecretSyncActionTriggers = ({ secretSync, onEdit }: Props) => {
                       </div>
                     </TooltipTrigger>
                     <TooltipContent side="right" sideOffset={14}>
-                      Import secrets from this {destinationName} destination into Infisical.
+                      Import secrets from this {destinationName} destination into Keydesk.
                     </TooltipContent>
                   </Tooltip>
                 </DropdownMenuItem>
@@ -198,7 +198,7 @@ export const SecretSyncActionTriggers = ({ secretSync, onEdit }: Props) => {
                       </div>
                     </TooltipTrigger>
                     <TooltipContent side="right" sideOffset={14}>
-                      Remove secrets synced by Infisical from this {destinationName} destination.
+                      Remove secrets synced by Keydesk from this {destinationName} destination.
                     </TooltipContent>
                   </Tooltip>
                 </DropdownMenuItem>

@@ -71,8 +71,7 @@ export const HoneyTokenSection = () => {
             )}
           </CardTitle>
           <CardDescription>
-            Plant decoy IAM credentials in your AWS account. Infisical alerts on every access
-            attempt.
+            Plant decoy IAM credentials in your AWS account. Keydesk alerts on every access attempt.
           </CardDescription>
           <CardAction>
             <OrgPermissionCan

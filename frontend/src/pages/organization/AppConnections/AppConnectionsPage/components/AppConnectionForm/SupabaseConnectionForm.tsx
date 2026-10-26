@@ -44,7 +44,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(SupabaseConnectionMethod.AccessToken),
     credentials: z.object({
-      accessKey: z.string().trim().min(1, "Access Key required"),
+      accessKey: z.string().trim().min(1, "액세스 키를 입력하세요"),
       instanceUrl: z.string().url().optional()
     })
   })
@@ -76,13 +76,13 @@ export const SupabaseConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL <span className="text-muted">(optional)</span>
+                인스턴스 URL <span className="text-muted">(선택 사항)</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Will default to Supabase Cloud if not specified.
+                    지정하지 않으면 Supabase Cloud를 사용합니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -103,21 +103,20 @@ export const SupabaseConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Token Type
+                토큰 유형
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The type of token you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Supabase].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 토큰 유형입니다: {APP_CONNECTION_MAP[AppConnection.Supabase].name}
+                    . 이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(SupabaseConnectionMethod).map((method) => {
@@ -139,7 +138,7 @@ export const SupabaseConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="access-key">Access Key Value</FieldLabel>
+              <FieldLabel htmlFor="access-key">액세스 키 값</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "access-key-error" : undefined}
                 isError={Boolean(error)}
@@ -152,9 +151,7 @@ export const SupabaseConnectionForm = ({ appConnection, onSubmit }: Props) => {
           )}
         />
 
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Supabase"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Supabase에 연결"} />
       </form>
     </FormProvider>
   );

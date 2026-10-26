@@ -25,9 +25,9 @@ export const FlyioSyncOptionsFields = () => {
             <FieldContent>
               <Label htmlFor="flyio-auto-redeploy">Auto-redeploy on secret change</Label>
               <FieldDescription>
-                Infisical restarts all app machines after syncing or removing secrets so they pick
-                up new values immediately. Fly.io does not expose a way to mark secrets as deployed,
-                so the dashboard may still show them as Staged — confirm deployment via the Fly.io
+                Keydesk restarts all app machines after syncing or removing secrets so they pick up
+                new values immediately. Fly.io does not expose a way to mark secrets as deployed, so
+                the dashboard may still show them as Staged — confirm deployment via the Fly.io
                 Machines view or app logs.
               </FieldDescription>
             </FieldContent>

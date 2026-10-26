@@ -38,7 +38,7 @@ export const AuditLogStreamsTab = withPermission(
               <DocumentationLinkBadge href="https://infisical.com/docs/documentation/platform/audit-log-streams/audit-log-streams" />
             </CardTitle>
             <CardDescription>
-              Send audit logs from Infisical to external logging providers via HTTP
+              Send audit logs from Keydesk to external logging providers via HTTP
             </CardDescription>
             <CardAction className="flex items-center gap-2">
               <AuditLogStreamAlertAction />

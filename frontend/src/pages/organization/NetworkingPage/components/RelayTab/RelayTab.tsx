@@ -158,7 +158,7 @@ export const RelayTab = withPermission(
             Relays
             <DocumentationLinkBadge href="https://infisical.com/docs/documentation/platform/gateways/relay-deployment" />
           </CardTitle>
-          <CardDescription>Create and manage network relays from Infisical</CardDescription>
+          <CardDescription>Create and manage network relays from Keydesk</CardDescription>
           <CardAction>
             <Button variant={scopeVariant} onClick={() => handlePopUpOpen("deployRelay")}>
               <PlusIcon />
@@ -254,7 +254,7 @@ export const RelayTab = withPermission(
                                 Managed
                               </Badge>
                             </TooltipTrigger>
-                            <TooltipContent>This relay is managed by Infisical.</TooltipContent>
+                            <TooltipContent>This relay is managed by Keydesk.</TooltipContent>
                           </Tooltip>
                         )}
                       </div>

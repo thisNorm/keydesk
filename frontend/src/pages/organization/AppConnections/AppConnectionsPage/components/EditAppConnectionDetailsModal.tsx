@@ -59,7 +59,7 @@ const Content = ({ appConnection, onComplete }: ContentProps) => {
       ...formData
     });
     createNotification({
-      text: `Successfully updated ${appName} Connection`,
+      text: `연결 수정 완료: ${appName} 연결`,
       type: "success"
     });
     onComplete();
@@ -72,7 +72,7 @@ const Content = ({ appConnection, onComplete }: ContentProps) => {
         <DialogFooter className="mt-8">
           <DialogClose asChild>
             <Button type="button" variant="outline">
-              Cancel
+              취소
             </Button>
           </DialogClose>
           <Button
@@ -81,7 +81,7 @@ const Content = ({ appConnection, onComplete }: ContentProps) => {
             isPending={isSubmitting}
             isDisabled={isSubmitting || !isDirty}
           >
-            Update Details
+            세부 정보 수정
           </Button>
         </DialogFooter>
       </form>
@@ -96,9 +96,9 @@ export const EditAppConnectionDetailsModal = ({ isOpen, onOpenChange, appConnect
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit Connection Name</DialogTitle>
+          <DialogTitle>연결 이름 수정</DialogTitle>
           <DialogDescription>
-            Update the name for this {APP_CONNECTION_MAP[appConnection.app].name} Connection.
+            다음 연결의 이름을 수정하세요: {APP_CONNECTION_MAP[appConnection.app].name} 연결입니다.
           </DialogDescription>
         </DialogHeader>
         <Content appConnection={appConnection} onComplete={() => onOpenChange(false)} />

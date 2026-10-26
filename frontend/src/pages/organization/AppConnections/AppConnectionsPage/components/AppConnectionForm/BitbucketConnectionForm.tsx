@@ -41,8 +41,8 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(BitbucketConnectionMethod.ApiToken),
     credentials: z.object({
-      email: z.string().email().trim().min(1, "Email required"),
-      apiToken: z.string().trim().min(1, "API Token required")
+      email: z.string().email().trim().min(1, "이메일을 입력하세요"),
+      apiToken: z.string().trim().min(1, "API 토큰을 입력하세요")
     })
   })
 ]);
@@ -72,21 +72,21 @@ export const BitbucketConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.Bitbucket].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(BitbucketConnectionMethod).map((method) => {
@@ -108,7 +108,7 @@ export const BitbucketConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">이메일</FieldLabel>
               <Input
                 id="email"
                 {...field}
@@ -125,7 +125,7 @@ export const BitbucketConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-token">API Token</FieldLabel>
+              <FieldLabel htmlFor="api-token">API 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-token-error" : undefined}
                 id="api-token"
@@ -137,9 +137,7 @@ export const BitbucketConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Bitbucket"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Bitbucket에 연결"} />
       </form>
     </FormProvider>
   );

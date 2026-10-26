@@ -52,9 +52,9 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(RedisConnectionMethod.UsernameAndPassword),
     credentials: z.object({
-      host: z.string().trim().min(1, "Host required"),
+      host: z.string().trim().min(1, "호스트를 입력하세요"),
       port: z.coerce.number().default(6379),
-      username: z.string().trim().min(1, "Username required"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
       password: z.string().trim().optional(),
       sslEnabled: z.boolean().default(false),
       sslRejectUnauthorized: z.boolean().default(true),
@@ -108,21 +108,20 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Redis].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Redis].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(RedisConnectionMethod).map((method) => (
@@ -143,8 +142,8 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
           className="mb-4"
         >
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value={CONFIGURATION_TAB}>Configuration</TabsTrigger>
-            <TabsTrigger value={SSL_TAB}>SSL ({sslEnabled ? "Enabled" : "Disabled"})</TabsTrigger>
+            <TabsTrigger value={CONFIGURATION_TAB}>구성</TabsTrigger>
+            <TabsTrigger value={SSL_TAB}>SSL ({sslEnabled ? "켜짐" : "꺼짐"})</TabsTrigger>
           </TabsList>
           <TabsContent value={CONFIGURATION_TAB}>
             <div className="flex items-start gap-2">
@@ -153,7 +152,7 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="flex-1">
-                    <FieldLabel htmlFor="redis-host">Host</FieldLabel>
+                    <FieldLabel htmlFor="redis-host">호스트</FieldLabel>
                     <Input id="redis-host" {...field} isError={Boolean(error?.message)} />
                     <FieldError errors={[error]} />
                   </Field>
@@ -164,7 +163,7 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="w-28">
-                    <FieldLabel htmlFor="redis-port">Port</FieldLabel>
+                    <FieldLabel htmlFor="redis-port">포트</FieldLabel>
                     <Input
                       id="redis-port"
                       type="number"
@@ -182,7 +181,7 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="flex-1">
-                    <FieldLabel htmlFor="redis-username">Username</FieldLabel>
+                    <FieldLabel htmlFor="redis-username">사용자 이름</FieldLabel>
                     <Input id="redis-username" {...field} isError={Boolean(error?.message)} />
                     <FieldError errors={[error]} />
                   </Field>
@@ -193,7 +192,7 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="flex-1">
-                    <FieldLabel htmlFor="app-connection-redis-password">Password</FieldLabel>
+                    <FieldLabel htmlFor="app-connection-redis-password">비밀번호</FieldLabel>
                     <SecretInput
                       aria-describedby={error ? "app-connection-redis-password-error" : undefined}
                       id="app-connection-redis-password"
@@ -215,7 +214,7 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field className="mb-4">
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-enabled">Enable SSL</Label>
+                      <Label htmlFor="ssl-enabled">SSL 사용</Label>
                     </FieldContent>
                     <Toggle
                       aria-invalid={Boolean(error)}
@@ -235,7 +234,7 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
               render={({ field, fieldState: { error } }) => (
                 <Field className={sslEnabled ? "mb-4" : "mb-4 opacity-50"}>
                   <FieldLabel htmlFor="ssl-certificate">
-                    SSL Certificate <span className="text-muted">(optional)</span>
+                    SSL 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="ssl-certificate"
@@ -255,10 +254,10 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field className={sslEnabled ? undefined : "opacity-50"}>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        If enabled, Infisical will only connect to the server if it has a valid,
-                        trusted SSL certificate.
+                        켜면 서버가 유효하고 신뢰할 수 있는 SSL 인증서를 제공할 때만 Keydesk가
+                        연결합니다.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -278,7 +277,7 @@ export const RedisConnectionForm = ({ appConnection, onSubmit }: Props) => {
         </Tabs>
 
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Database"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "데이터베이스에 연결"}
         />
       </form>
     </FormProvider>

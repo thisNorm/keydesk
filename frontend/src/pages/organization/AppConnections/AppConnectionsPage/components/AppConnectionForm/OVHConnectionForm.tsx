@@ -38,17 +38,17 @@ const rootSchema = genericAppConnectionFieldsSchema.extend({
 const pemPrivateKey = z
   .string()
   .trim()
-  .min(1, "Private key required")
+  .min(1, "개인 키를 입력하세요")
   .refine((val) => val.startsWith("-----BEGIN "), {
-    message: "Private key must be in PEM format (starts with -----BEGIN ...-----)"
+    message: "개인 키는 PEM 형식이어야 합니다(-----BEGIN ...-----로 시작)"
   });
 
 const pemCertificate = z
   .string()
   .trim()
-  .min(1, "Certificate required")
+  .min(1, "인증서를 입력하세요")
   .refine((val) => val.startsWith("-----BEGIN CERTIFICATE-----"), {
-    message: "Certificate must be in PEM format (starts with -----BEGIN CERTIFICATE-----)"
+    message: "인증서는 PEM 형식이어야 합니다(-----BEGIN CERTIFICATE-----로 시작)"
   });
 
 const formSchema = z.discriminatedUnion("method", [
@@ -57,8 +57,8 @@ const formSchema = z.discriminatedUnion("method", [
     credentials: z.object({
       privateKey: pemPrivateKey,
       certificate: pemCertificate,
-      okmsDomain: z.string().trim().min(1, "OKMS domain required"),
-      okmsId: z.string().trim().min(1, "OKMS ID required")
+      okmsDomain: z.string().trim().min(1, "OKMS 도메인을 입력하세요"),
+      okmsId: z.string().trim().min(1, "OKMS ID를 입력하세요")
     })
   })
 ]);
@@ -111,14 +111,14 @@ export const OVHConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="private-key">
-                Private Key (PEM)
+                개인 키(PEM)
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Paste the PEM-encoded private key issued by OVH OKMS, including the
-                    -----BEGIN/END PRIVATE KEY----- markers.
+                    -----BEGIN/END PRIVATE KEY----- 표시를 포함하여 OVH OKMS에서 발급한 PEM 형식의
+                    개인 키를 붙여 넣으세요.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -140,14 +140,14 @@ export const OVHConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="certificate">
-                Certificate (PEM)
+                인증서(PEM)
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Paste the PEM-encoded public certificate issued by OVH OKMS, including the
-                    -----BEGIN/END CERTIFICATE----- markers.
+                    -----BEGIN/END CERTIFICATE----- 표시를 포함하여 OVH OKMS에서 발급한 PEM 형식의
+                    공개 인증서를 붙여 넣으세요.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -169,13 +169,13 @@ export const OVHConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="okms-domain">
-                OKMS Domain
+                OKMS 도메인
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The OKMS base URL, e.g. &apos;https://ca-east-bhs.okms.ovh.net&apos;.
+                    OKMS 기본 URL입니다(예: &apos;https://ca-east-bhs.okms.ovh.net&apos;).
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -204,14 +204,14 @@ export const OVHConnectionForm = ({ appConnection, onSubmit }: Props) => {
               />
               {!error && (
                 <FieldDescription>
-                  Your OKMS instance identifier from the OVH Control Panel.
+                  OVH Control Panel에서 확인할 수 있는 OKMS 인스턴스 식별자입니다.
                 </FieldDescription>
               )}
               <FieldError errors={[error]} />
             </Field>
           )}
         />
-        <AppConnectionFormFooter submitLabel={isUpdate ? "Update Credentials" : "Connect to OVH"} />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "OVH에 연결"} />
       </form>
     </FormProvider>
   );

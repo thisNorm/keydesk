@@ -75,10 +75,12 @@ function VaultGatewaySelect({
       disabled={!isAllowed || isGatewayLoading}
     >
       <SelectTrigger size="default" className="w-full max-w-none min-w-0" aria-invalid={hasError}>
-        <SelectValue placeholder={isGatewayLoading ? "Loading gateways…" : "Internet Gateway"} />
+        <SelectValue
+          placeholder={isGatewayLoading ? "게이트웨이 불러오는 중…" : "인터넷 게이트웨이"}
+        />
       </SelectTrigger>
       <SelectContent position="popper" className="min-w-(--radix-select-trigger-width)">
-        <SelectItem value={GATEWAY_NONE}>Internet Gateway</SelectItem>
+        <SelectItem value={GATEWAY_NONE}>인터넷 게이트웨이</SelectItem>
         {gateways?.map((el) => (
           <SelectItem value={el.id} key={el.id}>
             {el.name}
@@ -98,7 +100,7 @@ function VaultGatewaySelect({
         <span className="block w-full cursor-not-allowed">{select}</span>
       </TooltipTrigger>
       <TooltipContent>
-        Restricted access. You don&apos;t have permission to attach gateways to resources.
+        접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
       </TooltipContent>
     </Tooltip>
   );
@@ -108,19 +110,17 @@ const MAPPING_TYPE_MENU_ITEMS = [
   {
     isCustom: false,
     value: VaultMappingType.KeyVault,
-    label: "Key Vaults",
+    label: "키 보관소",
     tooltip: (
       <div>
-        When using key vaults for mapping, each key vault within Vault will be created in Infisical
-        as a project. Each secret path inside the key vault, will be created as an environment
-        inside the corresponding project. When using Key Vaults as the project mapping type, a
-        default environment called &quot;Production&quot; will be created for each project, which
-        will contain the secrets from the key vault.
+        키 보관소로 매핑하면 Vault의 각 키 보관소를 Keydesk 프로젝트로 만듭니다. 키 보관소 내의 각
+        시크릿 경로는 해당 프로젝트의 환경으로 만듭니다. 프로젝트 매핑 유형으로 키 보관소를 선택하면
+        각 프로젝트에 Production이라는 기본 환경을 만들고 키 보관소의 시크릿을 저장합니다.
         <div className="mt-4 flex flex-col gap-1 text-sm">
-          <div>Key Vault → Project</div>
-          <div>Default Environment (Production)</div>
-          <div>Secret Path → Secret Folder</div>
-          <div>Secret data → Secrets</div>
+          <div>키 보관소 → 프로젝트</div>
+          <div>기본 환경(Production)</div>
+          <div>시크릿 경로 → 시크릿 폴더</div>
+          <div>시크릿 데이터 → 시크릿</div>
         </div>
       </div>
     )
@@ -128,17 +128,16 @@ const MAPPING_TYPE_MENU_ITEMS = [
   {
     isCustom: false,
     value: VaultMappingType.Namespace,
-    label: "Namespaces",
+    label: "네임스페이스",
     tooltip: (
       <div>
-        When using namespaces for mapping, each namespace within Vault will be created in Infisical
-        as a project. Each key vault (KV) inside the namespace, will be created as an environment
-        inside the corresponding project.
+        네임스페이스로 매핑하면 Vault의 각 네임스페이스를 Keydesk 프로젝트로 만듭니다. 네임스페이스
+        내의 각 키 보관소(KV)는 해당 프로젝트의 환경으로 만듭니다.
         <div className="mt-4 flex flex-col gap-1 text-sm">
-          <div>Namespace → Project</div>
-          <div>Key Vault → Project Environment</div>
-          <div>Secret Path → Secret Folder</div>
-          <div>Secret data → Secrets</div>
+          <div>네임스페이스 → 프로젝트</div>
+          <div>키 보관소 → 프로젝트 환경</div>
+          <div>시크릿 경로 → 시크릿 폴더</div>
+          <div>시크릿 데이터 → 시크릿</div>
         </div>
       </div>
     )
@@ -146,11 +145,11 @@ const MAPPING_TYPE_MENU_ITEMS = [
   {
     isCustom: true,
     value: VaultMappingType.Custom,
-    label: "Custom Migration",
+    label: "사용자 지정 마이그레이션",
     tooltip: (
       <div>
-        Custom migrations allow you to shape your Vault migration to your specific needs. Please
-        contact our sales team to get started with custom migrations.
+        필요에 맞게 Vault 마이그레이션을 구성할 수 있습니다. 사용자 지정 마이그레이션을 시작하려면
+        영업팀에 문의하세요.
       </div>
     )
   }
@@ -192,8 +191,8 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
       ...(data.gatewayId && { gatewayId: data.gatewayId })
     });
     createNotification({
-      title: "Import started",
-      text: "Your data is being imported. You will receive an email when the import is complete or if the import fails. This may take up to 10 minutes.",
+      title: "가져오기 시작",
+      text: "데이터를 가져오는 중입니다. 완료되거나 실패하면 이메일로 알려드립니다. 최대 10분이 걸릴 수 있습니다.",
       type: "info"
     });
 
@@ -204,14 +203,11 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
   return (
     <div>
       <Alert variant="info" className="mb-4">
-        <AlertTitle>Vault KV Secret Engine Import</AlertTitle>
+        <AlertTitle>Vault KV 시크릿 엔진 가져오기</AlertTitle>
         <AlertDescription>
-          <p>
-            The Vault migration currently supports importing static secrets from Vault
-            Dedicated/Self-Hosted.
-          </p>
+          <p>현재 Vault Dedicated 및 자체 호스팅 Vault의 정적 시크릿을 가져올 수 있습니다.</p>
           <p className="mt-2 text-xs opacity-80">
-            Currently only KV Secret Engine is supported for Vault migrations.
+            현재 Vault 마이그레이션은 KV 시크릿 엔진만 지원합니다.
           </p>
         </AlertDescription>
       </Alert>
@@ -229,8 +225,8 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field>
                     <FieldLabel className="inline-flex flex-wrap items-baseline gap-1.5">
-                      Gateway
-                      <span className="text-xs font-normal text-muted">(optional)</span>
+                      게이트웨이
+                      <span className="text-xs font-normal text-muted">(선택 사항)</span>
                     </FieldLabel>
                     <FieldContent>
                       <VaultGatewaySelect
@@ -268,7 +264,7 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
           name="vaultNamespace"
           render={({ field, fieldState: { error } }) => (
             <Field>
-              <FieldLabel>Vault Namespace</FieldLabel>
+              <FieldLabel>Vault 네임스페이스</FieldLabel>
               <FieldContent>
                 <Input
                   type="text"
@@ -287,7 +283,7 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
           name="vaultAccessToken"
           render={({ field, fieldState: { error } }) => (
             <Field>
-              <FieldLabel>Vault Access Token</FieldLabel>
+              <FieldLabel>Vault 액세스 토큰</FieldLabel>
               <FieldContent>
                 <Input
                   type="password"
@@ -307,7 +303,7 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
           defaultValue={VaultMappingType.KeyVault}
           render={({ field, fieldState: { error } }) => (
             <Field>
-              <FieldLabel>Project Mapping</FieldLabel>
+              <FieldLabel>프로젝트 매핑</FieldLabel>
               <FieldContent>
                 <div className="mt-2 grid grid-cols-2 gap-4">
                   {MAPPING_TYPE_MENU_ITEMS.map((el) => (
@@ -347,7 +343,7 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
                                 className="inline-flex text-muted hover:text-foreground"
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                <CircleHelpIcon className="size-4" aria-label="More info" />
+                                <CircleHelpIcon className="size-4" aria-label="자세히 보기" />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent className="max-w-96">{el.tooltip}</TooltipContent>
@@ -370,10 +366,10 @@ export const VaultPlatformModal = ({ onClose }: Props) => {
             isPending={isLoading || isSubmitting}
             isDisabled={!isDirty || isSubmitting || isLoading || !isValid}
           >
-            Import Data
+            데이터 가져오기
           </Button>
           <Button type="button" variant="outline" onClick={onClose}>
-            Cancel
+            취소
           </Button>
         </div>
       </form>

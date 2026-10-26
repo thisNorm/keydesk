@@ -11,7 +11,7 @@ export const NetworkingPage = () => {
   return (
     <>
       <Helmet>
-        <title>Infisical | Networking</title>
+        <title>Keydesk | Networking</title>
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <div className="flex w-full justify-center bg-page text-foreground-inverse">
@@ -19,7 +19,7 @@ export const NetworkingPage = () => {
           <PageHeader
             scope={isSubOrganization ? "namespace" : "org"}
             title="Networking"
-            description="Manage gateways and relays that securely connect Infisical to your infrastructure"
+            description="Manage gateways and relays that securely connect Keydesk to your infrastructure"
           />
           <NetworkingTabGroup />
         </div>

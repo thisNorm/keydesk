@@ -282,7 +282,7 @@ export const DynamicSecretLease = ({
                           I={ProjectPermissionDynamicSecretActions.Lease}
                           a={permissionSubject}
                           renderTooltip
-                          allowedLabel="Force delete lease. This removes the lease from Infisical without revoking it in the external provider."
+                          allowedLabel="Force delete lease. This removes the lease from Keydesk without revoking it in the external provider."
                         >
                           {(isAllowed) => (
                             <IconButton
@@ -365,7 +365,7 @@ export const DynamicSecretLease = ({
             </AlertDialogTitle>
             <AlertDialogDescription>
               {selectedLease?.isForced
-                ? "This removes the lease from Infisical without revoking it in the external provider. This cannot be undone."
+                ? "This removes the lease from Keydesk without revoking it in the external provider. This cannot be undone."
                 : "This revokes the temporary credentials and deletes the lease. This cannot be undone."}
             </AlertDialogDescription>
           </AlertDialogHeader>

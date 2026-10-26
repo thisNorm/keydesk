@@ -100,7 +100,7 @@ const BackupConfirmationModal = ({
           <DialogTitle>Create KMS Backup</DialogTitle>
           <DialogDescription>
             In case of interruptions with your configured external KMS, you can load a backup to set
-            the project&apos;s KMS back to the default Infisical KMS.
+            the project&apos;s KMS back to the default Keydesk KMS.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -189,8 +189,7 @@ const LoadBackupModal = ({
         <DialogHeader>
           <DialogTitle>Load KMS Backup</DialogTitle>
           <DialogDescription>
-            By loading a backup, the project&apos;s KMS will be switched to the default Infisical
-            KMS.
+            By loading a backup, the project&apos;s KMS will be switched to the default Keydesk KMS.
           </DialogDescription>
         </DialogHeader>
         <FileDropzone
@@ -311,7 +310,7 @@ export const EncryptionTab = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={INTERNAL_KMS_KEY_ID} key="kms-internal">
-                            Default Infisical KMS
+                            Default Keydesk KMS
                           </SelectItem>
                           {externalKmsList?.map((kms) => (
                             <SelectItem value={kms.id} key={`kms-${kms.id}`}>

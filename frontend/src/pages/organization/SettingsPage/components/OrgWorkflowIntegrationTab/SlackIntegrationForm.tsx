@@ -31,7 +31,7 @@ type Props = {
 };
 
 const slackFormSchema = z.object({
-  slug: slugSchema({ min: 1, field: "Alias" }),
+  slug: slugSchema({ min: 1, field: "별칭" }),
   description: z.string().optional()
 });
 
@@ -97,7 +97,7 @@ export const SlackIntegrationForm = ({ id, onClose, onBack }: Props) => {
 
       onClose();
       createNotification({
-        text: "Updated Slack integration",
+        text: "Slack 연동을 수정했습니다",
         type: "success"
       });
     } else {
@@ -117,7 +117,7 @@ export const SlackIntegrationForm = ({ id, onClose, onBack }: Props) => {
         render={({ field, fieldState: { error } }) => (
           <Field>
             <FieldLabel htmlFor="slack-integration-alias">
-              Alias <span className="text-danger">*</span>
+              별칭 <span className="text-danger">*</span>
             </FieldLabel>
             <Input id="slack-integration-alias" isError={Boolean(error)} {...field} />
             <FieldError>{error?.message}</FieldError>
@@ -129,7 +129,7 @@ export const SlackIntegrationForm = ({ id, onClose, onBack }: Props) => {
         name="description"
         render={({ field, fieldState: { error } }) => (
           <Field>
-            <FieldLabel htmlFor="slack-integration-description">Description</FieldLabel>
+            <FieldLabel htmlFor="slack-integration-description">설명</FieldLabel>
             <Input id="slack-integration-description" isError={Boolean(error)} {...field} />
             <FieldError>{error?.message}</FieldError>
           </Field>
@@ -137,7 +137,7 @@ export const SlackIntegrationForm = ({ id, onClose, onBack }: Props) => {
       />
       {slackIntegration && (
         <Field>
-          <FieldLabel htmlFor="slack-integration-workspace">Connected Slack workspace</FieldLabel>
+          <FieldLabel htmlFor="slack-integration-workspace">연결된 Slack 워크스페이스</FieldLabel>
           <Input id="slack-integration-workspace" value={slackIntegration?.teamName} readOnly />
         </Field>
       )}
@@ -145,12 +145,12 @@ export const SlackIntegrationForm = ({ id, onClose, onBack }: Props) => {
         {onBack && (
           <Button type="button" variant="ghost" className="mr-auto" onClick={onBack}>
             <ChevronLeft />
-            Back
+            뒤로
           </Button>
         )}
         <DialogClose asChild>
           <Button type="button" variant="ghost">
-            Cancel
+            취소
           </Button>
         </DialogClose>
         <Button
@@ -159,7 +159,7 @@ export const SlackIntegrationForm = ({ id, onClose, onBack }: Props) => {
           isPending={isSubmitting || isConnectLoading}
           isDisabled={!isDirty || isConnectLoading || isSubmitting}
         >
-          {slackIntegration ? "Save" : "Connect Slack"}
+          {slackIntegration ? "저장" : "Slack 연결"}
         </Button>
       </DialogFooter>
     </form>

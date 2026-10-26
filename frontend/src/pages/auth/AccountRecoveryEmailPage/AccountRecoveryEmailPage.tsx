@@ -58,12 +58,12 @@ export const AccountRecoveryEmailPage = () => {
     <AuthPageLayout variant="focused">
       <Helmet>
         <title>계정 복구</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
-        <meta property="og:title" content="Infisical 계정 복구" />
+        <meta property="og:title" content="Keydesk 계정 복구" />
         <meta
           name="og:description"
-          content="Infisical은 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다."
+          content="Keydesk는 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다."
         />
       </Helmet>
       <div className="flex flex-col items-center">

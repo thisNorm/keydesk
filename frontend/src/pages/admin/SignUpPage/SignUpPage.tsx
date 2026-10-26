@@ -42,7 +42,7 @@ type TOrganizationForm = z.infer<typeof organizationSchema>;
 const stepContent = {
   [BootstrapStep.Account]: {
     title: "최고 관리자 계정 만들기",
-    description: "이 계정으로 Infisical 서버를 관리하세요."
+    description: "이 계정으로 Keydesk 서버를 관리하세요."
   },
   [BootstrapStep.Organization]: {
     title: "조직 만들기",
@@ -108,8 +108,8 @@ export const SignUpPage = () => {
   return (
     <OnboardingPageLayout currentStep={activeStep + 1} totalSteps={4}>
       <Helmet>
-        <title>서버 초기 설정 | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>서버 초기 설정 | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <AuthPagePanel>

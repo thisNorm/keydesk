@@ -67,7 +67,7 @@ const initialSyncBehaviors = [
     label: "Import - Prefer values from Azure App Configuration",
     value: IntegrationSyncBehavior.PREFER_TARGET
   },
-  { label: "Import - Prefer values from Infisical", value: IntegrationSyncBehavior.PREFER_SOURCE }
+  { label: "Import - Prefer values from Keydesk", value: IntegrationSyncBehavior.PREFER_SOURCE }
 ];
 
 export const AzureAppConfigurationConfigurePage = () => {
@@ -175,7 +175,7 @@ export const AzureAppConfigurationConfigurePage = () => {
             <span>Azure App Configuration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync to your Azure App Configuration.
+            Choose which environment in Keydesk you want to sync to your Azure App Configuration.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>

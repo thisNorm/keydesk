@@ -3341,7 +3341,7 @@ export const PROJECT_PERMISSION_OBJECT: TProjectPermissionObject = {
   },
   [ProjectPermissionSub.HsmConnectors]: {
     title: "HSM Connectors",
-    description: "Manage HSM Connectors that bridge Infisical to your HSM",
+    description: "Manage HSM Connectors that bridge Keydesk to your HSM",
     actions: [
       {
         label: "Read",

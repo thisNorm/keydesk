@@ -42,8 +42,8 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(DNSMadeEasyConnectionMethod.APIKeySecret),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required"),
-      secretKey: z.string().trim().min(1, "Secret Key required")
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요"),
+      secretKey: z.string().trim().min(1, "시크릿 키를 입력하세요")
     })
   })
 ]);
@@ -77,21 +77,20 @@ export const DNSMadeEasyConnectionForm = ({ appConnection, onSubmit }: Props) =>
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.DNSMadeEasy].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.DNSMadeEasy].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(DNSMadeEasyConnectionMethod).map((method) => {
@@ -113,7 +112,7 @@ export const DNSMadeEasyConnectionForm = ({ appConnection, onSubmit }: Props) =>
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key">API Key</FieldLabel>
+              <FieldLabel htmlFor="api-key">API 키</FieldLabel>
               <Input
                 id="api-key"
                 value={value}
@@ -131,7 +130,7 @@ export const DNSMadeEasyConnectionForm = ({ appConnection, onSubmit }: Props) =>
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="secret-key">Secret Key</FieldLabel>
+              <FieldLabel htmlFor="secret-key">시크릿 키</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "secret-key-error" : undefined}
                 id="secret-key"
@@ -144,7 +143,7 @@ export const DNSMadeEasyConnectionForm = ({ appConnection, onSubmit }: Props) =>
           )}
         />
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to DNS Made Easy"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "DNS Made Easy에 연결"}
         />
       </form>
     </FormProvider>

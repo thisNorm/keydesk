@@ -125,7 +125,7 @@ const describeResult = (result: ShareResult) => {
   const plural = result.recipientCount === 1 ? "" : "s";
 
   if (result.requiresAccount) {
-    return `Sent to ${result.recipientCount} recipient${plural}. Only those with an Infisical account will receive a link.`;
+    return `Sent to ${result.recipientCount} recipient${plural}. Only those with an Keydesk account will receive a link.`;
   }
 
   return `Sent to ${result.recipientCount} recipient${plural}. Each one receives a unique link.`;
@@ -252,7 +252,7 @@ export const ShareSecretForm = ({
 
       createNotification({
         text: requiresAccount
-          ? `If the provided ${recipients.length > 1 ? "emails are" : "email is"} associated with an Infisical account they will receive a link`
+          ? `If the provided ${recipients.length > 1 ? "emails are" : "email is"} associated with an Keydesk account they will receive a link`
           : `Secret link has been sent to the provided ${recipients.length > 1 ? "emails" : "email"}`,
         type: "success"
       });
@@ -407,7 +407,7 @@ export const ShareSecretForm = ({
                   {isValueLocked && (
                     <FieldDescription>
                       Locked to the stored value, so the link shares exactly what is saved in
-                      Infisical.
+                      Keydesk.
                     </FieldDescription>
                   )}
                   {error && <FieldError>{error.message}</FieldError>}
@@ -639,7 +639,7 @@ export const ShareSecretForm = ({
                             disabled={isOrgAccess}
                           />
                           <FieldLabel htmlFor="share-secret-allow-external" className="flex-auto">
-                            Allow recipients without an Infisical account
+                            Allow recipients without an Keydesk account
                             {!allowSecretSharingOutsideOrganization && (
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -684,8 +684,8 @@ export const ShareSecretForm = ({
                           />
                           <FieldDescription>
                             {isAllowingExternalEmails
-                              ? "Recipients do not need an Infisical account, but they do need the password above."
-                              : "Recipients must sign in to Infisical so their identity can be verified."}
+                              ? "Recipients do not need an Keydesk account, but they do need the password above."
+                              : "Recipients must sign in to Keydesk so their identity can be verified."}
                           </FieldDescription>
                           {error && <FieldError>{error.message}</FieldError>}
                         </Field>
@@ -700,12 +700,8 @@ export const ShareSecretForm = ({
         <>
           {isPublic ? (
             <Badge variant="ghost" className="mr-auto">
-              <img
-                src="/images/logotransparent_trimmed.png"
-                alt="Infisical"
-                className="mr-0.5 h-[8px]"
-              />
-              Powered by Infisical
+              <img src="/keydesk.svg" alt="Keydesk" className="mr-0.5 h-[8px]" />
+              Keydesk로 안전하게 공유
             </Badge>
           ) : (
             <Button variant="ghost" isDisabled={isSubmitting} onClick={onCancel}>

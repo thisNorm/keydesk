@@ -27,8 +27,8 @@ export const rotationSchema = z.object({
 });
 
 export const genericAppConnectionFieldsSchema = z.object({
-  name: slugSchema({ min: 1, max: 64, field: "Name" }),
-  description: z.string().trim().max(256, "Description cannot exceed 256 characters").nullish(),
+  name: slugSchema({ min: 1, max: 64, field: "연결 식별자" }),
+  description: z.string().trim().max(256, "설명은 256자를 초과할 수 없습니다").nullish(),
   gatewayId: z
     .string()
     .nullish()
@@ -72,7 +72,7 @@ export const GenericAppConnectionsFields = () => {
   return (
     <>
       <Field className="mb-4">
-        <FieldLabel htmlFor="app-connection-name">Name</FieldLabel>
+        <FieldLabel htmlFor="app-connection-name">연결 식별자</FieldLabel>
         <Input
           id="app-connection-name"
           autoFocus
@@ -82,18 +82,22 @@ export const GenericAppConnectionsFields = () => {
           {...register("name")}
           autoComplete="off"
         />
-        {!errors.name?.message && <FieldDescription>Must be slug-friendly.</FieldDescription>}
+        {!errors.name?.message && (
+          <FieldDescription>
+            연결을 참조하는 식별자입니다. 영문 소문자, 숫자, 하이픈(-)을 1~64자로 입력하세요.
+          </FieldDescription>
+        )}
         <FieldError errors={[errors.name]} />
       </Field>
       <Field className="mb-4">
         <FieldLabel htmlFor="app-connection-description">
-          Description <span className="text-muted">(optional)</span>
+          설명 <span className="text-muted">(선택 사항)</span>
         </FieldLabel>
         <TextArea
           id="app-connection-description"
           className="resize-none"
           rows={2}
-          placeholder="Connection description..."
+          placeholder="연결 설명을 입력하세요..."
           isError={Boolean(errors.description?.message)}
           {...register("description")}
         />

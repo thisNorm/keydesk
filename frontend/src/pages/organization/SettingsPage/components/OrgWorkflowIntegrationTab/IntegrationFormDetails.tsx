@@ -29,9 +29,9 @@ export const IntegrationFormDetails = ({ isOpen, id, onOpenChange, workflowPlatf
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{platformTitle} Integration</DialogTitle>
+          <DialogTitle>{platformTitle} 연동</DialogTitle>
           <DialogDescription>
-            View and update this {platformTitle} integration&apos;s details.
+            다음 연동의 세부 정보를 확인하고 수정하세요: {platformTitle}
           </DialogDescription>
         </DialogHeader>
         {workflowPlatform === WorkflowIntegrationPlatform.SLACK && (

@@ -45,10 +45,10 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(ChefConnectionMethod.UserKey),
     credentials: z.object({
-      serverUrl: z.string().trim().url("Valid Chef Server URL required").optional(),
-      orgName: z.string().trim().min(1, "Organization name required"),
-      userName: z.string().trim().min(1, "User name required"),
-      privateKey: z.string().trim().min(1, "Private key required"),
+      serverUrl: z.string().trim().url("올바른 Chef 서버 URL을 입력하세요").optional(),
+      orgName: z.string().trim().min(1, "조직 이름을 입력하세요"),
+      userName: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      privateKey: z.string().trim().min(1, "개인 키를 입력하세요"),
       dataBagSecret: z
         .string()
         .trim()
@@ -88,7 +88,7 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
         >
           {(isAllowed) => (
             <Field className="mb-4">
-              <FieldLabel>Gateway</FieldLabel>
+              <FieldLabel>게이트웨이</FieldLabel>
               {isAllowed ? (
                 <GatewayPicker
                   isDisabled={!isAllowed}
@@ -116,8 +116,7 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    Restricted access. You don&apos;t have permission to attach gateways to
-                    resources.
+                    접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -131,13 +130,13 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="server-url">
-                Chef Server URL (optional)
+                Chef 서버 URL(선택 사항)
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Will default to Chef Cloud if not specified.
+                    지정하지 않으면 Chef Cloud를 사용합니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -158,21 +157,20 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Chef].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Chef].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(ChefConnectionMethod).map((method) => {
@@ -195,7 +193,7 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="org-name">Organization Short Name</FieldLabel>
+              <FieldLabel htmlFor="org-name">조직 약칭</FieldLabel>
               <Input
                 id="org-name"
                 placeholder="your-org"
@@ -213,7 +211,7 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="user-name">User Name</FieldLabel>
+              <FieldLabel htmlFor="user-name">사용자 이름</FieldLabel>
               <Input
                 id="user-name"
                 placeholder="your-username"
@@ -232,13 +230,13 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="private-key">
-                Private Key
+                개인 키
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Your Chef user&apos;s private key (.pem file)
+                    Chef 사용자의 개인 키(.pem 파일)
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -260,15 +258,15 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="data-bag-secret">
-                Data Bag Secret (optional)
+                데이터 백 시크릿(선택 사항)
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The contents of your encrypted_data_bag_secret file. Needed for syncs that
-                    encrypt secrets or read an encrypted data bag item. Enter it again whenever you
-                    update these credentials.
+                    encrypted_data_bag_secret 파일의 내용입니다. 시크릿을 암호화하거나 암호화된
+                    데이터 백 항목을 읽는 동기화에 필요합니다. 인증 정보를 수정할 때마다 다시
+                    입력하세요.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -283,9 +281,7 @@ export const ChefConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Chef"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Chef에 연결"} />
       </form>
     </FormProvider>
   );

@@ -47,7 +47,7 @@ const kafkaConnectionFields = [
     name: "inputs.saslMechanism",
     type: "select",
     label: "SASL Mechanism",
-    description: "How Infisical authenticates as the admin user.",
+    description: "How Keydesk authenticates as the admin user.",
     options: Object.values(KafkaSaslMechanism).map((value) => ({ label: value, value }))
   },
   {
@@ -261,7 +261,7 @@ const KafkaFields = () => {
         presentation="panel"
         surface
         title="Bootstrap Servers"
-        description="Brokers Infisical tries in order until one connects."
+        description="Brokers Keydesk tries in order until one connects."
       >
         <KafkaRows
           name="inputs.bootstrapServers"

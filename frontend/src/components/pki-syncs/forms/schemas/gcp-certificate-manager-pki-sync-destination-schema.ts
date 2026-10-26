@@ -32,7 +32,7 @@ const GcpLabelSchema = z.object({
       "Label keys must start with a lowercase letter and contain only lowercase letters, digits, hyphens and underscores"
     )
     .refine((value) => !GCP_RESERVED_LABEL_KEYS.includes(value), {
-      message: "This label key is set by Infisical and cannot be overridden"
+      message: "This label key is set by Keydesk and cannot be overridden"
     }),
   value: z
     .string()

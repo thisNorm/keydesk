@@ -71,7 +71,7 @@ type Props = {
 };
 
 const KEY_SOURCE_LABELS: Record<CertKeySource, string> = {
-  [CertKeySource.Infisical]: "Infisical",
+  [CertKeySource.Infisical]: "Keydesk",
   [CertKeySource.Hsm]: "HSM",
   [CertKeySource.AwsKms]: "AWS KMS"
 };

@@ -113,7 +113,7 @@ export default function TeamInviteStep({
             {t("signup.step5-invite-team")}
           </CardTitle>
           <CardDescription className="text-sm text-label">
-            Bring in the people who&apos;ll work with {productName ?? "Infisical"} day to day.
+            Bring in the people who&apos;ll work with {productName ?? "Keydesk"} day to day.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">

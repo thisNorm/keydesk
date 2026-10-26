@@ -28,7 +28,7 @@
     "schedule-demo": "데모 예약하기"
   },
   "common": {
-    "head-title": "{{title}} | Infisical",
+    "head-title": "{{title}} | Keydesk",
     "error_project-already-exists": "동일한 이름을 가진 프로젝트가 이미 존재해요.",
     "email": "이메일",
     "password": "비밀번호",
@@ -63,7 +63,7 @@
   "dashboard": {
     "title": "시크릿",
     "og-title": "빠르게 .env 파일을 관리하세요",
-    "og-description": "Infisical은 팀원과 .env파일을 공유할 수 있는 심플한 end-to-end 암호화 플렛폼입니다.",
+    "og-description": "Keydesk는 팀원과 .env파일을 공유할 수 있는 심플한 end-to-end 암호화 플렛폼입니다.",
     "search-keys": "키 검색하기...",
     "add-key": "키 추가하기",
     "personal": "개인",
@@ -98,8 +98,8 @@
   "integrations": {
     "available": "사용 가능한 연동",
     "available-text1": "연결하고 싶은 서비스를 클릭하세요. 환경 변수가 선택한 외부 서비스와 자동으로 연동됩니다.",
-    "available-text2": "참고: Heroku와의 연동에서는 보안상의 이유로 End-To-End 암호화를 유지하는 것이 불가능합니다. 이론적으로는 Infisical이 시크릿을 읽는것이 가능하지만, 절대 그러지 않는다고 확신할 수 있습니다. 핵심 Infisical 서비스는 항상 End-To-End 암호화 상태를 유지합니다. 질문이 있으면 support@infisical.com으로 문의하세요.",
-    "description": "외부 서비스와 함께 Infisical을 연동하고 관리하세요",
+    "available-text2": "참고: Heroku와의 연동에서는 보안상의 이유로 End-To-End 암호화를 유지하는 것이 불가능합니다. 이론적으로는 Keydesk가 시크릿을 읽는것이 가능하지만, 절대 그러지 않는다고 확신할 수 있습니다. 핵심 Keydesk 서비스는 항상 End-To-End 암호화 상태를 유지합니다. 질문이 있으면 https://github.com/thisNorm/keydesk/issues으로 문의하세요.",
+    "description": "외부 서비스와 함께 Keydesk를 연동하고 관리하세요",
     "no-integrations1": "연동된 서비스가 없어요. 연동하게 된다면 이곳에서 표시돼요.",
     "no-integrations2": "시작하려면, 아래의 옵션을 클릭하세요. 대체로 5분 이내로 가능해요.",
     "title": "프로젝트 연동",
@@ -107,16 +107,16 @@
     "framework-integrations": "프레임워크 연동",
     "click-to-start": "연동할 서비스를 선택해 시크릿 동기화를 시작하세요.",
     "click-to-setup": "프레임워크를 선택해 설정 방법을 확인하세요.",
-    "grant-access-to-secrets": "Infisical에 시크릿 접근 권한 부여",
-    "why-infisical-needs-access": "대부분의 클라우드 연동은 시크릿을 외부 서비스로 전송하기 위해 Infisical의 복호화 권한이 필요합니다.",
+    "grant-access-to-secrets": "Keydesk에 시크릿 접근 권한 부여",
+    "why-infisical-needs-access": "대부분의 클라우드 연동은 시크릿을 외부 서비스로 전송하기 위해 Keydesk의 복호화 권한이 필요합니다.",
     "grant-access-button": "접근 권한 부여"
   },
   "login": {
     "title": "로그인",
-    "og-title": "Infisical에 로그인하기",
-    "og-description": "Infisical은 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다.",
+    "og-title": "Keydesk에 로그인하기",
+    "og-description": "Keydesk는 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다.",
     "login": "로그인",
-    "need-account": "Infisical계정이 필요하신가요?",
+    "need-account": "Keydesk계정이 필요하신가요?",
     "create-account": "회원가입 하기",
     "forgot-password": "비밀번호를 잊으셨나요?",
     "error-login": "이메일 또는 비밀번호가 올바르지 않습니다.",
@@ -127,7 +127,7 @@
   "mfa": {
     "title": "회원가입",
     "og-title": "한줄의 코드르 .env파일을 교체하세요. 3분이면 가입할 수 있어요.",
-    "og-description": "Infisical은 팀원과 .env파일을 공유하고 연동할 수 있는 심플한 end-to-end 암호화 플렛폼입니다. Node.js, Next.js, Gatsby, Nest.js 와 같은 다양한 플렛폼에서 작동해요.",
+    "og-description": "Keydesk는 팀원과 .env파일을 공유하고 연동할 수 있는 심플한 end-to-end 암호화 플렛폼입니다. Node.js, Next.js, Gatsby, Nest.js 와 같은 다양한 플렛폼에서 작동해요.",
     "signup": "회원가입",
     "already-have-account": "이미 계정이 있나요? 로그인하기",
     "forgot-password": "비밀번호를 잊으셨나요?",
@@ -157,7 +157,7 @@
       "slack": "[NEW] 슬랙 포럼에 가입하기",
       "docs": "문서 보기",
       "issue": "깃허브 이슈 열기",
-      "email": "Infisical팀에게 메일 보내기"
+      "email": "Keydesk팀에게 메일 보내기"
     },
     "user": {
       "signed-in-as": "다음으로 로그인됨",
@@ -257,14 +257,14 @@
       "description": "계정 및 기본적인 설정을 확인하고 변경하세요.",
       "emergency": {
         "name": "긴급복구 키트",
-        "text1": "긴급복구 키트는 Infisical계정에 로그인 할 수 있는 정보를 가지고 있어요.",
+        "text1": "긴급복구 키트는 Keydesk계정에 로그인 할 수 있는 정보를 가지고 있어요.",
         "text2": "오직 마지막으로 발급한 긴급복구 키트만 사용 가능해요. 새로운 긴급복구 키트를 받으려면, 비밀번호를 입력하세요.",
         "download": "긴급복구 키트 다운로드"
       },
       "change-language": "언어 변경하기",
       "api-keys": {
         "title": "API 키",
-        "description": "Infisical API에 접근할 개인 API 키를 관리하세요.",
+        "description": "Keydesk API에 접근할 개인 API 키를 관리하세요.",
         "add-new": "새로 추가"
       }
     },
@@ -276,8 +276,8 @@
       "danger-zone-note": "프로젝트를 삭제한다면 모든 키가 즉시 삭제되며 다시는 되돌릴 수 없어요. 삭제를 원한다면 프로젝트 이름을 아래에 적어주세요.",
       "delete-project": "프로젝트 삭제",
       "delete-project-note": "노트: 최소 한개 이상의 프로젝트는 조직에 존재해야 해요.",
-      "docs": "Infisical 문서",
-      "project-id-description": "다른 코드에서 Infisical과 환경변수를 연동하기 위해서는 프로젝트 ID가 필요해요.",
+      "docs": "Keydesk 문서",
+      "project-id-description": "다른 코드에서 Keydesk와 환경변수를 연동하기 위해서는 프로젝트 ID가 필요해요.",
       "project-id-description2": "다양한 언어 및 프레임워크에 대한 가이드를 확인하고 싶다면, 다음을 확인하세요. ",
       "project-to-delete": "삭제할 프로젝트",
       "enforce-capitalization": "대문자 키 사용",
@@ -291,7 +291,7 @@
   "signup": {
     "title": "회원가입",
     "og-title": "한줄의 코드르 .env파일을 교체하세요. 3분이면 가입할 수 있어요.",
-    "og-description": "Infisical은 팀원과 .env파일을 공유하고 연동할 수 있는 심플한 end-to-end 암호화 플렛폼입니다. Node.js, Next.js, Gatsby, Nest.js 와 같은 다양한 플렛폼에서 작동해요.",
+    "og-description": "Keydesk는 팀원과 .env파일을 공유하고 연동할 수 있는 심플한 end-to-end 암호화 플렛폼입니다. Node.js, Next.js, Gatsby, Nest.js 와 같은 다양한 플렛폼에서 작동해요.",
     "signup": "회원가입",
     "already-have-account": "이미 계정이 있나요? 로그인하기",
     "forgot-password": "비밀번호를 잊으셨나요?",
@@ -312,11 +312,11 @@
     "step4-description3": "분실시 접근하거나 복구할 수 없는 시크릿 키가 포함되어 있어요.",
     "step4-download": "PDF 다운로드",
     "next": "다음",
-    "initial-title": "Infisical 계정 만들기",
+    "initial-title": "Keydesk 계정 만들기",
     "continue-with-google": "Google로 계속",
     "continue-with-email": "이메일로 계속",
     "create-policy": "가입하면 이용 약관 및 개인정보 처리방침에 동의한 것으로 간주합니다.",
-    "product-updates-notice": "Infisical 제품 업데이트와 안내 이메일을 보낼 수 있습니다. 언제든지 수신을 거부할 수 있습니다.",
+    "product-updates-notice": "Keydesk 제품 업데이트와 안내 이메일을 보낼 수 있습니다. 언제든지 수신을 거부할 수 있습니다.",
     "step2-resend-alert": "인증 코드가 보이지 않나요?",
     "step2-resend-submit": "다시 보내기",
     "step2-resend-progress": "다시 보내는 중...",
@@ -327,7 +327,7 @@
   },
   "activity": {
     "title": "감사 로그",
-    "subtitle": "이 Infisical 프로젝트의 이벤트 기록입니다.",
+    "subtitle": "이 Keydesk 프로젝트의 이벤트 기록입니다.",
     "event": {
       "readSecrets": "시크릿 조회",
       "updateSecrets": "시크릿 수정",
@@ -339,7 +339,7 @@
   "approval": {
     "title": "관리자 패널",
     "og-title": "시크릿 변경 관리",
-    "og-description": "Infisical은 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다."
+    "og-description": "Keydesk는 시크릿과 환경 변수를 암호화하여 보관하는 플랫폼입니다."
   },
   "admin": {
     "signup-title": "관리자 계정 만들기",

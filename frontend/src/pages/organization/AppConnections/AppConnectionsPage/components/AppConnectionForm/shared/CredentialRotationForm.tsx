@@ -39,11 +39,11 @@ export const CredentialRotationForm = ({ children }: Props) => {
             <Field>
               <Field orientation="horizontal">
                 <FieldContent>
-                  <Label htmlFor="auto-rotation-enabled">Automatic Credential Rotation</Label>
+                  <Label htmlFor="auto-rotation-enabled">인증 정보 자동 교체</Label>
                   <FieldDescription>
                     {value
-                      ? "App connection credentials will automatically be rotated when the rotation interval specified above as elapsed."
-                      : "App connection credentials will not be rotated automatically."}
+                      ? "위에서 지정한 교체 주기가 지나면 앱 연결의 인증 정보를 자동으로 교체합니다."
+                      : "앱 연결의 인증 정보를 자동으로 교체하지 않습니다."}
                   </FieldDescription>
                 </FieldContent>
                 <Toggle
@@ -68,13 +68,13 @@ export const CredentialRotationForm = ({ children }: Props) => {
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="flex-1">
                   <FieldLabel>
-                    Rotation Interval (In Days)
+                    교체 주기(일)
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        How often Infisical will rotate the credentials of this connection.
+                        Keydesk가 이 연결의 인증 정보를 교체하는 주기입니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -97,14 +97,13 @@ export const CredentialRotationForm = ({ children }: Props) => {
                 return (
                   <Field className="flex-1">
                     <FieldLabel>
-                      Rotate At (Local Time)
+                      교체 시각(현지 시간)
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
-                          The time of day at which Infisical will rotate the credentials of this
-                          connection.
+                          Keydesk가 이 연결의 인증 정보를 교체할 시각입니다.
                         </TooltipContent>
                       </Tooltip>
                     </FieldLabel>

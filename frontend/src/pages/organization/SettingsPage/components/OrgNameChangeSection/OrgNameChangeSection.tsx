@@ -44,7 +44,7 @@ const formSchema = z.object({
   name: GenericResourceNameSchema,
   slug: z
     .string()
-    .regex(/^[a-zA-Z0-9-]+$/, "Name must only contain alphanumeric characters or hyphens"),
+    .regex(/^[a-zA-Z0-9-]+$/, "주소 식별자에는 영문, 숫자, 하이픈(-)만 사용할 수 있습니다."),
   defaultMembershipRole: z.string()
 });
 
@@ -95,7 +95,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
     });
 
     createNotification({
-      text: "Successfully updated organization details",
+      text: "조직 정보를 저장했습니다.",
       type: "success"
     });
     reset({ name, slug, defaultMembershipRole }, { keepDirtyValues: true });
@@ -105,9 +105,9 @@ export const OrgNameChangeSection = (): JSX.Element => {
     <form onSubmit={handleSubmit(onFormSubmit)}>
       <Card className="gap-0 overflow-hidden p-0">
         <CardHeader className="p-6">
-          <CardTitle>Organization Details</CardTitle>
+          <CardTitle>조직 정보</CardTitle>
           <CardDescription>
-            Update your organization&apos;s name, slug, and default member role.
+            조직 이름, 주소 식별자, 새 구성원의 기본 역할을 변경합니다.
           </CardDescription>
         </CardHeader>
         <CardContent className="max-w-md px-6 pb-6">
@@ -125,10 +125,10 @@ export const OrgNameChangeSection = (): JSX.Element => {
                 name="name"
                 render={({ field, fieldState: { error } }) => (
                   <Field>
-                    <FieldLabel htmlFor="org-name">Organization Name</FieldLabel>
+                    <FieldLabel htmlFor="org-name">조직 이름</FieldLabel>
                     <Input
                       id="org-name"
-                      placeholder="Acme Corp"
+                      placeholder="예: 우리집 API 보관함"
                       isError={Boolean(error)}
                       {...field}
                       autoComplete="off"
@@ -139,7 +139,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
                 )}
               />
               <Field>
-                <FieldLabel htmlFor="org-id">Organization ID</FieldLabel>
+                <FieldLabel htmlFor="org-id">조직 ID</FieldLabel>
                 <InputGroup>
                   <InputGroupInput id="org-id" value={currentOrg.id} readOnly />
                   <InputGroupAddon align="inline-end">
@@ -147,7 +147,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
                       key={currentOrg.id}
                       type="button"
                       value={currentOrg.id}
-                      ariaLabel="Copy organization ID"
+                      ariaLabel="조직 ID 복사"
                     />
                   </InputGroupAddon>
                 </InputGroup>
@@ -158,7 +158,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
                 name="slug"
                 render={({ field, fieldState: { error } }) => (
                   <Field>
-                    <FieldLabel htmlFor="org-slug">Organization Slug</FieldLabel>
+                    <FieldLabel htmlFor="org-slug">주소 식별자</FieldLabel>
                     <Input id="org-slug" placeholder="acme" isError={Boolean(error)} {...field} />
                     <FieldError>{error?.message}</FieldError>
                   </Field>
@@ -171,9 +171,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
                   name="defaultMembershipRole"
                   render={({ field: { value, onChange }, fieldState: { error } }) => (
                     <Field>
-                      <FieldLabel htmlFor="org-default-role">
-                        Default Organization Member Role
-                      </FieldLabel>
+                      <FieldLabel htmlFor="org-default-role">새 구성원의 기본 역할</FieldLabel>
                       <Select
                         value={value}
                         onValueChange={!roles?.length ? undefined : onChange}
@@ -184,7 +182,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
                           isError={Boolean(error)}
                           className="w-full capitalize"
                         >
-                          <SelectValue placeholder="Select role" />
+                          <SelectValue placeholder="역할 선택" />
                         </SelectTrigger>
                         <SelectContent>
                           {roles?.map((role) => (
@@ -195,8 +193,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
                         </SelectContent>
                       </Select>
                       <FieldDescription>
-                        Users joining your organization will be assigned this role unless otherwise
-                        specified.
+                        별도 지정이 없으면 새로 가입한 구성원에게 이 역할을 부여합니다.
                       </FieldDescription>
                       <FieldError>{error?.message}</FieldError>
                     </Field>
@@ -216,7 +213,7 @@ export const OrgNameChangeSection = (): JSX.Element => {
                 isPending={isPending}
                 isDisabled={!isAllowed || !isDirty}
               >
-                Save Changes
+                변경 사항 저장
               </Button>
             )}
           </OrgPermissionCan>

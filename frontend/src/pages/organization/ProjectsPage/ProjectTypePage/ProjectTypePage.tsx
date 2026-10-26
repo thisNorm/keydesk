@@ -378,7 +378,7 @@ const ProjectTypeContent = ({
     <div className="mx-auto flex max-w-8xl flex-col">
       <Helmet>
         <title>{typeTitle} Projects</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <PageHeader
         title={typeTitle}

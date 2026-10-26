@@ -43,8 +43,8 @@ const formSchema = z.discriminatedUnion("method", [
       apiKey: z
         .string()
         .trim()
-        .min(1, "API Key required")
-        .startsWith("cog_", "API Key must start with 'cog_'")
+        .min(1, "API 키를 입력하세요")
+        .startsWith("cog_", "API 키는 'cog_'로 시작해야 합니다")
     })
   })
 ]);
@@ -74,21 +74,21 @@ export const DevinConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.Devin].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(DevinConnectionMethod).map((method) => (
@@ -109,14 +109,14 @@ export const DevinConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="api-key">
-                Service User API Key
+                서비스 사용자 API 키
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Generate a service-user credential with the ManageOrgSecrets permission from the
-                    Devin dashboard. The key starts with &apos;cog_&apos;.
+                    Devin 대시보드에서 ManageOrgSecrets 권한이 있는 서비스 사용자 인증 정보를
+                    만드세요. 키는 &apos;cog_&apos;로 시작합니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -131,9 +131,7 @@ export const DevinConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Devin"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Devin에 연결"} />
       </form>
     </FormProvider>
   );

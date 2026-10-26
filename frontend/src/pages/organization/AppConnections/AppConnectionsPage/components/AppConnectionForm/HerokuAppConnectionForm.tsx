@@ -55,14 +55,14 @@ const formSchema = z.discriminatedUnion("method", [
     app: z.literal(AppConnection.Heroku),
     method: z.literal(HerokuConnectionMethod.AuthToken),
     credentials: z.object({
-      authToken: z.string().min(1, "Auth token is required")
+      authToken: z.string().min(1, "인증 토큰을 입력하세요")
     })
   }),
   genericAppConnectionFieldsSchema.extend({
     app: z.literal(AppConnection.Heroku),
     method: z.literal(HerokuConnectionMethod.OAuth),
     credentials: z.object({
-      code: z.string().min(1, "Code is required")
+      code: z.string().min(1, "코드를 입력하세요")
     })
   })
 ]);
@@ -148,7 +148,7 @@ export const HerokuConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
           break;
 
         default:
-          throw new Error("Unhandled Heroku Connection method");
+          throw new Error("지원되지 않는 Heroku 연결 방식입니다");
       }
     } catch (error) {
       console.error("Error handling form submission:", error);
@@ -166,17 +166,17 @@ export const HerokuConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
       isMissingConfig = false;
       break;
     default:
-      throw new Error(`Unhandled Heroku Connection method: ${selectedMethod}`);
+      throw new Error(`지원되지 않는 Heroku 연결 방식: ${selectedMethod}`);
   }
 
   const methodDetails = getAppConnectionMethodDetails(selectedMethod);
 
   const getMethodErrorText = (fieldError?: { message?: string }) => {
     if (!isLoading && isMissingConfig && selectedMethod === HerokuConnectionMethod.OAuth) {
-      return `Environment variables have not been configured. ${
+      return `환경 변수가 구성되지 않았습니다. ${
         isInfisicalCloud()
-          ? "Please contact Infisical."
-          : `See Docs to configure Heroku ${methodDetails.name} Connections.`
+          ? "Keydesk 관리자에게 문의하세요."
+          : `문서를 확인해 Heroku 연결을 구성하세요: ${methodDetails.name} 연결입니다.`
       }`;
     }
     return fieldError?.message;
@@ -193,15 +193,14 @@ export const HerokuConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Heroku].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Heroku].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -219,7 +218,7 @@ export const HerokuConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
                   className="w-full"
                   isError={Boolean(error?.message) || isMissingConfig}
                 >
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(HerokuConnectionMethod).map((method) => (
@@ -242,12 +241,12 @@ export const HerokuConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
                 <FieldLabel htmlFor="heroku-auth-token">
-                  Auth Token
+                  인증 토큰
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Info />
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-sm">Your Heroku Auth Token</TooltipContent>
+                    <TooltipContent className="max-w-sm">Heroku 인증 토큰</TooltipContent>
                   </Tooltip>
                 </FieldLabel>
                 <SecretInput
@@ -276,10 +275,10 @@ export const HerokuConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
             }
           >
             {isRedirecting && selectedMethod === HerokuConnectionMethod.OAuth
-              ? "Redirecting to Heroku..."
+              ? "Heroku로 이동 중..."
               : isUpdate
-                ? "Reconnect to Heroku"
-                : "Connect to Heroku"}
+                ? "Heroku에 다시 연결"
+                : "Heroku에 연결"}
           </Button>
           <Button
             type="button"
@@ -287,7 +286,7 @@ export const HerokuConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

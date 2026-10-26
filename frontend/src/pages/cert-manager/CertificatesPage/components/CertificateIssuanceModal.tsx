@@ -208,7 +208,7 @@ const STEP_META: Record<IssuanceStepKey, WizardStep> = {
     subtitle: "Choose how to request the certificate and which profile to use.",
     rightLabel: "Profile",
     rightDescription:
-      "The certificate profile determines the issuing CA and the policy that constrains what this certificate may contain. Choose Managed to have Infisical generate the key pair for you, or CSR to supply your own certificate signing request."
+      "The certificate profile determines the issuing CA and the policy that constrains what this certificate may contain. Choose Managed to have Keydesk generate the key pair for you, or CSR to supply your own certificate signing request."
   },
   csr: {
     name: "Signing Request",

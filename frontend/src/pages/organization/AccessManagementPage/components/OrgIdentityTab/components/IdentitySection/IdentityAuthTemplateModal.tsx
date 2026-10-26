@@ -774,7 +774,7 @@ export const IdentityAuthTemplateModal = ({ popUp, handlePopUpToggle }: Props) =
                                   <TooltipContent className="max-w-md">
                                     {hasCaCert
                                       ? "Verification is always on while a CA certificate is provided. To disable verification, clear the CA certificate field below."
-                                      : "When enabled, Infisical validates the Kubernetes API server's TLS certificate against the CA certificate provided below."}
+                                      : "When enabled, Keydesk validates the Kubernetes API server's TLS certificate against the CA certificate provided below."}
                                   </TooltipContent>
                                 </Tooltip>
                               </FieldLabel>

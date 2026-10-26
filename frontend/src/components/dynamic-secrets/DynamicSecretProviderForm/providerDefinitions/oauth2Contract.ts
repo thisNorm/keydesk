@@ -74,7 +74,7 @@ const extraParamsSchema = z
         .regex(PARAM_KEY_REGEX, "Parameter name contains invalid characters")
         .refine(
           (key) => !OAUTH2_RESERVED_PARAMS.has(key.toLowerCase()),
-          "Infisical sets this parameter"
+          "Keydesk sets this parameter"
         ),
       value: z.string().trim().min(1, "Parameter value is required").max(2048)
     })

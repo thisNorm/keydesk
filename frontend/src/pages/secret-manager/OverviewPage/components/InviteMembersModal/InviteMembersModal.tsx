@@ -166,7 +166,7 @@ export const InviteMembersModal = ({ popUp, handlePopUpToggle, experimentVariant
         <DialogHeader>
           <DialogTitle>Invite your team</DialogTitle>
           <DialogDescription>
-            Infisical is better with your team. Bring your team in to review, rotate, and manage
+            Keydesk is better with your team. Bring your team in to review, rotate, and manage
             secrets together.
           </DialogDescription>
         </DialogHeader>

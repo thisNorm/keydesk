@@ -227,7 +227,7 @@ export const GroupDetailsByIDPage = () => {
         <title>
           {t("common.head-title", { title: projectsHidden ? "Group" : "Project Group" })}
         </title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <ProjectPermissionCan
         I={ProjectPermissionActions.Read}

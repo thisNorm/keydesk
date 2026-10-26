@@ -156,7 +156,7 @@ const NavigationCommandMenu = ({
           actionType: item.children ? "drill-down" : "navigation"
         });
       }}
-      title="Search Infisical"
+      title="Search Keydesk"
       description="Search pages, projects, organizations, teams, and commands."
       placeholder="Find..."
       emptyMessage="No matching pages or commands."

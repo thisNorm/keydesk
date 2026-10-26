@@ -87,7 +87,7 @@ export const ProxiedServiceSubstitutionFields = ({
                   <InfoIcon className="size-3.5 shrink-0 text-muted" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
-                  Infisical sets this environment variable on the agent for you, holding the
+                  Keydesk sets this environment variable on the agent for you, holding the
                   placeholder value.
                 </TooltipContent>
               </Tooltip>

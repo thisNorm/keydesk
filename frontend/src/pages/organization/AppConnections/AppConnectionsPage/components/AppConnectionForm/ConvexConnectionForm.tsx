@@ -41,13 +41,13 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(ConvexConnectionMethod.PersonalAccessToken),
     credentials: z.object({
-      accessToken: z.string().trim().min(1, "Access Token required"),
+      accessToken: z.string().trim().min(1, "액세스 토큰을 입력하세요"),
       instanceUrl: z
         .string()
         .trim()
         .transform((value) => value || undefined)
         .refine((value) => (!value ? true : z.string().url().safeParse(value).success), {
-          message: "Invalid instance URL"
+          message: "올바른 인스턴스 URL을 입력하세요"
         })
         .optional()
     })
@@ -79,21 +79,20 @@ export const ConvexConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Convex].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Convex].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(ConvexConnectionMethod).map((method) => {
@@ -115,7 +114,7 @@ export const ConvexConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="access-token">Access Token</FieldLabel>
+              <FieldLabel htmlFor="access-token">액세스 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "access-token-error" : undefined}
                 id="access-token"
@@ -134,13 +133,13 @@ export const ConvexConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL <span className="text-muted">(optional)</span>
+                인스턴스 URL <span className="text-muted">(선택 사항)</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Will default to https://api.convex.dev if not specified.
+                    지정하지 않으면 https://api.convex.dev를 사용합니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -154,9 +153,7 @@ export const ConvexConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Convex"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Convex에 연결"} />
       </form>
     </FormProvider>
   );

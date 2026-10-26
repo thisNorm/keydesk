@@ -42,7 +42,7 @@ const formSchema = z.discriminatedUnion("method", [
     method: z.literal(CircleCIConnectionMethod.ApiToken),
     credentials: z.object({
       host: z.string().trim().optional(),
-      apiToken: z.string().trim().min(1, "API Token required")
+      apiToken: z.string().trim().min(1, "API 토큰을 입력하세요")
     })
   })
 ]);
@@ -74,15 +74,14 @@ export const CircleCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="host">
-                Instance Hostname <span className="text-muted">(optional)</span>
+                인스턴스 호스트 이름 <span className="text-muted">(선택 사항)</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The host URL of your CircleCI instance. This is used to connect to your CircleCI
-                    instance. If not specified, the default value of &apos;circleci.com&apos; will
-                    be used.
+                    CircleCI 인스턴스에 연결할 호스트 URL입니다. 지정하지 않으면 기본값인
+                    &apos;circleci.com&apos;을 사용합니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -105,21 +104,20 @@ export const CircleCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.CircleCI].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.CircleCI].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(CircleCIConnectionMethod).map((method) => {
@@ -143,14 +141,14 @@ export const CircleCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="api-token">
-                API Token
+                API 토큰
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Your CircleCI API Token. You can generate one from CircleCI User Settings &gt;
-                    Personal API Tokens.
+                    CircleCI API 토큰입니다. CircleCI User Settings &gt; Personal API Tokens에서
+                    만들 수 있습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -165,9 +163,7 @@ export const CircleCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to CircleCI"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "CircleCI에 연결"} />
       </form>
     </FormProvider>
   );

@@ -136,7 +136,7 @@ export const CaSection = () => {
           <DocumentationLinkBadge href={PkiDocsUrls.ca.internal} />
         </CardTitle>
         <CardDescription>
-          Private CAs hosted by Infisical. Use them to issue certificates directly or sign other CAs
+          Private CAs hosted by Keydesk. Use them to issue certificates directly or sign other CAs
           to build a layered setup.
         </CardDescription>
         <CardAction>

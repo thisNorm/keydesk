@@ -565,7 +565,7 @@ export const SessionLogModal = ({ isOpen, onOpenChange, onSaved, onEditCredentia
                       <p>
                         Everything already recorded stays in{" "}
                         <span className="font-mono">{savedExternal?.bucket}</span> and won&apos;t
-                        show in Infisical until you switch back to it. To rotate credentials, update
+                        show in Keydesk until you switch back to it. To rotate credentials, update
                         the AWS connection instead of moving the bucket.
                       </p>
                       {onEditCredentials && (

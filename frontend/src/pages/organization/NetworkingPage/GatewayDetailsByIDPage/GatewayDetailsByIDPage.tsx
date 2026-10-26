@@ -77,7 +77,7 @@ export const GatewayDetailsByIDPage = () => {
     <>
       <Helmet>
         <title>{t("common.head-title", { title: t("settings.org.title") })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <OrgPermissionCan
         passThrough={false}

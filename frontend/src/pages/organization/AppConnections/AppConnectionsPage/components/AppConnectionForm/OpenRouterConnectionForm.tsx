@@ -40,7 +40,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(OpenRouterConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required")
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요")
     })
   })
 ]);
@@ -70,21 +70,20 @@ export const OpenRouterConnectionForm = ({ appConnection, onSubmit }: Props) => 
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.OpenRouter].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.OpenRouter].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)} id="method">
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(OpenRouterConnectionMethod).map((method) => {
@@ -107,13 +106,13 @@ export const OpenRouterConnectionForm = ({ appConnection, onSubmit }: Props) => 
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="api-key">
-                Provisioning API Key
+                프로비저닝 API 키
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The OpenRouter Provisioning API key used to manage API keys.
+                    API 키 관리에 사용할 OpenRouter 프로비저닝 API 키입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -128,9 +127,7 @@ export const OpenRouterConnectionForm = ({ appConnection, onSubmit }: Props) => 
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to OpenRouter"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "OpenRouter에 연결"} />
       </form>
     </FormProvider>
   );

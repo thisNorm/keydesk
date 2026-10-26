@@ -44,16 +44,16 @@ const formSchema = z.discriminatedUnion("method", [
       userOcid: z
         .string()
         .trim()
-        .min(1, "User OCID required")
-        .regex(/^ocid1\.user\.oc1\.\..+$/, "Invalid User OCID format"),
+        .min(1, "사용자 OCID를 입력하세요")
+        .regex(/^ocid1\.user\.oc1\.\..+$/, "올바른 사용자 OCID 형식을 입력하세요"),
       tenancyOcid: z
         .string()
         .trim()
-        .min(1, "Tenancy OCID required")
-        .regex(/^ocid1\.tenancy\.oc1\.\..+$/, "Invalid Tenancy OCID format"),
-      region: z.string().trim().min(1, "Region required"),
-      fingerprint: z.string().trim().min(1, "Fingerprint required"),
-      privateKey: z.string().trim().min(1, "Private Key required")
+        .min(1, "테넌시 OCID를 입력하세요")
+        .regex(/^ocid1\.tenancy\.oc1\.\..+$/, "올바른 테넌시 OCID 형식을 입력하세요"),
+      region: z.string().trim().min(1, "리전을 입력하세요"),
+      fingerprint: z.string().trim().min(1, "지문을 입력하세요"),
+      privateKey: z.string().trim().min(1, "개인 키를 입력하세요")
     })
   })
 ]);
@@ -83,21 +83,21 @@ export const OCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.OCI].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(OCIConnectionMethod).map((method) => {
@@ -120,15 +120,14 @@ export const OCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials-user-ocid">
-                User OCID
+                사용자 OCID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The unique identifier (OCID) associated with your OCI user account. You can find
-                    this in your OCI console under Identity &gt; Domains &gt; [domain] &gt; Users
-                    &gt; [user].
+                    OCI 사용자 계정의 고유 식별자(OCID)입니다. OCI 콘솔의 Identity &gt; Domains &gt;
+                    [domain] &gt; Users &gt; [user]에서 확인할 수 있습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -149,14 +148,14 @@ export const OCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials-tenancy-ocid">
-                Tenancy OCID
+                테넌시 OCID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The unique identifier (OCID) for your tenancy in Oracle Cloud. You can find this
-                    in your OCI console under Administration &gt; Tenancy Details.
+                    Oracle Cloud 테넌시의 고유 식별자(OCID)입니다. OCI 콘솔의 Administration &gt;
+                    Tenancy Details에서 확인할 수 있습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -177,14 +176,13 @@ export const OCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials-region">
-                Region
+                리전
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The OCI region where your resources are located (e.g., us-ashburn-1,
-                    eu-frankfurt-1).
+                    리소스가 위치한 OCI 리전입니다(예: us-ashburn-1, eu-frankfurt-1).
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -205,14 +203,14 @@ export const OCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials-fingerprint">
-                Fingerprint
+                지문
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The fingerprint of the public key associated with your OCI API key. This is
-                    generated when you create an API key in your OCI user settings.
+                    OCI API 키에 연결된 공개 키의 지문입니다. OCI 사용자 설정에서 API 키를 만들면
+                    생성됩니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -232,7 +230,7 @@ export const OCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="app-connection-oci-private-key">Private Key PEM</FieldLabel>
+              <FieldLabel htmlFor="app-connection-oci-private-key">PEM 개인 키</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "app-connection-oci-private-key-error" : undefined}
                 id="app-connection-oci-private-key"
@@ -244,7 +242,7 @@ export const OCIConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter submitLabel={isUpdate ? "Update Credentials" : "Connect to OCI"} />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "OCI에 연결"} />
       </form>
     </FormProvider>
   );

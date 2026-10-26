@@ -10,8 +10,8 @@ export const OauthApplicationsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Infisical | OAuth Applications</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Keydesk | OAuth Applications</title>
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <div className="flex w-full justify-center bg-page text-foreground-inverse">
@@ -19,7 +19,7 @@ export const OauthApplicationsPage = () => {
           <PageHeader
             scope={isSubOrganization ? "namespace" : "org"}
             title="OAuth Applications"
-            description="Control how external platforms access Infisical on behalf of your users via OAuth 2.0."
+            description="Control how external platforms access Keydesk on behalf of your users via OAuth 2.0."
           />
           <OrgOauthClientsTab />
         </div>

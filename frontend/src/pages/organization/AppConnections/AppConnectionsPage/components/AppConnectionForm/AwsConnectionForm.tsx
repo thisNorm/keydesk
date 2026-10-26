@@ -50,12 +50,12 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(AwsConnectionMethod.AssumeRole),
     credentials: z.object({
-      roleArn: z.string().trim().min(1, "Role ARN required"),
+      roleArn: z.string().trim().min(1, "역할 ARN을 입력하세요"),
       stsEndpoint: z
         .string()
         .trim()
-        .url("Must be a valid URL")
-        .startsWith("https://", "Must use HTTPS")
+        .url("올바른 URL을 입력하세요")
+        .startsWith("https://", "HTTPS를 사용해야 합니다")
         .or(z.literal(""))
         .optional()
         .transform((val) => val || undefined)
@@ -64,8 +64,8 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(AwsConnectionMethod.AccessKey),
     credentials: z.object({
-      accessKeyId: z.string().trim().min(1, "Access Key ID required"),
-      secretAccessKey: z.string().trim().min(1, "Secret Access Key required")
+      accessKeyId: z.string().trim().min(1, "액세스 키 ID를 입력하세요"),
+      secretAccessKey: z.string().trim().min(1, "시크릿 액세스 키를 입력하세요")
     })
   })
 ]);
@@ -77,26 +77,25 @@ const OrgExternalIdHint = () => {
 
   return (
     <FieldDescription>
-      Infisical sends your{" "}
+      Keydesk는 역할을 수임할 때{" "}
       <HoverCard openDelay={150} closeDelay={150}>
         <HoverCardTrigger asChild>
           <span className="cursor-help text-foreground underline decoration-muted decoration-dotted underline-offset-4">
-            organization ID
+            조직 ID
           </span>
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-auto max-w-sm">
-          <p className="text-xs font-medium text-foreground">External ID</p>
+          <p className="text-xs font-medium text-foreground">외부 ID</p>
           <div className="mt-1 flex items-center gap-1">
             <span className="font-mono text-xs">{currentOrg.id}</span>
-            <CopyButton value={currentOrg.id} ariaLabel="Copy organization ID" />
+            <CopyButton value={currentOrg.id} ariaLabel="조직 ID 복사" />
           </div>
           <p className="mt-2 text-xs text-muted">
-            Require it in the role&apos;s trust policy with the <Code>sts:ExternalId</Code>{" "}
-            condition.
+            역할의 신뢰 정책에 <Code>sts:ExternalId</Code> 조건으로 지정하세요.
           </p>
         </HoverCardContent>
       </HoverCard>{" "}
-      as the External ID when it assumes this role.
+      를 외부 ID로 전송합니다.
     </FieldDescription>
   );
 };
@@ -126,21 +125,20 @@ export const AwsConnectionForm = ({ appConnection, onSubmit, projectType }: Prop
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.AWS].name}. This field cannot be changed after
-                    creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.AWS].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AwsConnectionMethod).map((method) => (
@@ -163,7 +161,7 @@ export const AwsConnectionForm = ({ appConnection, onSubmit, projectType }: Prop
               shouldUnregister
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="app-connection-aws-role-arn">Role ARN</FieldLabel>
+                  <FieldLabel htmlFor="app-connection-aws-role-arn">역할 ARN</FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "app-connection-aws-role-arn-error" : undefined}
                     id="app-connection-aws-role-arn"
@@ -183,15 +181,15 @@ export const AwsConnectionForm = ({ appConnection, onSubmit, projectType }: Prop
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel>
-                    STS Endpoint URL <span className="text-muted">(optional)</span>
+                    STS 엔드포인트 URL <span className="text-muted">(선택 사항)</span>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-md">
-                        Override the default AWS STS endpoint Infisical calls to assume the role.
-                        Useful for VPC (PrivateLink), GovCloud, China, FIPS, or region-pinned
-                        endpoints. Leave blank to use the default AWS STS endpoint.
+                        역할을 수임할 때 Keydesk가 호출할 AWS STS 엔드포인트를 지정합니다.
+                        VPC(PrivateLink), GovCloud, 중국, FIPS 또는 특정 리전에 고정된 엔드포인트에
+                        사용할 수 있습니다. 비워 두면 기본 AWS STS 엔드포인트를 사용합니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -214,7 +212,7 @@ export const AwsConnectionForm = ({ appConnection, onSubmit, projectType }: Prop
               shouldUnregister
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel>Access Key ID</FieldLabel>
+                  <FieldLabel>액세스 키 ID</FieldLabel>
                   <Input
                     placeholder={"*".repeat(20)}
                     value={value}
@@ -232,7 +230,7 @@ export const AwsConnectionForm = ({ appConnection, onSubmit, projectType }: Prop
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="app-connection-aws-secret-access-key">
-                    Secret Access Key
+                    시크릿 액세스 키
                   </FieldLabel>
                   <SecretInput
                     aria-describedby={
@@ -249,7 +247,7 @@ export const AwsConnectionForm = ({ appConnection, onSubmit, projectType }: Prop
             />
           </>
         )}
-        <AppConnectionFormFooter submitLabel={isUpdate ? "Update Credentials" : "Connect to AWS"} />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "AWS에 연결"} />
       </form>
     </FormProvider>
   );

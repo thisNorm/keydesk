@@ -125,7 +125,7 @@ export const AzureDevopsConfigurePage = () => {
             <span>Azure DevOps Integration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync to secrets in Azure DevOps.
+            Choose which environment in Keydesk you want to sync to secrets in Azure DevOps.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>

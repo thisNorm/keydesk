@@ -43,7 +43,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.nativeEnum(RailwayConnectionMethod),
     credentials: z.object({
-      apiToken: z.string().trim().min(1, "Service API Token required")
+      apiToken: z.string().trim().min(1, "서비스 API 토큰을 입력하세요")
     })
   })
 ]);
@@ -73,21 +73,20 @@ export const RailwayConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Token Type
+                토큰 유형
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The type of token you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Railway].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 토큰 유형입니다: {APP_CONNECTION_MAP[AppConnection.Railway].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)} id="method">
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(RailwayConnectionMethod).map((method) => {
@@ -109,7 +108,7 @@ export const RailwayConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-token">Token Value</FieldLabel>
+              <FieldLabel htmlFor="api-token">토큰 값</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-token-error" : undefined}
                 id="api-token"
@@ -121,9 +120,7 @@ export const RailwayConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Railway"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Railway에 연결"} />
       </form>
     </FormProvider>
   );

@@ -18,7 +18,7 @@ export const AuthenticationPage = () => {
           <PageHeader
             scope="instance"
             title="Authentication"
-            description="Manage authentication settings for your Infisical instance."
+            description="Manage authentication settings for your Keydesk instance."
           />
           <AuthenticationPageForm />
         </div>

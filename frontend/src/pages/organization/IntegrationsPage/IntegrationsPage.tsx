@@ -33,7 +33,7 @@ const AppConnectionsTab = withPermission(
       >
         <InfoIcon />
         <AlertDescription>
-          App connections can also be created and managed independently in projects now.
+          이제 프로젝트에서도 앱 연결을 개별적으로 만들고 관리할 수 있습니다.
         </AlertDescription>
       </DismissableAlert>
       <AppConnectionsTable />
@@ -58,17 +58,17 @@ export const IntegrationsPage = () => {
   const tabs = [
     {
       key: IntegrationsListPageTabs.AppConnections as string,
-      label: "App Connections",
+      label: "앱 연결",
       component: AppConnectionsTab
     },
     {
       key: "workflow-integrations",
-      label: "Workflow Integrations",
+      label: "워크플로 연동",
       component: OrgWorkflowIntegrationTab
     },
     {
       key: "external-migrations",
-      label: "External Migrations",
+      label: "외부 마이그레이션",
       component: ExternalMigrationsTab
     }
   ];
@@ -88,25 +88,21 @@ export const IntegrationsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Infisical | Integrations</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Keydesk | 연동</title>
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <div className="flex w-full justify-center bg-page text-foreground-inverse">
         <div className="flex w-full max-w-8xl flex-col">
           <PageHeader
             scope={isSubOrganization ? "namespace" : "org"}
-            title="Integrations"
-            description="Connect Infisical to external services and manage organization-wide integrations."
+            title="연동"
+            description="Keydesk를 외부 서비스에 연결하고 조직 전체의 연동을 관리하세요."
           />
           <Tabs value={activeTab} onValueChange={updateSelectedTab}>
             <TabsList
               variant={isSubOrganization ? "sub-org" : "org"}
-              aria-label={
-                isSubOrganization
-                  ? "Sub-organization integrations sections"
-                  : "Organization integrations sections"
-              }
+              aria-label={isSubOrganization ? "하위 조직 연동 섹션" : "조직 연동 섹션"}
             >
               {tabs.map(({ key, label }) => (
                 <TabsTrigger value={key} key={`tab-${key}`}>

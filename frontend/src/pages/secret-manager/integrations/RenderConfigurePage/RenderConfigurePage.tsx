@@ -137,7 +137,7 @@ export const RenderConfigurePage = () => {
             <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/render" />
           </CardTitle>
           <CardDescription>
-            Choose which environment or folder in Infisical you want to sync to Render environment
+            Choose which environment or folder in Keydesk you want to sync to Render environment
             variables.
           </CardDescription>
         </CardHeader>
@@ -290,7 +290,7 @@ export const RenderConfigurePage = () => {
         <AlertTitle>Pro Tip</AlertTitle>
         <AlertDescription>
           After creating an integration, your secrets will start syncing immediately. This might
-          cause an unexpected override of current secrets in Render with secrets from Infisical.
+          cause an unexpected override of current secrets in Render with secrets from Keydesk.
         </AlertDescription>
       </Alert>
     </form>
@@ -301,10 +301,11 @@ export const RenderConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthLoading || isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

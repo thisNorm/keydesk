@@ -60,37 +60,39 @@ const formSchema = z.discriminatedUnion("method", [
       apiUrl: z
         .string()
         .trim()
-        .url("API URL must be a valid URL")
-        .max(512, "API URL cannot exceed 512 characters")
+        .url("올바른 API URL을 입력하세요")
+        .max(512, "API URL은 512자를 초과할 수 없습니다")
         .refine((value) => ["http:", "https:"].includes(new URL(value).protocol), {
-          message: "API URL must use http or https"
+          message: "API URL은 http 또는 https를 사용해야 합니다"
         })
         .refine((value) => !new URL(value).search && !new URL(value).hash, {
-          message: "API URL must not contain a query string or fragment"
+          message: "API URL에는 쿼리 문자열이나 프래그먼트를 포함할 수 없습니다"
         })
         .refine((value) => !/\/api(\/v\d+)?\/*$/.test(new URL(value).pathname), {
-          message: "Enter the web server address only, without the /api/v1 path"
+          message: "/api/v1 경로를 제외한 웹 서버 주소만 입력하세요"
         }),
       apiKey: z
         .string()
         .trim()
-        .min(1, "API key required")
-        .max(512, "API key cannot exceed 512 characters"),
+        .min(1, "API 키를 입력하세요")
+        .max(512, "API 키는 512자를 초과할 수 없습니다"),
       serverId: z
         .string()
         .trim()
-        .max(64, "Server ID cannot exceed 64 characters")
+        .max(64, "서버 ID는 64자를 초과할 수 없습니다")
         .refine((value) => !value || /^[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(value), {
-          message: "Server ID may only contain letters, numbers, dots, hyphens and underscores"
+          message: "서버 ID에는 영문자, 숫자, 점, 하이픈, 밑줄만 사용할 수 있습니다"
         })
-        .refine((value) => !value.includes(".."), { message: "Server ID cannot contain '..'" })
+        .refine((value) => !value.includes(".."), {
+          message: "서버 ID에는 '..'를 사용할 수 없습니다"
+        })
         .transform((value) => value || undefined)
         .optional(),
       sslRejectUnauthorized: z.boolean(),
       sslCertificate: z
         .string()
         .trim()
-        .max(8192, "SSL certificate cannot exceed 8192 characters")
+        .max(8192, "SSL 인증서는 8192자를 초과할 수 없습니다")
         .transform((value) => value || undefined)
         .optional()
     })
@@ -158,10 +160,9 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
 
             return (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 <FieldDescription>
-                  Route requests through a Gateway when your PowerDNS server is not reachable from
-                  the internet.
+                  인터넷에서 PowerDNS 서버에 접근할 수 없다면 게이트웨이를 통해 요청을 전달하세요.
                 </FieldDescription>
                 {isAllowed ? (
                   picker
@@ -171,8 +172,7 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
                       <span className="block w-full cursor-not-allowed">{picker}</span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -186,21 +186,21 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.PowerDns].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(PowerDnsConnectionMethod).map((m) => {
@@ -218,7 +218,7 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
         />
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mb-4">
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
+            <TabsTrigger value="configuration">구성</TabsTrigger>
             <TabsTrigger value="ssl">SSL</TabsTrigger>
           </TabsList>
           <TabsContent value="configuration">
@@ -229,7 +229,7 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field className="mb-4">
                   <FieldLabel htmlFor="api-url">API URL</FieldLabel>
                   <FieldDescription>
-                    The address of the PowerDNS web server, without the /api/v1 path.
+                    /api/v1 경로를 제외한 PowerDNS 웹 서버의 주소입니다.
                   </FieldDescription>
                   <Input
                     id="api-url"
@@ -251,10 +251,8 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
               control={control}
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="api-key">API Key</FieldLabel>
-                  <FieldDescription>
-                    The value of the api-key setting in your PowerDNS configuration.
-                  </FieldDescription>
+                  <FieldLabel htmlFor="api-key">API 키</FieldLabel>
+                  <FieldDescription>PowerDNS 구성의 api-key 설정 값입니다.</FieldDescription>
                   <SecretInput
                     aria-describedby={error ? "api-key-error" : undefined}
                     isError={Boolean(error)}
@@ -272,11 +270,11 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="server-id">
-                    Server ID <span className="text-muted">(optional)</span>
+                    서버 ID <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <FieldDescription>
-                    Leave empty unless you connect through a proxy fronting several PowerDNS
-                    servers. A PowerDNS Authoritative Server always reports localhost.
+                    여러 PowerDNS 서버 앞에 있는 프록시로 연결하는 경우에만 입력하세요. PowerDNS
+                    Authoritative Server는 항상 localhost를 반환합니다.
                   </FieldDescription>
                   <Input
                     id="server-id"
@@ -297,7 +295,7 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="ssl-certificate">
-                    SSL Certificate <span className="text-muted">(optional)</span>
+                    SSL 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="ssl-certificate"
@@ -317,11 +315,11 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        If enabled, Infisical will only connect if PowerDNS presents a valid,
-                        trusted SSL certificate. Disable this for self-signed certificates or
-                        provide a CA certificate above.
+                        켜면 PowerDNS가 유효하고 신뢰할 수 있는 SSL 인증서를 제공할 때만 Keydesk가
+                        연결합니다. 자체 서명 인증서를 사용한다면 이 옵션을 끄거나 위에 CA 인증서를
+                        입력하세요.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -338,9 +336,7 @@ export const PowerDnsConnectionForm = ({ appConnection, onSubmit }: Props) => {
             />
           </TabsContent>
         </Tabs>
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to PowerDNS"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "PowerDNS에 연결"} />
       </form>
     </FormProvider>
   );

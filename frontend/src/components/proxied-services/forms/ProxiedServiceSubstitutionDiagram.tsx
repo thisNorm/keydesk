@@ -92,7 +92,7 @@ export const ProxiedServiceSubstitutionDiagram = ({ template }: Props) => {
           </TooltipTrigger>
           <TooltipContent className="max-w-xs">
             When an agent launches with{" "}
-            <span className="font-mono">infisical secrets agent-proxy connect</span>, Infisical sets
+            <span className="font-mono">infisical secrets agent-proxy connect</span>, Keydesk sets
             each placeholder as an environment variable on it. The agent sends the placeholder in
             its requests, and the proxy swaps it for the real secret on the wire.
           </TooltipContent>
@@ -106,7 +106,7 @@ export const ProxiedServiceSubstitutionDiagram = ({ template }: Props) => {
           <span className="text-foreground">{placeholder}</span>
         </p>
         <p className="mt-1 text-[11px] leading-tight text-muted">
-          Infisical sets this env var to a fake, real-looking value.
+          Keydesk sets this env var to a fake, real-looking value.
         </p>
       </Node>
 

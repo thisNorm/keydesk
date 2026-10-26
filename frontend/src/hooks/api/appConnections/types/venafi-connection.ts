@@ -17,10 +17,10 @@ export enum VenafiRegion {
 export const VENAFI_REGION_LABELS: Record<VenafiRegion, string> = {
   [VenafiRegion.US]: "US",
   [VenafiRegion.EU]: "EU",
-  [VenafiRegion.AU]: "Australia",
+  [VenafiRegion.AU]: "호주",
   [VenafiRegion.UK]: "UK",
-  [VenafiRegion.SG]: "Singapore",
-  [VenafiRegion.CA]: "Canada"
+  [VenafiRegion.SG]: "싱가포르",
+  [VenafiRegion.CA]: "캐나다"
 };
 
 export type TVenafiConnection = TRootAppConnection & { app: AppConnection.Venafi } & {

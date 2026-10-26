@@ -461,8 +461,8 @@ export const ApprovalRequestDetailPage = () => {
   return (
     <>
       <Helmet>
-        <title>Approval Request | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Approval Request | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <PageContent />
     </>

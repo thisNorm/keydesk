@@ -151,8 +151,8 @@ const KmipClientCertificateForm = ({
                   <TooltipContent>
                     <div className="max-w-72 space-y-2">
                       <p>
-                        <strong>Managed:</strong> Infisical generates and manages the private key
-                        for you.
+                        <strong>Managed:</strong> Keydesk generates and manages the private key for
+                        you.
                       </p>
                       <p>
                         <strong>CSR:</strong> Provide your own Certificate Signing Request. Use this

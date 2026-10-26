@@ -40,7 +40,7 @@ import {
 } from "@app/hooks/api/workflowIntegrations/types";
 
 const formSchema = z.object({
-  slackIntegrationId: z.string().min(1, "Select a Slack integration"),
+  slackIntegrationId: z.string().min(1, "Slack 연동 선택"),
   isSecretRequestNotificationEnabled: z.boolean(),
   secretRequestChannels: z.string().array(),
   isAccessRequestNotificationEnabled: z.boolean(),
@@ -74,7 +74,7 @@ const ChannelsField = ({
   isLoading
 }: TChannelsFieldProps) => (
   <Field>
-    <FieldLabel htmlFor={inputId}>Slack channels</FieldLabel>
+    <FieldLabel htmlFor={inputId}>Slack 채널</FieldLabel>
     <Combobox
       multiple
       id={inputId}
@@ -84,7 +84,7 @@ const ChannelsField = ({
       getOptionValue={(option) => option.id}
       getOptionLabel={(option) => option.name}
       getOptionKeywords={(option) => [option.id]}
-      placeholder="Select channels..."
+      placeholder="채널을 선택하세요..."
       isLoading={isLoading}
       isError={Boolean(error)}
     />
@@ -143,7 +143,7 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
 
     createNotification({
       type: "success",
-      text: "Saved Slack integration settings"
+      text: "Slack 연동 설정을 저장했습니다"
     });
 
     onClose();
@@ -213,19 +213,16 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
         {!isWorkflowIntegrationsLoading && !hasSlackIntegrations ? (
           <Alert>
             <Info />
-            <AlertTitle>No Slack integrations connected</AlertTitle>
+            <AlertTitle>연결된 Slack 연동이 없습니다</AlertTitle>
             <AlertDescription>
-              <p>
-                Connect a Slack workspace to your organization before configuring project
-                notifications.
-              </p>
+              <p>프로젝트 알림을 구성하려면 먼저 조직에 Slack 워크스페이스를 연결하세요.</p>
               <Button asChild variant="outline" size="sm" className="mt-2">
                 <Link
                   to="/organizations/$orgId/integrations"
                   params={{ orgId: currentProject.orgId }}
                   search={{ selectedTab: "workflow-integrations" }}
                 >
-                  Go to organization integrations
+                  조직 연동으로 이동
                 </Link>
               </Button>
             </AlertDescription>
@@ -236,7 +233,7 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
             name="slackIntegrationId"
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field>
-                <FieldLabel htmlFor="slack-integration">Slack integration</FieldLabel>
+                <FieldLabel htmlFor="slack-integration">Slack 연동</FieldLabel>
                 <Select value={value} onValueChange={onChange}>
                   <SelectTrigger
                     id="slack-integration"
@@ -245,7 +242,7 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
                   >
                     <SelectValue
                       placeholder={
-                        isWorkflowIntegrationsLoading ? "Loading..." : "Select an integration"
+                        isWorkflowIntegrationsLoading ? "불러오는 중..." : "연동을 선택하세요"
                       }
                     />
                   </SelectTrigger>
@@ -270,16 +267,16 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
               render={({ field }) => (
                 <Field orientation="horizontal" className="items-center!">
                   <FieldContent>
-                    <FieldTitle>Secret approval requests</FieldTitle>
+                    <FieldTitle>시크릿 승인 요청</FieldTitle>
                     <FieldDescription>
-                      Send a notification when a secret approval request is opened.
+                      시크릿 승인 요청이 생성되면 알림을 보냅니다.
                     </FieldDescription>
                   </FieldContent>
                   <Toggle
                     variant="project"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Secret approval request notifications"
+                    aria-label="시크릿 승인 요청 알림"
                   />
                 </Field>
               )}
@@ -306,16 +303,14 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
               render={({ field }) => (
                 <Field orientation="horizontal" className="items-center!">
                   <FieldContent>
-                    <FieldTitle>Access requests</FieldTitle>
-                    <FieldDescription>
-                      Send a notification when an access request is opened.
-                    </FieldDescription>
+                    <FieldTitle>접근 요청</FieldTitle>
+                    <FieldDescription>접근 요청이 생성되면 알림을 보냅니다.</FieldDescription>
                   </FieldContent>
                   <Toggle
                     variant="project"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Access request notifications"
+                    aria-label="접근 요청 알림"
                   />
                 </Field>
               )}
@@ -342,16 +337,14 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
               render={({ field }) => (
                 <Field orientation="horizontal" className="items-center!">
                   <FieldContent>
-                    <FieldTitle>Secret sync errors</FieldTitle>
-                    <FieldDescription>
-                      Send a notification when a secret sync fails.
-                    </FieldDescription>
+                    <FieldTitle>시크릿 동기화 오류</FieldTitle>
+                    <FieldDescription>시크릿 동기화에 실패하면 알림을 보냅니다.</FieldDescription>
                   </FieldContent>
                   <Toggle
                     variant="project"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Secret sync error notifications"
+                    aria-label="시크릿 동기화 오류 알림"
                   />
                 </Field>
               )}
@@ -379,12 +372,12 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
         {onBack && (
           <Button type="button" variant="ghost" className="mr-auto" onClick={onBack}>
             <ChevronLeft />
-            Back
+            뒤로
           </Button>
         )}
         <SheetClose asChild>
           <Button type="button" variant="ghost">
-            Cancel
+            취소
           </Button>
         </SheetClose>
         <Button
@@ -393,7 +386,7 @@ export const SlackIntegrationForm = ({ onClose, onBack }: Props) => {
           isPending={isSubmitting}
           isDisabled={!isDirty || isSubmitting || !hasSlackIntegrations}
         >
-          Save
+          저장
         </Button>
       </SheetFooter>
     </form>

@@ -148,7 +148,7 @@ export const CircleCIConfigurePage = () => {
             <span>CircleCI Context Integration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment or folder in Infisical you want to sync to CircleCI.
+            Choose which environment or folder in Keydesk you want to sync to CircleCI.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>

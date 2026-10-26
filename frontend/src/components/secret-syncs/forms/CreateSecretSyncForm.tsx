@@ -85,7 +85,7 @@ const getFormTabs = (destination: SecretSync, destinationName: string): FormTab[
       key: "source",
       shortDescription: "Pick env and path",
       title: "Source Secrets",
-      subtitle: "Pick the Infisical environment and path to sync from.",
+      subtitle: "Pick the Keydesk environment and path to sync from.",
       rightLabel: "SOURCE",
       rightDescription:
         "Choose what gets synced. The environment + path together define the set of secrets this sync will push out.",
@@ -98,7 +98,7 @@ const getFormTabs = (destination: SecretSync, destinationName: string): FormTab[
       title: `Connect to ${destinationName}`,
       subtitle: "Choose a connection and configure the target location.",
       rightLabel: "DESTINATION",
-      rightDescription: `Tell Infisical where to write. Pick a ${destinationName} connection and the exact destination, like a workspace, project, namespace, or whatever this provider expects.`,
+      rightDescription: `Tell Keydesk where to write. Pick a ${destinationName} connection and the exact destination, like a workspace, project, namespace, or whatever this provider expects.`,
       fields: ["connection", "destinationConfig"]
     },
     {
@@ -106,10 +106,10 @@ const getFormTabs = (destination: SecretSync, destinationName: string): FormTab[
       key: "initialSync",
       shortDescription: "How to resolve the first run",
       title: "Initial Sync Behavior",
-      subtitle: `Choose how Infisical should reconcile existing secrets in ${destinationName} the first time this sync runs.`,
+      subtitle: `Choose how Keydesk should reconcile existing secrets in ${destinationName} the first time this sync runs.`,
       rightLabel: "INITIAL SYNC",
       rightDescription:
-        "The first run is special. Infisical can either overwrite everything in the destination or import existing secrets back into Infisical. Subsequent runs follow your sync options.",
+        "The first run is special. Keydesk can either overwrite everything in the destination or import existing secrets back into Keydesk. Subsequent runs follow your sync options.",
       fields: ["syncOptions"]
     },
     {
@@ -120,7 +120,7 @@ const getFormTabs = (destination: SecretSync, destinationName: string): FormTab[
       subtitle: "Control how secrets are written and whether they sync automatically.",
       rightLabel: "SYNC OPTIONS",
       rightDescription:
-        "Decide how Infisical reconciles changes on every run, including auto-sync, key schema, and how conflicts are handled.",
+        "Decide how Keydesk reconciles changes on every run, including auto-sync, key schema, and how conflicts are handled.",
       fields: ["syncOptions"]
     },
     {
@@ -446,14 +446,14 @@ export const CreateSecretSyncForm = ({
             <AlertDialogTitle>Secret Sync Behavior</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="flex flex-col gap-2">
-                <p>Infisical is the source of truth for synced destinations.</p>
+                <p>Keydesk is the source of truth for synced destinations.</p>
                 <p>
                   Secrets in the destination will be overwritten, and any direct edits there may be
                   overwritten by future syncs.
                 </p>
                 {willDeleteUnmatchedSecrets && (
                   <p>
-                    Secrets in {destinationName} that don&apos;t exist in Infisical will be deleted.
+                    Secrets in {destinationName} that don&apos;t exist in Keydesk will be deleted.
                   </p>
                 )}
               </div>

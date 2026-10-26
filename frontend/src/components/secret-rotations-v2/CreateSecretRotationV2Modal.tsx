@@ -142,7 +142,7 @@ export const CreateSecretRotationV2Modal = ({ onOpenChange, isOpen, ...props }: 
               <>
                 <SheetTitle>Choose a rotation provider</SheetTitle>
                 <SheetDescription>
-                  Select the provider whose credentials Infisical should rotate.
+                  Select the provider whose credentials Keydesk should rotate.
                 </SheetDescription>
               </>
             )}

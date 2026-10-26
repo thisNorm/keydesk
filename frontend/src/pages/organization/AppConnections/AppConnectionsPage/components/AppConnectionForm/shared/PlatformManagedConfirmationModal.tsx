@@ -26,17 +26,16 @@ export const PlatformManagedConfirmationModal = ({ isOpen, onOpenChange, onConfi
           <AlertDialogMedia>
             <AlertTriangleIcon />
           </AlertDialogMedia>
-          <AlertDialogTitle>Platform Managed Credentials</AlertDialogTitle>
+          <AlertDialogTitle>플랫폼 관리 인증 정보</AlertDialogTitle>
           <AlertDialogDescription>
-            Once created, Infisical will update the password of this connection and you will no
-            longer be able to access it. Are you sure you want Infisical to manage the credentials
-            of this connection?
+            연결이 생성되면 Keydesk가 이 연결의 비밀번호를 변경하므로 이후에는 직접 접근할 수
+            없습니다. Keydesk가 이 연결의 인증 정보를 관리하도록 하시겠습니까?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>취소</AlertDialogCancel>
           <AlertDialogAction variant="warning" onClick={onConfirm}>
-            Grant Infisical Ownership
+            Keydesk에 관리 권한 부여
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

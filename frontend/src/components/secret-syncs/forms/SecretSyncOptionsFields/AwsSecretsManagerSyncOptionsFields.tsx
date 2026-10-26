@@ -225,7 +225,7 @@ export const AwsSecretsManagerSyncOptionsFields = () => {
                       </Label>
                       <FieldDescription>
                         Metadata attached to secrets is added as resource tags on secrets synced by
-                        Infisical. Manually configured tags take precedence when keys conflict.
+                        Keydesk. Manually configured tags take precedence when keys conflict.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle

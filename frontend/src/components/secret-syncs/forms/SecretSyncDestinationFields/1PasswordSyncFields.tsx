@@ -95,7 +95,7 @@ export const OnePassSyncFields = () => {
                 </TooltipTrigger>
                 <TooltipContent className="max-w-md">
                   It&apos;s the label of the 1Password item field which will hold your secret value.
-                  For example, if you were to sync Infisical secret &apos;foo: bar&apos;, the
+                  For example, if you were to sync Keydesk secret &apos;foo: bar&apos;, the
                   1Password item equivalent would have an item title of &apos;foo&apos;, and a field
                   on that item &apos;value: bar&apos;. The field label &apos;value&apos; is what
                   gets changed by this option.

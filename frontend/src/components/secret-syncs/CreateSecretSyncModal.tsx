@@ -115,7 +115,7 @@ export const CreateSecretSyncModal = ({
               <>
                 <SheetTitle>Choose a destination</SheetTitle>
                 <SheetDescription>
-                  Where should Infisical write these secrets? You can change this later only by
+                  Where should Keydesk write these secrets? You can change this later only by
                   creating a new sync.
                 </SheetDescription>
               </>

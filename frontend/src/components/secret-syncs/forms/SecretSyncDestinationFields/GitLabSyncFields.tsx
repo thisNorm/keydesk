@@ -412,7 +412,7 @@ export const GitLabSyncFields = () => {
             <SecretProtectionOption
               id="should-hide-secrets"
               title="Mark secrets as Hidden"
-              description="Hides the variable value in the GitLab UI. Requires masking to be enabled. Once enabled, Infisical can no longer unhide or unmask the variable from GitLab."
+              description="Hides the variable value in the GitLab UI. Requires masking to be enabled. Once enabled, Keydesk can no longer unhide or unmask the variable from GitLab."
               isEnabled={value || false}
               onChange={onChange}
               isDisabled={!shouldMaskSecrets}

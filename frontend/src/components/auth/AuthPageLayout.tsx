@@ -31,7 +31,7 @@ export const AuthPageLayout = ({
   contentClassName,
   headerAction,
   onDocumentationClick,
-  showFooter = true,
+  showFooter = false,
   variant = "split"
 }: Props) => {
   const isSplit = variant === "split";
@@ -91,17 +91,17 @@ export const AuthPageLayout = ({
         <aside className="relative hidden h-screen min-w-0 overflow-hidden bg-background lg:sticky lg:top-0 lg:flex lg:flex-col">
           <div className="flex h-16 items-center justify-between gap-4 px-8 xl:px-12">
             <span className="font-mono text-[10px] tracking-[0.12em] text-muted">
-              KEYDESK / PERSONAL WORKSPACE
+              KEYDESK / 개인 작업 공간
             </span>
             <Button asChild variant="outline" size="sm">
               <a
-                href="https://infisical.com/docs"
+                href="https://github.com/thisNorm/keydesk#readme"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={onDocumentationClick}
               >
                 <BookOpen />
-                Infisical 문서
+                Keydesk 문서
               </a>
             </Button>
           </div>
@@ -141,7 +141,7 @@ export const AuthPageLayout = ({
           </div>
           <div className="flex items-center justify-between gap-4 px-8 py-6 text-[10px] text-muted xl:px-12">
             <span className="font-mono">by Norm / thisNorm</span>
-            <span>Infisical 기반</span>
+            <span>나의 API 작업대</span>
           </div>
         </aside>
       )}

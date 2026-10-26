@@ -215,8 +215,8 @@ export const CreateCaWizard = ({ isOpen, onOpenChange, onComplete }: Props) => {
               <DocumentationLinkBadge href={PkiDocsUrls.ca.internal} />
             </SheetTitle>
             <SheetDescription>
-              A private Certificate Authority hosted by Infisical, with its signing key managed by
-              Infisical, kept in your HSM, or kept in AWS KMS.
+              A private Certificate Authority hosted by Keydesk, with its signing key managed by
+              Keydesk, kept in your HSM, or kept in AWS KMS.
             </SheetDescription>
           </SheetHeader>
 

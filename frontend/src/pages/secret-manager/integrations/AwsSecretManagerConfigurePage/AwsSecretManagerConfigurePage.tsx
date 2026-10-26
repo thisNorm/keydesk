@@ -90,11 +90,11 @@ const awsRegions = [
 
 const mappingBehaviors = [
   {
-    label: "Many to One (All Infisical secrets will be mapped to a single AWS secret)",
+    label: "Many to One (All Keydesk secrets will be mapped to a single AWS secret)",
     value: IntegrationMappingBehavior.MANY_TO_ONE
   },
   {
-    label: "One to One - (Each Infisical secret will be mapped to its own AWS secret)",
+    label: "One to One - (Each Keydesk secret will be mapped to its own AWS secret)",
     value: IntegrationMappingBehavior.ONE_TO_ONE
   }
 ];
@@ -243,7 +243,7 @@ export const AwsSecretManagerConfigurePage = () => {
               <span>AWS Secrets Manager Integration</span>
             </CardTitle>
             <CardDescription>
-              Choose which environment in Infisical you want to sync to secerts in AWS Secrets
+              Choose which environment in Keydesk you want to sync to secerts in AWS Secrets
               Manager.
             </CardDescription>
             <CardAction>
@@ -675,7 +675,7 @@ export const AwsSecretManagerConfigurePage = () => {
           <span className="mt-4 text-sm text-label">
             After creating an integration, your secrets will start syncing immediately. This might
             cause an unexpected override of current secrets in AWS Secrets Manager with secrets from
-            Infisical.
+            Keydesk.
           </span>
         </div>
       </form>
@@ -687,10 +687,11 @@ export const AwsSecretManagerConfigurePage = () => {
       </Helmet>
       {isintegrationAuthLoading || isIntegrationAuthAwsKmsKeysLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

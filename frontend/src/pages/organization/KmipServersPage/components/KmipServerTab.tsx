@@ -104,7 +104,7 @@ export const KmipServerTab = withPermission(
             <DocumentationLinkBadge href="https://infisical.com/docs/documentation/platform/kms/kmip-server" />
           </CardTitle>
           <CardDescription>
-            Create and configure KMIP servers that proxy KMIP requests to Infisical KMS
+            Create and configure KMIP servers that proxy KMIP requests to Keydesk KMS
           </CardDescription>
           <CardAction>
             <OrgPermissionCan
@@ -149,7 +149,7 @@ export const KmipServerTab = withPermission(
                 <EmptyDescription>
                   {kmipServers?.length
                     ? "Try a different search term."
-                    : "Create a KMIP server to proxy KMIP requests to Infisical KMS."}
+                    : "Create a KMIP server to proxy KMIP requests to Keydesk KMS."}
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>

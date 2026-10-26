@@ -65,7 +65,7 @@ export const AuditLogsRetentionSection = () => {
   const handleAuditLogsRetentionSubmit = async ({ auditLogsRetentionDays }: TForm) => {
     if (!subscription?.auditLogs) {
       handlePopUpOpen("upgradePlan", {
-        text: "Configuring audit logs retention can be unlocked if you upgrade to Infisical Pro plan."
+        text: "감사 로그 보관 기간을 설정하려면 해당 기능이 포함된 라이선스가 필요합니다."
       });
 
       return;
@@ -76,7 +76,7 @@ export const AuditLogsRetentionSection = () => {
       auditLogsRetentionDays > subscription.auditLogsRetentionDays
     ) {
       handlePopUpOpen("upgradePlan", {
-        text: "Updating audit logs retention period to a higher value can be unlocked if you upgrade to Infisical Pro plan."
+        text: "감사 로그 보관 기간을 늘리려면 해당 기능이 포함된 라이선스가 필요합니다."
       });
 
       return;

@@ -54,9 +54,9 @@ type TSigningMethodOption = {
 const SIGNING_METHOD_OPTIONS: TSigningMethodOption[] = [
   {
     value: SigningMethod.Internal,
-    name: "Infisical CA",
+    name: "Keydesk CA",
     description:
-      "Sign with an internal Infisical root or intermediate CA. Fully managed, no external setup needed.",
+      "Sign with an internal Keydesk root or intermediate CA. Fully managed, no external setup needed.",
     icon: ShieldCheckIcon
   },
   {
@@ -70,7 +70,7 @@ const SIGNING_METHOD_OPTIONS: TSigningMethodOption[] = [
     value: SigningMethod.Automated,
     name: "External CA (Automated)",
     description:
-      "Connect to a third-party CA provider. Infisical automatically handles certificate signing and renewal through the provider's API.",
+      "Connect to a third-party CA provider. Keydesk automatically handles certificate signing and renewal through the provider's API.",
     icon: LinkIcon
   }
 ];

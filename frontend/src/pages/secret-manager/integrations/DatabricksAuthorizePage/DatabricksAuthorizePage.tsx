@@ -86,7 +86,7 @@ export const DatabricksAuthorizePage = () => {
           </CardTitle>
           <CardDescription>
             After adding your Access Token, you will be prompted to set up an integration for a
-            particular Infisical project and environment.
+            particular Keydesk project and environment.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>

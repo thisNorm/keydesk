@@ -94,7 +94,7 @@ export const RundeckAuthorizePage = () => {
             </CardTitle>
             <CardDescription>
               After adding your URL and auth token, you will be prompted to set up an integration
-              for a particular Infisical project and environment.
+              for a particular Keydesk project and environment.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">

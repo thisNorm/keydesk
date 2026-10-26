@@ -49,10 +49,10 @@ const formSchema = z.discriminatedUnion("method", [
       instanceUrl: z
         .string()
         .trim()
-        .url("Invalid Instance URL")
-        .min(1, "Instance URL required")
+        .url("올바른 인스턴스 URL을 입력하세요")
+        .min(1, "인스턴스 URL을 입력하세요")
         .max(255),
-      apiToken: z.string().trim().min(1, "API Token required").max(255)
+      apiToken: z.string().trim().min(1, "API 토큰을 입력하세요").max(255)
     })
   })
 ]);
@@ -99,10 +99,10 @@ export const PortainerConnectionForm = ({ appConnection, onSubmit }: Props) => {
 
             return (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 <FieldDescription>
-                  Route requests through a Gateway when your Portainer instance is not reachable
-                  from the internet.
+                  인터넷에서 Portainer 인스턴스에 접근할 수 없다면 게이트웨이를 통해 요청을
+                  전달하세요.
                 </FieldDescription>
                 {isAllowed ? (
                   picker
@@ -112,8 +112,7 @@ export const PortainerConnectionForm = ({ appConnection, onSubmit }: Props) => {
                       <span className="block w-full cursor-not-allowed">{picker}</span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -127,21 +126,20 @@ export const PortainerConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Portainer].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Portainer].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)} id="method">
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(PortainerConnectionMethod).map((method) => {
@@ -164,13 +162,13 @@ export const PortainerConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Portainer Instance URL
+                Portainer 인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The URL of the Portainer instance to authenticate with.
+                    인증할 Portainer 인스턴스의 URL입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -190,7 +188,7 @@ export const PortainerConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-token">Portainer API Token</FieldLabel>
+              <FieldLabel htmlFor="api-token">Portainer API 토큰</FieldLabel>
               <SecretInput
                 id="api-token"
                 value={value}
@@ -200,9 +198,7 @@ export const PortainerConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Portainer"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Portainer에 연결"} />
       </form>
     </FormProvider>
   );

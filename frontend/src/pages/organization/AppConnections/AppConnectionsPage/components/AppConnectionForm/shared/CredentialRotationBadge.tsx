@@ -1,4 +1,5 @@
 import { format, formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import { PauseIcon, RefreshCwIcon, XIcon } from "lucide-react";
 
 import { Badge, Tooltip, TooltipContent, TooltipTrigger } from "@app/components/v3";
@@ -20,7 +21,7 @@ export const CredentialRotationStatusBadge = ({ appConnection }: Props) => {
     return (
       <Badge variant="neutral">
         <PauseIcon />
-        Auto-Rotation Disabled
+        자동 교체 꺼짐
       </Badge>
     );
   }
@@ -40,7 +41,7 @@ export const CredentialRotationStatusBadge = ({ appConnection }: Props) => {
         <TooltipTrigger asChild>
           <Badge variant="danger">
             <XIcon />
-            Rotation Failed
+            교체 실패
           </Badge>
         </TooltipTrigger>
         <TooltipContent side="left" className="max-w-sm select-text">
@@ -48,7 +49,7 @@ export const CredentialRotationStatusBadge = ({ appConnection }: Props) => {
             <div>
               <div className="mb-2 flex self-start text-danger">
                 <XIcon className="mr-1.5 ml-1 size-3 shrink-0" />
-                <div className="text-xs">Failure Reason</div>
+                <div className="text-xs">실패 사유</div>
               </div>
               <div className="rounded-sm bg-surface-active p-2 text-xs break-words">
                 {errorMessage}
@@ -56,8 +57,8 @@ export const CredentialRotationStatusBadge = ({ appConnection }: Props) => {
             </div>
             {rotation.nextRotationAt && (
               <span className="text-xs text-label">
-                Next rotation attempt on {format(rotation.nextRotationAt, "MM/dd/yyyy")} at{" "}
-                {format(rotation.nextRotationAt, "h:mm aa")}.
+                다음 교체 시도: {format(rotation.nextRotationAt, "yyyy/MM/dd")} 시각{" "}
+                {format(rotation.nextRotationAt, "HH:mm")}.
               </span>
             )}
           </div>
@@ -75,16 +76,16 @@ export const CredentialRotationStatusBadge = ({ appConnection }: Props) => {
         <Badge variant={daysToRotation >= 7 ? "info" : "warning"} className="capitalize">
           <RefreshCwIcon />
           {daysToRotation < 0
-            ? "Rotating"
-            : `Rotates ${formatDistanceToNow(rotation.nextRotationAt, { addSuffix: true })}`}
+            ? "교체 중"
+            : `교체 예정: ${formatDistanceToNow(rotation.nextRotationAt, { addSuffix: true, locale: ko })}`}
         </Badge>
       </TooltipTrigger>
       <TooltipContent className="max-w-lg">
         <span>
-          Rotates on {format(rotation.nextRotationAt, "MM/dd/yyyy")} at{" "}
-          {format(rotation.nextRotationAt, "h:mm aa")}
+          교체 예정: {format(rotation.nextRotationAt, "yyyy/MM/dd")} 시각{" "}
+          {format(rotation.nextRotationAt, "HH:mm")}
         </span>{" "}
-        <span className="text-label">(Local Time)</span>
+        <span className="text-label">(현지 시간)</span>
       </TooltipContent>
     </Tooltip>
   );

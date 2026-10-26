@@ -10,8 +10,8 @@ export const ShareSecretPage = () => {
   return (
     <>
       <Helmet>
-        <title>Securely Share Secrets | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Securely Share Secrets | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
         <meta property="og:title" content="Securely Share Secrets" />
         <meta

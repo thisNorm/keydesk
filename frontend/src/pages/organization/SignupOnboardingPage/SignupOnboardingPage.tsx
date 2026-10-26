@@ -199,7 +199,7 @@ export const SignupOnboardingPage = () => {
     >
       <Helmet>
         <title>{t("common.head-title", { title: t("signup.title") })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <OnboardingStepTransition step={section}>{renderView()}</OnboardingStepTransition>
     </AuthPageLayout>

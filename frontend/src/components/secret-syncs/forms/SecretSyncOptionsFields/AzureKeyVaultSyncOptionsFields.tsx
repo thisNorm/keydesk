@@ -25,9 +25,9 @@ export const AzureKeyVaultSyncOptionsFields = () => {
             <FieldContent>
               <Label htmlFor="disable-certificate-import">Disable certificate import</Label>
               <FieldDescription>
-                When enabled, Infisical will not import certificate objects from Azure Key Vault
-                when syncing secrets. Use this to keep your secrets project free of certificate
-                objects that Azure Key Vault exposes through the secrets API.
+                When enabled, Keydesk will not import certificate objects from Azure Key Vault when
+                syncing secrets. Use this to keep your secrets project free of certificate objects
+                that Azure Key Vault exposes through the secrets API.
               </FieldDescription>
             </FieldContent>
             <Toggle

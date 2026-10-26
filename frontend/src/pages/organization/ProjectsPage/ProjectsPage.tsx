@@ -46,7 +46,7 @@ export const ProjectsPage = () => {
     <div className="mx-auto flex max-w-8xl flex-col justify-start px-0 md:px-6">
       <Helmet>
         <title>{t("common.head-title", { title: t("settings.members.title") })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <PageHeader
         className="mb-6 md:mb-10"

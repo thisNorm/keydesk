@@ -50,7 +50,7 @@ export const STEPS: WizardStep[] = [
     subtitle: "Name the certificate authority and choose whether it is a root or intermediate.",
     rightLabel: "BASICS",
     rightDescription:
-      "The name identifies the CA inside Infisical. A Root CA is self-signed and active immediately. An Intermediate CA is created pending a certificate, then signed by a parent CA after you generate its CSR.",
+      "The name identifies the CA inside Keydesk. A Root CA is self-signed and active immediately. An Intermediate CA is created pending a certificate, then signed by a parent CA after you generate its CSR.",
     docsUrl: PkiDocsUrls.ca.internal
   },
   {
@@ -70,7 +70,7 @@ export const STEPS: WizardStep[] = [
     subtitle: "Choose where the signing key is generated and how long the CA is valid.",
     rightLabel: "KEY & VALIDITY",
     rightDescription:
-      "Pick the key source: Infisical generates and manages the keypair, HSM keeps it inside your own Hardware Security Module, and AWS KMS creates it in your AWS account. With HSM and AWS KMS, every signature is performed there. Root CAs are self-signed immediately, so their validity and path length are set here.",
+      "Pick the key source: Keydesk generates and manages the keypair, HSM keeps it inside your own Hardware Security Module, and AWS KMS creates it in your AWS account. With HSM and AWS KMS, every signature is performed there. Root CAs are self-signed immediately, so their validity and path length are set here.",
     docsUrl: PkiDocsUrls.ca.internal
   },
   {
@@ -80,7 +80,7 @@ export const STEPS: WizardStep[] = [
     subtitle: "Configure how clients check whether certificates from this CA are revoked.",
     rightLabel: "DISTRIBUTION",
     rightDescription:
-      "Certificates issued by this CA carry revocation endpoints so clients can check their status. OCSP answers for one certificate at a time, while a CRL lists every certificate this CA has revoked. The Infisical-managed CRL endpoint is included by default; add backup URLs or disable the managed one as needed.",
+      "Certificates issued by this CA carry revocation endpoints so clients can check their status. OCSP answers for one certificate at a time, while a CRL lists every certificate this CA has revoked. The Keydesk-managed CRL endpoint is included by default; add backup URLs or disable the managed one as needed.",
     docsUrl: PkiDocsUrls.ca.internal
   }
 ];

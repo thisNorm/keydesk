@@ -41,10 +41,10 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(Auth0ConnectionMethod.ClientCredentials),
     credentials: z.object({
-      domain: z.string().trim().min(1, "Domain required"),
-      clientId: z.string().trim().min(1, "Client ID required"),
-      clientSecret: z.string().trim().min(1, "Client Secret required"),
-      audience: z.string().url().trim().min(1, "Audience required")
+      domain: z.string().trim().min(1, "도메인을 입력하세요"),
+      clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+      clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요"),
+      audience: z.string().url().trim().min(1, "대상을 입력하세요")
     })
   })
 ]);
@@ -74,21 +74,21 @@ export const Auth0ConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.Auth0].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(Auth0ConnectionMethod).map((method) => {
@@ -110,7 +110,7 @@ export const Auth0ConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="domain">Domain</FieldLabel>
+              <FieldLabel htmlFor="domain">도메인</FieldLabel>
               <Input
                 id="domain"
                 {...field}
@@ -127,7 +127,7 @@ export const Auth0ConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="client-id">Client ID</FieldLabel>
+              <FieldLabel htmlFor="client-id">클라이언트 ID</FieldLabel>
               <Input
                 id="client-id"
                 {...field}
@@ -144,7 +144,7 @@ export const Auth0ConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="client-secret">Client Secret</FieldLabel>
+              <FieldLabel htmlFor="client-secret">클라이언트 시크릿</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "client-secret-error" : undefined}
                 id="client-secret"
@@ -163,29 +163,27 @@ export const Auth0ConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="audience">
-                Audience
+                대상
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The unique identifier of the target API you want to access.
+                    접근할 대상 API의 고유 식별자입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Input
                 id="audience"
                 {...field}
-                placeholder="Your API identifier"
+                placeholder="API 식별자"
                 isError={Boolean(error?.message)}
               />
               <FieldError errors={[error]} />
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Auth0"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Auth0에 연결"} />
       </form>
     </FormProvider>
   );

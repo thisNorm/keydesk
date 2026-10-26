@@ -41,10 +41,10 @@ const formSchema = z.discriminatedUnion("method", [
       instanceUrl: z
         .string()
         .trim()
-        .url("Invalid Instance URL")
-        .min(1, "Instance URL required")
+        .url("올바른 인스턴스 URL을 입력하세요")
+        .min(1, "인스턴스 URL을 입력하세요")
         .max(255),
-      apiKey: z.string().trim().min(1, "API Key required")
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요")
     })
   })
 ]);
@@ -75,13 +75,13 @@ export const LiteLLMConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL
+                인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The base URL of your LiteLLM instance (e.g., https://litellm.example.com).
+                    LiteLLM 인스턴스의 기본 URL입니다(예: https://litellm.example.com).
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -102,13 +102,13 @@ export const LiteLLMConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="api-key">
-                API Key
+                API 키
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The LiteLLM API key used to authenticate with your LiteLLM instance.
+                    LiteLLM 인스턴스 인증에 사용할 API 키입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -123,9 +123,7 @@ export const LiteLLMConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to LiteLLM"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "LiteLLM에 연결"} />
       </form>
     </FormProvider>
   );

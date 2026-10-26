@@ -709,8 +709,7 @@ export const ProductSheet = ({
                     <Info />
                     <AlertTitle>Managed Billing</AlertTitle>
                     <AlertDescription>
-                      Contact your Infisical account manager to adjust products, commitments, or
-                      your subscription.
+                      제품, 약정 또는 구독을 변경하려면 라이선스 담당자에게 문의하세요.
                     </AlertDescription>
                   </Alert>
                 )}

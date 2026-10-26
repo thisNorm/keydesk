@@ -70,7 +70,7 @@ export const QoveryAuthorizePage = () => {
           </CardTitle>
           <CardDescription>
             After adding your API key, you will be prompted to set up an integration for a
-            particular Infisical project and environment.
+            particular Keydesk project and environment.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">

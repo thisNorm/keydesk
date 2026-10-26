@@ -53,8 +53,8 @@ export const PkiSyncImportCertificatesModal = ({ isOpen, onOpenChange, pkiSync }
           </AlertDialogMedia>
           <AlertDialogTitle>Import certificates from {destinationName}?</AlertDialogTitle>
           <AlertDialogDescription>
-            This retrieves certificates from {destinationName} and makes them available in
-            Infisical. Only certificates that are not already imported will be processed.
+            This retrieves certificates from {destinationName} and makes them available in Keydesk.
+            Only certificates that are not already imported will be processed.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

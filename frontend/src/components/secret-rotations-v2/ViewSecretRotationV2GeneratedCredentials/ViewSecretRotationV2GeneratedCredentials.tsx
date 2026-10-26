@@ -299,7 +299,7 @@ const Content = ({ secretRotation }: ContentProps) => {
               >
                 inactive period
               </a>
-              . This is a limitation of {appName} and cannot be rectified by Infisical.
+              . This is a limitation of {appName} and cannot be rectified by Keydesk.
             </p>
           </AlertDescription>
         </Alert>

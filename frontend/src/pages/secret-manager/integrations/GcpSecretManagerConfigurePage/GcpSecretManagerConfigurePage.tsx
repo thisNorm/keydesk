@@ -209,7 +209,7 @@ export const GcpSecretManagerConfigurePage = () => {
             <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/gcp-secret-manager" />
           </CardTitle>
           <CardDescription>
-            Select which environment or folder in Infisical you want to sync to GCP Secret Manager.
+            Select which environment or folder in Keydesk you want to sync to GCP Secret Manager.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -536,10 +536,11 @@ export const GcpSecretManagerConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

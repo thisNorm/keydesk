@@ -18,7 +18,7 @@ export const SignupInvitePage = () => {
       <AuthPageLayout variant="focused">
         <Helmet>
           <title>잘못된 초대</title>
-          <link rel="icon" href="/infisical.ico" />
+          <link rel="icon" href="/keydesk.svg" />
         </Helmet>
         <AuthPagePanel className="text-center">
           <CardHeader className="mb-6 items-center gap-2 text-center">

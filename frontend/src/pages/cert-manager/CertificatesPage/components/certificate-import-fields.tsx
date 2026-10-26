@@ -106,7 +106,7 @@ export const CertificateProfileSelect = ({
         if (axios.isAxiosError<{ message?: unknown }>(error)) {
           if (!error.response) {
             message =
-              "The profile was created, but no response was received for the attachment request. Check your connection to Infisical, then retry.";
+              "The profile was created, but no response was received for the attachment request. Check your connection to Keydesk, then retry.";
           } else if (typeof error.response.data?.message === "string") {
             const apiMessage = error.response.data.message.trim();
             if (apiMessage) {
@@ -141,8 +141,7 @@ export const CertificateProfileSelect = ({
           <p>{option.slug}</p>
           {!option.isLinkable && (
             <p className="text-xs whitespace-normal text-muted">
-              Infisical can&apos;t manage the lifecycle of a certificate issued by this authority
-              yet.
+              Keydesk can&apos;t manage the lifecycle of a certificate issued by this authority yet.
             </p>
           )}
         </div>

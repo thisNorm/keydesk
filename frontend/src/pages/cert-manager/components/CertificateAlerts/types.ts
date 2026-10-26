@@ -115,7 +115,7 @@ const ALERT_EVENT_DESCRIPTIONS: Record<TCertificateAlertEventType, (where: strin
   [CertificateApplicationAlertEventType.Expiry]: () =>
     "Fires ahead of a certificate's expiry date.",
   [CertificateApplicationAlertEventType.Issuance]: (where) =>
-    `Fires when Infisical issues a certificate ${where}.`,
+    `Fires when Keydesk issues a certificate ${where}.`,
   [CertificateApplicationAlertEventType.Renewal]: (where) =>
     `Fires when a certificate ${where} is renewed.`,
   [CertificateApplicationAlertEventType.Revocation]: (where) =>

@@ -35,7 +35,7 @@ export const AppConnectionFormFooter = ({
     return (
       <DialogFooter>
         <Button type="button" variant="ghost" onClick={onCancel} isDisabled={isSubmitting}>
-          Cancel
+          취소
         </Button>
         <Button
           type="submit"
@@ -51,7 +51,7 @@ export const AppConnectionFormFooter = ({
   return (
     <SheetFooter className="sticky bottom-0 -mx-4 items-center border-t bg-popover">
       <Button type="button" variant="ghost" onClick={onCancel} isDisabled={isSubmitting}>
-        Cancel
+        취소
       </Button>
       <Button
         type="submit"

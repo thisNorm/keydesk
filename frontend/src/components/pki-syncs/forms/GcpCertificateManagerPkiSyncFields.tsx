@@ -120,7 +120,7 @@ export const GcpCertificateManagerPkiSyncFields = ({ isUpdate }: Props) => {
       return "Certificate maps exist only for global certificates. Regional Application Load Balancers attach certificates directly to the target HTTPS proxy.";
     if (!isDefaultScope)
       return `A certificate map entry can only reference a Default-scope certificate, so this is unavailable with the ${GCP_CERTIFICATE_MANAGER_SCOPES[scope as GcpCertificateManagerScope].label} scope.`;
-    return "Infisical keeps a certificate map entry pointed at this sync's certificate, so renewals need no change in GCP. Leave this off to upload certificates only.";
+    return "Keydesk keeps a certificate map entry pointed at this sync's certificate, so renewals need no change in GCP. Leave this off to upload certificates only.";
   })();
 
   const resetDestinationConfig = () => {
@@ -352,7 +352,7 @@ export const GcpCertificateManagerPkiSyncFields = ({ isUpdate }: Props) => {
                     />
                   </FieldContent>
                   <FieldDescription>
-                    Infisical creates entries inside this map but never creates or deletes the map
+                    Keydesk creates entries inside this map but never creates or deletes the map
                     itself.
                   </FieldDescription>
                   <FieldError errors={[combinedError]} />

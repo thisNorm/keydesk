@@ -40,7 +40,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(RenderConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required")
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요")
     })
   })
 ]);
@@ -70,21 +70,20 @@ export const RenderConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Render].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Render].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)} id="method">
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(RenderConnectionMethod).map((method) => {
@@ -106,7 +105,7 @@ export const RenderConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key">API Key</FieldLabel>
+              <FieldLabel htmlFor="api-key">API 키</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-key-error" : undefined}
                 id="api-key"
@@ -118,9 +117,7 @@ export const RenderConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Render"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Render에 연결"} />
       </form>
     </FormProvider>
   );

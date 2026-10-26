@@ -100,14 +100,14 @@ export const CloudflareWorkersConfigurePage = () => {
         <CardHeader>
           <CardTitle>Cloudflare Workers Integration</CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync with your Cloudflare Workers
+            Choose which environment in Keydesk you want to sync with your Cloudflare Workers
             project.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           <Field className="mt-2" data-invalid={false}>
             <FieldLabel htmlFor="cloudflareworkers-infisical-project-environment">
-              Infisical Project Environment
+              Keydesk Project Environment
             </FieldLabel>
             <Select
               value={selectedSourceEnvironment}
@@ -133,7 +133,7 @@ export const CloudflareWorkersConfigurePage = () => {
           </Field>
           <Field className="mt-2" data-invalid={false}>
             <FieldLabel htmlFor="cloudflareworkers-infisical-secret-path">
-              Infisical Secret Path
+              Keydesk Secret Path
             </FieldLabel>
             <SecretPathInput
               value={secretPath}

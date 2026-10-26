@@ -125,14 +125,13 @@ export const CloudflarePagesConfigurePage = () => {
         <CardHeader>
           <CardTitle>Cloudflare Pages Integration</CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync with your Cloudflare Pages
-            project.
+            Choose which environment in Keydesk you want to sync with your Cloudflare Pages project.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           <Field className="mt-2" data-invalid={false}>
             <FieldLabel htmlFor="cloudflarepages-infisical-project-environment">
-              Infisical Project Environment
+              Keydesk Project Environment
             </FieldLabel>
             <Select
               value={selectedSourceEnvironment}
@@ -155,7 +154,7 @@ export const CloudflarePagesConfigurePage = () => {
           </Field>
           <Field className="mt-2" data-invalid={false}>
             <FieldLabel htmlFor="cloudflarepages-infisical-secret-path">
-              Infisical Secret Path
+              Keydesk Secret Path
             </FieldLabel>
             <SecretPathInput
               value={secretPath}

@@ -167,7 +167,7 @@ export const ViewCredentialsModal = ({
           <DialogTitle>Account Credentials</DialogTitle>
           <DialogDescription>
             {credentials
-              ? `Stored credentials for ${accountName}. Copying one takes it outside Infisical, where no session recording applies.`
+              ? `Stored credentials for ${accountName}. Copying one takes it outside Keydesk, where no session recording applies.`
               : `Reveal the stored credentials for ${accountName}. Every reveal is recorded in the audit log.`}
           </DialogDescription>
         </DialogHeader>

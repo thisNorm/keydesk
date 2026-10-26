@@ -80,7 +80,7 @@ const Content = ({ secretSync, onComplete }: ContentProps) => {
     <form onSubmit={handleSubmit(handleTriggerImportSecrets)}>
       <p className="mb-6 text-sm text-accent">
         Are you sure you want to import secrets from this {destinationName} destination into
-        Infisical?
+        Keydesk?
       </p>
       <Controller
         name="importBehavior"
@@ -137,7 +137,7 @@ export const SecretSyncImportSecretsModal = ({ isOpen, onOpenChange, secretSync 
         <DialogHeader>
           <DialogTitle>Import Secrets</DialogTitle>
           <DialogDescription>
-            Import secrets into Infisical from this {destinationName} Sync destination.
+            Import secrets into Keydesk from this {destinationName} Sync destination.
           </DialogDescription>
         </DialogHeader>
         <Content secretSync={secretSync} onComplete={() => onOpenChange(false)} />

@@ -137,8 +137,8 @@ export const F5BigIpPkiSyncFields = () => {
                       <Info />
                     </TooltipTrigger>
                     <TooltipContent className="max-w-sm">
-                      The name of the SSL profile inside the partition. Infisical will add each
-                      synced certificate to it.
+                      The name of the SSL profile inside the partition. Keydesk will add each synced
+                      certificate to it.
                     </TooltipContent>
                   </Tooltip>
                 </FieldLabel>

@@ -41,9 +41,9 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(DbtConnectionMethod.ApiToken),
     credentials: z.object({
-      apiToken: z.string().trim().min(1, "API Token required"),
-      instanceUrl: z.string().trim().min(1, "Instance URL required"),
-      accountId: z.string().trim().min(1, "Account ID required")
+      apiToken: z.string().trim().min(1, "API 토큰을 입력하세요"),
+      instanceUrl: z.string().trim().min(1, "인스턴스 URL을 입력하세요"),
+      accountId: z.string().trim().min(1, "계정 ID를 입력하세요")
     })
   })
 ]);
@@ -79,7 +79,7 @@ export const DbtConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="instance-url">Instance URL</FieldLabel>
+              <FieldLabel htmlFor="instance-url">인스턴스 URL</FieldLabel>
               <Input
                 id="instance-url"
                 value={value}
@@ -98,7 +98,7 @@ export const DbtConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="account-id">Account ID</FieldLabel>
+              <FieldLabel htmlFor="account-id">계정 ID</FieldLabel>
               <Input
                 id="account-id"
                 value={value}
@@ -117,21 +117,20 @@ export const DbtConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Token Type
+                토큰 유형
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The type of token you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Dbt].name}. This field cannot be changed after
-                    creation.
+                    다음에 연결할 토큰 유형입니다: {APP_CONNECTION_MAP[AppConnection.Dbt].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(DbtConnectionMethod).map((method) => {
@@ -153,7 +152,7 @@ export const DbtConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-token">API Token</FieldLabel>
+              <FieldLabel htmlFor="api-token">API 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-token-error" : undefined}
                 id="api-token"
@@ -166,7 +165,7 @@ export const DbtConnectionForm = ({ appConnection, onSubmit }: Props) => {
           )}
         />
 
-        <AppConnectionFormFooter submitLabel={isUpdate ? "Update Credentials" : "Connect to DBT"} />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "DBT에 연결"} />
       </form>
     </FormProvider>
   );

@@ -61,7 +61,7 @@ export const OrgSSOSection = ({ onSwitchProvider }: Props): JSX.Element => {
 
     if (!subscription?.samlSSO) {
       handlePopUpOpen("upgradePlan", {
-        text: "Your current plan does not include access to SAML SSO. To unlock this feature, please upgrade to Infisical Pro plan."
+        text: "SAML SSO를 사용하려면 해당 기능이 포함된 라이선스가 필요합니다."
       });
       return;
     }
@@ -83,7 +83,7 @@ export const OrgSSOSection = ({ onSwitchProvider }: Props): JSX.Element => {
     if (!subscription?.samlSSO || !subscription?.groups) {
       handlePopUpOpen("upgradePlan", {
         isEnterpriseFeature: true,
-        text: "Your current plan does not include access to SAML group mapping. To unlock this feature, please upgrade to Infisical Enterprise plan."
+        text: "SAML 그룹 매핑을 사용하려면 해당 기능이 포함된 라이선스가 필요합니다."
       });
       return;
     }
@@ -116,7 +116,7 @@ export const OrgSSOSection = ({ onSwitchProvider }: Props): JSX.Element => {
         handlePopUpOpen("addSSO");
       } else {
         handlePopUpOpen("upgradePlan", {
-          text: "Your current plan does not include access to SAML SSO. To unlock this feature, please upgrade to Infisical Pro plan."
+          text: "SAML SSO를 사용하려면 해당 기능이 포함된 라이선스가 필요합니다."
         });
       }
     } catch (err) {
@@ -166,7 +166,7 @@ export const OrgSSOSection = ({ onSwitchProvider }: Props): JSX.Element => {
               <FieldContent>
                 <FieldTitle>Enable SAML</FieldTitle>
                 <FieldDescription>
-                  Allow members to authenticate into Infisical with SAML.
+                  Allow members to authenticate into Keydesk with SAML.
                 </FieldDescription>
               </FieldContent>
               {!isPending && (
@@ -209,9 +209,9 @@ export const OrgSSOSection = ({ onSwitchProvider }: Props): JSX.Element => {
                       </TooltipTrigger>
                       <TooltipContent className="max-w-lg">
                         <p>
-                          When this feature is enabled, Infisical will automatically sync group
-                          memberships between the SAML provider and Infisical. Users will be added
-                          to Infisical groups that match their SAML group names.
+                          When this feature is enabled, Keydesk will automatically sync group
+                          memberships between the SAML provider and Keydesk. Users will be added to
+                          Keydesk groups that match their SAML group names.
                         </p>
                         <p className="mt-3">
                           To use this feature you must include group claims in the SAML response as
@@ -228,9 +228,9 @@ export const OrgSSOSection = ({ onSwitchProvider }: Props): JSX.Element => {
                         <p className="mt-3 flex items-start gap-1.5 text-warning">
                           <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
                           <span>
-                            Group membership changes in the SAML provider only sync with Infisical
+                            Group membership changes in the SAML provider only sync with Keydesk
                             when a user logs in via SAML — removing a user from a group in the SAML
-                            provider will not be reflected in Infisical until their next SAML login.
+                            provider will not be reflected in Keydesk until their next SAML login.
                             Enable Enforce SAML SSO to ensure this behavior.
                           </span>
                         </p>
@@ -238,7 +238,7 @@ export const OrgSSOSection = ({ onSwitchProvider }: Props): JSX.Element => {
                     </Tooltip>
                   </FieldTitle>
                   <FieldDescription>
-                    Infisical will manage user group memberships based on the SAML provider.
+                    Keydesk will manage user group memberships based on the SAML provider.
                   </FieldDescription>
                 </FieldContent>
                 <OrgPermissionCan I={OrgPermissionActions.Edit} a={OrgPermissionSubjects.Sso}>

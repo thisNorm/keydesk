@@ -131,7 +131,7 @@ export const HsmConnectorDetailsByIDPage = () => (
   <>
     <Helmet>
       <title>HSM Connectors</title>
-      <link rel="icon" href="/infisical.ico" />
+      <link rel="icon" href="/keydesk.svg" />
     </Helmet>
     <Page />
   </>

@@ -44,7 +44,7 @@ const FORM_TABS: FormTab[] = [
     key: "configuration",
     shortDescription: "Environment",
     title: "Choose where to plant it",
-    subtitle: "Select the environment where Infisical should store the decoy credentials.",
+    subtitle: "Select the environment where Keydesk should store the decoy credentials.",
     fields: ["environment"]
   },
   {

@@ -50,19 +50,19 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(SshConnectionMethod.Password),
     credentials: z.object({
-      host: z.string().trim().min(1, "Host required"),
-      port: z.coerce.number().int().min(1).max(65535, "Port must be between 1 and 65535"),
-      username: z.string().trim().min(1, "Username required"),
-      password: z.string().trim().min(1, "Password required")
+      host: z.string().trim().min(1, "호스트를 입력하세요"),
+      port: z.coerce.number().int().min(1).max(65535, "포트는 1~65535 사이여야 합니다"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      password: z.string().trim().min(1, "비밀번호를 입력하세요")
     })
   }),
   rootSchema.extend({
     method: z.literal(SshConnectionMethod.SshKey),
     credentials: z.object({
-      host: z.string().trim().min(1, "Host required"),
-      port: z.coerce.number().int().min(1).max(65535, "Port must be between 1 and 65535"),
-      username: z.string().trim().min(1, "Username required"),
-      privateKey: z.string().trim().min(1, "Private key required"),
+      host: z.string().trim().min(1, "호스트를 입력하세요"),
+      port: z.coerce.number().int().min(1).max(65535, "포트는 1~65535 사이여야 합니다"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      privateKey: z.string().trim().min(1, "개인 키를 입력하세요"),
       passphrase: z.string().trim().optional()
     })
   })
@@ -140,7 +140,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
           >
             {(isAllowed) => (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div>
@@ -159,8 +159,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
                   </TooltipTrigger>
                   {!isAllowed && (
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -174,15 +173,14 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Authentication Method
+                인증 방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The authentication method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.SSH].name}. This field cannot be changed after
-                    creation.
+                    다음에 연결할 인증 방식입니다: {APP_CONNECTION_MAP[AppConnection.SSH].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -192,7 +190,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 onValueChange={(val) => handleMethodChange(val as SshConnectionMethod)}
               >
                 <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(SshConnectionMethod).map((method) => (
@@ -212,11 +210,11 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="ssh-host">Host</FieldLabel>
+                <FieldLabel htmlFor="ssh-host">호스트</FieldLabel>
                 <Input
                   id="ssh-host"
                   {...field}
-                  placeholder="Hostname or IP address"
+                  placeholder="호스트 이름 또는 IP 주소"
                   isError={Boolean(error?.message)}
                 />
                 <FieldError errors={[error]} />
@@ -228,7 +226,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="ssh-port">Port</FieldLabel>
+                <FieldLabel htmlFor="ssh-port">포트</FieldLabel>
                 <Input
                   id="ssh-port"
                   {...field}
@@ -246,11 +244,11 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
           control={control}
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="ssh-username">Username</FieldLabel>
+              <FieldLabel htmlFor="ssh-username">사용자 이름</FieldLabel>
               <Input
                 id="ssh-username"
                 {...field}
-                placeholder="SSH username"
+                placeholder="SSH 사용자 이름"
                 isError={Boolean(error?.message)}
               />
               <FieldError errors={[error]} />
@@ -263,7 +261,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="app-connection-ssh-password">Password</FieldLabel>
+                <FieldLabel htmlFor="app-connection-ssh-password">비밀번호</FieldLabel>
                 <SecretInput
                   aria-describedby={error ? "app-connection-ssh-password-error" : undefined}
                   id="app-connection-ssh-password"
@@ -282,7 +280,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="app-connection-ssh-private-key">Private Key</FieldLabel>
+                  <FieldLabel htmlFor="app-connection-ssh-private-key">개인 키</FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "app-connection-ssh-private-key-error" : undefined}
                     id="app-connection-ssh-private-key"
@@ -301,7 +299,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="app-connection-ssh-passphrase">
-                    Passphrase <span className="text-muted">(optional)</span>
+                    암호 문구 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "app-connection-ssh-passphrase-error" : undefined}
@@ -322,14 +320,14 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Blocked Users <span className="text-muted">(optional)</span>
+                차단된 사용자 <span className="text-muted">(선택 사항)</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    A comma-separated list of usernames that are blocked from being used in
-                    operations like secret rotation (e.g., root,admin,ubuntu).
+                    시크릿 교체 등의 작업에서 사용을 차단할 사용자 이름을 쉼표로 구분해
+                    입력하세요(예: root,admin,ubuntu).
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -343,7 +341,7 @@ export const SshConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter submitLabel={isUpdate ? "Update Credentials" : "Connect to SSH"} />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "SSH에 연결"} />
       </form>
     </FormProvider>
   );

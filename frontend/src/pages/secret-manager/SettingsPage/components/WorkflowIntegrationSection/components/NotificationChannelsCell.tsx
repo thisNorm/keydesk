@@ -22,7 +22,7 @@ export const NotificationChannelsCell = ({ isLoading, isEnabled, channelNames }:
       <TableCell>
         <Badge variant="neutral">
           <Ban />
-          Disabled
+          꺼짐
         </Badge>
       </TableCell>
     );
@@ -31,7 +31,7 @@ export const NotificationChannelsCell = ({ isLoading, isEnabled, channelNames }:
   if (!channelNames.length) {
     return (
       <TableCell>
-        <span className="text-muted">No channels selected</span>
+        <span className="text-muted">선택한 채널이 없습니다</span>
       </TableCell>
     );
   }

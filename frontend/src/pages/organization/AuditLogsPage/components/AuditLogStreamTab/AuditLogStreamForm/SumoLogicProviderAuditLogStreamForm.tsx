@@ -92,7 +92,7 @@ export const SumoLogicProviderAuditLogStreamForm = ({ auditLogStream, onSubmit }
                   <TooltipContent className="max-w-sm">
                     The collector token from your HTTP Source&apos;s <code>x-sumo-token</code>{" "}
                     header (the value after <code>x-sumo-token: </code>
-                    ). Infisical sends it as the <code>x-sumo-token</code> header on each request.
+                    ). Keydesk sends it as the <code>x-sumo-token</code> header on each request.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>

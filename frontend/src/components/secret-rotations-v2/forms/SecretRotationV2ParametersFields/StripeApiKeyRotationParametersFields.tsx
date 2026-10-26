@@ -26,7 +26,7 @@ export const StripeApiKeyRotationParametersFields = () => {
           <Field data-invalid={Boolean(error)}>
             <FieldLabelWithTooltip
               htmlFor="secret-rotation-key-name"
-              tooltip="Optional. The name of each key this rotation creates in Stripe. Infisical adds a timestamp to each name so you can tell the old and new key apart. If empty, the name is infisical-managed."
+              tooltip="Optional. The name of each key this rotation creates in Stripe. Keydesk adds a timestamp to each name so you can tell the old and new key apart. If empty, the name is infisical-managed."
             >
               Key Name
             </FieldLabelWithTooltip>

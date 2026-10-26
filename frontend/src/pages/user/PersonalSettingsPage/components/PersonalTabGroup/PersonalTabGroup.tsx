@@ -23,7 +23,7 @@ type Props = {
 const tabs = [
   { name: "일반", key: "general" },
   { name: "인증", key: "authentication" },
-  { name: "Infisical API 키", key: "api-keys", icon: TriangleAlertIcon }
+  { name: "Keydesk API 키", key: "api-keys", icon: TriangleAlertIcon }
 ] satisfies { name: string; key: PersonalSettingsTab; icon?: typeof TriangleAlertIcon }[];
 
 export const PersonalTabGroup = ({ selectedTab, onTabChange }: Props) => {
@@ -50,7 +50,7 @@ export const PersonalTabGroup = ({ selectedTab, onTabChange }: Props) => {
       <TabsContent value="api-keys">
         <Alert variant="danger">
           <KeyRoundIcon />
-          <AlertTitle>Infisical API 키 인증은 더 이상 지원하지 않습니다.</AlertTitle>
+          <AlertTitle>Keydesk API 키 인증은 더 이상 지원하지 않습니다.</AlertTitle>
           <AlertDescription>
             <p>
               기존 키로는 요청을 인증할 수 없습니다. 프로그램에서 접근하려면 머신 ID를 사용하세요.

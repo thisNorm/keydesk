@@ -95,7 +95,7 @@ export const UserOrgMembershipModal = ({ popUp, handlePopUpOpen, handlePopUpTogg
 
     if (isCustomOrgRole(role.slug) && subscription && !subscription?.rbac) {
       handlePopUpOpen("upgradePlan", {
-        text: "Your current plan does not include access to assigning custom roles to members. To unlock this feature, please upgrade to Infisical Enterprise plan.",
+        text: "멤버에게 사용자 지정 역할을 할당하려면 해당 기능이 포함된 라이선스가 필요합니다.",
         isEnterpriseFeature: true
       });
       return;
@@ -148,7 +148,7 @@ export const UserOrgMembershipModal = ({ popUp, handlePopUpOpen, handlePopUpTogg
 
                     if (isCustomRole && subscription && !subscription?.rbac) {
                       handlePopUpOpen("upgradePlan", {
-                        text: "Your current plan does not include access to assigning custom roles to members. To unlock this feature, please upgrade to Infisical Enterprise plan.",
+                        text: "멤버에게 사용자 지정 역할을 할당하려면 해당 기능이 포함된 라이선스가 필요합니다.",
                         isEnterpriseFeature: true
                       });
                       return;

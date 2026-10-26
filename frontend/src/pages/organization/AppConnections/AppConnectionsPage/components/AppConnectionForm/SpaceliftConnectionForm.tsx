@@ -42,9 +42,9 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(SpaceliftConnectionMethod.ApiKeySecret),
     credentials: z.object({
-      apiUrl: z.string().trim().url("Must be a valid URL").min(1, "API URL required"),
-      apiKeyId: z.string().trim().min(1, "API Key ID required"),
-      apiKeySecret: z.string().trim().min(1, "API Key Secret required")
+      apiUrl: z.string().trim().url("올바른 URL을 입력하세요").min(1, "API URL을 입력하세요"),
+      apiKeyId: z.string().trim().min(1, "API 키 ID를 입력하세요"),
+      apiKeySecret: z.string().trim().min(1, "API 키 시크릿을 입력하세요")
     })
   })
 ]);
@@ -79,21 +79,20 @@ export const SpaceliftConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Spacelift].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Spacelift].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(SpaceliftConnectionMethod).map((method) => {
@@ -122,7 +121,7 @@ export const SpaceliftConnectionForm = ({ appConnection, onSubmit }: Props) => {
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Your Spacelift account URL (e.g. https://myaccount.app.spacelift.io)
+                    Spacelift 계정 URL입니다(예: https://myaccount.app.spacelift.io)
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -143,7 +142,7 @@ export const SpaceliftConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key-id">API Key ID</FieldLabel>
+              <FieldLabel htmlFor="api-key-id">API 키 ID</FieldLabel>
               <Input
                 id="api-key-id"
                 value={value}
@@ -160,7 +159,7 @@ export const SpaceliftConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key-secret">API Key Secret</FieldLabel>
+              <FieldLabel htmlFor="api-key-secret">API 키 시크릿</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-key-secret-error" : undefined}
                 id="api-key-secret"
@@ -172,9 +171,7 @@ export const SpaceliftConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Spacelift"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Spacelift에 연결"} />
       </form>
     </FormProvider>
   );

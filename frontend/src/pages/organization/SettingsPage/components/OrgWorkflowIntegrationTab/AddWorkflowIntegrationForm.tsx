@@ -57,15 +57,15 @@ export const AddWorkflowIntegrationForm = ({ isOpen, onToggle }: Props) => {
         <DialogHeader>
           <DialogTitle>
             {selectedPlatform
-              ? `Connect ${PLATFORM_TITLES[selectedPlatform]}`
-              : "Add Workflow Integration"}
+              ? `연결 대상: ${PLATFORM_TITLES[selectedPlatform]}`
+              : "워크플로 연동 추가"}
           </DialogTitle>
           <DialogDescription>
             {selectedPlatform
-              ? `Connect a ${PLATFORM_TITLES[selectedPlatform]} ${
-                  selectedPlatform === WorkflowIntegrationPlatform.SLACK ? "workspace" : "tenant"
-                } for your organization's notification and approval workflows.`
-              : "Select a platform to connect for notification and approval workflows."}
+              ? `조직의 알림과 승인 워크플로에 사용할 연결: ${PLATFORM_TITLES[selectedPlatform]} ${
+                  selectedPlatform === WorkflowIntegrationPlatform.SLACK ? "워크스페이스" : "테넌트"
+                }를 연결하세요.`
+              : "알림과 승인 워크플로에 연결할 플랫폼을 선택하세요."}
           </DialogDescription>
         </DialogHeader>
         {!selectedPlatform && (
@@ -86,7 +86,7 @@ export const AddWorkflowIntegrationForm = ({ isOpen, onToggle }: Props) => {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="ghost">
-                  Cancel
+                  취소
                 </Button>
               </DialogClose>
             </DialogFooter>

@@ -27,7 +27,7 @@ export const Route = createFileRoute(
   context: () => ({
     breadcrumbs: [
       {
-        label: "Integrations"
+        label: "연동"
       }
     ]
   }),

@@ -123,7 +123,7 @@ export const FlyioConfigurePage = () => {
             <span>Fly.io Integration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment or folder in Infisical you want to sync to Fly.io environment
+            Choose which environment or folder in Keydesk you want to sync to Fly.io environment
             variables.
           </CardDescription>
           <CardAction>
@@ -146,7 +146,7 @@ export const FlyioConfigurePage = () => {
               <TriangleAlertIcon />
               <AlertDescription>
                 All current secrets linked to the related Fly.io project will be deleted before
-                Infisical secrets are pushed to your Fly.io project.
+                Keydesk secrets are pushed to your Fly.io project.
               </AlertDescription>
             </Alert>
           </div>
@@ -228,7 +228,7 @@ export const FlyioConfigurePage = () => {
         </div>
         <span className="mt-4 text-sm text-label">
           After creating an integration, your secrets will start syncing immediately. This might
-          cause an unexpected override of current secrets in Fly.io with secrets from Infisical.
+          cause an unexpected override of current secrets in Fly.io with secrets from Keydesk.
         </span>
       </div>
     </div>
@@ -239,10 +239,11 @@ export const FlyioConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthLoading || isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

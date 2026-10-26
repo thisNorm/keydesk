@@ -37,9 +37,9 @@ const formSchema = genericAppConnectionFieldsSchema.extend({
   app: z.literal(AppConnection.MicrosoftIntune),
   method: z.literal(MicrosoftIntuneConnectionMethod.ClientSecret),
   credentials: z.object({
-    tenantId: z.string().trim().min(1, "Tenant ID is required"),
-    clientId: z.string().trim().min(1, "Client ID is required"),
-    clientSecret: z.string().trim().min(1, "Client Secret is required")
+    tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
+    clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+    clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요")
   })
 });
 
@@ -100,21 +100,21 @@ export const MicrosoftIntuneConnectionForm = ({ appConnection, onSubmit }: Props
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.MicrosoftIntune].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다:{" "}
+                    {APP_CONNECTION_MAP[AppConnection.MicrosoftIntune].name}. 이 필드는 생성 후
+                    변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(MicrosoftIntuneConnectionMethod).map((method) => {
@@ -137,13 +137,13 @@ export const MicrosoftIntuneConnectionForm = ({ appConnection, onSubmit }: Props
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials.tenantId">
-                Tenant ID
+                테넌트 ID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Microsoft Entra (Azure AD) Tenant ID of the application.
+                    애플리케이션의 Microsoft Entra(Azure AD) 테넌트 ID입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -164,14 +164,14 @@ export const MicrosoftIntuneConnectionForm = ({ appConnection, onSubmit }: Props
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials.clientId">
-                Client ID
+                클라이언트 ID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Application (Client) ID of the Entra app registration granted the Intune
-                    SCEP challenge validation permission.
+                    Intune SCEP 챌린지 검증 권한을 부여한 Entra 앱 등록의 애플리케이션(클라이언트)
+                    ID입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -192,13 +192,13 @@ export const MicrosoftIntuneConnectionForm = ({ appConnection, onSubmit }: Props
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials.clientSecret">
-                Client Secret
+                클라이언트 시크릿
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The client secret of the Entra app registration.
+                    Entra 앱 등록의 클라이언트 시크릿입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -221,10 +221,10 @@ export const MicrosoftIntuneConnectionForm = ({ appConnection, onSubmit }: Props
             isPending={isSubmitting}
             isDisabled={isSubmitting || (!isUpdate && !isDirty)}
           >
-            {isUpdate ? "Reconnect to Microsoft Intune" : "Connect to Microsoft Intune"}
+            {isUpdate ? "Microsoft Intune에 다시 연결" : "Microsoft Intune에 연결"}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel} isDisabled={isSubmitting}>
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

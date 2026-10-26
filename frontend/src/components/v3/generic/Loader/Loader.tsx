@@ -29,8 +29,8 @@ type LoaderProps = Omit<ComponentProps<"div">, "children"> & {
 };
 
 const animationSources = {
-  brand: "/lotties/infisical_loading.json",
-  inverse: "/lotties/infisical_loading_bw.json"
+  brand: "/lotties/keydesk_loading.json",
+  inverse: "/lotties/keydesk_loading_bw.json"
 };
 
 // The mark is 1.91:1 rather than square, so the scale is expressed as widths and

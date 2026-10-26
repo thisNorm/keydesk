@@ -55,10 +55,10 @@ const formSchema = z.discriminatedUnion("method", [
       adcsUrl: z
         .string()
         .trim()
-        .min(1, "ADCS URL required")
-        .refine((value) => value.startsWith("https://"), "ADCS URL must use HTTPS"),
-      username: z.string().trim().min(1, "Username required"),
-      password: z.string().trim().min(1, "Password required"),
+        .min(1, "ADCS URL을 입력하세요")
+        .refine((value) => value.startsWith("https://"), "ADCS URL은 HTTPS를 사용해야 합니다"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      password: z.string().trim().min(1, "비밀번호를 입력하세요"),
       sslRejectUnauthorized: z.boolean().optional(),
       sslCertificate: z
         .string()
@@ -113,21 +113,21 @@ export const AzureADCSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.AzureADCS].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AzureADCSConnectionMethod).map((method) => {
@@ -145,8 +145,8 @@ export const AzureADCSConnectionForm = ({ appConnection, onSubmit }: Props) => {
         />
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mb-4">
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
-            <TabsTrigger value="ssl">SSL ({sslEnabled ? "Enabled" : "Disabled"})</TabsTrigger>
+            <TabsTrigger value="configuration">구성</TabsTrigger>
+            <TabsTrigger value="ssl">SSL ({sslEnabled ? "켜짐" : "꺼짐"})</TabsTrigger>
           </TabsList>
           <TabsContent value="configuration">
             <Controller
@@ -171,7 +171,7 @@ export const AzureADCSConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="username">Username</FieldLabel>
+                    <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
                     <Input
                       id="username"
                       {...field}
@@ -187,7 +187,7 @@ export const AzureADCSConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <FieldLabel htmlFor="password">비밀번호</FieldLabel>
                     <SecretInput
                       aria-describedby={error ? "password-error" : undefined}
                       id="password"
@@ -202,14 +202,14 @@ export const AzureADCSConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </div>
           </TabsContent>
           <TabsContent value="ssl">
-            <p className="mb-3 text-xs text-muted">SSL configuration for HTTPS connections</p>
+            <p className="mb-3 text-xs text-muted">HTTPS 연결을 위한 SSL 구성</p>
             <Controller
               name="credentials.sslCertificate"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className={sslEnabled ? "mb-4" : "mb-4 opacity-50"}>
                   <FieldLabel htmlFor="ssl-certificate">
-                    SSL Certificate <span className="text-muted">(optional)</span>
+                    SSL 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="ssl-certificate"
@@ -232,11 +232,10 @@ export const AzureADCSConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field className={sslEnabled ? undefined : "opacity-50"}>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        If enabled, Infisical will only connect to the ADCS server if it has a
-                        valid, trusted SSL certificate. Disable only in test environments with
-                        self-signed certificates.
+                        켜면 ADCS 서버가 유효하고 신뢰할 수 있는 SSL 인증서를 제공할 때만 Keydesk가
+                        연결합니다. 자체 서명 인증서를 사용하는 테스트 환경에서만 끄세요.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -254,9 +253,7 @@ export const AzureADCSConnectionForm = ({ appConnection, onSubmit }: Props) => {
             />
           </TabsContent>
         </Tabs>
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Azure ADCS"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Azure ADCS에 연결"} />
       </form>
     </FormProvider>
   );

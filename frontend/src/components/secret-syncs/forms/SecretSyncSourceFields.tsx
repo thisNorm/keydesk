@@ -164,7 +164,7 @@ const DefaultSecretSyncSourceFields = () => {
                 <AlertTitle>Initial sync is set to overwrite the destination</AlertTitle>
                 <AlertDescription>
                   A sync that includes subfolders cannot import secrets from the destination into
-                  Infisical, because there is no single folder to import them into.
+                  Keydesk, because there is no single folder to import them into.
                 </AlertDescription>
               </Alert>
             )}

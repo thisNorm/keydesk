@@ -8,9 +8,9 @@ export enum AdcsConnectionMethod {
 }
 
 export const CreateAdcsConnectionSchema = z.object({
-  host: z.string().min(1, "CA Host is required"),
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required")
+  host: z.string().min(1, "CA 호스트를 입력하세요"),
+  username: z.string().min(1, "사용자 이름을 입력하세요"),
+  password: z.string().min(1, "비밀번호를 입력하세요")
 });
 
 export type TCreateAdcsConnection = z.infer<typeof CreateAdcsConnectionSchema>;

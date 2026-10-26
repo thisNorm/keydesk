@@ -45,8 +45,8 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(GoDaddyConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required"),
-      apiSecret: z.string().trim().min(1, "API Secret required")
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요"),
+      apiSecret: z.string().trim().min(1, "API 시크릿을 입력하세요")
     })
   })
 ]);
@@ -77,21 +77,21 @@ export const GoDaddyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.GoDaddy].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(GoDaddyConnectionMethod).map((method) => {
@@ -113,7 +113,7 @@ export const GoDaddyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key">API Key</FieldLabel>
+              <FieldLabel htmlFor="api-key">API 키</FieldLabel>
               <Input
                 id="api-key"
                 value={value}
@@ -122,7 +122,7 @@ export const GoDaddyConnectionForm = ({ appConnection, onSubmit }: Props) => {
               />
               {!error && (
                 <FieldDescription>
-                  Generate an API key and secret at developer.godaddy.com under Keys.
+                  developer.godaddy.com의 Keys에서 API 키와 시크릿을 만드세요.
                 </FieldDescription>
               )}
               <FieldError errors={[error]} />
@@ -135,7 +135,7 @@ export const GoDaddyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-secret">API Secret</FieldLabel>
+              <FieldLabel htmlFor="api-secret">API 시크릿</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-secret-error" : undefined}
                 isError={Boolean(error)}
@@ -147,9 +147,7 @@ export const GoDaddyConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to GoDaddy"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "GoDaddy에 연결"} />
       </form>
     </FormProvider>
   );

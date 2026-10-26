@@ -68,7 +68,7 @@ const initialSyncBehaviors = [
     label: "No Import - Overwrite all values in GitLab",
     value: IntegrationSyncBehavior.OVERWRITE_TARGET
   },
-  { label: "Import - Prefer values from Infisical", value: IntegrationSyncBehavior.PREFER_SOURCE }
+  { label: "Import - Prefer values from Keydesk", value: IntegrationSyncBehavior.PREFER_SOURCE }
 ];
 
 const schema = z.object({
@@ -233,7 +233,7 @@ export const GitlabConfigurePage = () => {
             <span>GitLab Integration</span>
           </CardTitle>
           <CardDescription>
-            Select which environment or folder in Infisical you want to sync to GitLab&apos;s
+            Select which environment or folder in Keydesk you want to sync to GitLab&apos;s
             environment variables.
           </CardDescription>
           <CardAction>
@@ -547,7 +547,7 @@ export const GitlabConfigurePage = () => {
                       <Field orientation="horizontal">
                         <FieldLabel htmlFor="should-mask-secrets">
                           <div className="max-w-md">
-                            Mark Infisical secrets in Gitlab as &apos;Masked&apos; secrets
+                            Mark Keydesk secrets in Gitlab as &apos;Masked&apos; secrets
                           </div>
                         </FieldLabel>
                         <Toggle
@@ -567,7 +567,7 @@ export const GitlabConfigurePage = () => {
                     render={({ field: { onChange, value } }) => (
                       <Field orientation="horizontal">
                         <FieldLabel htmlFor="should-protect-secrets">
-                          Mark Infisical secrets in Gitlab as &apos;Protected&apos; secrets
+                          Mark Keydesk secrets in Gitlab as &apos;Protected&apos; secrets
                         </FieldLabel>
                         <Toggle
                           id="should-protect-secrets"
@@ -672,10 +672,11 @@ export const GitlabConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthAppsLoading || isintegrationAuthTeamsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

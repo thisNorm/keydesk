@@ -8,23 +8,23 @@ interface AuthTermsNoticeProps {
 export const AuthTermsNotice = ({ showCaptchaNotice = false }: AuthTermsNoticeProps) => (
   <div className="flex flex-col gap-1 text-xs text-pretty text-label">
     <p>
-      가입하면 다음 정책에 동의합니다:{" "}
+      Keydesk의 운영 안내와 사용 범위를 확인하세요:{" "}
       <a
-        href="https://infisical.com/terms/cloud"
+        href="https://github.com/thisNorm/keydesk#readme"
         target="_blank"
         rel="noopener noreferrer"
         className={linkClassName}
       >
-        이용 약관
+        사용 안내
       </a>{" "}
       및{" "}
       <a
-        href="https://infisical.com/privacy"
+        href="https://github.com/thisNorm/keydesk/blob/keydesk/LICENSE"
         target="_blank"
         rel="noopener noreferrer"
         className={linkClassName}
       >
-        개인정보 처리방침
+        라이선스
       </a>
       .
     </p>

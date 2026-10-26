@@ -145,8 +145,8 @@ export const SecretV2MigrationSection = () => {
         <Alert variant="danger">
           <CircleXIcon />
           <AlertDescription>
-            Secrets engine upgrade unsuccessful. For assistance, please contact the Infisical
-            support team.
+            Secrets engine upgrade unsuccessful. For assistance, please contact the Keydesk support
+            team.
           </AlertDescription>
         </Alert>
       )}

@@ -215,7 +215,7 @@ export const DiscoveryDetailsByIDPage = () => {
     <>
       <Helmet>
         <title>Discovery Job Details</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <Page />
     </>

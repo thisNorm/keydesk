@@ -44,9 +44,9 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(DatabricksConnectionMethod.ServicePrincipal),
     credentials: z.object({
-      workspaceUrl: z.string().url().trim().min(1, "Workspace URL required"),
-      clientId: z.string().trim().min(1, "Client ID required"),
-      clientSecret: z.string().trim().min(1, "Client secret required")
+      workspaceUrl: z.string().url().trim().min(1, "워크스페이스 URL을 입력하세요"),
+      clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+      clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요")
     })
   })
 ]);
@@ -76,21 +76,20 @@ export const DatabricksConnectionForm = ({ appConnection, onSubmit }: Props) => 
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Databricks].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Databricks].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(DatabricksConnectionMethod).map((method) => {
@@ -112,7 +111,7 @@ export const DatabricksConnectionForm = ({ appConnection, onSubmit }: Props) => 
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="workspace-url">Workspace URL</FieldLabel>
+              <FieldLabel htmlFor="workspace-url">워크스페이스 URL</FieldLabel>
               <Input
                 id="workspace-url"
                 {...field}
@@ -129,7 +128,7 @@ export const DatabricksConnectionForm = ({ appConnection, onSubmit }: Props) => 
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="client-id">Client ID</FieldLabel>
+              <FieldLabel htmlFor="client-id">클라이언트 ID</FieldLabel>
               <Input
                 id="client-id"
                 {...field}
@@ -146,7 +145,7 @@ export const DatabricksConnectionForm = ({ appConnection, onSubmit }: Props) => 
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="client-secret">Client Secret</FieldLabel>
+              <FieldLabel htmlFor="client-secret">클라이언트 시크릿</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "client-secret-error" : undefined}
                 id="client-secret"
@@ -158,9 +157,7 @@ export const DatabricksConnectionForm = ({ appConnection, onSubmit }: Props) => 
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Databricks"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Databricks에 연결"} />
       </form>
     </FormProvider>
   );

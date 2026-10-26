@@ -44,7 +44,7 @@ export const fetchAzureDevOpsProjects = async (
   connectionId: string
 ): Promise<AzureDevOpsProjectsResponse> => {
   if (!connectionId) {
-    throw new Error("Connection ID is required");
+    throw new Error("연결 ID를 입력하세요");
   }
 
   const { data } = await apiRequest.get<AzureDevOpsProjectsResponse>(

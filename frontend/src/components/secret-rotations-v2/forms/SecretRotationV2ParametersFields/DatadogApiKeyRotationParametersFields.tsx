@@ -33,7 +33,7 @@ export const DatadogApiKeyRotationParametersFields = () => {
             value={value}
             onBlur={onBlur}
             onChange={onChange}
-            placeholder="Infisical Rotated API Key"
+            placeholder="Keydesk Rotated API Key"
             maxLength={DATADOG_API_KEY_NAME_MAX_LENGTH}
             isError={Boolean(error)}
           />

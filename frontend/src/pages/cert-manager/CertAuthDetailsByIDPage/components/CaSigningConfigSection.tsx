@@ -69,7 +69,7 @@ type Props = {
 };
 
 const signingTypeLabels: Record<CaSigningConfigType, string> = {
-  [CaSigningConfigType.INTERNAL]: "Internal (Infisical CA)",
+  [CaSigningConfigType.INTERNAL]: "Internal (Keydesk CA)",
   [CaSigningConfigType.MANUAL]: "Manual",
   [CaSigningConfigType.VENAFI]: "Venafi TLS Protect Cloud",
   [CaSigningConfigType.AZURE_ADCS]: "Azure AD CS (Web Enrollment)",

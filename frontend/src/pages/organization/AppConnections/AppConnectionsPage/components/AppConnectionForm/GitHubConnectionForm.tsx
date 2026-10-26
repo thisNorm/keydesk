@@ -80,7 +80,7 @@ const rootSchema = genericAppConnectionFieldsSchema.extend({
 const baseCredentialsSchema = z.union([
   z.object({
     instanceType: z.literal("server"),
-    host: z.string().min(1, "Host is required for server instance type")
+    host: z.string().min(1, "서버 인스턴스 유형에는 호스트가 필요합니다")
   }),
   z.object({
     instanceType: z.literal("cloud").optional(),
@@ -103,13 +103,13 @@ const patSchema = rootSchema.extend({
   credentials: z.union([
     z.object({
       instanceType: z.literal("server"),
-      host: z.string().min(1, "Host is required for server instance type"),
-      personalAccessToken: z.string().min(1, "Personal Access Token is required")
+      host: z.string().min(1, "서버 인스턴스 유형에는 호스트가 필요합니다"),
+      personalAccessToken: z.string().min(1, "개인 액세스 토큰을 입력하세요")
     }),
     z.object({
       instanceType: z.literal("cloud").optional(),
       host: z.string().optional(),
-      personalAccessToken: z.string().min(1, "Personal Access Token is required")
+      personalAccessToken: z.string().min(1, "개인 액세스 토큰을 입력하세요")
     })
   ])
 });
@@ -341,7 +341,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
         type: "error",
         text:
           (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-          (err instanceof Error ? err.message : "Failed to start GitHub App creation.")
+          (err instanceof Error ? err.message : "GitHub App 생성을 시작하지 못했습니다.")
       });
       return false;
     }
@@ -384,7 +384,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
         );
         break;
       default:
-        throw new Error(`Unhandled GitHub Connection method: ${(formData as FormData).method}`);
+        throw new Error(`지원되지 않는 GitHub 연결 방식: ${(formData as FormData).method}`);
     }
   };
 
@@ -403,7 +403,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
       isMissingConfig = false;
       break;
     default:
-      throw new Error(`Unhandled GitHub Connection method: ${selectedMethod}`);
+      throw new Error(`지원되지 않는 GitHub 연결 방식: ${selectedMethod}`);
   }
 
   const customHost = watch("credentials.host")?.trim().toLowerCase();
@@ -418,12 +418,12 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
   const getMethodErrorText = (fieldError?: { message?: string }) => {
     if (!isLoading && isMissingConfig) {
       const configHint = isInfisicalCloud()
-        ? "Please contact Infisical."
-        : `See Docs to configure ${methodDetails.name.startsWith("GitHub") ? methodDetails.name : `GitHub ${methodDetails.name}`} Connections.`;
-      return `Credentials have not been configured. ${configHint}`;
+        ? "Keydesk 관리자에게 문의하세요."
+        : `설정 방법은 문서를 확인하세요: ${methodDetails.name.startsWith("GitHub") ? methodDetails.name : `GitHub ${methodDetails.name}`} 연결입니다.`;
+      return `인증 정보가 구성되지 않았습니다. ${configHint}`;
     }
     if (isCloudCustomHostUnsupported) {
-      return "GitHub App/OAuth with a custom host is only supported on self-hosted Infisical.";
+      return "사용자 지정 호스트의 GitHub App/OAuth는 자체 호스팅 Keydesk에서만 지원됩니다.";
     }
     return fieldError?.message;
   };
@@ -433,10 +433,10 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
 
   const getButtonText = () => {
     if (selectedMethod === GitHubConnectionMethod.Pat) {
-      return isUpdate ? "Update Connection" : "Create Connection";
+      return isUpdate ? "연결 수정" : "연결 만들기";
     }
 
-    return isUpdate ? "Reconnect to GitHub" : "Connect to GitHub";
+    return isUpdate ? "GitHub에 다시 연결" : "GitHub에 연결";
   };
 
   return (
@@ -453,7 +453,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
         >
           <AccordionItem value="enterprise-options">
             <AccordionTrigger className="h-fit flex-none pl-1 text-sm">
-              GitHub Enterprise Options
+              GitHub Enterprise 옵션
             </AccordionTrigger>
             <AccordionContent className="px-0">
               <Controller
@@ -461,7 +461,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
                 control={control}
                 render={({ field }) => (
                   <Field className="mb-4">
-                    <FieldLabel>Instance Type</FieldLabel>
+                    <FieldLabel>인스턴스 유형</FieldLabel>
                     <Select
                       value={field.value}
                       onValueChange={(e) => {
@@ -473,11 +473,11 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
                       }}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Enterprise Cloud" />
+                        <SelectValue placeholder="엔터프라이즈 클라우드" />
                       </SelectTrigger>
                       <SelectContent position="popper">
-                        <SelectItem value="cloud">Enterprise Cloud</SelectItem>
-                        <SelectItem value="server">Enterprise Server</SelectItem>
+                        <SelectItem value="cloud">엔터프라이즈 클라우드</SelectItem>
+                        <SelectItem value="server">엔터프라이즈 서버</SelectItem>
                       </SelectContent>
                     </Select>
                   </Field>
@@ -490,8 +490,8 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
                 render={({ field, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="github-host">
-                      Instance Hostname
-                      {instanceType === "cloud" && <span className="text-muted"> (optional)</span>}
+                      인스턴스 호스트 이름
+                      {instanceType === "cloud" && <span className="text-muted"> (선택 사항)</span>}
                     </FieldLabel>
                     <Input
                       id="github-host"
@@ -510,7 +510,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
                 >
                   {(isAllowed) => (
                     <Field className="mb-4">
-                      <FieldLabel>Gateway</FieldLabel>
+                      <FieldLabel>게이트웨이</FieldLabel>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div>
@@ -529,8 +529,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
                         </TooltipTrigger>
                         {!isAllowed && (
                           <TooltipContent>
-                            Restricted access. You don&apos;t have permission to attach gateways to
-                            resources.
+                            접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                           </TooltipContent>
                         )}
                       </Tooltip>
@@ -547,15 +546,14 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.GitHub].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.GitHub].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -566,7 +564,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
                     Boolean(error?.message) || isMissingConfig || isCloudCustomHostUnsupported
                   }
                 >
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(GitHubConnectionMethod).map((method) => (
@@ -590,14 +588,9 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
                   <Info />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-sm">
-                  Reuse an existing GitHub App from{" "}
-                  {/* eslint-disable-next-line no-nested-ternary */}
-                  {projectId
-                    ? canSeeOrgApps
-                      ? "this project or your organization"
-                      : "this project"
-                    : "your organization"}
-                  , or create a new one. Apps can be shared across multiple connections.
+                  기존 GitHub App을 {/* eslint-disable-next-line no-nested-ternary */}
+                  {projectId ? (canSeeOrgApps ? "이 프로젝트 또는 조직" : "이 프로젝트") : "조직"}
+                  에서 선택하거나 새로 만드세요. 여러 연결에서 앱을 공유할 수 있습니다.
                 </TooltipContent>
               </Tooltip>
             </FieldLabel>
@@ -623,7 +616,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
                 <FieldLabel htmlFor="app-connection-git-hub-personal-access-token">
-                  Personal Access Token
+                  개인 액세스 토큰
                 </FieldLabel>
                 <SecretInput
                   aria-describedby={
@@ -664,7 +657,7 @@ export const GitHubConnectionForm = ({ appConnection, projectId, onSubmit }: Pro
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

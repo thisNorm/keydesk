@@ -46,18 +46,18 @@ const getBehaviorCopy = (
     case SecretSyncInitialSyncBehavior.OverwriteDestination:
       return {
         title: `Overwrite ${destinationName}`,
-        description: `On the initial sync, Infisical will write its secrets to ${destinationName}. No secrets will be imported from ${shortName}. Depending on your configuration this can lead to removal of secrets from ${shortName}.`
+        description: `On the initial sync, Keydesk will write its secrets to ${destinationName}. No secrets will be imported from ${shortName}. Depending on your configuration this can lead to removal of secrets from ${shortName}.`
       };
     case SecretSyncInitialSyncBehavior.ImportPrioritizeSource:
       return {
-        title: `Import from ${shortName} — prioritize Infisical`,
-        description: `Prior to the initial sync, Infisical will import secrets from ${destinationName}. If an imported secret already exists in Infisical, the imported secret value is ignored, preserving the Infisical value.`
+        title: `Import from ${shortName} — prioritize Keydesk`,
+        description: `Prior to the initial sync, Keydesk will import secrets from ${destinationName}. If an imported secret already exists in Keydesk, the imported secret value is ignored, preserving the Keydesk value.`
       };
     case SecretSyncInitialSyncBehavior.ImportPrioritizeDestination:
     default:
       return {
         title: `Import from ${shortName} — prioritize ${shortName}`,
-        description: `Prior to the initial sync, Infisical will import secrets from ${destinationName}. If an imported secret already exists in Infisical, the imported secret value will overwrite the existing value in Infisical.`
+        description: `Prior to the initial sync, Keydesk will import secrets from ${destinationName}. If an imported secret already exists in Keydesk, the imported secret value will overwrite the existing value in Keydesk.`
       };
   }
 };
@@ -210,7 +210,7 @@ const ReconciliationSection = ({
     <div className="grid grid-cols-2 items-start gap-3">
       <div className="flex min-w-0 flex-col gap-1.5">
         <p className="truncate text-[10px] font-medium tracking-wider text-muted uppercase">
-          Infisical
+          Keydesk
         </p>
         <div className="flex flex-col gap-1">
           {infisicalRows.map((row) => (
@@ -320,7 +320,7 @@ export const InitialSyncAlerts = ({
         <AlertTitle>External secrets will be deleted</AlertTitle>
         <AlertDescription>
           <p>
-            Anything in {destinationName} not in Infisical will be removed. To keep them,{" "}
+            Anything in {destinationName} not in Keydesk will be removed. To keep them,{" "}
             {renderRemedy("import from provider", onGoToInitialSync)},{" "}
             {renderRemedy("customize key names", onGoToOptions)}, or{" "}
             {renderRemedy("prevent secret deletion", onGoToOptions)}.
@@ -393,7 +393,7 @@ export const SecretSyncInitialSyncBehaviorFields = () => {
               !keySchema &&
               (syncOption?.supportsKeySchema !== false ||
                 syncOption?.supportsDisableSecretDeletion !== false) &&
-              " Secrets not in Infisical will be removed — add a key schema or prevent secret deletion to keep them."}
+              " Secrets not in Keydesk will be removed — add a key schema or prevent secret deletion to keep them."}
           </AlertDescription>
         </Alert>
       )}
@@ -402,7 +402,7 @@ export const SecretSyncInitialSyncBehaviorFields = () => {
           <TriangleAlert />
           <AlertTitle>Overwrite only</AlertTitle>
           <AlertDescription>
-            Vercel can&apos;t read sensitive secrets back, so Infisical must overwrite the
+            Vercel can&apos;t read sensitive secrets back, so Keydesk must overwrite the
             destination.
           </AlertDescription>
         </Alert>

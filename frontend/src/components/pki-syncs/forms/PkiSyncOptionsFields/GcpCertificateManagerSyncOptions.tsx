@@ -100,7 +100,7 @@ export const GcpCertificateManagerSyncOptions = () => {
               <span className="font-mono"> managed-by </span>
               and
               <span className="font-mono"> infisical-certificate-id </span>
-              labels Infisical sets.
+              labels Keydesk sets.
             </FieldDescription>
           </FieldContent>
           <Toggle

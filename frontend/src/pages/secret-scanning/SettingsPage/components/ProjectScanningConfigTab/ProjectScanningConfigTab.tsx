@@ -22,7 +22,7 @@ export const ProjectScanningConfigTab = () => {
     return (
       <AccessRestrictedNotice
         title="Secret Scanning Not Available"
-        description="Your current plan doesn't include Secret Scanning. Contact Infisical support or reach out on Slack to enable it."
+        description="Your current plan doesn't include Secret Scanning. Contact Keydesk support or reach out on Slack to enable it."
       />
     );
   }

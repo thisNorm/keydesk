@@ -27,7 +27,7 @@ export const AccessStep = ({ form }: Props) => (
           <FieldContent>
             <Input {...field} placeholder="fortanix-prod" isError={Boolean(error)} />
             <FieldDescription>
-              The PKCS#11 token label of the slot Infisical will use on the HSM. Ask your HSM
+              The PKCS#11 token label of the slot Keydesk will use on the HSM. Ask your HSM
               administrator if you are not sure.
             </FieldDescription>
             <FieldError errors={[error]} />
@@ -53,7 +53,7 @@ export const AccessStep = ({ form }: Props) => (
               isError={Boolean(error)}
             />
             <FieldDescription>
-              The PIN Infisical uses to log in to that slot through the Gateway.
+              The PIN Keydesk uses to log in to that slot through the Gateway.
             </FieldDescription>
             <FieldError errors={[error]} />
           </FieldContent>
@@ -75,7 +75,7 @@ export const AccessStep = ({ form }: Props) => (
               isError={Boolean(error)}
             />
             <FieldDescription>
-              Prepended to the label of every key Infisical creates on this HSM. Makes them easy to
+              Prepended to the label of every key Keydesk creates on this HSM. Makes them easy to
               identify in your HSM tooling.
             </FieldDescription>
             <FieldError errors={[error]} />

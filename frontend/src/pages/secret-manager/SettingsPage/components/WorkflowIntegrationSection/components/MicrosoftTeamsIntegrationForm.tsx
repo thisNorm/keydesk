@@ -43,7 +43,7 @@ const channelsSchema = z.object({
 
 const formSchema = z
   .object({
-    microsoftTeamsIntegrationId: z.string().min(1, "Select a Microsoft Teams integration"),
+    microsoftTeamsIntegrationId: z.string().min(1, "Microsoft Teams 연동 선택"),
     isSecretRequestNotificationEnabled: z.boolean(),
     isAccessRequestNotificationEnabled: z.boolean(),
     secretRequestChannels: channelsSchema.optional(),
@@ -55,7 +55,7 @@ const formSchema = z
         ctx.addIssue({
           path: ["secretRequestChannels", "teamId"],
           code: z.ZodIssueCode.custom,
-          message: "Team is required"
+          message: "팀을 선택하세요"
         });
       }
 
@@ -63,7 +63,7 @@ const formSchema = z
         ctx.addIssue({
           path: ["secretRequestChannels", "channelIds"],
           code: z.ZodIssueCode.custom,
-          message: "At least one channel is required"
+          message: "채널을 하나 이상 선택하세요"
         });
       }
     }
@@ -73,7 +73,7 @@ const formSchema = z
         ctx.addIssue({
           path: ["accessRequestChannels", "teamId"],
           code: z.ZodIssueCode.custom,
-          message: "Team is required"
+          message: "팀을 선택하세요"
         });
       }
 
@@ -81,7 +81,7 @@ const formSchema = z
         ctx.addIssue({
           path: ["accessRequestChannels", "channelIds"],
           code: z.ZodIssueCode.custom,
-          message: "At least one channel is required"
+          message: "채널을 하나 이상 선택하세요"
         });
       }
     }
@@ -157,7 +157,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
 
     createNotification({
       type: "success",
-      text: "Saved Microsoft Teams integration settings"
+      text: "Microsoft Teams 연동 설정을 저장했습니다"
     });
 
     onClose();
@@ -229,7 +229,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
           name={`${fieldPrefix}.teamId`}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field>
-              <FieldLabel htmlFor={`${fieldPrefix}-team`}>Microsoft Teams team</FieldLabel>
+              <FieldLabel htmlFor={`${fieldPrefix}-team`}>Microsoft Teams 팀</FieldLabel>
               <Combobox
                 id={`${fieldPrefix}-team`}
                 isClearable={false}
@@ -243,7 +243,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
                 getOptionValue={(option) => option.teamId}
                 getOptionLabel={(option) => option.teamName}
                 placeholder={
-                  isLoadingMicrosoftTeamsIntegrationTeams ? "Loading..." : "Select a team..."
+                  isLoadingMicrosoftTeamsIntegrationTeams ? "불러오는 중..." : "팀을 선택하세요..."
                 }
                 isLoading={isLoadingMicrosoftTeamsIntegrationTeams}
                 isError={Boolean(error)}
@@ -257,7 +257,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
           name={`${fieldPrefix}.channelIds`}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field>
-              <FieldLabel htmlFor={`${fieldPrefix}-channels`}>Microsoft Teams channels</FieldLabel>
+              <FieldLabel htmlFor={`${fieldPrefix}-channels`}>Microsoft Teams 채널</FieldLabel>
               <Combobox
                 multiple
                 id={`${fieldPrefix}-channels`}
@@ -266,7 +266,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
                 onValueChange={(selected) => onChange(selected.map((channel) => channel.channelId))}
                 getOptionValue={(option) => option.channelId}
                 getOptionLabel={(option) => option.channelName}
-                placeholder={selectedTeamId ? "Select channels..." : "Select a team first"}
+                placeholder={selectedTeamId ? "채널을 선택하세요..." : "먼저 팀을 선택하세요"}
                 isDisabled={!selectedTeamId}
                 isLoading={isLoadingMicrosoftTeamsIntegrationTeams}
                 isError={Boolean(error)}
@@ -289,19 +289,16 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
         {!isMicrosoftTeamsIntegrationsLoading && !hasMicrosoftTeamsIntegrations ? (
           <Alert>
             <Info />
-            <AlertTitle>No Microsoft Teams integrations connected</AlertTitle>
+            <AlertTitle>연결된 Microsoft Teams 연동이 없습니다</AlertTitle>
             <AlertDescription>
-              <p>
-                Connect a Microsoft Teams tenant to your organization before configuring project
-                notifications.
-              </p>
+              <p>프로젝트 알림을 구성하려면 먼저 조직에 Microsoft Teams 테넌트를 연결하세요.</p>
               <Button asChild variant="outline" size="sm" className="mt-2">
                 <Link
                   to="/organizations/$orgId/integrations"
                   params={{ orgId: currentProject.orgId }}
                   search={{ selectedTab: "workflow-integrations" }}
                 >
-                  Go to organization integrations
+                  조직 연동으로 이동
                 </Link>
               </Button>
             </AlertDescription>
@@ -312,9 +309,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
             name="microsoftTeamsIntegrationId"
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field>
-                <FieldLabel htmlFor="microsoft-teams-integration">
-                  Microsoft Teams integration
-                </FieldLabel>
+                <FieldLabel htmlFor="microsoft-teams-integration">Microsoft Teams 연동</FieldLabel>
                 <Select
                   value={value}
                   onValueChange={(newValue) => {
@@ -339,7 +334,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
                   >
                     <SelectValue
                       placeholder={
-                        isMicrosoftTeamsIntegrationsLoading ? "Loading..." : "Select an integration"
+                        isMicrosoftTeamsIntegrationsLoading ? "불러오는 중..." : "연동을 선택하세요"
                       }
                     />
                   </SelectTrigger>
@@ -367,16 +362,16 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
               render={({ field }) => (
                 <Field orientation="horizontal" className="items-center!">
                   <FieldContent>
-                    <FieldTitle>Secret approval requests</FieldTitle>
+                    <FieldTitle>시크릿 승인 요청</FieldTitle>
                     <FieldDescription>
-                      Send a notification when a secret approval request is opened.
+                      시크릿 승인 요청이 생성되면 알림을 보냅니다.
                     </FieldDescription>
                   </FieldContent>
                   <Toggle
                     variant="project"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Secret approval request notifications"
+                    aria-label="시크릿 승인 요청 알림"
                   />
                 </Field>
               )}
@@ -388,16 +383,14 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
               render={({ field }) => (
                 <Field orientation="horizontal" className="items-center!">
                   <FieldContent>
-                    <FieldTitle>Access requests</FieldTitle>
-                    <FieldDescription>
-                      Send a notification when an access request is opened.
-                    </FieldDescription>
+                    <FieldTitle>접근 요청</FieldTitle>
+                    <FieldDescription>접근 요청이 생성되면 알림을 보냅니다.</FieldDescription>
                   </FieldContent>
                   <Toggle
                     variant="project"
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    aria-label="Access request notifications"
+                    aria-label="접근 요청 알림"
                   />
                 </Field>
               )}
@@ -410,12 +403,12 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
         {onBack && (
           <Button type="button" variant="ghost" className="mr-auto" onClick={onBack}>
             <ChevronLeft />
-            Back
+            뒤로
           </Button>
         )}
         <SheetClose asChild>
           <Button type="button" variant="ghost">
-            Cancel
+            취소
           </Button>
         </SheetClose>
         <Button
@@ -424,7 +417,7 @@ export const MicrosoftTeamsIntegrationForm = ({ onClose, onBack }: Props) => {
           isPending={isSubmitting}
           isDisabled={!isDirty || isSubmitting || !hasMicrosoftTeamsIntegrations}
         >
-          Save
+          저장
         </Button>
       </SheetFooter>
     </form>

@@ -59,7 +59,7 @@ export const DeleteAccountSection = () => {
         <CardHeader className="p-6">
           <CardTitle className="font-alliance">계정 삭제</CardTitle>
           <CardDescription>
-            계정을 영구 삭제하고 Infisical 접근 권한을 해제합니다. 이 작업은 되돌릴 수 없습니다.
+            계정을 영구 삭제하고 Keydesk 접근 권한을 해제합니다. 이 작업은 되돌릴 수 없습니다.
           </CardDescription>
         </CardHeader>
         <CardFooter className="min-h-8 justify-end border-t border-danger/15 bg-danger/5 p-4">
@@ -82,7 +82,7 @@ export const DeleteAccountSection = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>계정을 삭제하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              계정이 Infisical에 영구적으로 접근할 수 없게 됩니다. 이 작업은 되돌릴 수 없습니다.
+              계정이 Keydesk에 영구적으로 접근할 수 없게 됩니다. 이 작업은 되돌릴 수 없습니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <Field>

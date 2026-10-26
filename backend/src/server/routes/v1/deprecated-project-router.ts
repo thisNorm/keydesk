@@ -11,9 +11,9 @@ import { ProjectMicrosoftTeamsConfigsSchema } from "@app/db/schemas/project-micr
 import { MAX_PROJECT_AUDIT_LOG_RETENTION_DAYS } from "@app/ee/services/audit-log/audit-log-retention-fns";
 import { EventType } from "@app/ee/services/audit-log/audit-log-types";
 import { ApiDocsTags, PROJECTS } from "@app/lib/api-docs";
-import { CharacterType, characterValidator } from "@app/lib/validator/validate-string";
 import { re2Validator } from "@app/lib/zod";
 import { readLimit, writeLimit } from "@app/server/config/rateLimiter";
+import { GenericResourceNameSchema } from "@app/server/lib/schemas";
 import { verifyAuth } from "@app/server/plugins/auth/verify-auth";
 import { AuthMode } from "@app/services/auth/auth-type";
 import { validateMicrosoftTeamsChannelsSchema } from "@app/services/microsoft-teams/microsoft-teams-fns";
@@ -606,16 +606,7 @@ export const registerDeprecatedProjectRouter = async (server: FastifyZodProvider
         type: z.nativeEnum(ProjectType).optional(),
         orderBy: z.nativeEnum(SearchProjectSortBy).optional().default(SearchProjectSortBy.NAME),
         orderDirection: z.nativeEnum(SortDirection).optional().default(SortDirection.ASC),
-        name: z
-          .string()
-          .trim()
-          .refine(
-            (val) => characterValidator([CharacterType.AlphaNumeric, CharacterType.Spaces, CharacterType.Hyphen])(val),
-            {
-              message: "Invalid pattern: only alphanumeric characters, spaces, - are allowed."
-            }
-          )
-          .optional()
+        name: GenericResourceNameSchema.optional()
       }),
       response: {
         200: z.object({

@@ -261,7 +261,7 @@ const Content = ({
         <Field>
           <VaultFieldLabel
             htmlFor="vault-secret-import-paths"
-            tooltip="Choose one or more secret paths from the selected mount to import into Infisical."
+            tooltip="Choose one or more secret paths from the selected mount to import into Keydesk."
             tooltipLabel="Vault Secret Path"
           >
             Vault Secret Path
@@ -292,7 +292,7 @@ const Content = ({
           />
           <FieldDescription>
             Choose up to {MAX_IMPORT_PATHS} secret paths from the selected mount to import into
-            Infisical
+            Keydesk
           </FieldDescription>
         </Field>
 
@@ -311,7 +311,7 @@ const Content = ({
               Preserve folder structure
             </FieldLabel>
             <FieldDescription>
-              Create folders inside Infisical, matching the selected Vault secret&apos;s path.
+              Create folders inside Keydesk, matching the selected Vault secret&apos;s path.
             </FieldDescription>
           </FieldContent>
         </Field>
@@ -340,9 +340,9 @@ const Content = ({
             </AlertTitle>
             <AlertDescription>
               <p>
-                Infisical folder names allow only letters, numbers, dashes and underscores. Rename
-                the following {invalidPaths.length > 1 ? "paths" : "path"} in Vault, or import
-                without preserving the folder structure.
+                Keydesk folder names allow only letters, numbers, dashes and underscores. Rename the
+                following {invalidPaths.length > 1 ? "paths" : "path"} in Vault, or import without
+                preserving the folder structure.
               </p>
               <div className="mt-2 flex flex-wrap items-start gap-1">
                 {invalidPaths.map((path) => (

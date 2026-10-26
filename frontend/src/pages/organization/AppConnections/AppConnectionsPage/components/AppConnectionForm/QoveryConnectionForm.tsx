@@ -40,7 +40,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(QoveryConnectionMethod.AccessToken),
     credentials: z.object({
-      accessToken: z.string().trim().min(1, "Project Access Token required")
+      accessToken: z.string().trim().min(1, "프로젝트 액세스 토큰을 입력하세요")
     })
   })
 ]);
@@ -70,21 +70,20 @@ export const QoveryConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Qovery].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Qovery].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)} id="method">
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(QoveryConnectionMethod).map((method) => {
@@ -107,14 +106,14 @@ export const QoveryConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="access-token">
-                Project Access Token
+                프로젝트 액세스 토큰
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Your Qovery project access token. You can create one from the Qovery dashboard
-                    under your organization settings.
+                    Qovery 프로젝트 액세스 토큰입니다. Qovery 대시보드의 조직 설정에서 만들 수
+                    있습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -129,9 +128,7 @@ export const QoveryConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Qovery"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Qovery에 연결"} />
       </form>
     </FormProvider>
   );

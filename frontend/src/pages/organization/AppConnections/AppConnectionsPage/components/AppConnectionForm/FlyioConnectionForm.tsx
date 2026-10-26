@@ -43,8 +43,8 @@ const formSchema = z.discriminatedUnion("method", [
       accessToken: z
         .string()
         .trim()
-        .min(1, "Access Token required")
-        .startsWith("FlyV1", "Token must start with 'FlyV1'")
+        .min(1, "액세스 토큰을 입력하세요")
+        .startsWith("FlyV1", "토큰은 'FlyV1'로 시작해야 합니다")
     })
   })
 ]);
@@ -74,21 +74,21 @@ export const FlyioConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.Flyio].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(FlyioConnectionMethod).map((method) => {
@@ -110,7 +110,7 @@ export const FlyioConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="access-token">Access Token</FieldLabel>
+              <FieldLabel htmlFor="access-token">액세스 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "access-token-error" : undefined}
                 isError={Boolean(error)}
@@ -122,9 +122,7 @@ export const FlyioConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Fly.io"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Fly.io에 연결"} />
       </form>
     </FormProvider>
   );

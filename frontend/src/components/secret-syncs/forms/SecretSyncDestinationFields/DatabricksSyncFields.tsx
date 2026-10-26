@@ -52,9 +52,9 @@ export const DatabricksSyncFields = () => {
                   <Info />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-md">
-                  Infisical recommends creating a designated Databricks secret scope for your sync
-                  to prevent removal of secrets not managed by Infisical. Ensure that you&apos;ve
-                  created the secret scope in the selected workspace, the service principal has been
+                  Keydesk recommends creating a designated Databricks secret scope for your sync to
+                  prevent removal of secrets not managed by Keydesk. Ensure that you&apos;ve created
+                  the secret scope in the selected workspace, the service principal has been
                   assigned to the respective workspace and that your service principal has write
                   permissions for the specified secret scope.
                 </TooltipContent>

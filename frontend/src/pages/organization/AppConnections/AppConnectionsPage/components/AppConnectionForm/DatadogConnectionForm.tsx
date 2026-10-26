@@ -40,22 +40,27 @@ const rootSchema = genericAppConnectionFieldsSchema.extend({
   app: z.literal(AppConnection.Datadog)
 });
 
-const urlSchema = z.string().trim().url("Invalid Datadog URL").min(1, "URL required").max(255);
+const urlSchema = z
+  .string()
+  .trim()
+  .url("올바른 Datadog URL을 입력하세요")
+  .min(1, "URL을 입력하세요")
+  .max(255);
 
 const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(DatadogConnectionMethod.Token),
     credentials: z.object({
       url: urlSchema,
-      token: z.string().trim().min(1, "Token required")
+      token: z.string().trim().min(1, "토큰을 입력하세요")
     })
   }),
   rootSchema.extend({
     method: z.literal(DatadogConnectionMethod.ApiKey),
     credentials: z.object({
       url: urlSchema,
-      apiKey: z.string().trim().min(1, "API Key required"),
-      applicationKey: z.string().trim().min(1, "Application Key required")
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요"),
+      applicationKey: z.string().trim().min(1, "애플리케이션 키를 입력하세요")
     })
   })
 ]);
@@ -88,21 +93,20 @@ export const DatadogConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Datadog].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Datadog].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(DatadogConnectionMethod).map((method) => (
@@ -131,7 +135,7 @@ export const DatadogConnectionForm = ({ appConnection, onSubmit }: Props) => {
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Datadog site URL to connect to (e.g., https://api.datadoghq.com).
+                    연결할 Datadog 사이트 URL입니다(예: https://api.datadoghq.com).
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -153,7 +157,7 @@ export const DatadogConnectionForm = ({ appConnection, onSubmit }: Props) => {
             shouldUnregister
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="token">Service Access Token</FieldLabel>
+                <FieldLabel htmlFor="token">서비스 액세스 토큰</FieldLabel>
                 <SecretInput
                   aria-describedby={error ? "token-error" : undefined}
                   id="token"
@@ -173,7 +177,7 @@ export const DatadogConnectionForm = ({ appConnection, onSubmit }: Props) => {
               shouldUnregister
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="api-key">API Key</FieldLabel>
+                  <FieldLabel htmlFor="api-key">API 키</FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "api-key-error" : undefined}
                     id="api-key"
@@ -191,7 +195,7 @@ export const DatadogConnectionForm = ({ appConnection, onSubmit }: Props) => {
               shouldUnregister
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="application-key">Application Key</FieldLabel>
+                  <FieldLabel htmlFor="application-key">애플리케이션 키</FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "application-key-error" : undefined}
                     id="application-key"
@@ -206,9 +210,7 @@ export const DatadogConnectionForm = ({ appConnection, onSubmit }: Props) => {
           </>
         )}
 
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Datadog"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Datadog에 연결"} />
       </form>
     </FormProvider>
   );

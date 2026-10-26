@@ -87,7 +87,7 @@ type PlanPrice = {
 
 const PLAN_FEATURE_DESCRIPTIONS: Record<string, string> = {
   environments: "Organize secrets across development stages and deployment targets.",
-  integrations: "Connect Infisical with infrastructure, cloud, and developer tools.",
+  integrations: "Keydesk를 인프라, 클라우드 및 개발 도구와 연결합니다.",
   "audit log retention": "Keep organization activity history available for longer.",
   "honey tokens": "Detect unauthorized access with decoy secrets.",
   "secret versioning": "Track and restore previous versions of secrets.",
@@ -95,15 +95,14 @@ const PLAN_FEATURE_DESCRIPTIONS: Record<string, string> = {
   rbac: "Control access with custom roles and granular permissions.",
   "dynamic secrets": "Issue short-lived credentials on demand.",
   "temporary access": "Grant time-bound access without permanent permissions.",
-  gateways: "Connect Infisical securely to private infrastructure.",
+  gateways: "Keydesk를 비공개 인프라에 안전하게 연결합니다.",
   "sso/mfa enforcement": "Require centralized sign-in and stronger authentication.",
   scim: "Provision and deprovision users from your identity provider.",
   kmip: "Manage cryptographic keys through KMIP-compatible systems.",
   "audit log streaming": "Send audit activity to external monitoring systems.",
   "sub-organizations": "Separate teams or environments under one organization.",
   "certificate authorities": "Connect or operate certificate authorities from one control plane.",
-  "internal certificate authorities":
-    "Operate Infisical-managed root and intermediate authorities.",
+  "internal certificate authorities": "Keydesk에서 관리하는 루트 및 중간 인증 기관을 운영합니다.",
   certificates: "Issue, renew, and centrally manage certificates.",
   "wildcard certificates": "Issue certificates that secure multiple subdomains.",
   "subject alternative names": "Secure additional hostnames and identities on one certificate.",
@@ -580,7 +579,7 @@ const ProductUpgradeGate = ({ intent, paywallKey, isOpen, onOpenChange }: Props)
               Plan details could not be loaded.{" "}
               {isSelfHosted
                 ? licenseCopy.detail
-                : "Try again, or contact Infisical if the problem continues."}
+                : "다시 시도하고, 문제가 계속되면 라이선스 담당자에게 문의하세요."}
             </AlertDescription>
           </Alert>
           <DialogFooter>
@@ -930,9 +929,7 @@ const ProductUpgradeGate = ({ intent, paywallKey, isOpen, onOpenChange }: Props)
       <Alert variant="info" appearance="borderless">
         <CircleAlert />
         <AlertTitle>Managed Subscription</AlertTitle>
-        <AlertDescription>
-          Contact your Infisical account manager to update this subscription.
-        </AlertDescription>
+        <AlertDescription>구독을 변경하려면 라이선스 담당자에게 문의하세요.</AlertDescription>
       </Alert>
     );
   } else if (showUsedTrialNotice) {

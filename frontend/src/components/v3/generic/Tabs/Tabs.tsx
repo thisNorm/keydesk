@@ -69,13 +69,13 @@ const tabsListStyleByVariant: Record<TabsVariant, "filled" | "underline"> = {
 };
 
 const tabsListAriaLabelByVariant: Record<TabsVariant, string> = {
-  filled: "Sections",
-  project: "Project sections",
-  org: "Organization sections",
-  "sub-org": "Sub-organization sections",
-  pam: "PAM sections",
-  av: "Agent Vault sections",
-  ss: "Secret Scanning sections"
+  filled: "섹션",
+  project: "프로젝트 섹션",
+  org: "조직 섹션",
+  "sub-org": "하위 조직 섹션",
+  pam: "접근 관리 섹션",
+  av: "에이전트 보관함 섹션",
+  ss: "시크릿 탐지 섹션"
 };
 
 const TabsList = React.forwardRef<

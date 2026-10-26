@@ -204,8 +204,8 @@ export const PkiSyncTargetHostField = ({ applicationId }: Props) => {
                   <FieldContent>
                     <FieldTitle>Reject Unauthorized</FieldTitle>
                     <FieldDescription>
-                      If enabled, Infisical only connects when the listener presents a valid,
-                      trusted certificate.
+                      If enabled, Keydesk only connects when the listener presents a valid, trusted
+                      certificate.
                     </FieldDescription>
                   </FieldContent>
                   <Toggle

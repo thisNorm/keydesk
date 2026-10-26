@@ -63,16 +63,16 @@ const baseSchema = genericAppConnectionFieldsSchema.extend({
 });
 
 const oauthSchema = baseSchema.extend({
-  tenantId: z.string().trim().min(1, "Tenant ID is required"),
+  tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
   method: z.literal(AzureClientSecretsConnectionMethod.OAuth)
 });
 
 const clientSecretSchema = baseSchema.extend({
   method: z.literal(AzureClientSecretsConnectionMethod.ClientSecret),
   credentials: z.object({
-    clientSecret: z.string().trim().min(1, "Client Secret is required"),
-    clientId: z.string().trim().min(1, "Client ID is required"),
-    tenantId: z.string().trim().min(1, "Tenant ID is required"),
+    clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요"),
+    clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+    tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
     clientSecretKeyId: z.string().trim().optional()
   })
 });
@@ -80,10 +80,10 @@ const clientSecretSchema = baseSchema.extend({
 const certificateSchema = baseSchema.extend({
   method: z.literal(AzureClientSecretsConnectionMethod.Certificate),
   credentials: z.object({
-    clientId: z.string().trim().min(1, "Client ID is required"),
-    certificateBody: z.string().trim().min(1, "Certificate is required"),
-    privateKey: z.string().trim().min(1, "Private Key is required"),
-    tenantId: z.string().trim().min(1, "Tenant ID is required")
+    clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+    certificateBody: z.string().trim().min(1, "인증서를 입력하세요"),
+    privateKey: z.string().trim().min(1, "개인 키를 입력하세요"),
+    tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요")
   })
 });
 
@@ -225,7 +225,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
         await onSubmit(formData);
         break;
       default:
-        throw new Error(`Unhandled Azure Connection method: ${(formData as FormData).method}`);
+        throw new Error(`지원되지 않는 Azure 연결 방식: ${(formData as FormData).method}`);
     }
   };
 
@@ -244,15 +244,15 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.AzureClientSecrets].name}. This field cannot
-                    be changed after creation.
+                    다음에 연결할 방식입니다:{" "}
+                    {APP_CONNECTION_MAP[AppConnection.AzureClientSecrets].name}. 이 필드는 생성 후
+                    변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -262,7 +262,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
                   className="w-full"
                   isError={Boolean(error) || isMissingConfig}
                 >
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AzureClientSecretsConnectionMethod).map((method) => {
@@ -276,10 +276,10 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
               </Select>
               <FieldError>
                 {!isLoading && isMissingConfig
-                  ? `Environment variables have not been configured. ${
+                  ? `환경 변수가 구성되지 않았습니다. ${
                       isInfisicalCloud()
-                        ? "Please contact Infisical."
-                        : `See documentation to configure Azure ${methodDetails.name} Connections.`
+                        ? "Keydesk 관리자에게 문의하세요."
+                        : `문서를 확인해 Azure 연결을 구성하세요: ${methodDetails.name} 연결입니다.`
                     }`
                   : error?.message}
               </FieldError>
@@ -297,12 +297,12 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="tenantId">
-                Tenant ID
+                테넌트 ID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
-                  <TooltipContent className="max-w-sm">The Directory (tenant) ID.</TooltipContent>
+                  <TooltipContent className="max-w-sm">디렉터리(테넌트) ID입니다.</TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Input
@@ -328,7 +328,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.clientId">Client ID</FieldLabel>
+                  <FieldLabel htmlFor="credentials.clientId">클라이언트 ID</FieldLabel>
                   <Input
                     {...field}
                     id="credentials.clientId"
@@ -344,7 +344,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.clientSecret">Client Secret</FieldLabel>
+                  <FieldLabel htmlFor="credentials.clientSecret">클라이언트 시크릿</FieldLabel>
                   <Input
                     {...field}
                     id="credentials.clientSecret"
@@ -364,15 +364,15 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
                 render={({ field, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="credentials.clientSecretKeyId">
-                      Client Secret Key ID
+                      클라이언트 시크릿 키 ID
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
-                          The Key ID of the client secret provided above. Found in Azure Portal
-                          under App Registrations &gt; Certificates &amp; Secrets. Required so
-                          Infisical can revoke the original secret after rotation.
+                          위에서 입력한 클라이언트 시크릿의 키 ID입니다. Azure Portal의 App
+                          Registrations &gt; Certificates &amp; Secrets에서 확인할 수 있습니다. 교체
+                          후 Keydesk가 기존 시크릿을 폐기하는 데 필요합니다.
                         </TooltipContent>
                       </Tooltip>
                     </FieldLabel>
@@ -397,7 +397,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.clientId">Client ID</FieldLabel>
+                  <FieldLabel htmlFor="credentials.clientId">클라이언트 ID</FieldLabel>
                   <Input
                     {...field}
                     id="credentials.clientId"
@@ -413,7 +413,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
               control={control}
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.certificateBody">Certificate</FieldLabel>
+                  <FieldLabel htmlFor="credentials.certificateBody">인증서</FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "credentials.certificateBody-error" : undefined}
                     id="credentials.certificateBody"
@@ -431,7 +431,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
               control={control}
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.privateKey">Private Key</FieldLabel>
+                  <FieldLabel htmlFor="credentials.privateKey">개인 키</FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "credentials.privateKey-error" : undefined}
                     id="credentials.privateKey"
@@ -453,7 +453,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
             isPending={isSubmitting || isRedirecting}
             isDisabled={isSubmitting || (!isUpdate && !isDirty) || isMissingConfig || isRedirecting}
           >
-            {isUpdate ? "Reconnect to Azure" : "Connect to Azure"}
+            {isUpdate ? "Azure에 다시 연결" : "Azure에 연결"}
           </Button>
           <Button
             type="button"
@@ -461,7 +461,7 @@ export const AzureClientSecretsConnectionForm = ({ appConnection, onSubmit, proj
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

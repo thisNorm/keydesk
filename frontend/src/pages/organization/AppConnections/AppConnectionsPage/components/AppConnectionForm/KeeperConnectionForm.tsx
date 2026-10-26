@@ -41,10 +41,10 @@ const formSchema = z.discriminatedUnion("method", [
       instanceUrl: z
         .string()
         .trim()
-        .url("Invalid Instance URL")
-        .min(1, "Instance URL required")
+        .url("올바른 인스턴스 URL을 입력하세요")
+        .min(1, "인스턴스 URL을 입력하세요")
         .max(255),
-      apiKey: z.string().trim().min(1, "API Key required").max(500)
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요").max(500)
     })
   })
 ]);
@@ -75,13 +75,13 @@ export const KeeperConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL
+                인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The URL of your Keeper Commander instance (e.g., https://keeper.company.com).
+                    Keeper Commander 인스턴스의 URL입니다(예: https://keeper.company.com).
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -102,13 +102,13 @@ export const KeeperConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="api-key">
-                API Key
+                API 키
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The API key generated for Keeper Commander Service Mode.
+                    Keeper Commander 서비스 모드용으로 생성한 API 키입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -123,9 +123,7 @@ export const KeeperConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Keeper"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Keeper에 연결"} />
       </form>
     </FormProvider>
   );

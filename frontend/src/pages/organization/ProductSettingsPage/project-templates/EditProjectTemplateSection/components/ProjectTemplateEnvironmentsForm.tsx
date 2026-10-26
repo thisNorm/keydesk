@@ -139,7 +139,7 @@ export const ProjectTemplateEnvironmentsForm = ({
                 I={OrgPermissionActions.Edit}
                 a={OrgPermissionSubjects.ProjectTemplates}
                 renderTooltip={isEnvironmentLimitExceeded ? true : undefined}
-                allowedLabel={`Plan environment limit of ${subscription.environmentLimit} exceeded. Contact Infisical to increase limit.`}
+                allowedLabel={`Plan environment limit of ${subscription.environmentLimit} exceeded. Contact Keydesk to increase limit.`}
               >
                 {(isAllowed) => (
                   <Button

@@ -77,7 +77,7 @@ export const LoginSsoPage = ({ type }: Props) => {
     <AuthPageLayout variant="focused">
       <Helmet>
         <title>{t("common.head-title", { title: `${type} Login` })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
         <meta property="og:title" content={t("login.og-title") ?? ""} />
         <meta name="og:description" content={t("login.og-description") ?? ""} />

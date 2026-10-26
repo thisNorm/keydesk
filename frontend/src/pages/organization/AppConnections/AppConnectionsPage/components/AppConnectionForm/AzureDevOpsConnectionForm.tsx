@@ -54,25 +54,25 @@ const baseSchema = genericAppConnectionFieldsSchema.extend({
 // Method-specific schemas
 const oauthSchema = baseSchema.extend({
   method: z.literal(AzureDevOpsConnectionMethod.OAuth),
-  tenantId: z.string().trim().min(1, "Tenant ID is required"),
-  orgName: z.string().trim().min(1, "Organization name is required")
+  tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
+  orgName: z.string().trim().min(1, "조직 이름을 입력하세요")
 });
 
 const accessTokenSchema = baseSchema.extend({
   method: z.literal(AzureDevOpsConnectionMethod.AccessToken),
   credentials: z.object({
-    accessToken: z.string().trim().min(1, "Access Token is required"),
-    orgName: z.string().trim().min(1, "Organization name is required")
+    accessToken: z.string().trim().min(1, "액세스 토큰을 입력하세요"),
+    orgName: z.string().trim().min(1, "조직 이름을 입력하세요")
   })
 });
 
 const clientSecretSchema = baseSchema.extend({
   method: z.literal(AzureDevOpsConnectionMethod.ClientSecret),
   credentials: z.object({
-    clientSecret: z.string().trim().min(1, "Client Secret is required"),
-    tenantId: z.string().trim().min(1, "Tenant ID is required"),
-    clientId: z.string().trim().min(1, "Client ID is required"),
-    orgName: z.string().trim().min(1, "Organization name is required"),
+    clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요"),
+    tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
+    clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+    orgName: z.string().trim().min(1, "조직 이름을 입력하세요"),
     clientSecretKeyId: z.string().trim().optional()
   })
 });
@@ -228,7 +228,7 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
         await onSubmit(formData);
         break;
       default:
-        throw new Error(`Unhandled Azure Connection method: ${(formData as FormData).method}`);
+        throw new Error(`지원되지 않는 Azure 연결 방식: ${(formData as FormData).method}`);
     }
   };
 
@@ -246,15 +246,14 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.AzureDevOps].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.AzureDevOps].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -264,7 +263,7 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
                   className="w-full"
                   isError={Boolean(error) || isMissingConfig}
                 >
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AzureDevOpsConnectionMethod).map((method) => {
@@ -278,10 +277,10 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
               </Select>
               <FieldError>
                 {!isLoading && isMissingConfig
-                  ? `Environment variables have not been configured. ${
+                  ? `환경 변수가 구성되지 않았습니다. ${
                       isInfisicalCloud()
-                        ? "Please contact Infisical."
-                        : `See documentation to configure Azure ${methodDetails.name} Connections.`
+                        ? "Keydesk 관리자에게 문의하세요."
+                        : `문서를 확인해 Azure 연결을 구성하세요: ${methodDetails.name} 연결입니다.`
                     }`
                   : error?.message}
               </FieldError>
@@ -298,13 +297,13 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="tenantId">
-                    Tenant ID
+                    테넌트 ID
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        The Directory (tenant) ID.
+                        디렉터리(테넌트) ID입니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -328,13 +327,13 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="orgName">
-                    Organization Name
+                    조직 이름
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        Your Azure DevOps organization name.
+                        Azure DevOps 조직 이름입니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -363,7 +362,7 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.clientId">Client ID</FieldLabel>
+                  <FieldLabel htmlFor="credentials.clientId">클라이언트 ID</FieldLabel>
                   <Input
                     {...field}
                     id="credentials.clientId"
@@ -379,7 +378,7 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.clientSecret">Client Secret</FieldLabel>
+                  <FieldLabel htmlFor="credentials.clientSecret">클라이언트 시크릿</FieldLabel>
                   <Input
                     {...field}
                     id="credentials.clientSecret"
@@ -398,15 +397,15 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
                 render={({ field, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="credentials.clientSecretKeyId">
-                      Client Secret Key ID
+                      클라이언트 시크릿 키 ID
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
-                          The Key ID of the client secret provided above. Found in Azure Portal
-                          under App Registrations &gt; Certificates &amp; Secrets. Required so
-                          Infisical can revoke the original secret after rotation.
+                          위에서 입력한 클라이언트 시크릿의 키 ID입니다. Azure Portal의 App
+                          Registrations &gt; Certificates &amp; Secrets에서 확인할 수 있습니다. 교체
+                          후 Keydesk가 기존 시크릿을 폐기하는 데 필요합니다.
                         </TooltipContent>
                       </Tooltip>
                     </FieldLabel>
@@ -433,13 +432,13 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="credentials.accessToken">
-                    Access Token
+                    액세스 토큰
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        Personal Access Token from Azure DevOps.
+                        Azure DevOps의 개인 액세스 토큰입니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -447,7 +446,7 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
                     {...field}
                     id="credentials.accessToken"
                     type="password"
-                    placeholder="Enter your Personal Access Token"
+                    placeholder="개인 액세스 토큰을 입력하세요"
                     isError={Boolean(error)}
                   />
                   <FieldError errors={[error]} />
@@ -460,13 +459,13 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="credentials.orgName">
-                    Organization Name
+                    조직 이름
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        Your Azure DevOps organization name.
+                        Azure DevOps 조직 이름입니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -490,7 +489,7 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
             isPending={isSubmitting || isRedirecting}
             isDisabled={isSubmitting || (!isUpdate && !isDirty) || isMissingConfig || isRedirecting}
           >
-            {isUpdate ? "Reconnect to Azure" : "Connect to Azure"}
+            {isUpdate ? "Azure에 다시 연결" : "Azure에 연결"}
           </Button>
           <Button
             type="button"
@@ -498,7 +497,7 @@ export const AzureDevOpsConnectionForm = ({ appConnection, onSubmit, projectId }
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

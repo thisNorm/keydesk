@@ -119,7 +119,7 @@ export const HasuraCloudConfigurePage = () => {
               {APP_NAME} Integration
               <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/hasura-cloud" />
             </CardTitle>
-            <CardDescription>{`Choose which environment or folder in Infisical you want to sync to ${APP_NAME} environment variables.`}</CardDescription>
+            <CardDescription>{`Choose which environment or folder in Keydesk you want to sync to ${APP_NAME} environment variables.`}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <Controller
@@ -241,10 +241,11 @@ export const HasuraCloudConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthLoading || isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

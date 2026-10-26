@@ -8,9 +8,9 @@ export enum AzureADCSConnectionMethod {
 }
 
 export const CreateAzureADCSConnectionSchema = z.object({
-  adcsUrl: z.string().url().min(1, "ADCS URL is required"),
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required")
+  adcsUrl: z.string().url().min(1, "ADCS URL을 입력하세요"),
+  username: z.string().min(1, "사용자 이름을 입력하세요"),
+  password: z.string().min(1, "비밀번호를 입력하세요")
 });
 
 export type TCreateAzureADCSConnection = z.infer<typeof CreateAzureADCSConnectionSchema>;

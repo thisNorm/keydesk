@@ -58,16 +58,16 @@ const baseSchema = genericAppConnectionFieldsSchema.extend({
 });
 
 const oauthSchema = baseSchema.extend({
-  tenantId: z.string().trim().min(1, "Tenant ID is required"),
+  tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
   method: z.literal(AzureAppConfigurationConnectionMethod.OAuth)
 });
 
 const clientSecretSchema = baseSchema.extend({
   method: z.literal(AzureAppConfigurationConnectionMethod.ClientSecret),
   credentials: z.object({
-    clientSecret: z.string().trim().min(1, "Client Secret is required"),
-    clientId: z.string().trim().min(1, "Client ID is required"),
-    tenantId: z.string().trim().min(1, "Tenant ID is required"),
+    clientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요"),
+    clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+    tenantId: z.string().trim().min(1, "테넌트 ID를 입력하세요"),
     clientSecretKeyId: z.string().trim().optional()
   })
 });
@@ -192,7 +192,7 @@ export const AzureAppConfigurationConnectionForm = ({
         await onSubmit(formData);
         break;
       default:
-        throw new Error(`Unhandled Azure Connection method: ${(formData as FormData).method}`);
+        throw new Error(`지원되지 않는 Azure 연결 방식: ${(formData as FormData).method}`);
     }
   };
 
@@ -206,7 +206,7 @@ export const AzureAppConfigurationConnectionForm = ({
       isMissingConfig = false;
       break;
     default:
-      throw new Error(`Unhandled Azure Connection method: ${selectedMethod}`);
+      throw new Error(`지원되지 않는 Azure 연결 방식: ${selectedMethod}`);
   }
 
   const methodDetails = getAppConnectionMethodDetails(selectedMethod);
@@ -221,15 +221,15 @@ export const AzureAppConfigurationConnectionForm = ({
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.AzureAppConfiguration].name}. This field
-                    cannot be changed after creation.
+                    다음에 연결할 방식입니다:{" "}
+                    {APP_CONNECTION_MAP[AppConnection.AzureAppConfiguration].name}. 이 필드는 생성
+                    후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -239,7 +239,7 @@ export const AzureAppConfigurationConnectionForm = ({
                   className="w-full"
                   isError={Boolean(error) || isMissingConfig}
                 >
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AzureAppConfigurationConnectionMethod).map((method) => {
@@ -253,10 +253,10 @@ export const AzureAppConfigurationConnectionForm = ({
               </Select>
               <FieldError>
                 {!isLoading && isMissingConfig
-                  ? `Environment variables have not been configured. ${
+                  ? `환경 변수가 구성되지 않았습니다. ${
                       isInfisicalCloud()
-                        ? "Please contact Infisical."
-                        : `See documentation to configure Azure ${methodDetails.name} Connections.`
+                        ? "Keydesk 관리자에게 문의하세요."
+                        : `문서를 확인해 Azure 연결을 구성하세요: ${methodDetails.name} 연결입니다.`
                     }`
                   : error?.message}
               </FieldError>
@@ -270,16 +270,16 @@ export const AzureAppConfigurationConnectionForm = ({
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="tenantId">
-                Tenant ID
+                테넌트 ID
                 {selectedMethod === AzureAppConfigurationConnectionMethod.OAuth && (
-                  <span className="text-muted"> (optional)</span>
+                  <span className="text-muted"> (선택 사항)</span>
                 )}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Azure Active Directory (Entra ID) Tenant ID.
+                    Azure Active Directory(Entra ID)의 테넌트 ID입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -306,7 +306,7 @@ export const AzureAppConfigurationConnectionForm = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.clientId">Client ID</FieldLabel>
+                  <FieldLabel htmlFor="credentials.clientId">클라이언트 ID</FieldLabel>
                   <Input
                     {...field}
                     id="credentials.clientId"
@@ -322,7 +322,7 @@ export const AzureAppConfigurationConnectionForm = ({
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials.clientSecret">Client Secret</FieldLabel>
+                  <FieldLabel htmlFor="credentials.clientSecret">클라이언트 시크릿</FieldLabel>
                   <Input
                     {...field}
                     id="credentials.clientSecret"
@@ -341,15 +341,15 @@ export const AzureAppConfigurationConnectionForm = ({
                 render={({ field, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="credentials.clientSecretKeyId">
-                      Client Secret Key ID
+                      클라이언트 시크릿 키 ID
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
-                          The Key ID of the client secret provided above. Found in Azure Portal
-                          under App Registrations &gt; Certificates &amp; Secrets. Required so
-                          Infisical can revoke the original secret after rotation.
+                          위에서 입력한 클라이언트 시크릿의 키 ID입니다. Azure Portal의 App
+                          Registrations &gt; Certificates &amp; Secrets에서 확인할 수 있습니다. 교체
+                          후 Keydesk가 기존 시크릿을 폐기하는 데 필요합니다.
                         </TooltipContent>
                       </Tooltip>
                     </FieldLabel>
@@ -373,7 +373,7 @@ export const AzureAppConfigurationConnectionForm = ({
             isPending={isSubmitting || isRedirecting}
             isDisabled={isSubmitting || (!isUpdate && !isDirty) || isMissingConfig || isRedirecting}
           >
-            {isUpdate ? "Reconnect to Azure" : "Connect to Azure"}
+            {isUpdate ? "Azure에 다시 연결" : "Azure에 연결"}
           </Button>
           <Button
             type="button"
@@ -381,7 +381,7 @@ export const AzureAppConfigurationConnectionForm = ({
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

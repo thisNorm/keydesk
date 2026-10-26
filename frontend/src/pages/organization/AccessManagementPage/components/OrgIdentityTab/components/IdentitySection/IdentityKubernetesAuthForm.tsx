@@ -844,7 +844,7 @@ export const IdentityKubernetesAuthForm = ({
                         <div className="flex flex-col gap-1">
                           <p>
                             A comma-separated list of trusted namespaces that service accounts must
-                            belong to authenticate with Infisical.
+                            belong to authenticate with Keydesk.
                           </p>
                           <p>
                             Regex and Wildcard patterns are supported. Use{" "}
@@ -887,7 +887,7 @@ export const IdentityKubernetesAuthForm = ({
                         <div className="flex flex-col gap-1">
                           <p>
                             An optional comma-separated list of trusted service account names that
-                            are allowed to authenticate with Infisical. Leave empty to allow any
+                            are allowed to authenticate with Keydesk. Leave empty to allow any
                             service account.
                           </p>
                           <p>
@@ -937,7 +937,7 @@ export const IdentityKubernetesAuthForm = ({
                       </TooltipTrigger>
                       <TooltipContent className="max-w-md">
                         An optional audience claim that the service account JWT token must have to
-                        authenticate with Infisical. Leave empty to allow any audience claim.
+                        authenticate with Keydesk. Leave empty to allow any audience claim.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -989,7 +989,7 @@ export const IdentityKubernetesAuthForm = ({
                                   ) : (
                                     <>
                                       <p>
-                                        When enabled, Infisical validates the Kubernetes API
+                                        When enabled, Keydesk validates the Kubernetes API
                                         server&apos;s TLS certificate against the CA certificate
                                         provided below.
                                       </p>

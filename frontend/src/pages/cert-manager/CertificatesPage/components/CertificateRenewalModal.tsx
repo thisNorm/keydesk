@@ -409,7 +409,7 @@ export const CertificateRenewalModal = ({ popUp, applicationName, handlePopUpTog
   let reuseRefusalReason: string | undefined;
   if (isSelfSigned && certificate?.hasPrivateKey === false) {
     reuseRefusalReason =
-      "Infisical does not hold this certificate's private key, which is what signs a self-signed certificate.";
+      "Keydesk does not hold this certificate's private key, which is what signs a self-signed certificate.";
   } else if (!isSelfSigned && certificate?.caType === CertificateIssuerKind.External) {
     reuseRefusalReason =
       "The issuing certificate authority does not support reusing an existing key pair.";

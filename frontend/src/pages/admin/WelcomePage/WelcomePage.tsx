@@ -16,8 +16,8 @@ export const WelcomePage = ({ organizationId }: Props) => {
   return (
     <AuthPageLayout variant="focused" contentClassName="max-w-xl">
       <Helmet>
-        <title>서버 준비 완료 | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>서버 준비 완료 | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <AuthPagePanel>
         <CardHeader className="gap-0">

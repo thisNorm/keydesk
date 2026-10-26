@@ -199,8 +199,8 @@ export const GatewayDeploySection = ({
                             <Badge variant={scopeVariant}>Recommended</Badge>
                           </FieldTitle>
                           <FieldDescription>
-                            Infisical opens the connection to the gateway. Choose this when your
-                            self-hosted Infisical can reach the gateway&apos;s address.
+                            Keydesk opens the connection to the gateway. Choose this when your
+                            self-hosted Keydesk can reach the gateway&apos;s address.
                           </FieldDescription>
                         </FieldContent>
                         <RadioGroupItem value="direct" id="gateway-connection-mode-direct" />
@@ -212,7 +212,7 @@ export const GatewayDeploySection = ({
                           <FieldTitle>Relay</FieldTitle>
                           <FieldDescription>
                             The gateway opens the connection out to a relay. Choose this when
-                            Infisical runs outside the gateway&apos;s network, or when inbound
+                            Keydesk runs outside the gateway&apos;s network, or when inbound
                             connections to it are blocked by NAT or a firewall.
                           </FieldDescription>
                         </FieldContent>
@@ -233,7 +233,7 @@ export const GatewayDeploySection = ({
                     placeholder="gateway.internal:8443"
                     isError={hasListenAddressError}
                   />
-                  <FieldDescription>The host and port Infisical dials.</FieldDescription>
+                  <FieldDescription>The host and port Keydesk dials.</FieldDescription>
                   <FieldError isOpen={hasListenAddressError}>
                     Enter a host and port, such as gateway.internal:8443.
                   </FieldError>

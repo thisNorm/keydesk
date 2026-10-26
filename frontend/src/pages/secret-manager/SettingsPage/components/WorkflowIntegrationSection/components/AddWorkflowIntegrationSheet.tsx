@@ -72,13 +72,13 @@ export const AddWorkflowIntegrationSheet = ({ isOpen, onOpenChange }: Props) => 
           <SheetHeader>
             <SheetTitle>
               {selectedPlatform
-                ? `Configure ${WORKFLOW_INTEGRATION_PLATFORM_LABELS[selectedPlatform]} Integration`
-                : "Add Workflow Integration"}
+                ? `구성할 연동: ${WORKFLOW_INTEGRATION_PLATFORM_LABELS[selectedPlatform]} 연동`
+                : "워크플로 연동 추가"}
             </SheetTitle>
             <SheetDescription>
               {selectedPlatform
-                ? `Choose which events send notifications to ${WORKFLOW_INTEGRATION_PLATFORM_LABELS[selectedPlatform]}.`
-                : "Select the platform that will receive this project's notifications."}
+                ? `다음으로 알림을 보낼 이벤트를 선택하세요: ${WORKFLOW_INTEGRATION_PLATFORM_LABELS[selectedPlatform]}.`
+                : "이 프로젝트의 알림을 받을 플랫폼을 선택하세요."}
             </SheetDescription>
           </SheetHeader>
           {!selectedPlatform && (
@@ -100,7 +100,7 @@ export const AddWorkflowIntegrationSheet = ({ isOpen, onOpenChange }: Props) => 
                           isFullWidth
                           className="absolute inset-x-0 bottom-0 justify-center rounded-none"
                         >
-                          Already configured
+                          이미 구성됨
                         </Badge>
                       )}
                     </button>
@@ -110,7 +110,7 @@ export const AddWorkflowIntegrationSheet = ({ isOpen, onOpenChange }: Props) => 
               <SheetFooter className="justify-end border-t">
                 <SheetClose asChild>
                   <Button type="button" variant="ghost">
-                    Cancel
+                    취소
                   </Button>
                 </SheetClose>
               </SheetFooter>

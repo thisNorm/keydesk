@@ -284,8 +284,8 @@ export const SecretScanningDataSourceByIdPage = () => {
   return (
     <>
       <Helmet>
-        <title>Secret Scanning Data Source | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Secret Scanning Data Source | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <ProjectPermissionCan
         renderGuardBanner

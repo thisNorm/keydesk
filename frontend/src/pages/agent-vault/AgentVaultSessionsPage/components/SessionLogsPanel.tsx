@@ -557,7 +557,7 @@ export const SessionLogsPanel = ({ session }: Props) => {
               <p>
                 Your browser couldn&apos;t download this session&apos;s logs. Your network may be
                 blocking them. Try again, or contact{" "}
-                {isInfisicalCloud() ? "Infisical support" : "your server administrator"} if it keeps
+                {isInfisicalCloud() ? "Keydesk support" : "your server administrator"} if it keeps
                 happening.
               </p>
             ) : (

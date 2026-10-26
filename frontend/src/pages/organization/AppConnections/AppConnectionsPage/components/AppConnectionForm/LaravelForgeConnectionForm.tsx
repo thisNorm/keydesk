@@ -43,7 +43,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(LaravelForgeConnectionMethod.ApiToken),
     credentials: z.object({
-      apiToken: z.string().trim().min(1, "API Token required")
+      apiToken: z.string().trim().min(1, "API 토큰을 입력하세요")
     })
   })
 ]);
@@ -74,21 +74,21 @@ export const LaravelForgeConnectionForm = ({ appConnection, onSubmit }: Props) =
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.LaravelForge].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(LaravelForgeConnectionMethod).map((method) => {
@@ -110,7 +110,7 @@ export const LaravelForgeConnectionForm = ({ appConnection, onSubmit }: Props) =
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="app-connection-laravel-forge-api-token">API Token</FieldLabel>
+              <FieldLabel htmlFor="app-connection-laravel-forge-api-token">API 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={
                   error ? "app-connection-laravel-forge-api-token-error" : undefined
@@ -125,7 +125,7 @@ export const LaravelForgeConnectionForm = ({ appConnection, onSubmit }: Props) =
           )}
         />
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Laravel Forge"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "Laravel Forge에 연결"}
         />
       </form>
     </FormProvider>

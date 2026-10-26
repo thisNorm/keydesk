@@ -75,17 +75,13 @@ export const MicrosoftTeamsConfigRow = ({ handlePopUpOpen, microsoftTeamsConfig 
         )}
       />
       <TableCell>
-        <span className="text-muted">Not supported</span>
+        <span className="text-muted">지원되지 않음</span>
       </TableCell>
       <TableCell>
         <div className="flex items-center justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <IconButton
-                variant="ghost"
-                size="xs"
-                aria-label="Actions for Microsoft Teams integration"
-              >
+              <IconButton variant="ghost" size="xs" aria-label="Microsoft Teams 연동 작업">
                 <MoreHorizontal />
               </IconButton>
             </DropdownMenuTrigger>
@@ -104,7 +100,7 @@ export const MicrosoftTeamsConfigRow = ({ handlePopUpOpen, microsoftTeamsConfig 
                     }
                   >
                     <Pencil />
-                    Edit
+                    수정
                   </DropdownMenuItem>
                 )}
               </ProjectPermissionCan>
@@ -124,7 +120,7 @@ export const MicrosoftTeamsConfigRow = ({ handlePopUpOpen, microsoftTeamsConfig 
                     }
                   >
                     <Trash2 />
-                    Remove
+                    제거
                   </DropdownMenuItem>
                 )}
               </ProjectPermissionCan>

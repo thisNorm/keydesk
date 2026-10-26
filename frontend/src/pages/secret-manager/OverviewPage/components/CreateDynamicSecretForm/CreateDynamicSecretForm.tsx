@@ -87,7 +87,7 @@ export const CreateDynamicSecretForm = ({
           Choose a Dynamic Secret Provider
         </SheetTitle>
         <SheetDescription>
-          Select the provider whose credentials Infisical should generate.
+          Select the provider whose credentials Keydesk should generate.
         </SheetDescription>
       </SheetHeader>
       <DynamicSecretProviderSelect onSelect={setSelectedProvider} />

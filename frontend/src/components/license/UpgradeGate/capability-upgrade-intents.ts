@@ -69,7 +69,7 @@ export const InstanceUserManagementUpgradeIntent = {
   scope: "instance",
   featureKey: "instance_user_management",
   title: "Unlock Instance User Management",
-  description: "Manage server administrators and user access across your Infisical instance.",
+  description: "Keydesk 인스턴스의 서버 관리자와 사용자 접근 권한을 관리합니다.",
   isEnterpriseFeature: false
 } satisfies CapabilityUpgradeIntent;
 

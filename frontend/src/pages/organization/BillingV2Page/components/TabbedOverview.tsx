@@ -254,8 +254,7 @@ export const TabbedOverview = ({
   if (!isManaged && !overview.selfServe) {
     accountTeamNote = {
       label: "Managed Billing",
-      detail:
-        "Contact your Infisical account manager to adjust products, commitments, or your subscription."
+      detail: "제품, 약정 또는 구독을 변경하려면 라이선스 담당자에게 문의하세요."
     };
   }
 

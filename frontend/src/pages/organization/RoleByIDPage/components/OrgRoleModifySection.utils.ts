@@ -522,7 +522,7 @@ export const ORG_PERMISSION_OBJECT: Record<string, TOrgPermissionConfig> = {
   },
   [OrgPermissionSubjects.GithubOrgSync]: {
     title: "GitHub Organization Sync",
-    description: "Sync GitHub organization teams with Infisical groups",
+    description: "Sync GitHub organization teams with Keydesk groups",
     actions: [
       {
         value: OrgPermissionActions.Read,
@@ -772,7 +772,7 @@ export const ORG_PERMISSION_OBJECT: Record<string, TOrgPermissionConfig> = {
   },
   [OrgPermissionSubjects.Gateway]: {
     title: "Gateways",
-    description: "Manage gateways that securely connect Infisical to your infrastructure",
+    description: "Manage gateways that securely connect Keydesk to your infrastructure",
     actions: [
       {
         value: OrgGatewayPermissionActions.ListGateways,
@@ -783,7 +783,7 @@ export const ORG_PERMISSION_OBJECT: Record<string, TOrgPermissionConfig> = {
         value: OrgGatewayPermissionActions.CreateGateways,
         label: "Create Gateways",
         description:
-          "Register new gateways that securely proxy Infisical traffic into your infrastructure"
+          "Register new gateways that securely proxy Keydesk traffic into your infrastructure"
       },
       {
         value: OrgGatewayPermissionActions.EditGateways,
@@ -871,7 +871,7 @@ export const ORG_PERMISSION_OBJECT: Record<string, TOrgPermissionConfig> = {
   },
   [OrgPermissionSubjects.KmipServer]: {
     title: "KMIP Servers",
-    description: "Manage KMIP servers that proxy KMIP requests to Infisical KMS",
+    description: "Manage KMIP servers that proxy KMIP requests to Keydesk KMS",
     actions: [
       {
         value: OrgKmipServerPermissionActions.ListKmipServers,

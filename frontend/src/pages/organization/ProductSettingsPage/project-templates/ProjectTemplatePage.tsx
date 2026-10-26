@@ -55,8 +55,8 @@ export const ProjectTemplatePage = ({ templateId, projectType, onBack }: Props) 
   return (
     <>
       <Helmet>
-        <title>Project Template | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Project Template | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <div>
         <div className="mx-auto w-full max-w-8xl bg-page text-foreground-inverse">

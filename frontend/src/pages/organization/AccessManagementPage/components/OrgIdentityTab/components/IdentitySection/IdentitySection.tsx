@@ -182,7 +182,7 @@ const IdentitySectionContent = ({ view = "identities" }: Props) => {
                       if (subscription && !subscription.machineIdentityAuthTemplates) {
                         handlePopUpOpen("upgradePlan", {
                           isEnterpriseFeature: true,
-                          text: "Your current plan does not include access to creating Machine Identity Auth Templates. To unlock this feature, please upgrade to Infisical Enterprise plan."
+                          text: "머신 ID 인증 템플릿을 만들려면 해당 기능이 포함된 라이선스가 필요합니다."
                         });
                         return;
                       }

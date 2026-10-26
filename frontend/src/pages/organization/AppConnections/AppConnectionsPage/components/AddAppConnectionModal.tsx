@@ -104,7 +104,7 @@ export const AddAppConnectionModal = ({
                     className="mb-1 flex w-fit cursor-pointer items-center gap-1 text-xs text-muted transition-colors hover:text-foreground hover:underline"
                   >
                     <ArrowLeftIcon className="size-3" />
-                    Select Another App
+                    다른 앱 선택
                   </button>
                 )}
                 <SheetTitle>
@@ -113,8 +113,8 @@ export const AddAppConnectionModal = ({
               </>
             ) : (
               <>
-                <SheetTitle>Add Connection</SheetTitle>
-                <SheetDescription>Select a third-party app to connect to.</SheetDescription>
+                <SheetTitle>연결 추가</SheetTitle>
+                <SheetDescription>연결할 타사 앱을 선택하세요.</SheetDescription>
               </>
             )}
           </SheetHeader>
@@ -147,8 +147,8 @@ export const AddAppConnectionModal = ({
         open={isDiscardDialogOpen}
         onOpenChange={setIsDiscardDialogOpen}
         onDiscard={confirmDiscard}
-        title="Discard Connection Setup?"
-        description="Your progress configuring this connection will be lost."
+        title="연결 설정을 취소하시겠습니까?"
+        description="설정 중인 연결의 진행 내용이 사라집니다."
       />
     </>
   );

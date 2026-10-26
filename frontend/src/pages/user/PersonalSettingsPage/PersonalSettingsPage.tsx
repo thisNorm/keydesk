@@ -18,7 +18,7 @@ export const PersonalSettingsPage = () => {
     <div className="mx-auto w-full max-w-5xl p-4 lg:p-8">
       <Helmet>
         <title>{t("common.head-title", { title: t("settings.personal.title") })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <Link
         to="/"

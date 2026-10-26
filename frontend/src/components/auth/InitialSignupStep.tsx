@@ -128,7 +128,7 @@ export default function InitialSignupStep({
           <CardTitle className="ml-0.5 bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
             계정 만들기
           </CardTitle>
-          <CardDescription className="ml-0.5 text-base">Infisical 계정 만들기</CardDescription>
+          <CardDescription className="ml-0.5 text-base">Keydesk 계정 만들기</CardDescription>
           <CardAction>
             <RegionSelect compact />
           </CardAction>

@@ -107,9 +107,7 @@ export const GitHubRadarConnectionForm = ({ appConnection, projectId }: Props) =
         );
         break;
       default:
-        throw new Error(
-          `Unhandled GitHub Radar Connection method: ${(formData as FormData).method}`
-        );
+        throw new Error(`지원되지 않는 GitHub Radar 연결 방식: ${(formData as FormData).method}`);
     }
   };
 
@@ -120,17 +118,17 @@ export const GitHubRadarConnectionForm = ({ appConnection, projectId }: Props) =
       isMissingConfig = !appClientSlug;
       break;
     default:
-      throw new Error(`Unhandled GitHub Radar Connection method: ${selectedMethod}`);
+      throw new Error(`지원되지 않는 GitHub Radar 연결 방식: ${selectedMethod}`);
   }
 
   const methodDetails = getAppConnectionMethodDetails(selectedMethod);
 
   const getMethodErrorText = (fieldError?: { message?: string }) => {
     if (!isLoading && isMissingConfig) {
-      return `Environment variables have not been configured. ${
+      return `환경 변수가 구성되지 않았습니다. ${
         isInfisicalCloud()
-          ? "Please contact Infisical."
-          : `See Docs to configure GitHub Radar ${methodDetails.name} Connections.`
+          ? "Keydesk 관리자에게 문의하세요."
+          : `문서를 확인해 GitHub Radar 연결을 구성하세요: ${methodDetails.name} 연결입니다.`
       }`;
     }
     return fieldError?.message;
@@ -146,15 +144,14 @@ export const GitHubRadarConnectionForm = ({ appConnection, projectId }: Props) =
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.GitHubRadar].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.GitHubRadar].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -163,7 +160,7 @@ export const GitHubRadarConnectionForm = ({ appConnection, projectId }: Props) =
                   className="w-full"
                   isError={Boolean(error?.message) || isMissingConfig}
                 >
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(GitHubRadarConnectionMethod).map((method) => (
@@ -184,7 +181,7 @@ export const GitHubRadarConnectionForm = ({ appConnection, projectId }: Props) =
             isPending={isSubmitting || isRedirecting}
             isDisabled={isSubmitting || (!isUpdate && !isDirty) || isMissingConfig || isRedirecting}
           >
-            {isUpdate ? "Reconnect to GitHub" : "Connect to GitHub"}
+            {isUpdate ? "GitHub에 다시 연결" : "GitHub에 연결"}
           </Button>
           <Button
             type="button"
@@ -192,7 +189,7 @@ export const GitHubRadarConnectionForm = ({ appConnection, projectId }: Props) =
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

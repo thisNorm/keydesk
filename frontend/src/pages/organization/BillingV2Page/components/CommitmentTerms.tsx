@@ -18,7 +18,7 @@ export const CommitmentTerms = ({ acknowledged, onAcknowledgedChange }: Props) =
       />
       <span className="text-xs text-muted">
         Click here to confirm your purchase and agree to be invoiced as shown above, prorated
-        through your current billing cycle, per your Infisical agreement.
+        through your current billing cycle, per your subscription agreement.
       </span>
     </div>
   </div>

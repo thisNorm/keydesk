@@ -62,21 +62,21 @@ const formSchema = z.discriminatedUnion("method", [
       hostname: z
         .string()
         .trim()
-        .min(1, "Hostname is required")
-        .max(512, "Hostname cannot exceed 512 characters")
+        .min(1, "호스트 이름을 입력하세요")
+        .max(512, "호스트 이름은 512자를 초과할 수 없습니다")
         .refine((val) => !val.includes("/") && !val.includes("@") && !val.includes("?"), {
-          message: "Hostname must not contain /, @, or ? characters"
+          message: "호스트 이름에는 /, @, ? 문자를 사용할 수 없습니다"
         }),
       port: z.coerce.number().int().min(1).max(65535).optional(),
       username: z
         .string()
         .trim()
-        .min(1, "Username is required")
-        .max(256, "Username cannot exceed 256 characters"),
+        .min(1, "사용자 이름을 입력하세요")
+        .max(256, "사용자 이름은 256자를 초과할 수 없습니다"),
       password: z
         .string()
-        .min(1, "Password is required")
-        .max(512, "Password cannot exceed 512 characters"),
+        .min(1, "비밀번호를 입력하세요")
+        .max(512, "비밀번호는 512자를 초과할 수 없습니다"),
       sslRejectUnauthorized: z.boolean(),
       sslCertificate: z
         .string()
@@ -123,7 +123,7 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
         >
           {(isAllowed) => (
             <Field className="mb-4">
-              <FieldLabel>Gateway</FieldLabel>
+              <FieldLabel>게이트웨이</FieldLabel>
               {isAllowed ? (
                 <GatewayPicker
                   isDisabled={!isAllowed}
@@ -151,8 +151,7 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    Restricted access. You don&apos;t have permission to attach gateways to
-                    resources.
+                    접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -165,21 +164,21 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.PaloAltoNetworks].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(PaloAltoNetworksConnectionMethod).map((method) => {
@@ -197,7 +196,7 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
         />
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mb-4">
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
+            <TabsTrigger value="configuration">구성</TabsTrigger>
             <TabsTrigger value="ssl">SSL</TabsTrigger>
           </TabsList>
           <TabsContent value="configuration">
@@ -207,14 +206,13 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="credentials-hostname">
-                    Hostname
+                    호스트 이름
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        The IP address or hostname of the management interface of the firewall or
-                        Panorama.
+                        방화벽 또는 Panorama 관리 인터페이스의 IP 주소 또는 호스트 이름입니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -222,7 +220,7 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
                     id="credentials-hostname"
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    placeholder="e.g. firewall.example.com"
+                    placeholder="예: firewall.example.com"
                     isError={Boolean(error?.message)}
                   />
                   <FieldError errors={[error]} />
@@ -236,14 +234,14 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="credentials-username">
-                      Username
+                      사용자 이름
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
-                          A PAN-OS administrator with XML API access to configuration, operational
-                          requests, commit, and import. Use an account dedicated to Infisical.
+                          구성, 운영 요청, 커밋, 가져오기에 대한 XML API 접근 권한이 있는 PAN-OS
+                          관리자입니다. Keydesk 전용 계정을 사용하세요.
                         </TooltipContent>
                       </Tooltip>
                     </FieldLabel>
@@ -264,13 +262,13 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="app-connection-palo-alto-networks-password">
-                      Password
+                      비밀번호
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
-                          The password of the PAN-OS administrator.
+                          PAN-OS 관리자의 비밀번호입니다.
                         </TooltipContent>
                       </Tooltip>
                     </FieldLabel>
@@ -297,13 +295,13 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="credentials-port">
-                    Port <span className="text-muted">(optional)</span>
+                    포트 <span className="text-muted">(선택 사항)</span>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        The HTTPS port of the management interface. Defaults to 443.
+                        관리 인터페이스의 HTTPS 포트입니다. 기본값은 443입니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -327,7 +325,7 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="ssl-certificate">
-                    SSL Certificate <span className="text-muted">(optional)</span>
+                    SSL 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="ssl-certificate"
@@ -346,11 +344,11 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
                 <Field>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        When on, Infisical connects only if the management interface presents a
-                        trusted certificate. PAN-OS uses a self-signed certificate by default, so
-                        add its CA certificate above or turn this off.
+                        켜면 관리 인터페이스가 신뢰할 수 있는 인증서를 제공할 때만 Keydesk가
+                        연결합니다. PAN-OS는 기본적으로 자체 서명 인증서를 사용하므로 위에 CA
+                        인증서를 추가하거나 이 옵션을 끄세요.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -368,7 +366,7 @@ export const PaloAltoNetworksConnectionForm = ({ appConnection, onSubmit }: Prop
           </TabsContent>
         </Tabs>
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Palo Alto Networks"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "Palo Alto Networks에 연결"}
         />
       </form>
     </FormProvider>

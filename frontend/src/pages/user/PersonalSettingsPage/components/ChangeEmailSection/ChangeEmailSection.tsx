@@ -263,7 +263,7 @@ export const ChangeEmailSection = () => {
           >
             {otpStep === "newEmail" && (
               <p className="text-center text-xs text-muted">
-                코드를 받지 못했나요? 새 주소가 이미 다른 Infisical 계정에 사용 중이면 해당 주소로
+                코드를 받지 못했나요? 새 주소가 이미 다른 Keydesk 계정에 사용 중이면 해당 주소로
                 변경할 수 없는 이유를 안내했습니다.
               </p>
             )}

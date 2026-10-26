@@ -25,8 +25,8 @@ export const KempLoadMasterSyncOptions = () => {
               CA certificate name schema
               <NameSchemaHoverCard>
                 <span>
-                  This schema names each CA (intermediate) certificate that Infisical pushes into
-                  the LoadMaster&apos;s Intermediate Certs store.
+                  This schema names each CA (intermediate) certificate that Keydesk pushes into the
+                  LoadMaster&apos;s Intermediate Certs store.
                 </span>
                 <div className="flex flex-col">
                   <span>Available placeholders:</span>

@@ -85,7 +85,7 @@ export const TerraformCloudAuthorizePage = () => {
           </CardTitle>
           <CardDescription>
             After adding the details below, you will be prompted to set up an integration for a
-            particular Infisical project and environment.
+            particular Keydesk project and environment.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">

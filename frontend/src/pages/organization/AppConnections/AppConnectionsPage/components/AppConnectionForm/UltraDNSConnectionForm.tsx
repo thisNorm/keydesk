@@ -45,8 +45,8 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(UltraDNSConnectionMethod.UsernamePassword),
     credentials: z.object({
-      username: z.string().trim().min(1, "Username required"),
-      password: z.string().trim().min(1, "Password required"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      password: z.string().trim().min(1, "비밀번호를 입력하세요"),
       environment: z.nativeEnum(UltraDNSEnvironment)
     })
   })
@@ -82,21 +82,20 @@ export const UltraDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.UltraDNS].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.UltraDNS].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(UltraDNSConnectionMethod).map((method) => {
@@ -119,14 +118,14 @@ export const UltraDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="username">
-                Username
+                사용자 이름
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    UltraDNS blocks API access for users with Two Factor Mobile Authentication
-                    turned on, so use a user that has it off.
+                    UltraDNS는 Two Factor Mobile Authentication을 켠 사용자의 API 접근을 차단하므로
+                    해당 설정을 끈 사용자를 사용하세요.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -147,7 +146,7 @@ export const UltraDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <FieldLabel htmlFor="password">비밀번호</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "password-error" : undefined}
                 isError={Boolean(error)}
@@ -166,33 +165,31 @@ export const UltraDNSConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="environment">
-                Environment
+                환경
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Which UltraDNS API to connect to. Use Test for the UltraDNS customer test
-                    environment, which has its own accounts and zones.
+                    연결할 UltraDNS API입니다. 별도의 계정과 영역을 사용하는 UltraDNS 고객 테스트
+                    환경에는 테스트를 선택하세요.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select an environment..." />
+                  <SelectValue placeholder="환경을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
-                  <SelectItem value={UltraDNSEnvironment.Production}>Production</SelectItem>
-                  <SelectItem value={UltraDNSEnvironment.Test}>Test</SelectItem>
+                  <SelectItem value={UltraDNSEnvironment.Production}>프로덕션</SelectItem>
+                  <SelectItem value={UltraDNSEnvironment.Test}>테스트</SelectItem>
                 </SelectContent>
               </Select>
               <FieldError errors={[error]} />
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to UltraDNS"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "UltraDNS에 연결"} />
       </form>
     </FormProvider>
   );

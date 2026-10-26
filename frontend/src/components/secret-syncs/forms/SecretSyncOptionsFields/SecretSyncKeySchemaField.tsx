@@ -37,7 +37,7 @@ const KeySchemaPreview = ({ schema, destinationName }: PreviewProps) => {
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3" aria-hidden="true">
       <div className="flex min-w-0 flex-col gap-1">
-        <p className="text-[10px] font-medium tracking-wider text-muted uppercase">Infisical</p>
+        <p className="text-[10px] font-medium tracking-wider text-muted uppercase">Keydesk</p>
         <div className="flex items-center justify-between gap-2 rounded border border-border bg-container px-2 py-1 text-[10px]">
           <span className="truncate font-mono text-foreground/80">{SAMPLE_SECRET_KEY}</span>
         </div>
@@ -82,7 +82,7 @@ export const SecretSyncKeySchemaField = () => {
         <FieldContent>
           <Label htmlFor="customize-key-names">Customize key names</Label>
           <FieldDescription>
-            Add a prefix or suffix so Infisical can identify which keys in {destinationName} it
+            Add a prefix or suffix so Keydesk can identify which keys in {destinationName} it
             manages. Anything else is left untouched.
           </FieldDescription>
         </FieldContent>

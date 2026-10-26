@@ -137,7 +137,7 @@ export const HashicorpVaultConfigurePage = () => {
               <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/hashicorp-vault" />
             </CardTitle>
             <CardDescription>
-              Select which environment or folder in Infisical you want to sync to which path in
+              Select which environment or folder in Keydesk you want to sync to which path in
               HashiCorp Vault.
             </CardDescription>
           </CardHeader>
@@ -201,7 +201,7 @@ export const HashicorpVaultConfigurePage = () => {
                   />
                   {!error && (
                     <FieldDescription id="HashicorpVaultConfigurePage-field-2-feedback">
-                      A path to your secrets in Infisical.
+                      A path to your secrets in Keydesk.
                     </FieldDescription>
                   )}
                   {Boolean(error) && (
@@ -291,7 +291,7 @@ export const HashicorpVaultConfigurePage = () => {
         <AlertTitle>Pro Tip</AlertTitle>
         <AlertDescription>
           After creating an integration, your secrets will start syncing immediately. This might
-          cause an unexpected override of current secrets in Vault with secrets from Infisical.
+          cause an unexpected override of current secrets in Vault with secrets from Keydesk.
         </AlertDescription>
       </Alert>
     </div>
@@ -302,10 +302,11 @@ export const HashicorpVaultConfigurePage = () => {
       </Helmet>
       {isintegrationAuthLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

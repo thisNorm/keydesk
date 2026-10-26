@@ -10,7 +10,7 @@ export const EmailNotVerifiedPage = () => {
     <AuthPageLayout variant="focused">
       <Helmet>
         <title>이메일 미인증</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <AuthPagePanel>
         <CardHeader className="mb-6 gap-2 text-center">

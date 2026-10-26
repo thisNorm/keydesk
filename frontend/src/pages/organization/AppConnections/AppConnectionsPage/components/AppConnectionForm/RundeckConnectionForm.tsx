@@ -44,10 +44,10 @@ const formSchema = z.discriminatedUnion("method", [
       instanceUrl: z
         .string()
         .trim()
-        .url("Invalid Instance URL")
-        .min(1, "Instance URL required")
+        .url("올바른 인스턴스 URL을 입력하세요")
+        .min(1, "인스턴스 URL을 입력하세요")
         .max(255),
-      apiToken: z.string().trim().min(1, "API Token required")
+      apiToken: z.string().trim().min(1, "API 토큰을 입력하세요")
     })
   })
 ]);
@@ -77,21 +77,20 @@ export const RundeckConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Rundeck].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Rundeck].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)} id="method">
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(RundeckConnectionMethod).map((method) => {
@@ -114,13 +113,13 @@ export const RundeckConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Rundeck Instance URL
+                Rundeck 인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The URL of the Rundeck instance to authenticate with.
+                    인증할 Rundeck 인스턴스의 URL입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -140,7 +139,7 @@ export const RundeckConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-token">Rundeck API Token</FieldLabel>
+              <FieldLabel htmlFor="api-token">Rundeck API 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-token-error" : undefined}
                 isError={Boolean(error)}
@@ -152,9 +151,7 @@ export const RundeckConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Rundeck"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Rundeck에 연결"} />
       </form>
     </FormProvider>
   );

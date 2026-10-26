@@ -94,7 +94,7 @@ export const AppConnectionRow = ({
     navigator.clipboard.writeText(id);
 
     createNotification({
-      text: "Connection ID copied to clipboard",
+      text: "연결 ID를 클립보드에 복사했습니다",
       type: "info"
     });
 
@@ -143,7 +143,7 @@ export const AppConnectionRow = ({
         <div className="flex items-center gap-2">
           <div className="relative">
             <ProviderIcon
-              alt={`${connectionDetails.name} integration`}
+              alt={`${connectionDetails.name} 연동`}
               icon={connectionDetails.image}
               className="mr-0.5 w-5"
             />
@@ -225,7 +225,7 @@ export const AppConnectionRow = ({
           ) : (
             <p className="flex items-center gap-1.5 truncate">
               <OrgIcon className="size-3.5 text-label/75" />
-              Organization
+              조직
             </p>
           )}
         </TableCell>
@@ -238,12 +238,12 @@ export const AppConnectionRow = ({
                 <div>
                   <Badge variant="info">
                     <ServerIcon />
-                    Platform Managed Credentials
+                    플랫폼 관리 인증 정보
                   </Badge>
                 </div>
               </TooltipTrigger>
               <TooltipContent side="left">
-                This connection&apos;s credentials are managed by Infisical.
+                이 연결의 인증 정보는 Keydesk에서 관리합니다.
               </TooltipContent>
             </Tooltip>
           )}
@@ -254,14 +254,14 @@ export const AppConnectionRow = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <IconButton aria-label="Options" variant="ghost" size="xs">
+              <IconButton aria-label="옵션" variant="ghost" size="xs">
                 <Ellipsis />
               </IconButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent sideOffset={2} align="end">
               <DropdownMenuItem onClick={() => handleCopyId()}>
                 {isIdCopied ? <CheckIcon /> : <CopyIcon />}
-                Copy Connection ID
+                연결 ID 복사
               </DropdownMenuItem>
               {(isProjectView || !project) && (
                 <>
@@ -288,7 +288,7 @@ export const AppConnectionRow = ({
                         onClick={() => onEditDetails(appConnection)}
                       >
                         <PencilIcon />
-                        Edit Details
+                        세부 정보 수정
                       </DropdownMenuItem>
                     )}
                   </VariablePermissionCan>
@@ -315,7 +315,7 @@ export const AppConnectionRow = ({
                         onClick={() => onEditCredentials(appConnection)}
                       >
                         <AsteriskIcon />
-                        {isPlatformManagedCredentials ? "View" : "Edit"} Credentials
+                        {isPlatformManagedCredentials ? "보기" : "수정"} 인증 정보
                       </DropdownMenuItem>
                     )}
                   </VariablePermissionCan>
@@ -344,14 +344,14 @@ export const AppConnectionRow = ({
                             onClick={() => onRotateCredentials(appConnection)}
                           >
                             <RefreshCwIcon />
-                            Rotate Credentials
+                            인증 정보 교체
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             isDisabled={!isAllowed}
                             onClick={() => onToggleAutoRotation(appConnection)}
                           >
                             {isAutoRotationEnabled ? <PauseIcon /> : <PlayIcon />}
-                            {isAutoRotationEnabled ? "Disable" : "Enable"} Auto-Rotation
+                            {isAutoRotationEnabled ? "끄기" : "켜기"} 자동 교체
                           </DropdownMenuItem>
                         </>
                       )}
@@ -381,7 +381,7 @@ export const AppConnectionRow = ({
                         onClick={() => onDelete(appConnection)}
                       >
                         <Trash2Icon />
-                        Delete Connection
+                        연결 삭제
                       </DropdownMenuItem>
                     )}
                   </VariablePermissionCan>

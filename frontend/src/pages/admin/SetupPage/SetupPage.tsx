@@ -589,8 +589,8 @@ export const SetupPage = () => {
       }
     >
       <Helmet>
-        <title>서버 설정 | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>서버 설정 | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <AuthPagePanel>
         <form id={setupFormId} onSubmit={onSubmit}>

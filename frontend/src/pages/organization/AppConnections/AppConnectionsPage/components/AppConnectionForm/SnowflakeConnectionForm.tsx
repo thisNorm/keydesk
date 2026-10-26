@@ -38,9 +38,9 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(SnowflakeConnectionMethod.UsernameAndToken),
     credentials: z.object({
-      account: z.string().trim().min(1, "Account required"),
-      username: z.string().trim().min(1, "Username required"),
-      password: z.string().trim().min(1, "Programmatic Access Token required")
+      account: z.string().trim().min(1, "계정을 입력하세요"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      password: z.string().trim().min(1, "프로그래밍 방식 액세스 토큰을 입력하세요")
     })
   })
 ]);
@@ -77,14 +77,12 @@ export const SnowflakeConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="account">
-                Account
+                계정
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
-                  <TooltipContent className="max-w-sm">
-                    Your Snowflake account identifier.
-                  </TooltipContent>
+                  <TooltipContent className="max-w-sm">Snowflake 계정 식별자입니다.</TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Input
@@ -105,13 +103,13 @@ export const SnowflakeConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="username">
-                Username
+                사용자 이름
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The login name used to authenticate with Snowflake.
+                    Snowflake 인증에 사용할 로그인 이름입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -133,13 +131,13 @@ export const SnowflakeConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="password">
-                Programmatic Access Token
+                프로그래밍 방식 액세스 토큰
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Programmatic Access Token (PAT) used to authenticate with Snowflake.
+                    Snowflake 인증에 사용할 프로그래밍 방식 액세스 토큰(PAT)입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -155,9 +153,7 @@ export const SnowflakeConnectionForm = ({ appConnection, onSubmit }: Props) => {
           )}
         />
 
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Snowflake"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Snowflake에 연결"} />
       </form>
     </FormProvider>
   );

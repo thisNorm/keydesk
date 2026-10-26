@@ -210,7 +210,7 @@ export const MFASection = () => {
           </h3>
           <Separator className="flex-1" />
         </div>
-        <CardDescription>Infisical에 로그인할 때 먼저 사용할 방식을 설정하세요.</CardDescription>
+        <CardDescription>Keydesk에 로그인할 때 먼저 사용할 방식을 설정하세요.</CardDescription>
       </CardHeader>
       <div className="max-w-xs">
         <Select

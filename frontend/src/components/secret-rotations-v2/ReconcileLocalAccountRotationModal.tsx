@@ -66,13 +66,13 @@ export const ReconcileLocalAccountRotationModal = ({
         <DialogHeader>
           <DialogTitle>Reconcile {rotationTypeName}</DialogTitle>
           <DialogDescription>
-            Sync the {rotationTypeName} password between Infisical and the server.
+            Sync the {rotationTypeName} password between Keydesk and the server.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 text-sm text-foreground-secondary">
           <p>
-            Reconciliation ensures the password stored in Infisical matches the actual password on
-            the server.
+            Reconciliation ensures the password stored in Keydesk matches the actual password on the
+            server.
           </p>
           <p>
             Use this if you suspect the credentials are out of sync, for example after a failed

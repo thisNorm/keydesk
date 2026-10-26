@@ -600,7 +600,7 @@ export const CertificateImportSheet = ({ popUp, handlePopUpToggle, applicationId
                 <FieldError>{passwordError}</FieldError>
               ) : (
                 <FieldDescription>
-                  Infisical opens the keystore in your browser to list what is inside.
+                  Keydesk opens the keystore in your browser to list what is inside.
                 </FieldDescription>
               )}
             </FieldContent>
@@ -971,7 +971,7 @@ export const CertificateImportSheet = ({ popUp, handlePopUpToggle, applicationId
       onOpenChange={(open) => handlePopUpToggle("certificateImport", open)}
       icon={<Upload className="size-5" />}
       title="Import Certificate"
-      description="Bring a certificate you already hold under Infisical management."
+      description="Bring a certificate you already hold under Keydesk management."
       steps={steps}
       activeStep={step}
       onStepChange={(index) => {

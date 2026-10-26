@@ -279,7 +279,7 @@ export const ConnectToSignerDrawer = ({ signer, isOpen, onOpenChange }: Props) =
             <span className="font-medium">Standard signing tools</span> like jarsigner,
             osslsigncode, and cosign work on Linux, macOS, and Windows.{" "}
             <span className="font-medium">Windows signtool</span> is native Authenticode signing on
-            Windows. Either way, the private key stays in Infisical.
+            Windows. Either way, the private key stays in Keydesk.
           </p>
         </>
       );
@@ -289,7 +289,7 @@ export const ConnectToSignerDrawer = ({ signer, isOpen, onOpenChange }: Props) =
         <>
           <p className="mt-4 text-sm font-semibold text-foreground">What this step does</p>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Choose how the signing machine logs in to Infisical.{" "}
+            Choose how the signing machine logs in to Keydesk.{" "}
             <span className="font-medium">Your own access token</span> is quickest, but it is
             temporary because tokens expire. A <span className="font-medium">machine identity</span>{" "}
             is best for unattended or CI/CD signing.
@@ -359,7 +359,7 @@ export const ConnectToSignerDrawer = ({ signer, isOpen, onOpenChange }: Props) =
               <>
                 <h2 className="text-lg font-normal text-foreground">Choose your signing tool</h2>
                 <p className="mt-1 mb-6 text-sm text-muted">
-                  Pick the tool you already sign with. Infisical plugs into it, so your build keeps
+                  Pick the tool you already sign with. Keydesk plugs into it, so your build keeps
                   working the same way.
                 </p>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -386,13 +386,13 @@ export const ConnectToSignerDrawer = ({ signer, isOpen, onOpenChange }: Props) =
               <>
                 <h2 className="text-lg font-normal text-foreground">Choose how you authenticate</h2>
                 <p className="mt-1 mb-6 text-sm text-muted">
-                  Pick how the signing tool proves who it is to Infisical during signing operations.
+                  Pick how the signing tool proves who it is to Keydesk during signing operations.
                 </p>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <AuthOptionCard
                     icon={<KeyRoundIcon className="size-4" />}
                     title="Use my credentials"
-                    description="Sign as yourself with your own Infisical access token. Quickest to set up, but temporary because the token expires."
+                    description="Sign as yourself with your own Keydesk access token. Quickest to set up, but temporary because the token expires."
                     isSelected={authMethod === AuthMethod.Token}
                     onSelect={() => setAuthMethod(AuthMethod.Token)}
                   />
@@ -436,8 +436,8 @@ export const ConnectToSignerDrawer = ({ signer, isOpen, onOpenChange }: Props) =
                       title="Configure"
                       description={
                         authMethod === AuthMethod.Token
-                          ? "Set your Infisical address and access token as environment variables."
-                          : "Set your Infisical address and Machine Identity credentials as environment variables."
+                          ? "Set your Keydesk address and access token as environment variables."
+                          : "Set your Keydesk address and Machine Identity credentials as environment variables."
                       }
                     >
                       <CommandBlock snippet={kspConfigureSnippet(serverUrl, auth)} />
@@ -486,8 +486,8 @@ export const ConnectToSignerDrawer = ({ signer, isOpen, onOpenChange }: Props) =
                       title="Configure"
                       description={
                         authMethod === AuthMethod.Token
-                          ? "Set your Infisical address and access token as environment variables."
-                          : "Set your Infisical address and Machine Identity credentials as environment variables."
+                          ? "Set your Keydesk address and access token as environment variables."
+                          : "Set your Keydesk address and Machine Identity credentials as environment variables."
                       }
                     >
                       <CommandBlock snippet={pkcs11ConfigureSnippet(os, serverUrl, auth)} />

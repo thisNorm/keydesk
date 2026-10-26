@@ -66,12 +66,12 @@ const formSchema = z.discriminatedUnion("method", [
       hostname: z
         .string()
         .trim()
-        .min(1, "Hostname is required")
-        .max(512, "Hostname cannot exceed 512 characters")
+        .min(1, "호스트 이름을 입력하세요")
+        .max(512, "호스트 이름은 512자를 초과할 수 없습니다")
         .refine(
           (val) => isValidHostname(val) || isIPv4(val) || (isIPv6(val) && !val.includes("%")),
           {
-            message: "Enter a hostname or IP address without a scheme, port, brackets, or path"
+            message: "스킴, 포트, 대괄호, 경로를 제외한 호스트 이름 또는 IP 주소를 입력하세요"
           }
         ),
       port: z
@@ -81,12 +81,12 @@ const formSchema = z.discriminatedUnion("method", [
       username: z
         .string()
         .trim()
-        .min(1, "Username is required")
-        .max(256, "Username cannot exceed 256 characters"),
+        .min(1, "사용자 이름을 입력하세요")
+        .max(256, "사용자 이름은 256자를 초과할 수 없습니다"),
       password: z
         .string()
-        .min(1, "Password is required")
-        .max(512, "Password cannot exceed 512 characters"),
+        .min(1, "비밀번호를 입력하세요")
+        .max(512, "비밀번호는 512자를 초과할 수 없습니다"),
       sslRejectUnauthorized: z.boolean(),
       sslCertificate: z
         .string()
@@ -153,7 +153,7 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
 
             return (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 {isAllowed ? (
                   picker
                 ) : (
@@ -162,8 +162,7 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
                       <span className="block w-full cursor-not-allowed">{picker}</span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -177,21 +176,21 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.HpeIloRedFish].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(HpeIloConnectionMethod).map((method) => {
@@ -209,7 +208,7 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
         />
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mb-4">
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
+            <TabsTrigger value="configuration">구성</TabsTrigger>
             <TabsTrigger value="ssl">SSL</TabsTrigger>
           </TabsList>
           <TabsContent value="configuration">
@@ -219,12 +218,12 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="hostname">Hostname</FieldLabel>
+                    <FieldLabel htmlFor="hostname">호스트 이름</FieldLabel>
                     <Input
                       id="hostname"
                       value={value}
                       onChange={(e) => onChange(e.target.value)}
-                      placeholder="e.g. ilo.example.com"
+                      placeholder="예: ilo.example.com"
                       isError={Boolean(error?.message)}
                     />
                     <FieldError errors={[error]} />
@@ -237,7 +236,7 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4 w-24">
                     <FieldLabel htmlFor="port">
-                      Port <span className="text-muted">(optional)</span>
+                      포트 <span className="text-muted">(선택 사항)</span>
                     </FieldLabel>
                     <Input
                       id="port"
@@ -260,12 +259,12 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="username">Username</FieldLabel>
+                    <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
                     <Input
                       id="username"
                       value={value}
                       onChange={(e) => onChange(e.target.value)}
-                      placeholder="Administrator"
+                      placeholder="관리자"
                       isError={Boolean(error?.message)}
                     />
                     <FieldError errors={[error]} />
@@ -277,7 +276,7 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <FieldLabel htmlFor="password">비밀번호</FieldLabel>
                     <SecretInput
                       aria-describedby={error ? "password-error" : undefined}
                       isError={Boolean(error)}
@@ -298,7 +297,7 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="ssl-certificate">
-                    SSL Certificate <span className="text-muted">(optional)</span>
+                    SSL 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="ssl-certificate"
@@ -317,11 +316,11 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        If enabled, Infisical will only connect to the HPE iLO if it has a valid,
-                        trusted SSL certificate. Disable this for self-signed certificates or
-                        provide a CA certificate above.
+                        켜면 HPE iLO가 유효하고 신뢰할 수 있는 SSL 인증서를 제공할 때만 Keydesk가
+                        연결합니다. 자체 서명 인증서를 사용한다면 이 옵션을 끄거나 위에 CA 인증서를
+                        입력하세요.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -338,9 +337,7 @@ export const HpeIloConnectionForm = ({ appConnection, onSubmit }: Props) => {
             />
           </TabsContent>
         </Tabs>
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to HPE iLO"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "HPE iLO에 연결"} />
       </form>
     </FormProvider>
   );

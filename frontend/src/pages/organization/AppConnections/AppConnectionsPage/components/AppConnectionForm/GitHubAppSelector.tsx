@@ -48,7 +48,7 @@ import { TGitHubApp, useDeleteGitHubApp } from "@app/hooks/api/gitHubApps";
 const SHARED_KEY = "__shared__";
 
 // New GitHub Apps are pre-filled with this prefix so they're easy to identify in the GitHub account.
-const GITHUB_APP_NAME_PREFIX = "infisical-";
+const GITHUB_APP_NAME_PREFIX = "keydesk-";
 
 const getAppKey = (app: TGitHubApp | null) => (app ? (app.id ?? SHARED_KEY) : null);
 
@@ -136,7 +136,7 @@ export const GitHubAppSelector = ({
     if (!app.id) return;
     try {
       await deleteGitHubApp.mutateAsync(app.id);
-      createNotification({ type: "success", text: `Deleted GitHub App "${app.name}"` });
+      createNotification({ type: "success", text: `GitHub App 삭제 완료: "${app.name}"` });
       if (getAppKey(value) === app.id) onChange(null);
       setDeleteTargetId(null);
     } catch (err) {
@@ -144,7 +144,7 @@ export const GitHubAppSelector = ({
         type: "error",
         text:
           (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-          (err instanceof Error ? err.message : "Failed to delete GitHub App")
+          (err instanceof Error ? err.message : "GitHub App을 삭제하지 못했습니다")
       });
     }
   };
@@ -182,16 +182,16 @@ export const GitHubAppSelector = ({
           <div className="flex items-center gap-2 text-sm font-medium text-foreground">
             <TrashIcon className="size-4 text-danger" />
             <span>
-              Delete <span className="font-mono">{app.name}</span>?
+              삭제 <span className="font-mono">{app.name}</span>?
             </span>
           </div>
           <p className="mt-1 text-xs leading-relaxed text-accent">
-            Removes it from Infisical and uninstalls it from GitHub. The app registration itself
-            remains on GitHub until you delete it there.
+            Keydesk에서 제거하고 GitHub에서 설치를 해제합니다. 앱 등록은 GitHub에서 직접 삭제할
+            때까지 유지됩니다.
           </p>
           <div className="mt-3 flex items-center justify-end gap-2">
             <Button variant="ghost" size="xs" onClick={() => setDeleteTargetId(null)}>
-              Cancel
+              취소
             </Button>
             <Button
               variant="danger"
@@ -199,7 +199,7 @@ export const GitHubAppSelector = ({
               isPending={deleteGitHubApp.isPending}
               onClick={() => handleDelete(app)}
             >
-              Delete
+              삭제
             </Button>
           </div>
         </div>
@@ -223,7 +223,7 @@ export const GitHubAppSelector = ({
           <p className="truncate font-mono text-sm text-foreground">{app.name}</p>
           <p className="truncate text-xs text-accent">
             {app.owner ? `${app.owner} · ` : ""}
-            {app.connectionCount} connection{app.connectionCount === 1 ? "" : "s"}
+            연결 {app.connectionCount}개
           </p>
         </div>
         <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 data-[selected=true]:opacity-100">
@@ -232,7 +232,7 @@ export const GitHubAppSelector = ({
               <IconButton
                 variant="ghost-muted"
                 size="xs"
-                aria-label="Open on GitHub"
+                aria-label="GitHub에서 열기"
                 onClick={(e) => {
                   e.stopPropagation();
                   window.open(
@@ -245,7 +245,7 @@ export const GitHubAppSelector = ({
                 <ExternalLinkIcon />
               </IconButton>
             </TooltipTrigger>
-            <TooltipContent>Open on GitHub</TooltipContent>
+            <TooltipContent>GitHub에서 열기</TooltipContent>
           </Tooltip>
           {isInUse || !canDelete ? (
             <Tooltip>
@@ -254,19 +254,16 @@ export const GitHubAppSelector = ({
                     needs a focusable wrapper to open on hover/focus. */}
                 {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
                 <span tabIndex={0}>
-                  <IconButton variant="ghost-muted" size="xs" aria-label="Delete app" isDisabled>
+                  <IconButton variant="ghost-muted" size="xs" aria-label="앱 삭제" isDisabled>
                     <TrashIcon />
                   </IconButton>
                 </span>
               </TooltipTrigger>
               <TooltipContent>
                 {canDelete ? (
-                  <>
-                    Remove the connection{app.connectionCount === 1 ? "" : "s"} before deleting this
-                    app.
-                  </>
+                  <>연결을 제거한 후 이 앱을 삭제하세요.</>
                 ) : (
-                  "Organization apps can only be deleted from the organization's App Connections page."
+                  "조직 앱은 조직의 앱 연결 페이지에서만 삭제할 수 있습니다."
                 )}
               </TooltipContent>
             </Tooltip>
@@ -276,7 +273,7 @@ export const GitHubAppSelector = ({
                 <IconButton
                   variant="ghost-muted"
                   size="xs"
-                  aria-label="Delete this app"
+                  aria-label="이 앱 삭제"
                   className="hover:text-danger"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -286,7 +283,7 @@ export const GitHubAppSelector = ({
                   <TrashIcon />
                 </IconButton>
               </TooltipTrigger>
-              <TooltipContent>Delete this app</TooltipContent>
+              <TooltipContent>이 앱 삭제</TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -306,24 +303,24 @@ export const GitHubAppSelector = ({
           disabled={isLoading}
         >
           <SelectTrigger className="min-w-0 flex-1">
-            <SelectValue placeholder="Select a GitHub App" />
+            <SelectValue placeholder="GitHub App 선택" />
           </SelectTrigger>
           <SelectContent position="popper">
             {sharedApp && (
               <>
-                {renderPickerHeading("INSTANCE")}
+                {renderPickerHeading("인스턴스")}
                 {renderPickerItem(sharedApp)}
               </>
             )}
             {customApps.length > 0 && (
               <>
-                {renderPickerHeading("PRIVATE")}
+                {renderPickerHeading("비공개")}
                 {customApps.map(renderPickerItem)}
               </>
             )}
             {!sharedApp && customApps.length === 0 && !isLoading && (
               <div className="px-4 py-6 text-center text-xs leading-relaxed text-muted">
-                No GitHub Apps available yet. Use the gear button to create one.
+                사용 가능한 GitHub App이 없습니다. 톱니바퀴 버튼으로 앱을 만드세요.
               </div>
             )}
           </SelectContent>
@@ -332,13 +329,13 @@ export const GitHubAppSelector = ({
           <TooltipTrigger asChild>
             <IconButton
               variant="outline"
-              aria-label="Manage GitHub Apps"
+              aria-label="GitHub App 관리"
               onClick={() => setIsManageOpen(true)}
             >
               <SettingsIcon />
             </IconButton>
           </TooltipTrigger>
-          <TooltipContent>Manage GitHub Apps</TooltipContent>
+          <TooltipContent>GitHub App 관리</TooltipContent>
         </Tooltip>
       </div>
 
@@ -351,9 +348,9 @@ export const GitHubAppSelector = ({
           className="max-w-xl"
         >
           <DialogHeader>
-            <DialogTitle>Manage GitHub Apps</DialogTitle>
+            <DialogTitle>GitHub App 관리</DialogTitle>
             <DialogDescription>
-              Create, inspect, and remove the GitHub Apps available to your connections.
+              연결에서 사용할 GitHub App을 만들고 확인하거나 삭제하세요.
             </DialogDescription>
           </DialogHeader>
           <div
@@ -367,15 +364,15 @@ export const GitHubAppSelector = ({
                   <IconButton
                     variant="ghost-muted"
                     size="xs"
-                    aria-label="Back to list"
+                    aria-label="목록으로"
                     onClick={resetCreate}
                   >
                     <ChevronLeftIcon />
                   </IconButton>
-                  Create GitHub App
+                  GitHub App 만들기
                 </div>
                 <Field className="mb-1">
-                  <FieldLabel htmlFor="github-app-name">App name</FieldLabel>
+                  <FieldLabel htmlFor="github-app-name">앱 이름</FieldLabel>
                   <Input
                     id="github-app-name"
                     ref={nameInputRef}
@@ -396,15 +393,14 @@ export const GitHubAppSelector = ({
                 </Field>
                 <Field className="mt-3 mb-0">
                   <FieldLabel htmlFor="github-app-org">
-                    Organization
+                    조직
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <InfoIcon />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-sm">
-                        Enter a GitHub organization name to create the app under that organization.
-                        This is required if you want to install the app on repositories owned by the
-                        organization. Leave blank to create the app under your personal account.
+                        조직 소유의 저장소에 앱을 설치하려면 GitHub 조직 이름을 입력하세요. 비워
+                        두면 개인 계정에 앱을 만듭니다.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -412,42 +408,42 @@ export const GitHubAppSelector = ({
                     id="github-app-org"
                     value={newAppOrg}
                     onChange={(e) => setNewAppOrg(e.target.value)}
-                    placeholder="Leave blank to create on your personal account"
+                    placeholder="개인 계정에 만들려면 비워 두세요"
                   />
                 </Field>
                 <Alert variant="info" className="mt-3">
                   <InfoIcon />
                   <AlertDescription>
                     <p>
-                      The app will be created on{" "}
+                      앱을 만들 위치:{" "}
                       <span className="font-medium text-foreground">
                         {buildGitHubHostUrl(host).replace("https://", "")}
                       </span>
                       {gatewayLabel ? (
                         <>
                           {" "}
-                          through the{" "}
+                          사용할 게이트웨이:{" "}
                           <span className="font-medium text-foreground">{gatewayLabel}</span>{" "}
                           gateway
                         </>
                       ) : null}
-                      . You&apos;ll be redirected to complete the private app setup. GitHub fails
-                      the setup if you&apos;re signed out, so{" "}
+                      . 비공개 앱 설정을 완료하는 페이지로 이동합니다. 로그아웃 상태에서는 GitHub
+                      설정이 실패하므로 먼저{" "}
                       <a
                         href={`${buildGitHubHostUrl(host)}/login`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="underline underline-offset-2 hover:text-foreground"
                       >
-                        sign in
+                        로그인
                       </a>{" "}
-                      first.
+                      하세요.
                     </p>
                   </AlertDescription>
                 </Alert>
                 <div className="mt-3 flex items-center justify-end gap-2">
                   <Button variant="ghost" size="sm" onClick={resetCreate}>
-                    Cancel
+                    취소
                   </Button>
                   <Button
                     variant={scopeVariant}
@@ -457,7 +453,7 @@ export const GitHubAppSelector = ({
                     onClick={handleContinueCreate}
                   >
                     <GithubIcon />
-                    Continue on GitHub
+                    GitHub에서 계속
                   </Button>
                 </div>
               </div>
@@ -466,9 +462,9 @@ export const GitHubAppSelector = ({
                 <Command className="h-auto bg-transparent">
                   <CommandList className="max-h-[360px]">
                     {sharedApp && (
-                      <CommandGroup heading="INSTANCE">
+                      <CommandGroup heading="인스턴스">
                         <CommandItem
-                          value={`instance server admin ${sharedApp.name}`}
+                          value={`인스턴스 서버 관리자 ${sharedApp.name}`}
                           className="group cursor-default"
                         >
                           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-sm bg-foreground/10">
@@ -479,8 +475,7 @@ export const GitHubAppSelector = ({
                               {sharedApp.name}
                             </p>
                             <p className="truncate text-xs text-muted">
-                              Server admin · {sharedApp.connectionCount} connection
-                              {sharedApp.connectionCount === 1 ? "" : "s"}
+                              서버 관리자 · 연결 {sharedApp.connectionCount}개
                             </p>
                           </div>
                           <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 data-[selected=true]:opacity-100">
@@ -489,7 +484,7 @@ export const GitHubAppSelector = ({
                                 <IconButton
                                   variant="ghost-muted"
                                   size="xs"
-                                  aria-label="Open on GitHub"
+                                  aria-label="GitHub에서 열기"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     window.open(
@@ -506,7 +501,7 @@ export const GitHubAppSelector = ({
                                   <ExternalLinkIcon />
                                 </IconButton>
                               </TooltipTrigger>
-                              <TooltipContent>Open on GitHub</TooltipContent>
+                              <TooltipContent>GitHub에서 열기</TooltipContent>
                             </Tooltip>
                           </div>
                         </CommandItem>
@@ -515,7 +510,7 @@ export const GitHubAppSelector = ({
                     <CommandGroup
                       heading={
                         <span className="flex items-center gap-2">
-                          PRIVATE
+                          비공개
                           {customApps.length > 0 && (
                             <span className="rounded-full bg-foreground/10 px-1.5 text-[10px] text-foreground">
                               {customApps.length}
@@ -529,9 +524,11 @@ export const GitHubAppSelector = ({
                           <div className="flex h-12 w-12 items-center justify-center rounded-md bg-foreground/10 text-accent">
                             <GithubIcon className="size-6" />
                           </div>
-                          <p className="text-sm font-medium text-foreground">No private apps yet</p>
+                          <p className="text-sm font-medium text-foreground">
+                            비공개 앱이 없습니다
+                          </p>
                           <p className="max-w-[260px] text-xs leading-relaxed text-muted">
-                            Create a dedicated GitHub App for tighter, per-team permission scoping.
+                            팀별 권한 범위를 세분화하려면 전용 GitHub App을 만드세요.
                           </p>
                         </div>
                       ) : (
@@ -551,7 +548,7 @@ export const GitHubAppSelector = ({
                     <PlusIcon className="size-4" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground">Create new GitHub App</p>
+                    <p className="text-sm font-medium text-foreground">새 GitHub App 만들기</p>
                   </div>
                 </button>
               </>
@@ -559,7 +556,7 @@ export const GitHubAppSelector = ({
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Close</Button>
+              <Button variant="outline">닫기</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

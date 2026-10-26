@@ -65,7 +65,7 @@ export const UserNameSection = (): JSX.Element => {
       <Card className="gap-0 overflow-hidden p-0">
         <CardHeader className="p-6">
           <CardTitle className="font-alliance">프로필</CardTitle>
-          <CardDescription>Infisical에 표시되는 이름을 변경하세요.</CardDescription>
+          <CardDescription>Keydesk에 표시되는 이름을 변경하세요.</CardDescription>
         </CardHeader>
         <CardContent className="max-w-md px-6 pb-6">
           <Controller

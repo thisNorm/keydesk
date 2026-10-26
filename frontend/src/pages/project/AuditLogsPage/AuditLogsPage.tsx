@@ -16,7 +16,7 @@ export const AuditLogsPage = () => {
     <div className="mx-auto flex flex-col justify-between bg-page text-foreground-inverse">
       <Helmet>
         <title>{projectsHidden ? "Audit Logs" : "Project Audit Logs"}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <div className="flex h-full w-full justify-center bg-page text-foreground-inverse">
         <div className="w-full max-w-8xl">

@@ -58,14 +58,14 @@ const formSchema = z.discriminatedUnion("method", [
     app: z.literal(AppConnection.GitLab),
     method: z.literal(GitLabConnectionMethod.AccessToken),
     credentials: z.object({
-      accessToken: z.string().min(1, "Access token is required"),
+      accessToken: z.string().min(1, "액세스 토큰을 입력하세요"),
       accessTokenType: z.nativeEnum(GitLabAccessTokenType),
       instanceUrl: z
         .string()
         .trim()
         .transform((value) => value || undefined)
         .refine((value) => (!value ? true : z.string().url().safeParse(value).success), {
-          message: "Invalid instance URL"
+          message: "올바른 인스턴스 URL을 입력하세요"
         })
         .optional()
     })
@@ -74,13 +74,13 @@ const formSchema = z.discriminatedUnion("method", [
     app: z.literal(AppConnection.GitLab),
     method: z.literal(GitLabConnectionMethod.OAuth),
     credentials: z.object({
-      code: z.string().min(1, "Code is required"),
+      code: z.string().min(1, "코드를 입력하세요"),
       instanceUrl: z
         .string()
         .trim()
         .transform((value) => value || undefined)
         .refine((value) => (!value ? true : z.string().url().safeParse(value).success), {
-          message: "Invalid instance URL"
+          message: "올바른 인스턴스 URL을 입력하세요"
         })
         .optional()
     })
@@ -179,7 +179,7 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
           break;
 
         default:
-          throw new Error("Unhandled GitLab Connection method");
+          throw new Error("지원되지 않는 GitLab 연결 방식입니다");
       }
     } catch (error) {
       console.error("Error handling form submission:", error);
@@ -197,7 +197,7 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
       isMissingConfig = false;
       break;
     default:
-      throw new Error(`Unhandled GitLab Connection method: ${selectedMethod}`);
+      throw new Error(`지원되지 않는 GitLab 연결 방식: ${selectedMethod}`);
   }
 
   const methodDetails = getAppConnectionMethodDetails(selectedMethod);
@@ -206,8 +206,8 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
     if (!isLoading && isMissingConfig && selectedMethod === GitLabConnectionMethod.OAuth) {
       return `${
         isInfisicalCloud()
-          ? "GitLab Oauth is not supported in Infisical Cloud."
-          : `Environment variables have not been configured. See Docs to configure GitLab ${methodDetails.name} Connections.`
+          ? "Keydesk Cloud에서는 GitLab OAuth를 지원하지 않습니다."
+          : `환경 변수가 구성되지 않았습니다. 문서를 확인해 GitLab 연결을 구성하세요: ${methodDetails.name} 연결입니다.`
       }`;
     }
     return fieldError?.message;
@@ -224,13 +224,13 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="gitlab-instance-url">
-                Self-hosted URL <span className="text-muted">(optional)</span>
+                자체 호스팅 URL <span className="text-muted">(선택 사항)</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Will default to GitLab Cloud if not specified.
+                    지정하지 않으면 GitLab Cloud를 사용합니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -252,15 +252,14 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.GitLab].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.GitLab].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -278,7 +277,7 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
                   className="w-full"
                   isError={Boolean(error?.message) || isMissingConfig}
                 >
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(GitLabConnectionMethod).map((method) => (
@@ -301,7 +300,7 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
               control={control}
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel>Access Token Type</FieldLabel>
+                  <FieldLabel>액세스 토큰 유형</FieldLabel>
                   <Select
                     disabled={isUpdate}
                     value={value}
@@ -313,12 +312,12 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
                     }}
                   >
                     <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                      <SelectValue placeholder="Select a type..." />
+                      <SelectValue placeholder="유형을 선택하세요..." />
                     </SelectTrigger>
                     <SelectContent position="popper">
                       {Object.values(GitLabAccessTokenType).map((method) => (
                         <SelectItem value={method} key={method}>
-                          {method.charAt(0).toUpperCase() + method.slice(1)} Access Token
+                          {method.charAt(0).toUpperCase() + method.slice(1)} 액세스 토큰
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -333,12 +332,12 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
               render={({ field: { value, onChange }, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="gitlab-access-token">
-                    Access Token
+                    액세스 토큰
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Info />
                       </TooltipTrigger>
-                      <TooltipContent className="max-w-sm">Your GitLab Access Token</TooltipContent>
+                      <TooltipContent className="max-w-sm">GitLab 액세스 토큰</TooltipContent>
                     </Tooltip>
                   </FieldLabel>
                   <SecretInput
@@ -368,10 +367,10 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
             }
           >
             {isRedirecting && selectedMethod === GitLabConnectionMethod.OAuth
-              ? "Redirecting to GitLab..."
+              ? "GitLab으로 이동 중..."
               : isUpdate
-                ? "Reconnect to GitLab"
-                : "Connect to GitLab"}
+                ? "GitLab에 다시 연결"
+                : "GitLab에 연결"}
           </Button>
           <Button
             type="button"
@@ -379,7 +378,7 @@ export const GitLabConnectionForm = ({ appConnection, onSubmit: formSubmit, proj
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

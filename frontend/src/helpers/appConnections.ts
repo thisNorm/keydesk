@@ -127,567 +127,567 @@ export const APP_CONNECTION_MAP: Record<
     name: "AWS",
     image: "Amazon Web Services.png",
     category: "AWS",
-    description: "Connect using IAM access keys or role assumption."
+    description: "IAM 액세스 키 또는 역할 수임으로 연결합니다."
   },
   [AppConnection.GitHub]: {
     name: "GitHub",
     image: "GitHub.png",
-    category: "VERSION CONTROL",
-    description: "Authenticate via GitHub App, OAuth, or a personal access token."
+    category: "버전 관리",
+    description: "GitHub App, OAuth 또는 개인 액세스 토큰으로 인증합니다."
   },
   [AppConnection.GitHubRadar]: {
     name: "GitHub Radar",
     image: "GitHub.png",
     icon: RadarIcon,
-    category: "SECURITY",
-    description: "GitHub App connection used for secret scanning."
+    category: "보안",
+    description: "시크릿 스캔에 사용하는 GitHub App 연결입니다."
   },
   [AppConnection.GCP]: {
     name: "GCP",
     image: "Google Cloud Platform.png",
-    category: "GOOGLE CLOUD",
-    description: "Authenticate via service account impersonation."
+    category: "Google Cloud",
+    description: "서비스 계정 가장으로 인증합니다."
   },
   [AppConnection.AzureKeyVault]: {
     name: "Azure Key Vault",
     image: "Microsoft Azure.png",
     category: "AZURE",
-    description: "Cloud-managed keys, secrets, and certificates."
+    description: "클라우드에서 키, 시크릿, 인증서를 관리합니다."
   },
   [AppConnection.AzureAppConfiguration]: {
     name: "Azure App Configuration",
     image: "Microsoft Azure.png",
     category: "AZURE",
-    description: "Centralized application settings on Azure."
+    description: "Azure에서 애플리케이션 설정을 중앙 관리합니다."
   },
   [AppConnection.AzureClientSecrets]: {
     name: "Azure Client Secrets",
     image: "Microsoft Azure.png",
     category: "AZURE",
-    description: "Manage Entra ID application client secrets."
+    description: "Entra ID 애플리케이션의 클라이언트 시크릿을 관리합니다."
   },
   [AppConnection.AzureDevOps]: {
     name: "Azure DevOps",
     image: "Microsoft Azure.png",
     category: "AZURE",
-    description: "Pipeline and project access for Azure DevOps."
+    description: "Azure DevOps 파이프라인과 프로젝트에 접근합니다."
   },
   [AppConnection.AzureADCS]: {
     name: "Azure ADCS (Web Enrollment)",
     image: "Microsoft Azure.png",
-    category: "CERTIFICATES",
-    description: "Issue certificates via ADCS Web Enrollment over HTTPS."
+    category: "인증서",
+    description: "HTTPS를 통해 ADCS Web Enrollment에서 인증서를 발급합니다."
   },
   [AppConnection.ADCS]: {
     name: "Microsoft ADCS",
     image: "Windows.png",
-    category: "CERTIFICATES",
-    description: "Issue certificates via Active Directory Certificate Services over the Gateway."
+    category: "인증서",
+    description: "게이트웨이를 통해 Active Directory Certificate Services에서 인증서를 발급합니다."
   },
   [AppConnection.AzureDNS]: {
     name: "Azure DNS",
     image: "Microsoft Azure.png",
     category: "AZURE",
-    description: "Manage DNS zones and records on Azure."
+    description: "Azure의 DNS 영역과 레코드를 관리합니다."
   },
   [AppConnection.Databricks]: {
     name: "Databricks",
     image: "Databricks.png",
-    category: "DATA",
-    description: "Workspace access for jobs, notebooks, and secrets."
+    category: "데이터",
+    description: "작업, 노트북, 시크릿을 위한 Databricks 워크스페이스에 접근합니다."
   },
   [AppConnection.Humanitec]: {
     name: "Humanitec",
     image: "Humanitec.png",
-    category: "PLATFORM",
-    description: "Platform orchestrator for application configuration."
+    category: "플랫폼",
+    description: "애플리케이션 구성을 위한 플랫폼 오케스트레이터입니다."
   },
   [AppConnection.TerraformCloud]: {
     name: "Terraform Cloud",
     image: "Terraform Cloud.png",
-    category: "INFRASTRUCTURE",
-    description: "Manage variables across Terraform Cloud workspaces."
+    category: "인프라",
+    description: "Terraform Cloud 워크스페이스의 변수를 관리합니다."
   },
   [AppConnection.Vercel]: {
     name: "Vercel",
     image: "Vercel.png",
-    category: "HOSTING",
-    description: "Project and environment access for Vercel."
+    category: "호스팅",
+    description: "Vercel 프로젝트와 환경에 접근합니다."
   },
   [AppConnection.Postgres]: {
     name: "PostgreSQL",
     image: "Postgres.png",
-    category: "DATABASE",
-    description: "Connect to a PostgreSQL database."
+    category: "데이터베이스",
+    description: "PostgreSQL 데이터베이스에 연결합니다."
   },
   [AppConnection.MsSql]: {
     name: "Microsoft SQL Server",
     image: "MsSql.png",
-    category: "DATABASE",
-    description: "Connect to a Microsoft SQL Server database."
+    category: "데이터베이스",
+    description: "Microsoft SQL Server 데이터베이스에 연결합니다."
   },
   [AppConnection.MySql]: {
     name: "MySQL",
     image: "MySql.png",
-    category: "DATABASE",
-    description: "Connect to a MySQL database."
+    category: "데이터베이스",
+    description: "MySQL 데이터베이스에 연결합니다."
   },
   [AppConnection.OracleDB]: {
     name: "OracleDB",
     image: "Oracle.png",
     enterprise: true,
-    category: "DATABASE",
-    description: "Connect to an Oracle database."
+    category: "데이터베이스",
+    description: "Oracle 데이터베이스에 연결합니다."
   },
   [AppConnection.Camunda]: {
     name: "Camunda",
     image: "Camunda.png",
-    category: "PLATFORM",
-    description: "Cluster and client access for Camunda 8."
+    category: "플랫폼",
+    description: "Camunda 8 클러스터와 클라이언트에 접근합니다."
   },
   [AppConnection.Windmill]: {
     name: "Windmill",
     image: "Windmill.png",
-    category: "PLATFORM",
-    description: "Workspace access for Windmill scripts and flows."
+    category: "플랫폼",
+    description: "Windmill 스크립트와 플로를 위한 워크스페이스에 접근합니다."
   },
   [AppConnection.Auth0]: {
     name: "Auth0",
     image: "Auth0.png",
     size: 40,
-    category: "IDENTITY",
-    description: "Manage an Auth0 tenant via client credentials."
+    category: "ID 관리",
+    description: "클라이언트 인증 정보로 Auth0 테넌트를 관리합니다."
   },
   [AppConnection.HCVault]: {
     name: "Hashicorp Vault",
     image: "Vault.png",
     size: 65,
-    category: "SECRET MANAGER",
-    description: "Connect to a self-managed HashiCorp Vault."
+    category: "시크릿 관리자",
+    description: "직접 관리하는 HashiCorp Vault에 연결합니다."
   },
   [AppConnection.LDAP]: {
     name: "LDAP",
     image: "LDAP.png",
     size: 65,
-    category: "IDENTITY",
-    description: "Bind to an LDAP directory server."
+    category: "ID 관리",
+    description: "LDAP 디렉터리 서버에 바인딩합니다."
   },
   [AppConnection.TeamCity]: {
     name: "TeamCity",
     image: "TeamCity.png",
     category: "CI/CD",
-    description: "Project and build access for JetBrains TeamCity."
+    description: "JetBrains TeamCity 프로젝트와 빌드에 접근합니다."
   },
   [AppConnection.OCI]: {
     name: "OCI",
     image: "Oracle.png",
     enterprise: true,
-    category: "ORACLE CLOUD",
-    description: "Authenticate to Oracle Cloud Infrastructure."
+    category: "Oracle Cloud",
+    description: "Oracle Cloud Infrastructure에 인증합니다."
   },
   [AppConnection.OnePass]: {
     name: "1Password",
     image: "1Password.png",
-    category: "PASSWORD MANAGER",
-    description: "Read and manage items in 1Password vaults."
+    category: "비밀번호 관리자",
+    description: "1Password 보관함의 항목을 읽고 관리합니다."
   },
   [AppConnection.Keeper]: {
     name: "Keeper",
     image: "Keeper.png",
-    category: "PASSWORD MANAGER",
-    description: "Connect to Keeper Commander Service Mode."
+    category: "비밀번호 관리자",
+    description: "Keeper Commander 서비스 모드에 연결합니다."
   },
   [AppConnection.Heroku]: {
     name: "Heroku",
     image: "Heroku.png",
-    category: "HOSTING",
-    description: "App and config var access for Heroku."
+    category: "호스팅",
+    description: "Heroku 앱과 구성 변수에 접근합니다."
   },
   [AppConnection.Stripe]: {
     name: "Stripe",
     image: "Stripe.svg",
-    category: "PLATFORM",
-    description: "API key management for Stripe."
+    category: "플랫폼",
+    description: "Stripe API 키를 관리합니다."
   },
   [AppConnection.Render]: {
     name: "Render",
     image: "Render.png",
-    category: "HOSTING",
-    description: "Service and environment access for Render."
+    category: "호스팅",
+    description: "Render 서비스와 환경에 접근합니다."
   },
   [AppConnection.Flyio]: {
     name: "Fly.io",
     image: "Flyio.svg",
-    category: "HOSTING",
-    description: "App and secret access for Fly.io."
+    category: "호스팅",
+    description: "Fly.io 앱과 시크릿에 접근합니다."
   },
   [AppConnection.GitLab]: {
     name: "GitLab",
     image: "GitLab.png",
-    category: "VERSION CONTROL",
-    description: "Authenticate via OAuth or an access token."
+    category: "버전 관리",
+    description: "OAuth 또는 액세스 토큰으로 인증합니다."
   },
   [AppConnection.Cloudflare]: {
     name: "Cloudflare",
     image: "Cloudflare.png",
-    category: "NETWORKING",
-    description: "Manage Cloudflare account resources via API token."
+    category: "네트워크",
+    description: "API 토큰으로 Cloudflare 계정 리소스를 관리합니다."
   },
   [AppConnection.DNSMadeEasy]: {
     name: "DNS Made Easy",
     image: "DNSMadeEasy.svg",
     size: 120,
     category: "DNS",
-    description: "Manage DNS records on DNS Made Easy."
+    description: "DNS Made Easy의 DNS 레코드를 관리합니다."
   },
   [AppConnection.PowerDns]: {
     name: "PowerDNS",
     image: "PowerDNS.png",
     category: "DNS",
-    description: "Manage DNS records on a self-hosted PowerDNS server."
+    description: "직접 호스팅하는 PowerDNS 서버의 DNS 레코드를 관리합니다."
   },
   [AppConnection.UltraDNS]: {
     name: "UltraDNS",
     image: "UltraDNS.png",
     category: "DNS",
-    description: "Manage DNS records on UltraDNS."
+    description: "UltraDNS의 DNS 레코드를 관리합니다."
   },
   [AppConnection.Zabbix]: {
     name: "Zabbix",
     image: "Zabbix.png",
-    category: "MONITORING",
-    description: "Monitoring and host access for Zabbix."
+    category: "모니터링",
+    description: "Zabbix 모니터링과 호스트에 접근합니다."
   },
   [AppConnection.Railway]: {
     name: "Railway",
     image: "Railway.png",
-    category: "HOSTING",
-    description: "Project and environment access for Railway."
+    category: "호스팅",
+    description: "Railway 프로젝트와 환경에 접근합니다."
   },
   [AppConnection.Bitbucket]: {
     name: "Bitbucket",
     image: "Bitbucket.png",
-    category: "VERSION CONTROL",
-    description: "Repository and workspace access for Bitbucket."
+    category: "버전 관리",
+    description: "Bitbucket 저장소와 워크스페이스에 접근합니다."
   },
   [AppConnection.Checkly]: {
     name: "Checkly",
     image: "Checkly.png",
-    category: "MONITORING",
-    description: "Synthetic monitoring access for Checkly."
+    category: "모니터링",
+    description: "Checkly 합성 모니터링에 접근합니다."
   },
   [AppConnection.Supabase]: {
     name: "Supabase",
     image: "Supabase.png",
-    category: "PLATFORM",
-    description: "Project access for the Supabase platform."
+    category: "플랫폼",
+    description: "Supabase 플랫폼의 프로젝트에 접근합니다."
   },
   [AppConnection.DigitalOcean]: {
     name: "Digital Ocean",
     image: "Digital Ocean.png",
-    category: "CLOUD",
-    description: "Account and resource access for DigitalOcean."
+    category: "클라우드",
+    description: "DigitalOcean 계정과 리소스에 접근합니다."
   },
   [AppConnection.Netlify]: {
     name: "Netlify",
     image: "Netlify.png",
-    category: "HOSTING",
-    description: "Site and environment access for Netlify."
+    category: "호스팅",
+    description: "Netlify 사이트와 환경에 접근합니다."
   },
   [AppConnection.Northflank]: {
     name: "Northflank",
     image: "Northflank.png",
-    category: "HOSTING",
-    description: "Project and service access for Northflank."
+    category: "호스팅",
+    description: "Northflank 프로젝트와 서비스에 접근합니다."
   },
   [AppConnection.Okta]: {
     name: "Okta",
     image: "Okta.png",
-    category: "IDENTITY",
-    description: "Manage an Okta org via API token."
+    category: "ID 관리",
+    description: "API 토큰으로 Okta 조직을 관리합니다."
   },
   [AppConnection.Redis]: {
     name: "Redis",
     image: "Redis.png",
-    category: "DATABASE",
-    description: "Connect to a Redis instance."
+    category: "데이터베이스",
+    description: "Redis 인스턴스에 연결합니다."
   },
   [AppConnection.MongoDB]: {
     name: "MongoDB",
     image: "MongoDB.png",
-    category: "DATABASE",
-    description: "Connect to a MongoDB database."
+    category: "데이터베이스",
+    description: "MongoDB 데이터베이스에 연결합니다."
   },
   [AppConnection.LaravelForge]: {
     name: "Laravel Forge",
     image: "Laravel Forge.png",
     size: 65,
-    category: "HOSTING",
-    description: "Server and site access for Laravel Forge."
+    category: "호스팅",
+    description: "Laravel Forge 서버와 사이트에 접근합니다."
   },
   [AppConnection.Chef]: {
     name: "Chef",
     image: "Chef.png",
     enterprise: true,
-    category: "INFRASTRUCTURE",
-    description: "Node and data bag access for Chef Infra."
+    category: "인프라",
+    description: "Chef Infra 노드와 데이터 백에 접근합니다."
   },
   [AppConnection.OctopusDeploy]: {
     name: "Octopus Deploy",
     image: "Octopus Deploy.png",
     category: "CI/CD",
-    description: "Project and deployment access for Octopus Deploy."
+    description: "Octopus Deploy 프로젝트와 배포에 접근합니다."
   },
   [AppConnection.SSH]: {
     name: "SSH",
     image: "SSH.png",
-    category: "INFRASTRUCTURE",
-    description: "Connect to a host over SSH."
+    category: "인프라",
+    description: "SSH로 호스트에 연결합니다."
   },
   [AppConnection.Dbt]: {
     name: "DBT",
     image: "DBT.png",
-    category: "DATA",
-    description: "Account and job access for dbt."
+    category: "데이터",
+    description: "dbt 계정과 작업에 접근합니다."
   },
   [AppConnection.SMB]: {
     name: "Windows (SMB)",
     image: "SMB.png",
     size: 50,
-    category: "STORAGE",
-    description: "Connect to an SMB/CIFS file share."
+    category: "스토리지",
+    description: "SMB/CIFS 파일 공유에 연결합니다."
   },
   [AppConnection.WinRM]: {
     name: "Windows (WinRM)",
     image: "Windows.png",
-    category: "INFRASTRUCTURE",
-    description: "Connect to a Windows host over WinRM via the Gateway."
+    category: "인프라",
+    description: "게이트웨이를 통해 WinRM으로 Windows 호스트에 연결합니다."
   },
   [AppConnection.OpenRouter]: {
     name: "OpenRouter",
     image: "OpenRouter.png",
     category: "AI",
-    description: "Route requests across LLM providers."
+    description: "여러 LLM 공급자로 요청을 라우팅합니다."
   },
   [AppConnection.OpenAI]: {
     name: "OpenAI",
     image: "OpenAI.png",
     category: "AI",
-    description: "Manage OpenAI API access."
+    description: "OpenAI API 접근을 관리합니다."
   },
   [AppConnection.CircleCI]: {
     name: "CircleCI",
     image: "CircleCI.png",
     category: "CI/CD",
-    description: "Project and pipeline access for CircleCI."
+    description: "CircleCI 프로젝트와 파이프라인에 접근합니다."
   },
   [AppConnection.Cloud66]: {
     name: "Cloud 66",
     image: "Cloud 66.png",
-    category: "HOSTING",
-    description: "App and deployment access for Cloud 66."
+    category: "호스팅",
+    description: "Cloud 66 앱과 배포에 접근합니다."
   },
   [AppConnection.AzureEntraId]: {
     name: "Azure Entra ID",
     image: "Microsoft Azure.png",
-    category: "IDENTITY",
-    description: "Manage users and groups in Entra ID."
+    category: "ID 관리",
+    description: "Entra ID의 사용자와 그룹을 관리합니다."
   },
   [AppConnection.MicrosoftIntune]: {
     name: "Microsoft Intune",
     image: "Microsoft Intune.svg",
-    category: "CERTIFICATES",
+    category: "인증서",
     enterprise: true,
-    description: "Validate SCEP certificate requests with Microsoft Intune."
+    description: "Microsoft Intune으로 SCEP 인증서 요청을 검증합니다."
   },
   [AppConnection.Venafi]: {
     name: "Venafi TLS Protect Cloud",
     image: "Venafi.png",
-    category: "CERTIFICATES",
-    description: "Issue and manage certificates via Venafi Cloud."
+    category: "인증서",
+    description: "Venafi Cloud에서 인증서를 발급하고 관리합니다."
   },
   [AppConnection.VenafiTpp]: {
     name: "Venafi TPP",
     image: "Venafi.png",
-    category: "CERTIFICATES",
-    description: "Issue certificates via Venafi Trust Protection Platform."
+    category: "인증서",
+    description: "Venafi Trust Protection Platform에서 인증서를 발급합니다."
   },
   [AppConnection.ExternalInfisical]: {
     name: "Infisical",
     image: "Infisical.png",
-    category: "SECRET MANAGER",
-    description: "Connect to another Infisical instance."
+    category: "시크릿 관리자",
+    description: "외부 Infisical 인스턴스에 연결합니다."
   },
   [AppConnection.Doppler]: {
     name: "Doppler",
     image: "Doppler.png",
-    category: "SECRET MANAGER",
-    description: "Project and config access for Doppler."
+    category: "시크릿 관리자",
+    description: "Doppler 프로젝트와 구성에 접근합니다."
   },
   [AppConnection.NetScaler]: {
     name: "NetScaler",
     image: "NetScaler.png",
-    category: "NETWORKING",
-    description: "Manage a Citrix NetScaler appliance."
+    category: "네트워크",
+    description: "Citrix NetScaler 장비를 관리합니다."
   },
   [AppConnection.PaloAltoNetworks]: {
     name: "Palo Alto Networks",
     image: "Palo Alto Networks.png",
-    category: "NETWORKING",
-    description: "Connect to a Palo Alto Networks firewall or Panorama."
+    category: "네트워크",
+    description: "Palo Alto Networks 방화벽 또는 Panorama에 연결합니다."
   },
   [AppConnection.KempLoadMaster]: {
     name: "Kemp LoadMaster",
     image: "Kemp LoadMaster.png",
-    category: "NETWORKING",
-    description: "Manage a Progress Kemp LoadMaster load balancer."
+    category: "네트워크",
+    description: "Progress Kemp LoadMaster 로드 밸런서를 관리합니다."
   },
   [AppConnection.Anthropic]: {
     name: "Anthropic",
     image: "Anthropic.png",
     category: "AI",
-    description: "Manage Anthropic API access."
+    description: "Anthropic API 접근을 관리합니다."
   },
   [AppConnection.LiteLLM]: {
     name: "LiteLLM",
     image: "LiteLLM.png",
     category: "AI",
-    description: "Manage LiteLLM API access."
+    description: "LiteLLM API 접근을 관리합니다."
   },
   [AppConnection.Fireworks]: {
     name: "Fireworks",
     image: "Fireworks.png",
     category: "AI",
-    description: "Manage Fireworks API access."
+    description: "Fireworks API 접근을 관리합니다."
   },
   [AppConnection.HasuraCloud]: {
     name: "Hasura Cloud",
     image: "Hasura.svg",
-    category: "PLATFORM",
-    description: "GraphQL API and data access for Hasura Cloud."
+    category: "플랫폼",
+    description: "Hasura Cloud의 GraphQL API와 데이터에 접근합니다."
   },
   [AppConnection.OVH]: {
     name: "OVH Cloud",
     image: "OVH.png",
-    category: "CLOUD",
-    description: "Account and service access for OVHcloud."
+    category: "클라우드",
+    description: "OVHcloud 계정과 서비스에 접근합니다."
   },
   [AppConnection.Devin]: {
     name: "Devin",
     image: "Devin.png",
     size: 55,
     category: "AI",
-    description: "Manage Devin API access."
+    description: "Devin API 접근을 관리합니다."
   },
   [AppConnection.Ona]: {
     name: "Ona",
     image: "Ona.png",
     aliases: ["gitpod"],
-    category: "PLATFORM",
-    description: "Workspace access for Ona (formerly Gitpod)."
+    category: "플랫폼",
+    description: "Ona(이전 Gitpod) 워크스페이스에 접근합니다."
   },
   [AppConnection.DigiCert]: {
     name: "DigiCert",
     image: "DigiCert.png",
-    category: "CERTIFICATES",
-    description: "Issue and manage certificates via DigiCert."
+    category: "인증서",
+    description: "DigiCert에서 인증서를 발급하고 관리합니다."
   },
   [AppConnection.GoDaddy]: {
     name: "GoDaddy",
     image: "GoDaddy.png",
     category: "DNS",
-    description: "Manage DNS records on GoDaddy."
+    description: "GoDaddy의 DNS 레코드를 관리합니다."
   },
   [AppConnection.TravisCI]: {
     name: "Travis CI",
     image: "Travis CI.png",
     category: "CI/CD",
-    description: "Repository and build access for Travis CI."
+    description: "Travis CI 저장소와 빌드에 접근합니다."
   },
   [AppConnection.Salesforce]: {
     name: "Salesforce",
     image: "Salesforce.png",
     category: "CRM",
-    description: "Org access via connected app client credentials."
+    description: "연결된 앱의 클라이언트 인증 정보로 조직에 접근합니다."
   },
   [AppConnection.Snowflake]: {
     name: "Snowflake",
     image: "Snowflake.png",
-    category: "DATA",
-    description: "Connect to a Snowflake data warehouse."
+    category: "데이터",
+    description: "Snowflake 데이터 웨어하우스에 연결합니다."
   },
   [AppConnection.Datadog]: {
     name: "Datadog",
     image: "DatadogWhite.png",
-    category: "MONITORING",
-    description: "Metrics and monitoring access for Datadog."
+    category: "모니터링",
+    description: "Datadog 지표와 모니터링에 접근합니다."
   },
   [AppConnection.F5BigIp]: {
     name: "F5 BIG-IP",
     image: "F5 BIG-IP.png",
-    category: "NETWORKING",
-    description: "Manage an F5 BIG-IP appliance."
+    category: "네트워크",
+    description: "F5 BIG-IP 장비를 관리합니다."
   },
   [AppConnection.HpeIloRedFish]: {
     name: "HPE iLO",
     image: "HPE iLO.png",
-    category: "INFRASTRUCTURE",
-    description: "Manage an HPE iLO server through the Redfish API."
+    category: "인프라",
+    description: "Redfish API로 HPE iLO 서버를 관리합니다."
   },
   [AppConnection.Convex]: {
     name: "Convex",
     image: "Convex.png",
-    category: "PLATFORM",
-    description: "Project and deployment access for Convex."
+    category: "플랫폼",
+    description: "Convex 프로젝트와 배포에 접근합니다."
   },
   [AppConnection.Qovery]: {
     name: "Qovery",
     image: "Qovery.png",
-    category: "HOSTING",
-    description: "Deploy and manage applications on Qovery."
+    category: "호스팅",
+    description: "Qovery에서 애플리케이션을 배포하고 관리합니다."
   },
   [AppConnection.TriggerDev]: {
     name: "Trigger.dev",
     image: "TriggerDev.png",
-    category: "INFRASTRUCTURE",
-    description: "Trigger.dev access."
+    category: "인프라",
+    description: "Trigger.dev에 접근합니다."
   },
   [AppConnection.Rundeck]: {
     name: "Rundeck",
     image: "Rundeck.svg",
-    category: "INFRASTRUCTURE",
-    description: "Job and project access for Rundeck."
+    category: "인프라",
+    description: "Rundeck 작업과 프로젝트에 접근합니다."
   },
   [AppConnection.Portainer]: {
     name: "Portainer",
     image: "Portainer.png",
-    category: "INFRASTRUCTURE",
-    description: "Stack and environment access for Portainer."
+    category: "인프라",
+    description: "Portainer 스택과 환경에 접근합니다."
   },
   [AppConnection.NutanixPrismCentral]: {
     name: "Nutanix Prism Central",
     image: "Nutanix.png",
-    category: "INFRASTRUCTURE",
-    description: "Manage a Nutanix Prism Central instance."
+    category: "인프라",
+    description: "Nutanix Prism Central 인스턴스를 관리합니다."
   },
   [AppConnection.Spacelift]: {
     name: "Spacelift",
     image: "Spacelift.png",
-    category: "INFRASTRUCTURE",
-    description: "Sync and manage resources with Spacelift."
+    category: "인프라",
+    description: "Spacelift 리소스를 동기화하고 관리합니다."
   },
   [AppConnection.Daytona]: {
     name: "Daytona",
     image: "Daytona.png",
-    category: "PLATFORM",
-    description: "Organization secret access for Daytona sandboxes."
+    category: "플랫폼",
+    description: "Daytona 샌드박스의 조직 시크릿에 접근합니다."
   },
   [AppConnection.S3Compatible]: {
-    name: "S3-Compatible Storage",
+    name: "S3 호환 스토리지",
     image: "S3 Compatible.svg",
     aliases: ["aws s3", "cloudflare r2", "google cloud storage", "gcs", "oracle", "oci"],
-    category: "STORAGE",
-    description: "Connect to AWS S3, Cloudflare R2, Google Cloud Storage or OCI Object Storage."
+    category: "스토리지",
+    description: "AWS S3, Cloudflare R2, Google Cloud Storage 또는 OCI Object Storage에 연결합니다."
   }
 };
 
@@ -759,7 +759,7 @@ export const getAppConnectionMethodDetails = (method: TAppConnection["method"]) 
       return { name: "GitHub App", icon: GithubIcon };
     case GitHubConnectionMethod.Pat:
     case OnaConnectionMethod.PersonalAccessToken:
-      return { name: "Personal Access Token", icon: KeyRoundIcon };
+      return { name: "개인 액세스 토큰", icon: KeyRoundIcon };
     case AzureKeyVaultConnectionMethod.OAuth:
     case AzureAppConfigurationConnectionMethod.OAuth:
     case AzureClientSecretsConnectionMethod.OAuth:
@@ -773,15 +773,15 @@ export const getAppConnectionMethodDetails = (method: TAppConnection["method"]) 
     case AwsConnectionMethod.AccessKey:
     case OCIConnectionMethod.AccessKey:
     case S3CompatibleConnectionMethod.AccessKey:
-      return { name: "Access Key", icon: KeyRoundIcon };
+      return { name: "액세스 키", icon: KeyRoundIcon };
     case AwsConnectionMethod.AssumeRole:
-      return { name: "Assume Role", icon: UserIcon };
+      return { name: "역할 수임", icon: UserIcon };
     case GcpConnectionMethod.ServiceAccountImpersonation:
-      return { name: "Service Account Impersonation", icon: UserIcon };
+      return { name: "서비스 계정 가장", icon: UserIcon };
     case DatabricksConnectionMethod.ServicePrincipal:
-      return { name: "Service Principal", icon: UserIcon };
+      return { name: "서비스 주체", icon: UserIcon };
     case CamundaConnectionMethod.ClientCredentials:
-      return { name: "Client Credentials", icon: KeyRoundIcon };
+      return { name: "클라이언트 인증 정보", icon: KeyRoundIcon };
     case HumanitecConnectionMethod.ApiToken:
     case TerraformCloudConnectionMethod.ApiToken:
     case VercelConnectionMethod.ApiToken:
@@ -799,9 +799,9 @@ export const getAppConnectionMethodDetails = (method: TAppConnection["method"]) 
     case DopplerConnectionMethod.ApiToken:
     case RundeckConnectionMethod.ApiToken:
     case PortainerConnectionMethod.ApiToken:
-      return { name: "API Token", icon: KeyRoundIcon };
+      return { name: "API 토큰", icon: KeyRoundIcon };
     case VenafiConnectionMethod.ApiKey:
-      return { name: "API Key", icon: KeyRoundIcon };
+      return { name: "API 키", icon: KeyRoundIcon };
     case PostgresConnectionMethod.UsernameAndPassword:
     case MsSqlConnectionMethod.UsernameAndPassword:
     case MySqlConnectionMethod.UsernameAndPassword:
@@ -811,9 +811,9 @@ export const getAppConnectionMethodDetails = (method: TAppConnection["method"]) 
     case RedisConnectionMethod.UsernameAndPassword:
     case MongoDBConnectionMethod.UsernameAndPassword:
     case UltraDNSConnectionMethod.UsernamePassword:
-      return { name: "Username & Password", icon: LockIcon };
+      return { name: "사용자 이름 및 비밀번호", icon: LockIcon };
     case SnowflakeConnectionMethod.UsernameAndToken:
-      return { name: "Username & Token", icon: KeyRoundIcon };
+      return { name: "사용자 이름 및 토큰", icon: KeyRoundIcon };
     case HCVaultConnectionMethod.AccessToken:
     case TeamCityConnectionMethod.AccessToken:
     case AzureDevOpsConnectionMethod.AccessToken:
@@ -824,23 +824,23 @@ export const getAppConnectionMethodDetails = (method: TAppConnection["method"]) 
     case HasuraCloudConnectionMethod.AccessToken:
     case QoveryConnectionMethod.AccessToken:
     case Cloud66ConnectionMethod.AccessToken:
-      return { name: "Personal Access Token", icon: KeyRoundIcon };
+      return { name: "개인 액세스 토큰", icon: KeyRoundIcon };
     case Auth0ConnectionMethod.ClientCredentials:
     case SalesforceConnectionMethod.ClientCredentials:
-      return { name: "Client Credentials", icon: ServerIcon };
+      return { name: "클라이언트 인증 정보", icon: ServerIcon };
     case HCVaultConnectionMethod.AppRole:
-      return { name: "App Role", icon: UserIcon };
+      return { name: "앱 역할", icon: UserIcon };
     case LdapConnectionMethod.SimpleBind:
-      return { name: "Simple Bind", icon: LinkIcon };
+      return { name: "단순 바인딩", icon: LinkIcon };
     case HerokuConnectionMethod.AuthToken:
-      return { name: "Auth Token", icon: KeyRoundIcon };
+      return { name: "인증 토큰", icon: KeyRoundIcon };
     case RailwayConnectionMethod.AccountToken:
     case SupabaseConnectionMethod.AccessToken:
-      return { name: "Account Token", icon: KeyRoundIcon };
+      return { name: "계정 토큰", icon: KeyRoundIcon };
     case RailwayConnectionMethod.TeamToken:
-      return { name: "Team Token", icon: KeyRoundIcon };
+      return { name: "팀 토큰", icon: KeyRoundIcon };
     case RailwayConnectionMethod.ProjectToken:
-      return { name: "Project Token", icon: KeyRoundIcon };
+      return { name: "프로젝트 토큰", icon: KeyRoundIcon };
     case RenderConnectionMethod.ApiKey:
     case ChecklyConnectionMethod.ApiKey:
     case OpenRouterConnectionMethod.ApiKey:
@@ -856,84 +856,84 @@ export const getAppConnectionMethodDetails = (method: TAppConnection["method"]) 
     case DaytonaConnectionMethod.ApiKey:
     case PowerDnsConnectionMethod.ApiKey:
     case KeeperConnectionMethod.ApiKey:
-      return { name: "API Key", icon: KeyRoundIcon };
+      return { name: "API 키", icon: KeyRoundIcon };
     case ChefConnectionMethod.UserKey:
-      return { name: "User Key", icon: KeyRoundIcon };
+      return { name: "사용자 키", icon: KeyRoundIcon };
     case AzureClientSecretsConnectionMethod.ClientSecret:
     case AzureAppConfigurationConnectionMethod.ClientSecret:
     case AzureKeyVaultConnectionMethod.ClientSecret:
     case AzureDevOpsConnectionMethod.ClientSecret:
-      return { name: "Client Secret", icon: KeyRoundIcon };
+      return { name: "클라이언트 시크릿", icon: KeyRoundIcon };
     case AzureClientSecretsConnectionMethod.Certificate:
     case AzureKeyVaultConnectionMethod.Certificate:
-      return { name: "Certificate", icon: FileBadgeIcon };
+      return { name: "인증서", icon: FileBadgeIcon };
     case DNSMadeEasyConnectionMethod.APIKeySecret:
     case SpaceliftConnectionMethod.ApiKeySecret:
-      return { name: "API Key & Secret", icon: KeyRoundIcon };
+      return { name: "API 키 및 시크릿", icon: KeyRoundIcon };
     case AzureDNSConnectionMethod.ClientSecret:
     case AzureEntraIdConnectionMethod.ClientSecret:
     case MicrosoftIntuneConnectionMethod.ClientSecret:
-      return { name: "Client Secret", icon: KeyRoundIcon };
+      return { name: "클라이언트 시크릿", icon: KeyRoundIcon };
     case OctopusDeployConnectionMethod.ApiKey:
-      return { name: "API Key", icon: KeyRoundIcon };
+      return { name: "API 키", icon: KeyRoundIcon };
     case DatadogConnectionMethod.Token:
-      return { name: "Service Access Token", icon: KeyRoundIcon };
+      return { name: "서비스 액세스 토큰", icon: KeyRoundIcon };
     case SshConnectionMethod.Password:
-      return { name: "Password", icon: LockIcon };
+      return { name: "비밀번호", icon: LockIcon };
     case SshConnectionMethod.SshKey:
-      return { name: "SSH Key", icon: KeyRoundIcon };
+      return { name: "SSH 키", icon: KeyRoundIcon };
     case SmbConnectionMethod.Credentials:
-      return { name: "Credentials", icon: LockIcon };
+      return { name: "인증 정보", icon: LockIcon };
     case WinRMConnectionMethod.UsernamePassword:
-      return { name: "Username & Password", icon: LockIcon };
+      return { name: "사용자 이름 및 비밀번호", icon: LockIcon };
     case ExternalInfisicalConnectionMethod.MachineIdentityUniversalAuth:
-      return { name: "Machine Identity - Universal Auth", icon: KeyRoundIcon };
+      return { name: "머신 ID - Universal Auth", icon: KeyRoundIcon };
     case NetScalerConnectionMethod.BasicAuth:
     case PaloAltoNetworksConnectionMethod.BasicAuth:
     case KempLoadMasterConnectionMethod.BasicAuth:
     case NutanixPrismCentralConnectionMethod.BasicAuth:
     case F5BigIpConnectionMethod.BasicAuth:
     case HpeIloConnectionMethod.BasicAuth:
-      return { name: "Basic Auth", icon: LockIcon };
+      return { name: "기본 인증", icon: LockIcon };
     case NutanixPrismCentralConnectionMethod.ApiKey:
-      return { name: "API Key", icon: KeyRoundIcon };
+      return { name: "API 키", icon: KeyRoundIcon };
     case OVHConnectionMethod.Certificate:
-      return { name: "Certificate", icon: FileBadgeIcon };
+      return { name: "인증서", icon: FileBadgeIcon };
     default:
-      throw new Error(`Unhandled App Connection Method: ${method}`);
+      throw new Error(`지원되지 않는 앱 연결 방식: ${method}`);
   }
 };
 
 export const AWS_REGIONS = [
-  { name: "US East (Ohio)", slug: "us-east-2" },
-  { name: "US East (N. Virginia)", slug: "us-east-1" },
-  { name: "US West (N. California)", slug: "us-west-1" },
-  { name: "US West (Oregon)", slug: "us-west-2" },
-  { name: "Africa (Cape Town)", slug: "af-south-1" },
-  { name: "Asia Pacific (Hong Kong)", slug: "ap-east-1" },
-  { name: "Asia Pacific (Hyderabad)", slug: "ap-south-2" },
-  { name: "Asia Pacific (Jakarta)", slug: "ap-southeast-3" },
-  { name: "Asia Pacific (Melbourne)", slug: "ap-southeast-4" },
-  { name: "Asia Pacific (Mumbai)", slug: "ap-south-1" },
-  { name: "Asia Pacific (Osaka)", slug: "ap-northeast-3" },
-  { name: "Asia Pacific (Seoul)", slug: "ap-northeast-2" },
-  { name: "Asia Pacific (Singapore)", slug: "ap-southeast-1" },
-  { name: "Asia Pacific (Sydney)", slug: "ap-southeast-2" },
-  { name: "Asia Pacific (Tokyo)", slug: "ap-northeast-1" },
-  { name: "Canada (Central)", slug: "ca-central-1" },
-  { name: "Europe (Frankfurt)", slug: "eu-central-1" },
-  { name: "Europe (Ireland)", slug: "eu-west-1" },
-  { name: "Europe (London)", slug: "eu-west-2" },
-  { name: "Europe (Milan)", slug: "eu-south-1" },
-  { name: "Europe (Paris)", slug: "eu-west-3" },
-  { name: "Europe (Spain)", slug: "eu-south-2" },
-  { name: "Europe (Stockholm)", slug: "eu-north-1" },
-  { name: "Europe (Zurich)", slug: "eu-central-2" },
-  { name: "Middle East (Bahrain)", slug: "me-south-1" },
-  { name: "Middle East (UAE)", slug: "me-central-1" },
-  { name: "South America (Sao Paulo)", slug: "sa-east-1" },
-  { name: "AWS GovCloud (US-East)", slug: "us-gov-east-1" },
-  { name: "AWS GovCloud (US-West)", slug: "us-gov-west-1" }
+  { name: "미국 동부(오하이오)", slug: "us-east-2" },
+  { name: "미국 동부(버지니아 북부)", slug: "us-east-1" },
+  { name: "미국 서부(캘리포니아 북부)", slug: "us-west-1" },
+  { name: "미국 서부(오리건)", slug: "us-west-2" },
+  { name: "아프리카(케이프타운)", slug: "af-south-1" },
+  { name: "아시아 태평양(홍콩)", slug: "ap-east-1" },
+  { name: "아시아 태평양(하이데라바드)", slug: "ap-south-2" },
+  { name: "아시아 태평양(자카르타)", slug: "ap-southeast-3" },
+  { name: "아시아 태평양(멜버른)", slug: "ap-southeast-4" },
+  { name: "아시아 태평양(뭄바이)", slug: "ap-south-1" },
+  { name: "아시아 태평양(오사카)", slug: "ap-northeast-3" },
+  { name: "아시아 태평양(서울)", slug: "ap-northeast-2" },
+  { name: "아시아 태평양(싱가포르)", slug: "ap-southeast-1" },
+  { name: "아시아 태평양(시드니)", slug: "ap-southeast-2" },
+  { name: "아시아 태평양(도쿄)", slug: "ap-northeast-1" },
+  { name: "캐나다(중부)", slug: "ca-central-1" },
+  { name: "유럽(프랑크푸르트)", slug: "eu-central-1" },
+  { name: "유럽(아일랜드)", slug: "eu-west-1" },
+  { name: "유럽(런던)", slug: "eu-west-2" },
+  { name: "유럽(밀라노)", slug: "eu-south-1" },
+  { name: "유럽(파리)", slug: "eu-west-3" },
+  { name: "유럽(스페인)", slug: "eu-south-2" },
+  { name: "유럽(스톡홀름)", slug: "eu-north-1" },
+  { name: "유럽(취리히)", slug: "eu-central-2" },
+  { name: "중동(바레인)", slug: "me-south-1" },
+  { name: "중동(아랍에미리트)", slug: "me-central-1" },
+  { name: "남아메리카(상파울루)", slug: "sa-east-1" },
+  { name: "AWS GovCloud(미국 동부)", slug: "us-gov-east-1" },
+  { name: "AWS GovCloud(미국 서부)", slug: "us-gov-west-1" }
 ];
 
 export const CSRF_TOKEN_STORAGE_KEY = "latestCSRFToken";

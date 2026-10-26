@@ -93,17 +93,17 @@ export const WorkflowIntegrationTab = withProjectPermission(
       handlePopUpClose("removeIntegration");
       createNotification({
         type: "success",
-        text: `Removed ${removeIntegrationLabel} integration from this project`
+        text: `프로젝트에서 연동 제거 완료: ${removeIntegrationLabel} 연동`
       });
     };
 
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Workflow Integrations</CardTitle>
+          <CardTitle>워크플로 연동</CardTitle>
           <CardDescription>
-            Send notifications for access requests, secret approval requests, and secret sync errors
-            to Slack or Microsoft Teams.
+            접근 요청, 시크릿 승인 요청, 시크릿 동기화 오류 알림을 Slack 또는 Microsoft Teams로
+            보내세요.
           </CardDescription>
           <CardAction>
             <ProjectPermissionCan
@@ -118,7 +118,7 @@ export const WorkflowIntegrationTab = withProjectPermission(
                   isDisabled={!isAllowed}
                 >
                   <Plus />
-                  Add integration
+                  연동 추가
                 </Button>
               )}
             </ProjectPermissionCan>
@@ -128,10 +128,10 @@ export const WorkflowIntegrationTab = withProjectPermission(
           {!isConfigLoading && !hasConfiguredIntegration ? (
             <Empty className="border">
               <EmptyHeader>
-                <EmptyTitle>No workflow integrations configured</EmptyTitle>
+                <EmptyTitle>구성된 워크플로 연동이 없습니다</EmptyTitle>
                 <EmptyDescription>
-                  Add a workflow integration to send this project&apos;s notifications to Slack or
-                  Microsoft Teams.
+                  이 프로젝트의 알림을 Slack 또는 Microsoft Teams로 보내려면 워크플로 연동을
+                  추가하세요.
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -139,11 +139,11 @@ export const WorkflowIntegrationTab = withProjectPermission(
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-1/5">Provider</TableHead>
-                  <TableHead>Access request notifications</TableHead>
-                  <TableHead>Secret request notifications</TableHead>
-                  <TableHead>Secret sync error notifications</TableHead>
-                  <TableHead className="w-px text-right" aria-label="Actions" />
+                  <TableHead className="w-1/5">공급자</TableHead>
+                  <TableHead>접근 요청 알림</TableHead>
+                  <TableHead>시크릿 요청 알림</TableHead>
+                  <TableHead>시크릿 동기화 오류 알림</TableHead>
+                  <TableHead className="w-px text-right" aria-label="작업" />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -188,17 +188,17 @@ export const WorkflowIntegrationTab = withProjectPermission(
                 <Trash2 />
               </AlertDialogMedia>
               <AlertDialogTitle>
-                Remove {removeIntegrationLabel} integration from this project?
+                제거 {removeIntegrationLabel} 연동을 이 프로젝트에서 제거하시겠습니까?
               </AlertDialogTitle>
               <AlertDialogDescription>
-                This project will stop sending notifications to {removeIntegrationLabel}. You can
-                add the integration again later.
+                이 프로젝트는 다음으로 알림을 보내지 않습니다: {removeIntegrationLabel}. 나중에 다시
+                연동을 추가할 수 있습니다.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>취소</AlertDialogCancel>
               <AlertDialogAction variant="danger" onClick={handleRemoveIntegration}>
-                Remove
+                제거
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

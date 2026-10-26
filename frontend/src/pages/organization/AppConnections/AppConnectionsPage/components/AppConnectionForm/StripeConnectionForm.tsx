@@ -51,7 +51,7 @@ const formSchema = genericAppConnectionFieldsSchema.extend({
   app: z.literal(AppConnection.Stripe),
   method: z.literal(StripeConnectionMethod.OAuth),
   credentials: z.object({
-    code: z.string().min(1, "Code is required")
+    code: z.string().min(1, "코드를 입력하세요")
   })
 });
 
@@ -93,9 +93,9 @@ export const StripeConnectionForm = ({ appConnection, projectId }: Props) => {
 
   const isMissingConfig = !oauthClientId;
 
-  let submitLabel = "Connect to Stripe";
-  if (isRedirecting) submitLabel = "Redirecting to Stripe...";
-  else if (isUpdate) submitLabel = "Reconnect to Stripe";
+  let submitLabel = "Stripe에 연결";
+  if (isRedirecting) submitLabel = "Stripe로 이동하는 중...";
+  else if (isUpdate) submitLabel = "Stripe에 다시 연결";
 
   const onSubmit = (formData: FormData) => {
     if (!oauthClientId || !oauthAuthorizeUrl) return;
@@ -139,21 +139,21 @@ export const StripeConnectionForm = ({ appConnection, projectId }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.Stripe].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(StripeConnectionMethod).map((method) => {
@@ -172,10 +172,10 @@ export const StripeConnectionForm = ({ appConnection, projectId }: Props) => {
 
         {!isLoading && isMissingConfig && (
           <p className="mb-4 text-sm text-danger">
-            Environment variables have not been configured.{" "}
+            환경 변수가 구성되지 않았습니다.{" "}
             {isInfisicalCloud()
-              ? "Please contact Infisical."
-              : "See Docs to configure Stripe Connections."}
+              ? "Keydesk 관리자에게 문의하세요."
+              : "문서를 확인해 Stripe 연결을 구성하세요."}
           </p>
         )}
 
@@ -194,7 +194,7 @@ export const StripeConnectionForm = ({ appConnection, projectId }: Props) => {
             onClick={onCancel}
             isDisabled={isSubmitting || isRedirecting}
           >
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

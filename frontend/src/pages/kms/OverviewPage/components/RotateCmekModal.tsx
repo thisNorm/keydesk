@@ -42,10 +42,10 @@ export const RotateCmekModal = ({ isOpen, onOpenChange, cmek }: Props) => {
             <TriangleAlertIcon />
             <AlertDescription>
               <p>
-                <strong>Data encrypted outside Infisical may be affected</strong>
+                <strong>Data encrypted outside Keydesk may be affected</strong>
               </p>
               <p>
-                Data encrypted through Infisical stays decryptable. However, any system that holds
+                Data encrypted through Keydesk stays decryptable. However, any system that holds
                 this key&apos;s material directly, such as a KMIP client or an exported copy of the
                 key, will receive the new material and may be unable to decrypt data it encrypted
                 with the previous version. Do not rotate a key that is in use over KMIP.

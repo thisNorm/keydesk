@@ -54,7 +54,7 @@ const initialSyncBehaviors = [
     value: IntegrationSyncBehavior.OVERWRITE_TARGET
   },
   {
-    label: "Import - Prefer values from Infisical",
+    label: "Import - Prefer values from Keydesk",
     value: IntegrationSyncBehavior.PREFER_SOURCE
   }
 ];
@@ -190,14 +190,14 @@ export const VercelConfigurePage = () => {
             <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/vercel" />
           </CardTitle>
           <CardDescription>
-            Select which environment or folder in Infisical you want to sync to Vercel&apos;s
+            Select which environment or folder in Keydesk you want to sync to Vercel&apos;s
             environment variables.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <Field>
             <FieldLabel htmlFor="VercelConfigurePage-field-1">
-              Infisical Project Environment
+              Keydesk Project Environment
             </FieldLabel>
             <Select
               value={selectedSourceEnvironment}
@@ -372,7 +372,7 @@ export const VercelConfigurePage = () => {
         <AlertTitle>Pro Tip</AlertTitle>
         <AlertDescription>
           After creating an integration, your secrets will start syncing immediately. This might
-          cause an unexpected override of current secrets in Vercel with secrets from Infisical.
+          cause an unexpected override of current secrets in Vercel with secrets from Keydesk.
         </AlertDescription>
       </Alert>
     </div>
@@ -383,10 +383,11 @@ export const VercelConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

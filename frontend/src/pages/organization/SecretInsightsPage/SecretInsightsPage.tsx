@@ -135,8 +135,8 @@ export const SecretInsightsPage = withPermission(
     return (
       <>
         <Helmet>
-          <title>Secret Insights | Infisical</title>
-          <link rel="icon" href="/infisical.ico" />
+          <title>Secret Insights | Keydesk</title>
+          <link rel="icon" href="/keydesk.svg" />
         </Helmet>
         <div>
           <div className="mx-auto w-full max-w-8xl bg-page text-foreground-inverse">

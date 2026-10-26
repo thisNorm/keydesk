@@ -206,13 +206,13 @@ export const QoveryConfigurePage = () => {
             <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/qovery" />
           </CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync to Checkly environment variables.
+            Choose which environment in Keydesk you want to sync to Checkly environment variables.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue={TabSections.InfisicalSettings}>
             <TabsList variant="project">
-              <TabsTrigger value={TabSections.InfisicalSettings}>Infisical Settings</TabsTrigger>
+              <TabsTrigger value={TabSections.InfisicalSettings}>Keydesk Settings</TabsTrigger>
               <TabsTrigger value={TabSections.QoverySettings}>Qovery Settings</TabsTrigger>
             </TabsList>
             <TabsContent value={TabSections.InfisicalSettings}>
@@ -226,7 +226,7 @@ export const QoveryConfigurePage = () => {
               >
                 <Field>
                   <FieldLabel htmlFor="QoveryConfigurePage-field-1">
-                    Infisical Project Environment
+                    Keydesk Project Environment
                   </FieldLabel>
                   <Select
                     value={selectedSourceEnvironment}
@@ -447,7 +447,7 @@ export const QoveryConfigurePage = () => {
       {/* <div className="border-t border-border-faint w-full max-w-md mt-6"/>
       <div className="flex flex-col bg-surface-raised border border-border-control w-full p-4 max-w-lg mt-6 rounded-md">
         <div className="flex flex-row items-center"><FontAwesomeIcon icon={faCircleInfo} className="text-foreground-secondary text-xl"/> <span className="ml-3 text-md text-foreground">Pro Tip</span></div>
-        <span className="text-label text-sm mt-4">After creating an integration, your secrets will start syncing immediately. This might cause an unexpected override of current secrets in Qovery with secrets from Infisical.</span>
+        <span className="text-label text-sm mt-4">After creating an integration, your secrets will start syncing immediately. This might cause an unexpected override of current secrets in Qovery with secrets from Keydesk.</span>
       </div> */}
     </div>
   ) : (
@@ -457,10 +457,11 @@ export const QoveryConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

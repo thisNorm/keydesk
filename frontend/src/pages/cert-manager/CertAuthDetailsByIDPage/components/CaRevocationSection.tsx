@@ -277,7 +277,7 @@ export const CaRevocationSection = ({ caId }: Props) => {
                               <Badge variant="info">Enterprise</Badge>
                             </TooltipTrigger>
                             <TooltipContent className="max-w-xs">
-                              OCSP is available on Infisical&apos;s Enterprise plan.
+                              OCSP를 사용하려면 해당 기능이 포함된 라이선스가 필요합니다.
                             </TooltipContent>
                           </Tooltip>
                         )}
@@ -305,7 +305,7 @@ export const CaRevocationSection = ({ caId }: Props) => {
                     <FieldContent>
                       <FieldLabel>Disable managed CRL URL</FieldLabel>
                       <FieldDescription>
-                        When enabled, the Infisical-managed CRL endpoint is not embedded in issued
+                        When enabled, the Keydesk-managed CRL endpoint is not embedded in issued
                         certificates. Only the mirror URLs below are included.
                       </FieldDescription>
                     </FieldContent>

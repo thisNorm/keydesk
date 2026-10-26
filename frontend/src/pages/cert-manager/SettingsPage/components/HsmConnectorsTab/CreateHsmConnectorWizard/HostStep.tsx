@@ -91,7 +91,7 @@ export const HostStep = ({ form }: Props) => {
                 >
                   Gateway
                 </a>{" "}
-                is a lightweight agent that performs HSM operations on Infisical&apos;s behalf. It
+                is a lightweight agent that performs HSM operations on Keydesk&apos;s behalf. It
                 runs inside your network and handles the communication with your HSM.
               </FieldDescription>
               <FieldError errors={[error]} />

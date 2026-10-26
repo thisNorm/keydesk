@@ -140,7 +140,7 @@ export const LiteLLMApiKeyRotationParametersFields = () => {
             <Field data-invalid={Boolean(error)}>
               <FieldLabelWithTooltip
                 htmlFor="litellm-key-name"
-                tooltip="A descriptive name for the generated key. Infisical appends a timestamp so each rotated key stays unique and records its creation time."
+                tooltip="A descriptive name for the generated key. Keydesk appends a timestamp so each rotated key stays unique and records its creation time."
               >
                 Key Name
               </FieldLabelWithTooltip>
@@ -270,7 +270,7 @@ export const LiteLLMApiKeyRotationParametersFields = () => {
           defaultValue={DEFAULT_LITELLM_OPTIONS}
           render={({ field, fieldState: { error } }) => (
             <Field data-invalid={Boolean(error)}>
-              <FieldLabelWithTooltip tooltip="Common fields: max_budget (number), tpm_limit / rpm_limit (numbers), metadata (object). user_id, team_id and models are set on the general tab; key_alias, auto_rotate, rotation_interval, duration, send_invite_email and key_type are managed by Infisical and cannot be set here.">
+              <FieldLabelWithTooltip tooltip="Common fields: max_budget (number), tpm_limit / rpm_limit (numbers), metadata (object). user_id, team_id and models are set on the general tab; key_alias, auto_rotate, rotation_interval, duration, send_invite_email and key_type are managed by Keydesk and cannot be set here.">
                 Additional Key Options (JSON){" "}
                 <span className="font-normal text-muted">(optional)</span>
               </FieldLabelWithTooltip>

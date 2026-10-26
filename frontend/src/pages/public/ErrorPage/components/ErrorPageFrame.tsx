@@ -43,7 +43,7 @@ type Props = {
 
 // Shared shell for the full-page error/status family (ErrorPage, ForbiddenPage, NotFoundPage,
 // ProjectAccessError): vault backdrop, two-column card, badge + heading + actions on the left,
-// "What We Know" status column on the right.
+// "현재 상태" status column on the right.
 export const ErrorPageFrame = ({
   helmetTitle,
   badgeIcon,
@@ -62,7 +62,7 @@ export const ErrorPageFrame = ({
   // the full-screen vault backdrop doesn't fit
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [copyLabel, isCopied, setCopyLabel] = useTimedReset<string>({
-    initialState: "Copy Report"
+    initialState: "오류 보고서 복사"
   });
 
   useLayoutEffect(() => {
@@ -76,14 +76,14 @@ export const ErrorPageFrame = ({
     ...statusRows,
     {
       icon: <MonitorCheckIcon />,
-      label: "Dashboard",
-      state: "Operational",
+      label: "대시보드",
+      state: "정상 작동",
       tone: "success"
     },
     {
       icon: <ShieldCheckIcon />,
-      label: "Your secrets",
-      state: "Encrypted & safe",
+      label: "나의 시크릿",
+      state: "암호화하여 보관",
       tone: "success"
     }
   ];
@@ -103,7 +103,7 @@ export const ErrorPageFrame = ({
       {isFullScreen && <AuthPageBackground />}
       <Card className="relative z-10 grid w-full max-w-5xl gap-0 overflow-hidden p-0 lg:grid-cols-[1fr_26rem]">
         <div className="flex flex-col p-8">
-          <img alt="Infisical" src="/images/logotransparent.png" className="h-5 self-start" />
+          <img alt="Keydesk" src="/images/keydesk-wordmark.svg" className="h-7 self-start" />
           <div className="mt-6 flex flex-col items-start gap-5">
             <Badge variant="warning" className="h-6 px-2">
               {badgeIcon}
@@ -113,23 +113,16 @@ export const ErrorPageFrame = ({
             <p className="max-w-md text-sm leading-relaxed text-accent">{description}</p>
             <div className="flex flex-wrap items-center gap-2.5">{actions}</div>
             <p className="text-xs text-muted">
-              Still stuck? Email{" "}
-              <a
-                className="underline underline-offset-4 hover:text-foreground"
-                href="mailto:support@infisical.com"
-              >
-                support@infisical.com
-              </a>{" "}
-              or{" "}
+              문제가 계속되면 오류 보고서를 복사해{" "}
               <a
                 className="underline underline-offset-4 hover:text-foreground"
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://community.infisical.com"
+                href="https://github.com/thisNorm/keydesk/issues"
               >
-                join the community forum
+                Keydesk 이슈
               </a>
-              .
+              에 남겨 주세요.
             </p>
           </div>
         </div>
@@ -137,14 +130,14 @@ export const ErrorPageFrame = ({
           <div className="flex items-center justify-between gap-2 border-b border-border py-4 pr-5 pl-6">
             <div className="flex items-center gap-2.5 text-muted">
               <ActivityIcon className="size-4" />
-              <span className="text-xs font-medium tracking-[0.2em] uppercase">What We Know</span>
+              <span className="text-xs font-medium tracking-[0.2em] uppercase">현재 상태</span>
             </div>
             <Button
               variant="outline"
               size="xs"
               onClick={() => {
                 navigator.clipboard.writeText(report).then(() => {
-                  setCopyLabel("Copied");
+                  setCopyLabel("복사됨");
                 });
               }}
             >

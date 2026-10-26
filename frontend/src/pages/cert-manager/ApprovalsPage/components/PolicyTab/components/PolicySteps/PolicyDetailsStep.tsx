@@ -71,7 +71,7 @@ export const PolicyDetailsStep = ({ applicationId }: Props) => {
             if (axios.isAxiosError<{ message?: unknown }>(error)) {
               if (!error.response) {
                 message =
-                  "The profile was created, but no response was received for the attachment request. Check your connection to Infisical, then retry.";
+                  "The profile was created, but no response was received for the attachment request. Check your connection to Keydesk, then retry.";
               } else if (typeof error.response.data?.message === "string") {
                 const apiMessage = error.response.data.message.trim();
                 if (apiMessage) {

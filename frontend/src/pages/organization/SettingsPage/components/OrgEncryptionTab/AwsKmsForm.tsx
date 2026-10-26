@@ -354,7 +354,7 @@ export const AwsKmsForm = ({
                         placeholder="arn:aws:iam::123456789012:role/InfisicalKms"
                       />
                       <FieldDescription>
-                        The role Infisical assumes to access AWS KMS.
+                        The role Keydesk assumes to access AWS KMS.
                       </FieldDescription>
                       <FieldError>{error?.message}</FieldError>
                     </Field>

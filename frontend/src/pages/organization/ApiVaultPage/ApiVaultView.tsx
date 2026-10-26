@@ -760,7 +760,7 @@ export const ApiVaultView = ({
         </p>
         <p className="inline-flex items-center gap-1.5">
           <ShieldCheckIcon className="size-3" aria-hidden />
-          키는 필요할 때만 표시 <span aria-hidden>·</span> Infisical 기반
+          키는 필요할 때만 표시 <span aria-hidden>·</span> Keydesk
         </p>
       </footer>
       {selected && !editor && (

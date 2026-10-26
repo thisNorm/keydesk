@@ -170,7 +170,7 @@ export const CertificateProfileDetailsByIDPage = () => {
     <>
       <Helmet>
         <title>Certificate Profile</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <Page />
     </>

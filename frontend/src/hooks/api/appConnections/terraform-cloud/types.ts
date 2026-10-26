@@ -46,11 +46,11 @@ export enum TerraformCloudSyncCategory {
 
 export const TERRAFORM_CLOUD_SYNC_SCOPES = {
   [TerraformCloudSyncScope.VariableSet]: {
-    name: "Variable Set",
-    description: "Sync secrets to a specific variable set in Terraform Cloud."
+    name: "변수 집합",
+    description: "시크릿을 Terraform Cloud의 특정 변수 집합으로 동기화합니다."
   },
   [TerraformCloudSyncScope.Workspace]: {
-    name: "Workspace",
-    description: "Sync secrets to a specific workspace in Terraform Cloud."
+    name: "워크스페이스",
+    description: "시크릿을 Terraform Cloud의 특정 워크스페이스로 동기화합니다."
   }
 };

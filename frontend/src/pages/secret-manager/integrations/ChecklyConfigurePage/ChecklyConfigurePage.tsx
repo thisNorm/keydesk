@@ -154,7 +154,7 @@ export const ChecklyConfigurePage = () => {
             <span>Checkly Integration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync to Checkly environment variables.
+            Choose which environment in Keydesk you want to sync to Checkly environment variables.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>
@@ -186,7 +186,7 @@ export const ChecklyConfigurePage = () => {
               >
                 <Field className="mb-4" data-invalid={false}>
                   <FieldLabel htmlFor="checkly-infisical-project-environment">
-                    Infisical Project Environment
+                    Keydesk Project Environment
                   </FieldLabel>
                   <Select
                     value={selectedSourceEnvironment}
@@ -309,10 +309,11 @@ export const ChecklyConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthAppsLoading || isintegrationAuthGroupsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

@@ -59,8 +59,8 @@ const credentialsBase = z.object({
   hostname: z
     .string()
     .trim()
-    .min(1, "Hostname is required")
-    .max(512, "Hostname cannot exceed 512 characters")
+    .min(1, "호스트 이름을 입력하세요")
+    .max(512, "호스트 이름은 512자를 초과할 수 없습니다")
     .refine(
       (val) =>
         !val.includes("/") &&
@@ -68,7 +68,7 @@ const credentialsBase = z.object({
         !val.includes("?") &&
         !val.includes(":") &&
         !val.includes("#"),
-      { message: "Hostname must not contain /, @, ?, :, or # characters" }
+      { message: "호스트 이름에는 /, @, ?, :, # 문자를 사용할 수 없습니다" }
     ),
   port: z
     .union([z.coerce.number().int().min(1).max(65535), z.literal("")])
@@ -89,7 +89,7 @@ const formSchema = z.discriminatedUnion("method", [
       apiKey: z
         .string()
         .trim()
-        .regex(/^[0-9a-f]{32}$/, "API key must be a 32-character lowercase hexadecimal string")
+        .regex(/^[0-9a-f]{32}$/, "API 키는 소문자 16진수 32자리여야 합니다")
     })
   }),
   rootSchema.extend({
@@ -98,13 +98,13 @@ const formSchema = z.discriminatedUnion("method", [
       username: z
         .string()
         .trim()
-        .min(1, "Username is required")
-        .max(256, "Username cannot exceed 256 characters"),
+        .min(1, "사용자 이름을 입력하세요")
+        .max(256, "사용자 이름은 256자를 초과할 수 없습니다"),
       password: z
         .string()
         .trim()
-        .min(1, "Password is required")
-        .max(512, "Password cannot exceed 512 characters")
+        .min(1, "비밀번호를 입력하세요")
+        .max(512, "비밀번호는 512자를 초과할 수 없습니다")
     })
   })
 ]);
@@ -158,7 +158,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
 
             return (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 {isAllowed ? (
                   picker
                 ) : (
@@ -167,8 +167,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
                       <span className="block w-full cursor-not-allowed">{picker}</span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -182,21 +181,21 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.NutanixPrismCentral].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(NutanixPrismCentralConnectionMethod).map((m) => {
@@ -214,7 +213,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
         />
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mb-4">
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
+            <TabsTrigger value="configuration">구성</TabsTrigger>
             <TabsTrigger value="ssl">SSL</TabsTrigger>
           </TabsList>
           <TabsContent value="configuration">
@@ -224,12 +223,12 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="hostname">Hostname</FieldLabel>
+                    <FieldLabel htmlFor="hostname">호스트 이름</FieldLabel>
                     <Input
                       id="hostname"
                       value={value}
                       onChange={(e) => onChange(e.target.value)}
-                      placeholder="e.g. prism.example.com"
+                      placeholder="예: prism.example.com"
                       isError={Boolean(error?.message)}
                     />
                     <FieldError errors={[error]} />
@@ -242,7 +241,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
                 render={({ field, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="port">
-                      Port <span className="text-muted">(optional)</span>
+                      포트 <span className="text-muted">(선택 사항)</span>
                     </FieldLabel>
                     <Input
                       id="port"
@@ -265,13 +264,13 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
                     <FieldLabel htmlFor="api-key">
-                      API Key
+                      API 키
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Info />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
-                          A Nutanix API key with permission to manage SSL certificates.
+                          SSL 인증서를 관리할 권한이 있는 Nutanix API 키입니다.
                         </TooltipContent>
                       </Tooltip>
                     </FieldLabel>
@@ -294,7 +293,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
                   control={control}
                   render={({ field: { value, onChange }, fieldState: { error } }) => (
                     <Field className="mb-4">
-                      <FieldLabel htmlFor="username">Username</FieldLabel>
+                      <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
                       <Input
                         id="username"
                         value={value}
@@ -311,7 +310,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
                   control={control}
                   render={({ field: { value, onChange }, fieldState: { error } }) => (
                     <Field className="mb-4">
-                      <FieldLabel htmlFor="password">Password</FieldLabel>
+                      <FieldLabel htmlFor="password">비밀번호</FieldLabel>
                       <SecretInput
                         aria-describedby={error ? "password-error" : undefined}
                         isError={Boolean(error)}
@@ -333,7 +332,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
                   <FieldLabel htmlFor="ssl-certificate">
-                    SSL Certificate <span className="text-muted">(optional)</span>
+                    SSL 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="ssl-certificate"
@@ -353,11 +352,11 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
                 <Field>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        If enabled, Infisical will only connect if Prism Central presents a valid,
-                        trusted SSL certificate. Disable this for self-signed certificates or
-                        provide a CA certificate above.
+                        켜면 Prism Central이 유효하고 신뢰할 수 있는 SSL 인증서를 제공할 때만
+                        Keydesk가 연결합니다. 자체 서명 인증서를 사용한다면 이 옵션을 끄거나 위에 CA
+                        인증서를 입력하세요.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -375,7 +374,7 @@ export const NutanixPrismCentralConnectionForm = ({ appConnection, onSubmit }: P
           </TabsContent>
         </Tabs>
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Nutanix Prism Central"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "Nutanix Prism Central에 연결"}
         />
       </form>
     </FormProvider>

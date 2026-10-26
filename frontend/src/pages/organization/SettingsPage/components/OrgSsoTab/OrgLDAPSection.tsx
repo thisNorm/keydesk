@@ -157,7 +157,7 @@ export const OrgLDAPSection = ({ onSwitchProvider }: Props): JSX.Element => {
                 <FieldContent>
                   <FieldTitle>Enable LDAP</FieldTitle>
                   <FieldDescription>
-                    Allow members to authenticate into Infisical with LDAP.
+                    Allow members to authenticate into Keydesk with LDAP.
                   </FieldDescription>
                 </FieldContent>
                 <OrgPermissionCan
@@ -192,7 +192,7 @@ export const OrgLDAPSection = ({ onSwitchProvider }: Props): JSX.Element => {
               <FieldContent>
                 <FieldTitle>LDAP Group Mappings</FieldTitle>
                 <FieldDescription>
-                  Manage how LDAP groups are mapped to internal groups in Infisical.
+                  Manage how LDAP groups are mapped to internal groups in Keydesk.
                 </FieldDescription>
               </FieldContent>
               <OrgPermissionCan I={OrgPermissionActions.Create} a={OrgPermissionSubjects.Ldap}>

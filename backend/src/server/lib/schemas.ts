@@ -29,17 +29,17 @@ export const slugSchema = ({ min = 1, max = 64, field = "Slug", trim = true }: S
 export const GenericResourceNameSchema = z
   .string()
   .trim()
-  .min(1, { message: "Name must be at least 1 character" })
-  .max(64, { message: "Name must be 64 or fewer characters" })
+  .min(1, { message: "이름은 1자 이상 입력하세요." })
+  .max(64, { message: "이름은 64자 이내로 입력하세요." })
   .refine(
     (val) =>
       characterValidator([
-        CharacterType.AlphaNumeric,
+        CharacterType.UnicodeLettersAndDigits,
         CharacterType.Hyphen,
         CharacterType.Underscore,
         CharacterType.Spaces
       ])(val),
-    "Name can only contain alphanumeric characters, dashes, underscores, and spaces"
+    "이름에는 한글을 포함한 문자, 숫자, 하이픈(-), 밑줄(_), 공백을 사용할 수 있습니다."
   );
 
 export const BaseSecretNameSchema = z.string().trim().min(1);

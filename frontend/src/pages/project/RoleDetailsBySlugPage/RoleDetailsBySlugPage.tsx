@@ -262,7 +262,7 @@ export const RoleDetailsBySlugPage = () => {
         <title>
           {t("common.head-title", { title: isCertManager ? "Role" : "Project Settings" })}
         </title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <ProjectPermissionCan
         I={ProjectPermissionActions.Read}

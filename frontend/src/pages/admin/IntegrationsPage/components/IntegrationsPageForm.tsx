@@ -22,10 +22,8 @@ export const IntegrationsPageForm = () => {
   return (
     <Card className="min-h-64">
       <CardHeader>
-        <CardTitle>Integrations</CardTitle>
-        <CardDescription>
-          Configure your instance-wide settings to enable integration with third-party services.
-        </CardDescription>
+        <CardTitle>연동</CardTitle>
+        <CardDescription>타사 서비스와 연동하려면 인스턴스 전체 설정을 구성하세요.</CardDescription>
       </CardHeader>
       <CardContent>
         <WorkflowTab adminIntegrationsConfig={adminIntegrationsConfig!} />

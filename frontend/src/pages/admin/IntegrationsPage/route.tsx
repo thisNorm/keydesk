@@ -10,11 +10,11 @@ export const Route = createFileRoute(
     return {
       breadcrumbs: [
         {
-          label: "Admin",
+          label: "관리자",
           link: linkOptions({ to: "/admin" })
         },
         {
-          label: "Integrations",
+          label: "연동",
           link: linkOptions({
             to: "/admin/integrations"
           })

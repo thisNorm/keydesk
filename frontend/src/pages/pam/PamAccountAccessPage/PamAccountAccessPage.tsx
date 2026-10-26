@@ -161,8 +161,8 @@ export const PamAccountAccessPage = () => {
   return (
     <>
       <Helmet>
-        <title>Web Access | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>Web Access | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <PageContent />
     </>

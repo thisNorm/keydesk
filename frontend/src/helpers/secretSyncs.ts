@@ -402,21 +402,21 @@ export const SECRET_SYNC_INITIAL_SYNC_BEHAVIOR_MAP: Record<
 > = {
   [SecretSyncInitialSyncBehavior.OverwriteDestination]: (destinationName: string) => ({
     name: "Overwrite Destination Secrets",
-    description: `Infisical will overwrite any secrets located in the ${destinationName} destination, removing any secrets that are not present within Infiscal. `
+    description: `Keydesk will overwrite any secrets located in the ${destinationName} destination, removing any secrets that are not present within Keydesk. `
   }),
   [SecretSyncInitialSyncBehavior.ImportPrioritizeSource]: (destinationName: string) => ({
     name:
       destinationName === "Infisical"
         ? "Import Destination Secrets - Prioritize Source (This Instance) Values"
-        : "Import Destination Secrets - Prioritize Infisical Values",
-    description: `Infisical will import any secrets present in the ${destinationName} destination prior to syncing, prioritizing values from Infisical over ${destinationName} when keys conflict.`
+        : "Import Destination Secrets - Prioritize Keydesk Values",
+    description: `Keydesk will import any secrets present in the ${destinationName} destination prior to syncing, prioritizing values from Keydesk over ${destinationName} when keys conflict.`
   }),
   [SecretSyncInitialSyncBehavior.ImportPrioritizeDestination]: (destinationName: string) => ({
     name:
       destinationName === "Infisical"
         ? "Import Destination Secrets - Prioritize Destination (Remote Instance) Values"
         : `Import Destination Secrets - Prioritize ${destinationName} Values`,
-    description: `Infisical will import any secrets present in the ${destinationName} destination prior to syncing, prioritizing values from ${destinationName} over Infisical when keys conflict.`
+    description: `Keydesk will import any secrets present in the ${destinationName} destination prior to syncing, prioritizing values from ${destinationName} over Keydesk when keys conflict.`
   })
 };
 
@@ -428,15 +428,15 @@ export const SECRET_SYNC_IMPORT_BEHAVIOR_MAP: Record<
     name:
       destinationName === "Infisical"
         ? "Prioritize Source (This Instance) Values"
-        : "Prioritize Infisical Values",
-    description: `Infisical will import any secrets present in the ${destinationName} destination, prioritizing values from Infisical over ${destinationName} when keys conflict.`
+        : "Prioritize Keydesk Values",
+    description: `Keydesk will import any secrets present in the ${destinationName} destination, prioritizing values from Keydesk over ${destinationName} when keys conflict.`
   }),
   [SecretSyncImportBehavior.PrioritizeDestination]: (destinationName: string) => ({
     name:
       destinationName === "Infisical"
         ? "Prioritize Destination (Remote Instance) Values"
         : `Prioritize ${destinationName} Values`,
-    description: `Infisical will import any secrets present in the ${destinationName} destination, prioritizing values from ${destinationName} over Infisical when keys conflict.`
+    description: `Keydesk will import any secrets present in the ${destinationName} destination, prioritizing values from ${destinationName} over Keydesk when keys conflict.`
   })
 };
 
@@ -447,12 +447,12 @@ export const HUMANITEC_SYNC_SCOPES: Record<
   [HumanitecSyncScope.Application]: {
     name: "Application",
     description:
-      "Infisical will sync secrets as application level shared values to the specified Humanitec application."
+      "Keydesk will sync secrets as application level shared values to the specified Humanitec application."
   },
   [HumanitecSyncScope.Environment]: {
     name: "Environment",
     description:
-      "Infisical will sync secrets as environment level shared values to the specified Humanitec application environment."
+      "Keydesk will sync secrets as environment level shared values to the specified Humanitec application environment."
   }
 };
 
@@ -470,11 +470,11 @@ export const GCP_SYNC_SCOPES: Record<GcpSyncScope, { name: string; description: 
 export const RENDER_SYNC_SCOPES: Record<RenderSyncScope, { name: string; description: string }> = {
   [RenderSyncScope.Service]: {
     name: "Service",
-    description: "Infisical will sync secrets to the specified Render service."
+    description: "Keydesk will sync secrets to the specified Render service."
   },
   [RenderSyncScope.EnvironmentGroup]: {
     name: "EnvironmentGroup",
-    description: "Infisical will sync secrets to the specified Render environment group."
+    description: "Keydesk will sync secrets to the specified Render environment group."
   }
 };
 

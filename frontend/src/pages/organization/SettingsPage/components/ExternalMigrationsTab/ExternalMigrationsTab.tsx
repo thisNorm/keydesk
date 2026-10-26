@@ -20,21 +20,19 @@ export const ExternalMigrationsTab = () => {
     <div className="flex flex-col gap-6">
       <div className="rounded-lg border border-border bg-card p-4">
         <div className="mb-4">
-          <h2 className="text-xl font-normal text-foreground">Bulk Data Import</h2>
+          <h2 className="text-xl font-normal text-foreground">대량 데이터 가져오기</h2>
           <p className="mt-1 mb-6 text-sm text-muted">
-            Perform one-time bulk imports of data from external platforms.
+            외부 플랫폼의 데이터를 한 번에 대량으로 가져옵니다.
           </p>
         </div>
 
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
             <div className="flex items-center gap-2">
-              <p className="text-base font-medium text-foreground">Import from external source</p>
+              <p className="text-base font-medium text-foreground">외부 소스에서 가져오기</p>
               <DocumentationLinkBadge href={EXTERNAL_MIGRATIONS_DOCS_HREF} />
             </div>
-            <p className="mt-1 text-sm text-muted">
-              Import data from another platform to Infisical.
-            </p>
+            <p className="mt-1 text-sm text-muted">다른 플랫폼의 데이터를 Keydesk로 가져옵니다.</p>
           </div>
 
           <Button
@@ -47,7 +45,7 @@ export const ExternalMigrationsTab = () => {
             isDisabled={!hasOrgRole(OrgMembershipRole.Admin)}
           >
             <Plus className="size-4 shrink-0" />
-            Import
+            가져오기
           </Button>
         </div>
 

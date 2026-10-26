@@ -314,7 +314,7 @@ export const EditAccountForm = ({ accountId, onDirtyChange }: Props) => {
       <Card>
         <CardHeader className="border-b">
           <CardTitle className="text-base">Connection Details</CardTitle>
-          <CardDescription>How Infisical reaches this account.</CardDescription>
+          <CardDescription>How Keydesk reaches this account.</CardDescription>
         </CardHeader>
         <CardContent>
           <ConnectionDetailsForm control={control} setValue={setValue} clearErrors={clearErrors} />

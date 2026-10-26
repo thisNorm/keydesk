@@ -93,18 +93,18 @@ export const OauthConsentPage = () => {
     <div className="flex min-h-screen flex-col items-center justify-center bg-page">
       <Helmet>
         <title>Authorize Application</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
 
       <Card className="w-full max-w-md">
         <Link to="/" className="block">
-          <img src="/images/gradientLogo.svg" className="mx-auto h-16" alt="Infisical logo" />
+          <img src="/keydesk.svg" className="mx-auto h-16" alt="Keydesk logo" />
         </Link>
 
         <CardHeader className="text-center">
           <CardTitle className="justify-center">Authorize Application</CardTitle>
           <CardDescription>
-            An external application is requesting access to your Infisical account.
+            An external application is requesting access to your Keydesk account.
           </CardDescription>
         </CardHeader>
 
@@ -124,8 +124,8 @@ export const OauthConsentPage = () => {
               )}
               <p className="mt-3 text-xs text-muted">
                 {authorizeInfo.requestedScopes.length
-                  ? "This application is requesting the following access on your behalf, limited to your existing Infisical permissions, until you revoke its session."
-                  : "This application will be able to act on your behalf with your existing Infisical permissions until you revoke its session."}
+                  ? "This application is requesting the following access on your behalf, limited to your existing Keydesk permissions, until you revoke its session."
+                  : "This application will be able to act on your behalf with your existing Keydesk permissions until you revoke its session."}
               </p>
               {authorizeInfo.requestedScopes.length > 0 && (
                 <ul className="mt-3 flex flex-col gap-2">

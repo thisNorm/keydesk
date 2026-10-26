@@ -103,8 +103,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <button
           type="button"
           tabIndex={-1}
-          aria-label={`Use suggested value ${suggestedValue}`}
-          title="Use suggested value"
+          aria-label={`추천 값 사용: ${suggestedValue}`}
+          title="추천 값 사용"
           className="absolute top-1/2 right-2 hidden -translate-y-1/2 cursor-pointer peer-placeholder-shown:flex peer-read-only:hidden peer-disabled:hidden"
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
@@ -115,7 +115,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <Kbd>Tab</Kbd>
         </button>
         <span id={suggestionHintId} className="sr-only">
-          When the field is empty, press Tab to use the suggested value.
+          입력란이 비어 있을 때 Tab 키를 누르면 추천 값을 사용할 수 있습니다.
         </span>
       </div>
     );

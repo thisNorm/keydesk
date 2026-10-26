@@ -16,7 +16,7 @@ export const AppConnectionHeader = ({ app, isConnected }: Props) => {
     <div className="flex w-full items-start gap-2">
       <div className="relative flex h-10 w-10 items-center justify-center rounded-md bg-container">
         <ProviderIcon
-          alt={`${appDetails.name} logo`}
+          alt={`${appDetails.name} 로고`}
           icon={appDetails.image}
           className="h-7 w-7 object-contain"
         />
@@ -30,7 +30,7 @@ export const AppConnectionHeader = ({ app, isConnected }: Props) => {
           />
         </div>
         <p className="text-sm leading-4 font-normal text-muted">
-          {isConnected ? `${appDetails.name} Connection` : `Connect to ${appDetails.name}`}
+          {isConnected ? `${appDetails.name} 연결` : `연결 대상: ${appDetails.name}`}
         </p>
       </div>
     </div>

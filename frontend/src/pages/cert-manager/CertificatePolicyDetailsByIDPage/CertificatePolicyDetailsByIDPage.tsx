@@ -197,7 +197,7 @@ export const CertificatePolicyDetailsByIDPage = () => {
     <>
       <Helmet>
         <title>Certificate Policy</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <Page />
     </>

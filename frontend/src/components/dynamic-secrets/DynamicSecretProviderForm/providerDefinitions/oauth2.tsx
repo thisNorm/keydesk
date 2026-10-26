@@ -39,14 +39,14 @@ const getConnectionFields = (mode: TDynamicSecretProviderRendererProps["mode"]) 
       label: "Revocation URL",
       placeholder: "https://auth.example.com/oauth2/revoke",
       description:
-        "The RFC 7009 endpoint Infisical calls to revoke each lease's access token when the lease ends."
+        "The RFC 7009 endpoint Keydesk calls to revoke each lease's access token when the lease ends."
     },
     {
       name: "inputs.clientAuth.method",
       type: "select",
       label: "Client Authentication",
       description:
-        "How Infisical sends the client credentials to the token and revocation endpoints.",
+        "How Keydesk sends the client credentials to the token and revocation endpoints.",
       options: [
         {
           label: "HTTP Basic Header",

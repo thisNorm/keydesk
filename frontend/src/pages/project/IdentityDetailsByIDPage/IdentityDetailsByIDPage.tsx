@@ -500,7 +500,7 @@ export const IdentityDetailsByIDPage = () => {
             title: isAgentVault ? "Machine Identity" : t("settings.members.title")
           })}
         </title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <ProjectPermissionCan
         I={ProjectPermissionActions.Read}

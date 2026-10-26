@@ -42,7 +42,7 @@ export const EnvKeyPlatformModal = ({ onClose }: Props) => {
     if (!data.file) {
       setError("file", {
         type: "required",
-        message: "File is required"
+        message: "파일을 선택하세요"
       });
       return;
     }
@@ -52,8 +52,8 @@ export const EnvKeyPlatformModal = ({ onClose }: Props) => {
       decryptionKey: data.encryptionKey
     });
     createNotification({
-      title: "Import started",
-      text: "Your data is being imported. You will receive an email when the import is complete or if the import fails. This may take up to 10 minutes.",
+      title: "가져오기 시작",
+      text: "데이터를 가져오는 중입니다. 완료되거나 실패하면 이메일로 알려드립니다. 최대 10분이 걸릴 수 있습니다.",
       type: "info"
     });
 
@@ -68,7 +68,7 @@ export const EnvKeyPlatformModal = ({ onClose }: Props) => {
   const onImportFileDrop = (file?: File) => {
     if (!file) {
       createNotification({
-        text: "No file selected.",
+        text: "선택한 파일이 없습니다.",
         type: "error"
       });
       return;
@@ -84,7 +84,7 @@ export const EnvKeyPlatformModal = ({ onClose }: Props) => {
         name="encryptionKey"
         render={({ field, fieldState: { error } }) => (
           <Field>
-            <FieldLabel>Encryption key</FieldLabel>
+            <FieldLabel>암호화 키</FieldLabel>
             <FieldContent>
               <Input type="password" placeholder="" {...field} isError={Boolean(error)} />
             </FieldContent>
@@ -94,7 +94,7 @@ export const EnvKeyPlatformModal = ({ onClose }: Props) => {
       />
       <GenericDropzone
         ref={fileUploadRef}
-        text="Select Env Key export file"
+        text="EnvKey 내보내기 파일 선택"
         onData={onImportFileDrop}
         isSmaller
       />
@@ -105,10 +105,10 @@ export const EnvKeyPlatformModal = ({ onClose }: Props) => {
           isPending={isLoading || isSubmitting}
           isDisabled={!isDirty || isSubmitting || isLoading || !isValid}
         >
-          Import data
+          데이터 가져오기
         </Button>
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          취소
         </Button>
       </div>
     </form>

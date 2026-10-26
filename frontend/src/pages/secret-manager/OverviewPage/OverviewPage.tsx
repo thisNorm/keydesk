@@ -4588,7 +4588,7 @@ const OverviewPageContent = () => {
             </AlertDialogTitle>
             <AlertDialogDescription>
               {dynamicSecretDeleteData?.isForced
-                ? "This removes the dynamic secret and its leases from Infisical without revoking them in the external provider. This cannot be undone."
+                ? "This removes the dynamic secret and its leases from Keydesk without revoking them in the external provider. This cannot be undone."
                 : "This deletes the dynamic secret configuration and revokes its active leases. This cannot be undone."}
             </AlertDialogDescription>
           </AlertDialogHeader>

@@ -314,7 +314,7 @@ export const SecretSyncRow = ({
                         </div>
                       </TooltipTrigger>
                       <TooltipContent side="left" sideOffset={20}>
-                        Import secrets from this {destinationName} destination into Infisical.
+                        Import secrets from this {destinationName} destination into Keydesk.
                       </TooltipContent>
                     </Tooltip>
                   </DropdownMenuItem>
@@ -346,7 +346,7 @@ export const SecretSyncRow = ({
                         </div>
                       </TooltipTrigger>
                       <TooltipContent side="left" sideOffset={20}>
-                        Remove secrets synced by Infisical from this {destinationName} destination.
+                        Remove secrets synced by Keydesk from this {destinationName} destination.
                       </TooltipContent>
                     </Tooltip>
                   </DropdownMenuItem>

@@ -51,8 +51,8 @@ export const CliRedirectPage = () => {
   return (
     <AuthPageLayout variant="focused">
       <Helmet>
-        <title>Infisical CLI | 로그인 성공</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>CLI 로그인 완료 | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       {cliToken ? (
         <AuthPagePanel className="text-center">
@@ -91,7 +91,7 @@ export const CliRedirectPage = () => {
             </InputGroup>
             <Button variant="project" size="lg" isFullWidth onClick={copyUrlToClipboard}>
               {isUrlCopied ? <CheckIcon /> : <CopyIcon />}
-              Copy to clipboard
+              클립보드에 복사
             </Button>
           </CardContent>
         </AuthPagePanel>
@@ -109,11 +109,11 @@ export const CliRedirectPage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <p className="text-sm text-label">Infisical CLI에 로그인했습니다.</p>
+            <p className="text-sm text-label">CLI에 로그인했습니다.</p>
             {dashboardOrgId && (
               <Button asChild variant="outline" className="self-center">
                 <Link to="/organizations/$orgId/api-vault" params={{ orgId: dashboardOrgId }}>
-                  Infisical 보관함 열기
+                  Keydesk 보관함 열기
                 </Link>
               </Button>
             )}

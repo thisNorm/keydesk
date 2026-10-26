@@ -46,7 +46,7 @@ export const GroupsSection = () => {
   const handleAddGroupModal = () => {
     if (!subscription?.groups) {
       handlePopUpOpen("upgradePlan", {
-        text: "Managing groups can be unlocked if you upgrade to Infisical Enterprise plan.",
+        text: "그룹을 관리하려면 해당 기능이 포함된 라이선스가 필요합니다.",
         isEnterpriseFeature: true
       });
     } else {

@@ -185,7 +185,7 @@ export const SignerKeyStep = ({
     currentKeyAlgorithm
   ]);
 
-  let keySourceHint: ReactNode = "Infisical manages the keypair.";
+  let keySourceHint: ReactNode = "Keydesk manages the keypair.";
   if (requiresHsm) {
     keySourceHint = (
       <span className="inline-flex items-center gap-1.5">
@@ -221,7 +221,7 @@ export const SignerKeyStep = ({
                 </SelectTrigger>
                 <SelectContent position="popper">
                   <SelectItem value={CertKeySource.Infisical} disabled={requiresHsm}>
-                    Infisical
+                    Keydesk
                   </SelectItem>
                   <SelectItem value={CertKeySource.Hsm} disabled={!isHsmLicensed || !canAttachHsm}>
                     <div className="flex items-center gap-2">

@@ -135,7 +135,7 @@ export const AcmeFields = ({
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-md">
-                    The DNS zone where Infisical creates the challenge TXT records. It must contain
+                    The DNS zone where Keydesk creates the challenge TXT records. It must contain
                     the domains you request certificates for.
                   </TooltipContent>
                 </Tooltip>

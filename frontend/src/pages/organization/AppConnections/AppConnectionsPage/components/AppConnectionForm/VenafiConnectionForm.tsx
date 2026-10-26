@@ -45,7 +45,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(VenafiConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required"),
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요"),
       region: z.nativeEnum(VenafiRegion)
     })
   })
@@ -79,21 +79,20 @@ export const VenafiConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Venafi].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Venafi].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(VenafiConnectionMethod).map((method) => (
@@ -114,19 +113,19 @@ export const VenafiConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Region
+                리전
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The region of your Venafi TLS Protect Cloud instance.
+                    Venafi TLS Protect Cloud 인스턴스의 리전입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                  <SelectValue placeholder="Select a region..." />
+                  <SelectValue placeholder="리전을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(VenafiRegion).map((region) => (
@@ -146,7 +145,7 @@ export const VenafiConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="app-connection-venafi-api-key">API Key</FieldLabel>
+              <FieldLabel htmlFor="app-connection-venafi-api-key">API 키</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "app-connection-venafi-api-key-error" : undefined}
                 id="app-connection-venafi-api-key"
@@ -159,7 +158,7 @@ export const VenafiConnectionForm = ({ appConnection, onSubmit }: Props) => {
           )}
         />
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Venafi"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "Venafi에 연결"}
           allowPristineSubmit={!isUpdate}
         />
       </form>

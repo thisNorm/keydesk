@@ -169,7 +169,7 @@ const FLOW_OPTIONS = [
     title: "Token exchange",
     rfc: "RFC 8693",
     description:
-      "The application presents a user's token from your identity provider and receives that user's Infisical token. No browser and no consent screen, and the token carries that user's full permissions."
+      "The application presents a user's token from your identity provider and receives that user's Keydesk token. No browser and no consent screen, and the token carries that user's full permissions."
   }
 ] as const;
 
@@ -296,7 +296,7 @@ export const OauthClientModal = ({ popUp, handlePopUpClose, onCreated }: Props) 
               {isEditing ? "Edit OAuth application" : "Add OAuth application"}
             </SheetTitle>
             <SheetDescription>
-              External platforms use this application to request delegated access to Infisical on a
+              External platforms use this application to request delegated access to Keydesk on a
               user&apos;s behalf via OAuth 2.0, limited to that user&apos;s permissions.
             </SheetDescription>
           </SheetHeader>
@@ -537,7 +537,7 @@ export const OauthClientModal = ({ popUp, handlePopUpClose, onCreated }: Props) 
                         <FieldContent>
                           <FieldTitle>Identity provider enforces MFA</FieldTitle>
                           <FieldDescription>
-                            Token exchange has no Infisical MFA challenge to run. Turn this on to
+                            Token exchange has no Keydesk MFA challenge to run. Turn this on to
                             declare that your identity provider already enforces MFA.
                           </FieldDescription>
                         </FieldContent>

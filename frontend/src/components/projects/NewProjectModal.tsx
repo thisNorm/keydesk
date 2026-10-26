@@ -297,11 +297,11 @@ const NewProjectForm = ({ onOpenChange, projectType: fixedProjectType }: NewProj
                       }}
                     >
                       <SelectTrigger id="new-project-kms" className="w-full">
-                        <SelectValue placeholder="Default Infisical KMS" />
+                        <SelectValue placeholder="Default Keydesk KMS" />
                       </SelectTrigger>
                       <SelectContent position="popper">
                         <SelectItem value={INTERNAL_KMS_KEY_ID} key="kms-internal">
-                          Default Infisical KMS
+                          Default Keydesk KMS
                         </SelectItem>
                         {externalKmsList?.map((kms) => (
                           <SelectItem value={kms.id} key={`kms-${kms.id}`}>

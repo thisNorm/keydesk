@@ -15,11 +15,11 @@ export enum ZabbixMacroType {
 
 export const ZABBIX_SYNC_SCOPES = {
   [ZabbixSyncScope.Host]: {
-    name: "Host",
-    description: "Sync secrets to a specific host in Zabbix."
+    name: "호스트",
+    description: "시크릿을 Zabbix의 특정 호스트로 동기화합니다."
   },
   [ZabbixSyncScope.Global]: {
-    name: "Global",
-    description: "Sync secrets to a global scope in Zabbix."
+    name: "전역",
+    description: "시크릿을 Zabbix 전역 범위로 동기화합니다."
   }
 };

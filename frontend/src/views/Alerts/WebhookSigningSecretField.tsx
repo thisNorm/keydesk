@@ -36,7 +36,7 @@ export const WebhookSigningSecretField = ({ index }: Props) => {
     <Field>
       <FieldLabelWithTooltip
         htmlFor={isEnabled ? `channel-${index}-signingSecret` : undefined}
-        tooltip="Signs each request in the x-infisical-signature header so your endpoint can verify it came from Infisical."
+        tooltip="Signs each request in the x-infisical-signature header so your endpoint can verify it came from Keydesk."
       >
         Signing secret <span className="text-muted">(optional)</span>
       </FieldLabelWithTooltip>

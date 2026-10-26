@@ -52,7 +52,7 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
     });
 
     createNotification({
-      text: "Updated admin Microsoft Teams configuration. It can take up to 5 minutes to take effect.",
+      text: "관리자 Microsoft Teams 구성을 수정했습니다. 적용되는 데 최대 5분이 걸릴 수 있습니다.",
       type: "success"
     });
   };
@@ -81,8 +81,8 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
           <AccordionContent className="p-6">
             <div className="flex w-full flex-col gap-4">
               <div className="max-w-lg text-sm text-label">
-                Step 1: Create and configure Microsoft Teams bot and Azure Resources. Please refer
-                to the documentation below for more information.
+                1단계: Microsoft Teams 봇과 Azure 리소스를 만들고 구성하세요. 자세한 내용은 아래
+                문서를 확인하세요.
               </div>
               <div>
                 <Button variant="neutral" asChild>
@@ -91,21 +91,23 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Documentation
+                    문서
                   </a>
                 </Button>
               </div>
               <div className="max-w-lg text-sm text-label">
-                Step 2: Configure your instance-wide settings to enable integration with Microsoft
-                Teams. Copy the App ID and Client Secret from your Microsoft Teams bot&apos;s App
-                Registration page. The Client Secret is the password for the bot.
+                2단계: Microsoft Teams와 연동하려면 인스턴스 전체 설정을 구성하세요. Microsoft Teams
+                봇의 앱 등록 페이지에서 앱 ID와 클라이언트 시크릿을 복사하세요. 클라이언트 시크릿은
+                봇의 비밀번호입니다.
               </div>
               <Controller
                 control={control}
                 name="appId"
                 render={({ field, fieldState: { error } }) => (
                   <Field className="max-w-96">
-                    <FieldLabel htmlFor="teams-app-client-id">Application (Client) ID</FieldLabel>
+                    <FieldLabel htmlFor="teams-app-client-id">
+                      애플리케이션(클라이언트) ID
+                    </FieldLabel>
                     <Input
                       id="teams-app-client-id"
                       {...field}
@@ -122,7 +124,7 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
                 name="clientSecret"
                 render={({ field, fieldState: { error } }) => (
                   <Field className="max-w-96">
-                    <FieldLabel htmlFor="teams-client-secret">Client secret</FieldLabel>
+                    <FieldLabel htmlFor="teams-client-secret">클라이언트 시크릿</FieldLabel>
                     <SecretInput
                       id="teams-client-secret"
                       {...field}
@@ -130,8 +132,7 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                     <FieldDescription>
-                      Find this value under Certificates &amp; secrets in the bot&apos;s app
-                      registration.
+                      봇 앱 등록의 Certificates &amp; secrets에서 확인할 수 있습니다.
                     </FieldDescription>
                     <FieldError>{error?.message}</FieldError>
                   </Field>
@@ -143,7 +144,7 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
                 name="botId"
                 render={({ field, fieldState: { error } }) => (
                   <Field className="max-w-96">
-                    <FieldLabel htmlFor="teams-app-id">Microsoft Teams App ID</FieldLabel>
+                    <FieldLabel htmlFor="teams-app-id">Microsoft Teams 앱 ID</FieldLabel>
                     <Input
                       id="teams-app-id"
                       {...field}
@@ -152,7 +153,7 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
                       onChange={(e) => field.onChange(e.target.value)}
                     />
                     <FieldDescription>
-                      Find this value in the app overview in the Microsoft Teams Developer Portal.
+                      Microsoft Teams Developer Portal의 앱 개요에서 확인할 수 있습니다.
                     </FieldDescription>
                     <FieldError>{error?.message}</FieldError>
                   </Field>
@@ -165,7 +166,7 @@ export const MicrosoftTeamsIntegrationForm = ({ adminIntegrationsConfig }: Props
                   isPending={isSubmitting}
                   isDisabled={!isDirty}
                 >
-                  Save
+                  저장
                 </Button>
               </div>
             </div>

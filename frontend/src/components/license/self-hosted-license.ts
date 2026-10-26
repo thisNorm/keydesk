@@ -36,11 +36,11 @@ export const SELF_HOSTED_LICENSE_COPY: Record<SelfHostedLicenseState, SelfHosted
   },
   online: {
     method: "License",
-    methodHint: "Synced from Infisical",
+    methodHint: "라이선스 서버에서 동기화됨",
     title: "Set by Your License",
     detail:
-      "Products and limits sync from your Infisical license, so contact sales to change them.",
-    pageDescription: "View products and usage set by your Infisical license.",
+      "제품과 사용 한도는 라이선스에 따라 동기화됩니다. 변경하려면 라이선스 담당자에게 문의하세요.",
+    pageDescription: "라이선스에 설정된 제품과 사용량을 확인합니다.",
     inactiveProductNote: "Not in your license, so contact sales to add it."
   },
   offline: {

@@ -160,7 +160,7 @@ export const DigiCertFields = ({
                 </TooltipTrigger>
                 <TooltipContent className="max-w-sm">
                   Products available are account-specific entitlements fetched from CertCentral.
-                  Each Infisical CA issues under exactly one product.
+                  Each Keydesk CA issues under exactly one product.
                 </TooltipContent>
               </Tooltip>
             </FieldLabel>

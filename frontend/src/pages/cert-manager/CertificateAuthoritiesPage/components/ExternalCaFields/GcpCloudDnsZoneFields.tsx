@@ -70,7 +70,7 @@ const GcpCloudDnsZoneSelect = ({
             <Info />
           </TooltipTrigger>
           <TooltipContent className="max-w-md">
-            The public Cloud DNS zone where Infisical creates the challenge TXT records. It must
+            The public Cloud DNS zone where Keydesk creates the challenge TXT records. It must
             contain the domains you request certificates for.
           </TooltipContent>
         </Tooltip>

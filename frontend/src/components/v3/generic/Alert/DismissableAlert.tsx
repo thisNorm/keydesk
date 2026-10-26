@@ -106,7 +106,7 @@ function DismissableAlert({
         <IconButton
           variant="ghost"
           size="xs"
-          aria-label="Dismiss notice"
+          aria-label="안내 닫기"
           onClick={handleDismiss}
           className="absolute top-1.5 right-1.5 text-current"
         >

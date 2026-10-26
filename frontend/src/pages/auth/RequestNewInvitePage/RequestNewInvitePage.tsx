@@ -18,7 +18,7 @@ export const RequestNewInvitePage = () => {
     <AuthPageLayout variant="focused">
       <Helmet>
         <title>{isAlreadyMember ? "이미 가입한 회원" : "새 초대 요청"}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <AuthPagePanel>
         <CardHeader className="mb-6 gap-2 text-center">

@@ -124,7 +124,7 @@ export const DatabricksConfigurePage = () => {
             <span>Databricks Integration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment or folder in Infisical you want to sync to which Databricks
+            Choose which environment or folder in Keydesk you want to sync to which Databricks
             secrets scope.
           </CardDescription>
           <CardAction>
@@ -224,13 +224,13 @@ export const DatabricksConfigurePage = () => {
           <span className="text-md ml-3 text-foreground">Pro Tip</span>
         </div>
         <span className="mt-4 text-sm text-label">
-          When integrating with Databricks, Infisical is intended to be the source of truth for the
+          When integrating with Databricks, Keydesk is intended to be the source of truth for the
           secrets in the configured Databricks scope.
         </span>
         <span className="mt-4 text-sm text-label">
-          Any secrets not present in Infisical will be removed from the specified scope. To prevent
-          removal of secrets not managed by Infisical, Infisical recommends creating a designated
-          secret scope for your integration.
+          Any secrets not present in Keydesk will be removed from the specified scope. To prevent
+          removal of secrets not managed by Keydesk, Keydesk recommends creating a designated secret
+          scope for your integration.
         </span>
       </div>
     </div>
@@ -241,10 +241,11 @@ export const DatabricksConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthScopesLoading || isintegrationAuthLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

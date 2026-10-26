@@ -43,7 +43,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(NetlifyConnectionMethod.AccessToken),
     credentials: z.object({
-      accessToken: z.string().trim().min(1, "Netlify Access Token required")
+      accessToken: z.string().trim().min(1, "Netlify 액세스 토큰을 입력하세요")
     })
   })
 ]);
@@ -73,21 +73,21 @@ export const NetlifyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The auth method you would like to connect with ${
+                    {`인증 방식: ${
                       APP_CONNECTION_MAP[AppConnection.Netlify].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(NetlifyConnectionMethod).map((method) => {
@@ -109,9 +109,7 @@ export const NetlifyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="app-connection-netlify-access-token">
-                Access Token Value
-              </FieldLabel>
+              <FieldLabel htmlFor="app-connection-netlify-access-token">액세스 토큰 값</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "app-connection-netlify-access-token-error" : undefined}
                 id="app-connection-netlify-access-token"
@@ -124,9 +122,7 @@ export const NetlifyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           )}
         />
 
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Netlify"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Netlify에 연결"} />
       </form>
     </FormProvider>
   );

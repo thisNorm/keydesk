@@ -51,8 +51,8 @@ export const SelectImportFromPlatformModal = ({ isOpen, onToggle }: Props) => {
   };
 
   const title = selectedPlatform
-    ? `Import from ${selectedPlatform.title}`
-    : "Import from external source";
+    ? `가져올 플랫폼: ${selectedPlatform.title}`
+    : "외부 소스에서 가져오기";
 
   return (
     <Dialog open={Boolean(isOpen)} onOpenChange={handleOpenChange}>
@@ -60,7 +60,7 @@ export const SelectImportFromPlatformModal = ({ isOpen, onToggle }: Props) => {
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {wizardStep === WizardSteps.SelectPlatform && (
-            <DialogDescription>Select a platform to import from</DialogDescription>
+            <DialogDescription>가져올 플랫폼을 선택하세요</DialogDescription>
           )}
         </DialogHeader>
         {wizardStep === WizardSteps.SelectPlatform && (
@@ -84,7 +84,7 @@ export const SelectImportFromPlatformModal = ({ isOpen, onToggle }: Props) => {
               >
                 <img
                   src={platform.image}
-                  alt={`${platform.title} logo`}
+                  alt={`${platform.title} 로고`}
                   style={{ width: platform.size }}
                 />
                 <div className="text-center text-sm whitespace-pre-wrap text-foreground">

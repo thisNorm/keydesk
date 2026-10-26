@@ -103,7 +103,7 @@ export const AuthMethodSection = () => {
       <CardHeader className="p-6">
         <CardTitle className="font-alliance">인증 방식</CardTitle>
         <CardDescription>
-          같은 이메일로 Infisical에 로그인할 수 있는 서비스를 선택하세요.
+          같은 이메일로 Keydesk에 로그인할 수 있는 서비스를 선택하세요.
         </CardDescription>
       </CardHeader>
       <CardContent className="divide-y divide-border px-6 pb-6">

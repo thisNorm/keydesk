@@ -54,11 +54,11 @@ const formSchema = z.discriminatedUnion("method", [
       tppUrl: z
         .string()
         .trim()
-        .min(1, "TPP URL required")
-        .refine((value) => value.startsWith("https://"), "TPP URL must use HTTPS"),
-      clientId: z.string().trim().min(1, "Client ID required"),
-      username: z.string().trim().min(1, "Username required"),
-      password: z.string().trim().min(1, "Password required")
+        .min(1, "TPP URL을 입력하세요")
+        .refine((value) => value.startsWith("https://"), "TPP URL은 HTTPS를 사용해야 합니다"),
+      clientId: z.string().trim().min(1, "클라이언트 ID를 입력하세요"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      password: z.string().trim().min(1, "비밀번호를 입력하세요")
     })
   })
 ]);
@@ -112,21 +112,20 @@ export const VenafiTppConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.VenafiTpp].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.VenafiTpp].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(VenafiTppConnectionMethod).map((method) => (
@@ -147,7 +146,7 @@ export const VenafiTppConnectionForm = ({ appConnection, onSubmit }: Props) => {
           >
             {(isAllowed) => (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div>
@@ -166,8 +165,7 @@ export const VenafiTppConnectionForm = ({ appConnection, onSubmit }: Props) => {
                   </TooltipTrigger>
                   {!isAllowed && (
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -197,13 +195,13 @@ export const VenafiTppConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="venafi-client-id">
-                Client ID
+                클라이언트 ID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The OAuth Client ID registered in the Venafi TPP API Integration.
+                    Venafi TPP API 연동에 등록한 OAuth 클라이언트 ID입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -223,7 +221,7 @@ export const VenafiTppConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="venafi-username">Username</FieldLabel>
+                <FieldLabel htmlFor="venafi-username">사용자 이름</FieldLabel>
                 <Input
                   id="venafi-username"
                   {...field}
@@ -239,7 +237,7 @@ export const VenafiTppConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="app-connection-venafi-tpp-password">Password</FieldLabel>
+                <FieldLabel htmlFor="app-connection-venafi-tpp-password">비밀번호</FieldLabel>
                 <SecretInput
                   aria-describedby={error ? "app-connection-venafi-tpp-password-error" : undefined}
                   id="app-connection-venafi-tpp-password"
@@ -259,10 +257,10 @@ export const VenafiTppConnectionForm = ({ appConnection, onSubmit }: Props) => {
             isPending={isSubmitting}
             isDisabled={isSubmitting || !isDirty}
           >
-            {isUpdate ? "Update Credentials" : "Connect to Venafi TPP"}
+            {isUpdate ? "인증 정보 수정" : "Venafi TPP에 연결"}
           </Button>
           <Button type="button" variant="outline" onClick={onCancel} isDisabled={isSubmitting}>
-            Cancel
+            취소
           </Button>
         </SheetFooter>
       </form>

@@ -52,11 +52,11 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(MongoDBConnectionMethod.UsernameAndPassword),
     credentials: z.object({
-      host: z.string().trim().min(1, "Host required"),
+      host: z.string().trim().min(1, "호스트를 입력하세요"),
       port: z.coerce.number().default(27017),
-      username: z.string().trim().min(1, "Username required"),
-      password: z.string().trim().min(1, "Password required"),
-      database: z.string().trim().min(1, "Database required"),
+      username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+      password: z.string().trim().min(1, "비밀번호를 입력하세요"),
+      database: z.string().trim().min(1, "데이터베이스를 입력하세요"),
       tlsEnabled: z.boolean().default(false),
       tlsRejectUnauthorized: z.boolean().default(true),
       tlsCertificate: z
@@ -110,21 +110,20 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.MongoDB].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.MongoDB].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(MongoDBConnectionMethod).map((method) => (
@@ -145,8 +144,8 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
           className="mb-4"
         >
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value={CONFIGURATION_TAB}>Configuration</TabsTrigger>
-            <TabsTrigger value={TLS_TAB}>TLS ({tlsEnabled ? "Enabled" : "Disabled"})</TabsTrigger>
+            <TabsTrigger value={CONFIGURATION_TAB}>구성</TabsTrigger>
+            <TabsTrigger value={TLS_TAB}>TLS ({tlsEnabled ? "켜짐" : "꺼짐"})</TabsTrigger>
           </TabsList>
           <TabsContent value={CONFIGURATION_TAB}>
             <div className="flex items-start gap-2">
@@ -155,7 +154,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="flex-1">
-                    <FieldLabel htmlFor="mongo-host">Host</FieldLabel>
+                    <FieldLabel htmlFor="mongo-host">호스트</FieldLabel>
                     <Input id="mongo-host" {...field} isError={Boolean(error?.message)} />
                     <FieldError errors={[error]} />
                   </Field>
@@ -166,7 +165,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="flex-1">
-                    <FieldLabel htmlFor="mongo-database">Database</FieldLabel>
+                    <FieldLabel htmlFor="mongo-database">데이터베이스</FieldLabel>
                     <Input id="mongo-database" {...field} isError={Boolean(error?.message)} />
                     <FieldError errors={[error]} />
                   </Field>
@@ -177,7 +176,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="w-28">
-                    <FieldLabel htmlFor="mongo-port">Port</FieldLabel>
+                    <FieldLabel htmlFor="mongo-port">포트</FieldLabel>
                     <Input
                       id="mongo-port"
                       type="number"
@@ -195,7 +194,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="flex-1">
-                    <FieldLabel htmlFor="mongo-username">Username</FieldLabel>
+                    <FieldLabel htmlFor="mongo-username">사용자 이름</FieldLabel>
                     <Input id="mongo-username" {...field} isError={Boolean(error?.message)} />
                     <FieldError errors={[error]} />
                   </Field>
@@ -206,7 +205,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="flex-1">
-                    <FieldLabel htmlFor="app-connection-mongo-db-password">Password</FieldLabel>
+                    <FieldLabel htmlFor="app-connection-mongo-db-password">비밀번호</FieldLabel>
                     <SecretInput
                       aria-describedby={
                         error ? "app-connection-mongo-db-password-error" : undefined
@@ -230,7 +229,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field className="mb-4">
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="tls-enabled">Enable TLS</Label>
+                      <Label htmlFor="tls-enabled">TLS 사용</Label>
                     </FieldContent>
                     <Toggle
                       aria-invalid={Boolean(error)}
@@ -250,7 +249,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
               render={({ field, fieldState: { error } }) => (
                 <Field className={tlsEnabled ? "mb-4" : "mb-4 opacity-50"}>
                   <FieldLabel htmlFor="tls-certificate">
-                    TLS Certificate <span className="text-muted">(optional)</span>
+                    TLS 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="tls-certificate"
@@ -270,10 +269,10 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field className={tlsEnabled ? undefined : "opacity-50"}>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="tls-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="tls-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        If enabled, Infisical will only connect to the server if it has a valid,
-                        trusted TLS certificate.
+                        켜면 서버가 유효하고 신뢰할 수 있는 TLS 인증서를 제공할 때만 Keydesk가
+                        연결합니다.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -293,7 +292,7 @@ export const MongoDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
         </Tabs>
 
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Database"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "데이터베이스에 연결"}
         />
       </form>
     </FormProvider>

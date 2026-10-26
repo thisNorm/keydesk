@@ -41,8 +41,8 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(TeamCityConnectionMethod.AccessToken),
     credentials: z.object({
-      accessToken: z.string().trim().min(1, "Access Token required"),
-      instanceUrl: z.string().trim().url("Invalid Instance URL")
+      accessToken: z.string().trim().min(1, "액세스 토큰을 입력하세요"),
+      instanceUrl: z.string().trim().url("올바른 인스턴스 URL을 입력하세요")
     })
   })
 ]);
@@ -72,21 +72,20 @@ export const TeamCityConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.TeamCity].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.TeamCity].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(TeamCityConnectionMethod).map((method) => {
@@ -109,13 +108,13 @@ export const TeamCityConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL
+                인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The URL at which your TeamCity instance is hosted.
+                    TeamCity 인스턴스가 호스팅되는 URL입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -135,7 +134,7 @@ export const TeamCityConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="access-token">Access Token</FieldLabel>
+              <FieldLabel htmlFor="access-token">액세스 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "access-token-error" : undefined}
                 isError={Boolean(error)}
@@ -147,9 +146,7 @@ export const TeamCityConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to TeamCity"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "TeamCity에 연결"} />
       </form>
     </FormProvider>
   );

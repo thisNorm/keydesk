@@ -116,7 +116,7 @@ export const OracleDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
           >
             {(isAllowed) => (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div>
@@ -135,8 +135,7 @@ export const OracleDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
                   </TooltipTrigger>
                   {!isAllowed && (
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -150,21 +149,20 @@ export const OracleDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.OracleDB].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.OracleDB].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error?.message)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(OracleDBConnectionMethod).map((method) => (
@@ -187,7 +185,7 @@ export const OracleDBConnectionForm = ({ appConnection, onSubmit }: Props) => {
           <PlatformManagedNoticeBanner />
         ) : (
           <AppConnectionFormFooter
-            submitLabel={isUpdate ? "Update Credentials" : "Connect to Database"}
+            submitLabel={isUpdate ? "인증 정보 수정" : "데이터베이스에 연결"}
           />
         )}
       </form>

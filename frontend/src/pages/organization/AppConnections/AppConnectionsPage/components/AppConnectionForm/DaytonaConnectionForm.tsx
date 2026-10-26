@@ -40,7 +40,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(DaytonaConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required").max(500)
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요").max(500)
     })
   })
 ]);
@@ -70,21 +70,21 @@ export const DaytonaConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.Daytona].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(DaytonaConnectionMethod).map((method) => (
@@ -105,15 +105,14 @@ export const DaytonaConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="api-key">
-                API Key
+                API 키
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Create an API key in Daytona under Settings &gt; API Keys. It must carry the
-                    manage:secrets permission, and it determines which Daytona organization secrets
-                    are synced to.
+                    Daytona의 Settings &gt; API Keys에서 API 키를 만드세요. manage:secrets 권한이
+                    필요하며, 이 키에 따라 시크릿을 동기화할 Daytona 조직이 결정됩니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -122,9 +121,7 @@ export const DaytonaConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Daytona"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Daytona에 연결"} />
       </form>
     </FormProvider>
   );

@@ -86,8 +86,8 @@ export const GitlabAuthorizePage = () => {
             <span>GitLab Integration</span>
           </CardTitle>
           <CardDescription>
-            Authorize this integration to sync secrets from Infisical to GitLab. If no self-hosted
-            GitLab URL is specified, then Infisical will connect you to GitLab Cloud.
+            Authorize this integration to sync secrets from Keydesk to GitLab. If no self-hosted
+            GitLab URL is specified, then Keydesk will connect you to GitLab Cloud.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>

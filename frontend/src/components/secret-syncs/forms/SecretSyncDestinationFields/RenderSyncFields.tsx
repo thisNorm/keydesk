@@ -73,7 +73,7 @@ export const RenderSyncFields = () => {
                 <TooltipContent className="max-w-lg">
                   <div className="flex flex-col gap-3">
                     <p>
-                      Specify how Infisical should manage secrets from Render. The following options
+                      Specify how Keydesk should manage secrets from Render. The following options
                       are available:
                     </p>
                     <ul className="flex list-disc flex-col gap-3 pl-4">

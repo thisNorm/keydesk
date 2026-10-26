@@ -315,8 +315,7 @@ export const GithubConfigurePage = () => {
             <span>GitHub Integration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync to environment variables in
-            GitHub.
+            Choose which environment in Keydesk you want to sync to environment variables in GitHub.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>
@@ -826,7 +825,7 @@ export const GithubConfigurePage = () => {
                       render={({ field: { onChange, value } }) => (
                         <Field orientation="horizontal">
                           <FieldLabel htmlFor="delete-github-option">
-                            Delete secrets in Github that are not in Infisical
+                            Delete secrets in Github that are not in Keydesk
                           </FieldLabel>
                           <Toggle
                             id="delete-github-option"
@@ -878,7 +877,7 @@ export const GithubConfigurePage = () => {
         </div>
         <span className="mt-4 text-sm text-label">
           After creating an integration, your secrets will start syncing immediately. This might
-          cause an unexpected override of current secrets in GitHub with secrets from Infisical.
+          cause an unexpected override of current secrets in GitHub with secrets from Keydesk.
         </span>
       </div>
     </div>
@@ -889,10 +888,11 @@ export const GithubConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

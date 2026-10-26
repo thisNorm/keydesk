@@ -382,9 +382,9 @@ export const EncryptionKeyRotationSection = () => {
                     onCheckedChange={(value) => setOverrideStraggler(value === true)}
                   />
                   <Label htmlFor="override-straggler" className="text-xs font-normal text-label">
-                    I have verified that no Infisical instance is still running with the old key,
-                    and I understand that any instance that has not been given the new key will fail
-                    its next restart.
+                    I have verified that no Keydesk instance is still running with the old key, and
+                    I understand that any instance that has not been given the new key will fail its
+                    next restart.
                   </Label>
                 </div>
               )}

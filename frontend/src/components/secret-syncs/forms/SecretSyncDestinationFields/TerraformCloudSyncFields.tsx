@@ -168,8 +168,8 @@ export const TerraformCloudSyncFields = () => {
                 <TooltipContent className="max-w-lg">
                   <div className="flex flex-col gap-3">
                     <p>
-                      Specify how Infisical should manage secrets from Terraform Cloud. The
-                      following options are available:
+                      Specify how Keydesk should manage secrets from Terraform Cloud. The following
+                      options are available:
                     </p>
                     <ul className="flex list-disc flex-col gap-3 pl-4">
                       {Object.values(TERRAFORM_CLOUD_SYNC_SCOPES).map(({ name, description }) => (

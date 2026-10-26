@@ -90,17 +90,13 @@ export const useAppConnectionCreation = <TOption,>({
 
   const app = apps.length === 1 ? apps[0] : selectedApp;
   const label =
-    apps.length === 1
-      ? `Create ${APP_CONNECTION_MAP[apps[0]].name} Connection`
-      : "Create Connection";
+    apps.length === 1 ? `만들 연결: ${APP_CONNECTION_MAP[apps[0]].name} 연결` : "연결 만들기";
   const attempt = attemptRef.current;
 
   return {
     mode: "dialog",
-    title: app ? `Create ${APP_CONNECTION_MAP[app].name} Connection` : label,
-    description: app
-      ? "The new connection is selected once it is created."
-      : "Choose the type of connection to create.",
+    title: app ? `만들 연결: ${APP_CONNECTION_MAP[app].name} 연결` : label,
+    description: app ? "새 연결을 만들면 자동으로 선택됩니다." : "만들 연결 유형을 선택하세요.",
     emptyLabel: label,
     formatLabel: () => label,
     isPending,
@@ -148,7 +144,7 @@ export const useAppConnectionCreation = <TOption,>({
                       <ItemMedia>
                         <ProviderIcon
                           icon={image}
-                          alt={`${name} logo`}
+                          alt={`${name} 로고`}
                           className="size-6 object-contain"
                         />
                       </ItemMedia>
@@ -166,7 +162,7 @@ export const useAppConnectionCreation = <TOption,>({
             </ItemGroup>
             <DialogFooter>
               <Button variant="ghost" onClick={() => requestCancel(cancel)}>
-                Cancel
+                취소
               </Button>
             </DialogFooter>
           </>
@@ -175,8 +171,8 @@ export const useAppConnectionCreation = <TOption,>({
           open={isDiscardDialogOpen}
           onOpenChange={setIsDiscardDialogOpen}
           onDiscard={confirmDiscard}
-          title="Discard Connection Setup?"
-          description="Your progress configuring this connection will be lost."
+          title="연결 설정을 취소하시겠습니까?"
+          description="설정 중인 연결의 진행 내용이 사라집니다."
         />
       </CreationLifecycle>
     )

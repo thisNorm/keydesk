@@ -64,7 +64,10 @@ export const GitHubManifestCallbackPage = () => {
     };
 
     if (!gitHubAppId || !slug || !installState) {
-      createNotification({ type: "error", text: "Invalid GitHub manifest callback parameters." });
+      createNotification({
+        type: "error",
+        text: "GitHub 매니페스트 콜백 매개변수가 올바르지 않습니다."
+      });
       navigateBack(false);
       return;
     }
@@ -74,7 +77,10 @@ export const GitHubManifestCallbackPage = () => {
     // token stored when the user kicked off app creation. This blocks a crafted callback URL from
     // pre-seeding the connection form with an attacker-chosen app id.
     if (!consumeCsrfToken(installState)) {
-      createNotification({ type: "error", text: "Invalid GitHub manifest callback state." });
+      createNotification({
+        type: "error",
+        text: "GitHub 매니페스트 콜백 상태가 올바르지 않습니다."
+      });
       navigateBack(false);
       return;
     }
@@ -92,10 +98,10 @@ export const GitHubManifestCallbackPage = () => {
 
     createNotification({
       type: "success",
-      text: "GitHub App created. Select it and finish setting up your connection."
+      text: "GitHub App을 만들었습니다. 앱을 선택하고 연결 설정을 완료하세요."
     });
     navigateBack(true);
   }, []);
 
-  return <PageLoader text="Creating your GitHub App, please wait..." />;
+  return <PageLoader text="GitHub App을 만드는 중입니다. 잠시 기다려 주세요..." />;
 };

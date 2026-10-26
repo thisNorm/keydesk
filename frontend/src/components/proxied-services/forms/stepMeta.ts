@@ -44,7 +44,7 @@ export const PROXIED_SERVICE_STEPS: StepMeta[] = [
     subtitle: "Swap a placeholder the agent sends for the real secret.",
     rightLabel: "SUBSTITUTION",
     rightDescription:
-      "Infisical hands the agent a placeholder as an environment variable; the proxy swaps it for the real secret wherever it appears in the surfaces you pick (path, query, header, body). Ideal when the credential sits in the URL or the agent's client validates its format."
+      "Keydesk hands the agent a placeholder as an environment variable; the proxy swaps it for the real secret wherever it appears in the surfaces you pick (path, query, header, body). Ideal when the credential sits in the URL or the agent's client validates its format."
   },
   {
     step: ProxiedServiceStep.Review,

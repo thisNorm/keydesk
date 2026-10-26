@@ -258,7 +258,7 @@ export const PkiSyncRow = ({
                   <TooltipContent
                     side="left"
                     sideOffset={20}
-                  >{`Import certificates from this ${destinationName} destination into Infisical.`}</TooltipContent>
+                  >{`Import certificates from this ${destinationName} destination into Keydesk.`}</TooltipContent>
                 </Tooltip>
               </DropdownMenuItem>
             )}
@@ -283,7 +283,7 @@ export const PkiSyncRow = ({
                   <TooltipContent
                     side="left"
                     sideOffset={20}
-                  >{`Remove certificates synced by Infisical from this ${destinationName} destination.`}</TooltipContent>
+                  >{`Remove certificates synced by Keydesk from this ${destinationName} destination.`}</TooltipContent>
                 </Tooltip>
               </DropdownMenuItem>
             )}

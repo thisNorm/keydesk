@@ -33,12 +33,12 @@ type Props = {
 };
 
 const microsoftTeamsFormSchema = z.object({
-  slug: slugSchema({ min: 1, field: "Alias" }),
+  slug: slugSchema({ min: 1, field: "별칭" }),
   tenantId: z
     .string()
-    .min(1, { message: "Tenant ID is required" })
+    .min(1, { message: "테넌트 ID를 입력하세요" })
     .trim()
-    .uuid("Tenant ID must be a valid UUID"),
+    .uuid("테넌트 ID는 올바른 UUID여야 합니다"),
   description: z.string().optional()
 });
 
@@ -75,7 +75,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
   }: TMicrosoftTeamsFormData) => {
     if (!microsoftTeamsClientId) {
       createNotification({
-        text: "Microsoft Teams client ID is not set. Please contact your instance administrator.",
+        text: "Microsoft Teams 클라이언트 ID가 설정되지 않았습니다. 인스턴스 관리자에게 문의하세요.",
         type: "error"
       });
       return;
@@ -88,7 +88,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
 
       if (tenantId !== microsoftTeamsIntegration.tenantId) {
         createNotification({
-          text: "Tenant ID cannot be changed",
+          text: "테넌트 ID는 변경할 수 없습니다",
           type: "error"
         });
         return;
@@ -102,7 +102,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
       });
 
       createNotification({
-        text: "Updated Microsoft Teams integration",
+        text: "Microsoft Teams 연동을 수정했습니다",
         type: "success"
       });
 
@@ -141,17 +141,17 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
       autoComplete="off"
     >
       <p className="text-xs text-muted">
-        For seamless installations, ensure that the Infisical bot is already installed in your
-        Microsoft Teams tenant. See the{" "}
+        설치 전에 Microsoft Teams 테넌트에 Keydesk 봇이 설치되어 있는지 확인하세요. 다운로드 및 설치
+        방법은{" "}
         <a
           className="text-org underline underline-offset-2"
           href="https://infisical.com/docs/documentation/platform/workflow-integrations/microsoft-teams-integration"
           target="_blank"
           rel="noopener noreferrer"
         >
-          documentation
+          문서
         </a>{" "}
-        for the download and installation process.
+        문서를 확인하세요.
       </p>
       <Controller
         control={control}
@@ -159,7 +159,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
         render={({ field, fieldState: { error } }) => (
           <Field>
             <FieldLabel htmlFor="microsoft-teams-integration-alias">
-              Alias <span className="text-danger">*</span>
+              별칭 <span className="text-danger">*</span>
             </FieldLabel>
             <Input id="microsoft-teams-integration-alias" isError={Boolean(error)} {...field} />
             <FieldError>{error?.message}</FieldError>
@@ -173,7 +173,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
           render={({ field, fieldState: { error } }) => (
             <Field>
               <FieldLabel htmlFor="microsoft-teams-integration-tenant-id">
-                Tenant ID <span className="text-danger">*</span>
+                테넌트 ID <span className="text-danger">*</span>
               </FieldLabel>
               <Input
                 id="microsoft-teams-integration-tenant-id"
@@ -181,7 +181,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
                 {...field}
               />
               <FieldError>{error?.message}</FieldError>
-              <FieldDescription>The ID of the Microsoft Teams tenant to connect.</FieldDescription>
+              <FieldDescription>연결할 Microsoft Teams 테넌트의 ID입니다.</FieldDescription>
             </Field>
           )}
         />
@@ -191,7 +191,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
         name="description"
         render={({ field, fieldState: { error } }) => (
           <Field>
-            <FieldLabel htmlFor="microsoft-teams-integration-description">Description</FieldLabel>
+            <FieldLabel htmlFor="microsoft-teams-integration-description">설명</FieldLabel>
             <Input
               id="microsoft-teams-integration-description"
               isError={Boolean(error)}
@@ -204,7 +204,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
       {microsoftTeamsIntegration && (
         <Field>
           <FieldLabel htmlFor="microsoft-teams-integration-tenant">
-            Connected Microsoft Teams tenant
+            연결된 Microsoft Teams 테넌트
           </FieldLabel>
           <Input
             id="microsoft-teams-integration-tenant"
@@ -217,12 +217,12 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
         {onBack && (
           <Button type="button" variant="ghost" className="mr-auto" onClick={onBack}>
             <ChevronLeft />
-            Back
+            뒤로
           </Button>
         )}
         <DialogClose asChild>
           <Button type="button" variant="ghost">
-            Cancel
+            취소
           </Button>
         </DialogClose>
         <Button
@@ -231,7 +231,7 @@ export const MicrosoftTeamsIntegrationForm = ({ id, onClose, onBack }: Props) =>
           isPending={isSubmitting}
           isDisabled={!isDirty || isSubmitting}
         >
-          {id && microsoftTeamsIntegration ? "Save" : "Connect Microsoft Teams"}
+          {id && microsoftTeamsIntegration ? "저장" : "Microsoft Teams 연결"}
         </Button>
       </DialogFooter>
     </form>

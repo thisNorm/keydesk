@@ -172,7 +172,7 @@ export const CreateHsmConnectorWizard = ({ isOpen, onOpenChange, onCreated }: Pr
           <SheetHeader>
             <SheetTitle>Add HSM Connector</SheetTitle>
             <SheetDescription>
-              Register a hardware security module so Infisical can route key operations through it.
+              Register a hardware security module so Keydesk can route key operations through it.
             </SheetDescription>
           </SheetHeader>
 
@@ -230,7 +230,7 @@ export const CreateHsmConnectorWizard = ({ isOpen, onOpenChange, onCreated }: Pr
                 <div className="mt-auto space-y-3">
                   {isLast && (
                     <p className="text-xs leading-relaxed text-muted">
-                      Infisical runs a Verify against your HSM before saving. A wrong PIN, slot, or
+                      Keydesk runs a Verify against your HSM before saving. A wrong PIN, slot, or
                       unreachable Gateway will surface here.
                     </p>
                   )}

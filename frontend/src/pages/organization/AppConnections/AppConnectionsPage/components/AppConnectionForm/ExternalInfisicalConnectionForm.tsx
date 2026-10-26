@@ -44,13 +44,17 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(ExternalInfisicalConnectionMethod.MachineIdentityUniversalAuth),
     credentials: z.object({
-      instanceUrl: z.string().trim().url("Must be a valid URL").min(1, "Instance URL is required"),
+      instanceUrl: z
+        .string()
+        .trim()
+        .url("올바른 URL을 입력하세요")
+        .min(1, "인스턴스 URL을 입력하세요"),
       machineIdentityClientId: z
         .string()
         .trim()
-        .uuid("Must be a valid UUID")
-        .min(1, "Client ID is required"),
-      machineIdentityClientSecret: z.string().trim().min(1, "Client Secret is required")
+        .uuid("올바른 UUID를 입력하세요")
+        .min(1, "클라이언트 ID를 입력하세요"),
+      machineIdentityClientSecret: z.string().trim().min(1, "클라이언트 시크릿을 입력하세요")
     })
   })
 ]);
@@ -88,21 +92,21 @@ export const ExternalInfisicalConnectionForm = ({ appConnection, onSubmit }: Pro
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.ExternalInfisical].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(ExternalInfisicalConnectionMethod).map((method) => {
@@ -125,14 +129,13 @@ export const ExternalInfisicalConnectionForm = ({ appConnection, onSubmit }: Pro
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL
+                인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The base URL of the external Infisical instance (e.g.,
-                    https://app.infisical.com)
+                    외부 Infisical 인스턴스의 기본 URL입니다(예: https://app.infisical.com)
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -154,14 +157,14 @@ export const ExternalInfisicalConnectionForm = ({ appConnection, onSubmit }: Pro
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="machine-identity-client-id">
-                Machine Identity Client ID
+                머신 ID의 클라이언트 ID
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The Client ID of the Machine Identity with Universal Auth configured on the
-                    external Infisical instance
+                    외부 Infisical 인스턴스에서 Universal Auth가 구성된 머신 ID의 클라이언트
+                    ID입니다
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -169,7 +172,7 @@ export const ExternalInfisicalConnectionForm = ({ appConnection, onSubmit }: Pro
                 id="machine-identity-client-id"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                placeholder="Enter Machine Identity Client ID"
+                placeholder="머신 ID의 클라이언트 ID를 입력하세요"
                 isError={Boolean(error)}
               />
               <FieldError errors={[error]} />
@@ -183,7 +186,7 @@ export const ExternalInfisicalConnectionForm = ({ appConnection, onSubmit }: Pro
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="machine-identity-client-secret">
-                Machine Identity Client Secret
+                머신 ID의 클라이언트 시크릿
               </FieldLabel>
               <SecretInput
                 aria-describedby={error ? "machine-identity-client-secret-error" : undefined}
@@ -196,9 +199,7 @@ export const ExternalInfisicalConnectionForm = ({ appConnection, onSubmit }: Pro
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Infisical"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Infisical에 연결"} />
       </form>
     </FormProvider>
   );

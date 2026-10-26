@@ -244,7 +244,7 @@ const Content = ({ onClose, appConnections }: ContentProps) => {
                 as the environment (e.g., <code className="text-xs">secret/data/prod/app</code> →
                 env: <code className="text-xs">prod</code>, path:{" "}
                 <code className="text-xs">/app</code>). Vault capabilities and wildcards are
-                automatically mapped to equivalent Infisical permissions and glob patterns.
+                automatically mapped to equivalent Keydesk permissions and glob patterns.
               </p>
             </div>
           </AlertDescription>
@@ -395,7 +395,7 @@ export const VaultPolicyImportModal = ({ isOpen, onOpenChange, appConnections }:
           <SheetTitle>Import from HashiCorp Vault</SheetTitle>
           <SheetDescription>
             Select a policy from your Vault namespace or paste your own HCL policy to translate it
-            into Infisical permissions.
+            into Keydesk permissions.
           </SheetDescription>
         </SheetHeader>
         <Content onClose={() => onOpenChange(false)} appConnections={appConnections} />

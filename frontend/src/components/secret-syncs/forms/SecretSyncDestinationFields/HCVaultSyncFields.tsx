@@ -55,9 +55,9 @@ export const HCVaultSyncFields = () => {
                 </TooltipTrigger>
                 <TooltipContent className="max-w-md">
                   Ensure the Secrets Engine mount exists and that your App Role / Access Token has
-                  permission to access it. Infisical currently supports KV Engines version 1 and 2.
-                  If you&apos;re using Hashicorp Cloud Platform, ensure that you correctly defined
-                  your &apos;namespace&apos; when creating the App Connection.
+                  permission to access it. Keydesk currently supports KV Engines version 1 and 2. If
+                  you&apos;re using Hashicorp Cloud Platform, ensure that you correctly defined your
+                  &apos;namespace&apos; when creating the App Connection.
                 </TooltipContent>
               </Tooltip>
             </FieldLabel>

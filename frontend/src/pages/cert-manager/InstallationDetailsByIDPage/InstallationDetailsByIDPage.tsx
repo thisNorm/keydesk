@@ -246,7 +246,7 @@ export const InstallationDetailsByIDPage = () => {
     <>
       <Helmet>
         <title>Installation Details</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <Page />
     </>

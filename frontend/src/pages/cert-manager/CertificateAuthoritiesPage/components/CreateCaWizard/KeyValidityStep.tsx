@@ -41,7 +41,7 @@ import { CaWizardForm } from "./schemas";
 import { HsmConnectorOption, isKeyAlgorithmSupportedByKeySource } from "./types";
 
 const KEY_SOURCE_DESCRIPTIONS: Record<CertKeySource, string> = {
-  [CertKeySource.Infisical]: "Infisical generates and manages the CA keypair for you.",
+  [CertKeySource.Infisical]: "Keydesk generates and manages the CA keypair for you.",
   [CertKeySource.Hsm]:
     "The CA keypair is generated on a Hardware Security Module and every signature is performed there.",
   [CertKeySource.AwsKms]:
@@ -123,7 +123,7 @@ export const KeyValidityStep = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent position="popper">
-                  <SelectItem value={CertKeySource.Infisical}>Infisical</SelectItem>
+                  <SelectItem value={CertKeySource.Infisical}>Keydesk</SelectItem>
                   <SelectItem value={CertKeySource.Hsm} disabled={!isHsmLicensed || !canAttachHsm}>
                     <div className="flex items-center gap-2">
                       HSM
@@ -193,7 +193,7 @@ export const KeyValidityStep = ({
                   isError={Boolean(error)}
                 />
                 <FieldDescription>
-                  The HSM on which Infisical will generate the CA signing key.
+                  The HSM on which Keydesk will generate the CA signing key.
                 </FieldDescription>
                 <FieldError errors={[error]} />
               </FieldContent>
@@ -240,7 +240,7 @@ export const KeyValidityStep = ({
                     isError={Boolean(error)}
                   />
                   <FieldDescription>
-                    The AWS connection Infisical uses to create the key and send signing requests.
+                    The AWS connection Keydesk uses to create the key and send signing requests.
                   </FieldDescription>
                   <FieldError errors={[error]} />
                 </FieldContent>

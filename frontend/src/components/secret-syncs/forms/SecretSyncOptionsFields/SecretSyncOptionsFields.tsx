@@ -185,8 +185,8 @@ export const SecretSyncOptionsFields = ({ hideInitialSync, children }: Props) =>
                       <TooltipContent className="max-w-lg">
                         <div className="flex flex-col gap-3">
                           <p>
-                            Specify how Infisical should resolve the initial sync to{" "}
-                            {destinationName}. The following options are available:
+                            Specify how Keydesk should resolve the initial sync to {destinationName}
+                            . The following options are available:
                           </p>
                           <ul className="flex list-disc flex-col gap-3 pl-4">
                             {Object.values(SECRET_SYNC_INITIAL_SYNC_BEHAVIOR_MAP).map((details) => {
@@ -241,9 +241,9 @@ export const SecretSyncOptionsFields = ({ hideInitialSync, children }: Props) =>
                 <FieldContent>
                   <Label htmlFor="disable-secret-deletion">Prevent secret deletion</Label>
                   <FieldDescription>
-                    Infisical will add and update secrets in {destinationName} but never delete
-                    them. Turn this off to let syncs remove any secrets in {destinationName} that
-                    are not in Infisical.
+                    Keydesk will add and update secrets in {destinationName} but never delete them.
+                    Turn this off to let syncs remove any secrets in {destinationName} that are not
+                    in Keydesk.
                   </FieldDescription>
                 </FieldContent>
                 <Toggle
@@ -272,7 +272,7 @@ export const SecretSyncOptionsFields = ({ hideInitialSync, children }: Props) =>
                     <AlertDialogTitle>Allow Secret Deletion</AlertDialogTitle>
                     <AlertDialogDescription>
                       Turning off &quot;Prevent secret deletion&quot; lets a sync delete secrets in{" "}
-                      {destinationName} that are not managed by Infisical.
+                      {destinationName} that are not managed by Keydesk.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

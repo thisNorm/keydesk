@@ -17,8 +17,8 @@ export const AppConnectionsPage = withProjectPermission(
     return (
       <div className="bg-page">
         <Helmet>
-          <title>Infisical | App Connections</title>
-          <link rel="icon" href="/infisical.ico" />
+          <title>Keydesk | 앱 연결</title>
+          <link rel="icon" href="/keydesk.svg" />
           <meta property="og:image" content="/images/message.png" />
         </Helmet>
         <div className="flex w-full justify-center bg-page text-foreground-inverse">
@@ -26,10 +26,8 @@ export const AppConnectionsPage = withProjectPermission(
             <PageHeader
               scope={currentProject.type}
               className="w-full"
-              title={
-                hidesProjects(currentProject.type) ? "App Connections" : "Project App Connections"
-              }
-              description={`Manage ${getProjectLabel(currentProject.type)} App Connections`}
+              title={hidesProjects(currentProject.type) ? "앱 연결" : "프로젝트 앱 연결"}
+              description={`관리 대상: ${getProjectLabel(currentProject.type)} 앱 연결`}
             />
 
             <AppConnectionsTable projectId={currentProject.id} projectType={currentProject.type} />

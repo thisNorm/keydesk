@@ -38,7 +38,7 @@ export const SshCaSetupCallout = ({ accountType, authMethod, accountId }: Props)
             <DocumentationLinkBadge href={PamDocsUrls.guides.sshCertificateAuth} />
           </div>
           <p className="mt-1 text-muted">
-            Certificate authentication requires the target host to trust Infisical&apos;s SSH
+            Certificate authentication requires the target host to trust Keydesk&apos;s SSH
             certificate authority. Copy the install command and run it on the host as root,
             otherwise certificate-based sessions will fail.
           </p>

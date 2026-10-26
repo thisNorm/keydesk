@@ -28,9 +28,9 @@ export const CreateUserStatementAlert = ({ statement }: Props) => {
       <InfoIcon />
       <AlertTitle>Example Create User Statement</AlertTitle>
       <AlertDescription className="gap-3">
-        <p>Infisical requires two database users to be created for rotation.</p>
+        <p>Keydesk requires two database users to be created for rotation.</p>
         <p>
-          These users are intended to be solely managed by Infisical. Altering their login after
+          These users are intended to be solely managed by Keydesk. Altering their login after
           rotation may cause unexpected failure.
         </p>
         <p>

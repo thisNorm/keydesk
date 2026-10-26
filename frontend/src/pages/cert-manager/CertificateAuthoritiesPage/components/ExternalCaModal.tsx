@@ -1013,8 +1013,8 @@ export const ExternalCaModal = ({ popUp, handlePopUpToggle, onComplete }: Props)
               <>
                 <SheetTitle>Connect External CA</SheetTitle>
                 <SheetDescription>
-                  Select the third-party certificate authority to connect to. Infisical issues
-                  through it rather than hosting the signing key.
+                  Select the third-party certificate authority to connect to. Keydesk issues through
+                  it rather than hosting the signing key.
                 </SheetDescription>
               </>
             ) : (

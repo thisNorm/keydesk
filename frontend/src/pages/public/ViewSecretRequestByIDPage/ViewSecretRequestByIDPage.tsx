@@ -253,7 +253,7 @@ export const ViewSecretRequestByIDPage = () => {
     <div className="relative flex max-h-screen min-h-screen flex-col overflow-y-auto bg-page px-4 text-foreground scheme-dark">
       <AuthPageBackground />
       <Helmet>
-        <title>Secret Request | Infisical</title>
+        <title>Secret Request | Keydesk</title>
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <AuthPageHeader />

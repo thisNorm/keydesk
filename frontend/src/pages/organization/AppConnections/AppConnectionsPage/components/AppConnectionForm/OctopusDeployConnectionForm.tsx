@@ -47,10 +47,10 @@ const formSchema = z.discriminatedUnion("method", [
       instanceUrl: z
         .string()
         .trim()
-        .url("Invalid Instance URL")
-        .min(1, "Instance URL required")
+        .url("올바른 인스턴스 URL을 입력하세요")
+        .min(1, "인스턴스 URL을 입력하세요")
         .max(255),
-      apiKey: z.string().trim().min(1, "API Key required")
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요")
     })
   })
 ]);
@@ -80,21 +80,20 @@ export const OctopusDeployConnectionForm = ({ appConnection, onSubmit }: Props) 
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.OctopusDeploy].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.OctopusDeploy].name}
+                    . 이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)} id="method">
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(OctopusDeployConnectionMethod).map((method) => {
@@ -117,13 +116,13 @@ export const OctopusDeployConnectionForm = ({ appConnection, onSubmit }: Props) 
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Octopus Deploy Instance URL
+                Octopus Deploy 인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The URL of the Octopus Deploy Connect Server instance to authenticate with.
+                    인증할 Octopus Deploy Connect Server 인스턴스의 URL입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -143,7 +142,7 @@ export const OctopusDeployConnectionForm = ({ appConnection, onSubmit }: Props) 
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key">Octopus Deploy API Key</FieldLabel>
+              <FieldLabel htmlFor="api-key">Octopus Deploy API 키</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-key-error" : undefined}
                 id="api-key"
@@ -156,7 +155,7 @@ export const OctopusDeployConnectionForm = ({ appConnection, onSubmit }: Props) 
           )}
         />
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Octopus Deploy"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "Octopus Deploy에 연결"}
         />
       </form>
     </FormProvider>

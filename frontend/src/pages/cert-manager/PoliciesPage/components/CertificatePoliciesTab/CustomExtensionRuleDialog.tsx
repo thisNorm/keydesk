@@ -156,7 +156,7 @@ export const CustomExtensionRuleDialog = ({
               />
               <FieldDescription>
                 {isPreset
-                  ? "Infisical names this extension."
+                  ? "Keydesk names this extension."
                   : "Optional label, shown wherever this extension appears."}
               </FieldDescription>
             </FieldContent>

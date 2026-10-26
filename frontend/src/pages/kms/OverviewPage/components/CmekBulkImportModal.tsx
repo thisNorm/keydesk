@@ -565,8 +565,7 @@ export const CmekBulkImportModal = ({ isOpen, onOpenChange, projectId }: Props) 
     }
     return {
       title: "Import Keys",
-      description:
-        "Upload a JSON file exported from Infisical KMS to import keys into this project."
+      description: "Upload a JSON file exported from Keydesk KMS to import keys into this project."
     };
   };
 

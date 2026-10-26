@@ -22,11 +22,10 @@ import {
 import { EventType } from "@app/ee/services/audit-log/audit-log-types";
 import { InfisicalProjectTemplate } from "@app/ee/services/project-template/project-template-types";
 import { ApiDocsTags, AUDIT_LOG_SETTINGS, FOLDERS, PROJECTS } from "@app/lib/api-docs";
-import { CharacterType, characterValidator } from "@app/lib/validator/validate-string";
 import { re2Validator } from "@app/lib/zod";
 import { JobState } from "@app/queue/queue-service";
 import { projectCreationLimit, readLimit, requestAccessLimit, writeLimit } from "@app/server/config/rateLimiter";
-import { slugSchema } from "@app/server/lib/schemas";
+import { GenericResourceNameSchema, slugSchema } from "@app/server/lib/schemas";
 import { getTelemetryDistinctId } from "@app/server/lib/telemetry";
 import { verifyAuth } from "@app/server/plugins/auth/verify-auth";
 import { ActorType, AuthMode } from "@app/services/auth/auth-type";
@@ -1192,16 +1191,7 @@ export const registerProjectRouter = async (server: FastifyZodProvider) => {
         orderBy: z.nativeEnum(SearchProjectSortBy).optional().default(SearchProjectSortBy.NAME),
         orderDirection: z.nativeEnum(SortDirection).optional().default(SortDirection.ASC),
         projectIds: z.string().trim().array().optional(),
-        name: z
-          .string()
-          .trim()
-          .refine(
-            (val) => characterValidator([CharacterType.AlphaNumeric, CharacterType.Spaces, CharacterType.Hyphen])(val),
-            {
-              message: "Invalid pattern: only alphanumeric characters, spaces, - are allowed."
-            }
-          )
-          .optional()
+        name: GenericResourceNameSchema.optional()
       }),
       response: {
         200: z.object({

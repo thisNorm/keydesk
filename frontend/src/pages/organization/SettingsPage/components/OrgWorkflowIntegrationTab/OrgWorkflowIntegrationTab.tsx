@@ -54,14 +54,14 @@ import { IntegrationFormDetails } from "./IntegrationFormDetails";
 
 const renderStatus = (status: WorkflowIntegrationStatus) => {
   if (status === WorkflowIntegrationStatus.Installed) {
-    return <Badge variant="success">Installed</Badge>;
+    return <Badge variant="success">설치됨</Badge>;
   }
 
   if (status === WorkflowIntegrationStatus.Pending) {
-    return <Badge variant="warning">Pending</Badge>;
+    return <Badge variant="warning">대기 중</Badge>;
   }
 
-  return <Badge variant="danger">Failed</Badge>;
+  return <Badge variant="danger">실패</Badge>;
 };
 
 export const OrgWorkflowIntegrationTab = withPermission(
@@ -114,7 +114,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
 
       handlePopUpClose("removeIntegration");
       createNotification({
-        text: `Deleted integration "${slug}"`,
+        text: `연동 삭제 완료: "${slug}"`,
         type: "success"
       });
     };
@@ -145,7 +145,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
       });
 
       createNotification({
-        text: "The Microsoft Teams bot is successfully installed in your Microsoft Teams tenant",
+        text: "Microsoft Teams 테넌트에 봇을 설치했습니다",
         type: "success"
       });
     };
@@ -153,9 +153,9 @@ export const OrgWorkflowIntegrationTab = withPermission(
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Workflow Integrations</CardTitle>
+          <CardTitle>워크플로 연동</CardTitle>
           <CardDescription>
-            Connect Infisical to other platforms for notification and workflow integrations.
+            알림과 워크플로를 연동하려면 Keydesk를 다른 플랫폼에 연결하세요.
           </CardDescription>
           <CardAction>
             <OrgPermissionCan I={OrgPermissionActions.Create} an={OrgPermissionSubjects.Settings}>
@@ -169,7 +169,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
                   isDisabled={!isAllowed}
                 >
                   <Plus />
-                  Add integration
+                  연동 추가
                 </Button>
               )}
             </OrgPermissionCan>
@@ -179,9 +179,9 @@ export const OrgWorkflowIntegrationTab = withPermission(
           {!isWorkflowIntegrationsLoading && workflowIntegrations?.length === 0 ? (
             <Empty className="border">
               <EmptyHeader>
-                <EmptyTitle>No workflow integrations connected</EmptyTitle>
+                <EmptyTitle>연결된 워크플로 연동이 없습니다</EmptyTitle>
                 <EmptyDescription>
-                  Connect Slack or Microsoft Teams to enable notification and approval workflows.
+                  알림과 승인 워크플로를 사용하려면 Slack 또는 Microsoft Teams를 연결하세요.
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -189,10 +189,10 @@ export const OrgWorkflowIntegrationTab = withPermission(
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-1/3">Provider</TableHead>
-                  <TableHead>Alias</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-px text-right" aria-label="Actions" />
+                  <TableHead className="w-1/3">공급자</TableHead>
+                  <TableHead>별칭</TableHead>
+                  <TableHead>상태</TableHead>
+                  <TableHead className="w-px text-right" aria-label="작업" />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -241,7 +241,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
                               <IconButton
                                 variant="ghost"
                                 size="xs"
-                                aria-label={`Actions for integration ${workflowIntegration.slug}`}
+                                aria-label={`연동 작업: ${workflowIntegration.slug}`}
                               >
                                 <MoreHorizontal />
                               </IconButton>
@@ -256,7 +256,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
                                 }
                               >
                                 <Info />
-                                View details
+                                세부 정보 보기
                               </DropdownMenuItem>
                               {workflowIntegration.integration ===
                                 WorkflowIntegrationPlatform.SLACK && (
@@ -270,7 +270,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
                                       onClick={() => triggerSlackReinstall(workflowIntegration.id)}
                                     >
                                       <RotateCcw />
-                                      Reinstall
+                                      다시 설치
                                     </DropdownMenuItem>
                                   )}
                                 </OrgPermissionCan>
@@ -291,7 +291,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
                                       }
                                     >
                                       <ShieldCheck />
-                                      Check installation status
+                                      설치 상태 확인
                                     </DropdownMenuItem>
                                   )}
                                 </OrgPermissionCan>
@@ -313,7 +313,7 @@ export const OrgWorkflowIntegrationTab = withPermission(
                                     }
                                   >
                                     <Trash2 />
-                                    Delete
+                                    삭제
                                   </DropdownMenuItem>
                                 )}
                               </OrgPermissionCan>
@@ -340,8 +340,8 @@ export const OrgWorkflowIntegrationTab = withPermission(
         <ConfirmationAlertDialog
           isOpen={popUp.removeIntegration.isOpen}
           onOpenChange={(isOpen) => handlePopUpToggle("removeIntegration", isOpen)}
-          title={`Delete integration "${removeIntegrationData?.slug ?? ""}"?`}
-          description="Projects using this integration will stop sending notifications to it. This cannot be undone."
+          title={`삭제할 연동: "${removeIntegrationData?.slug ?? ""}"?`}
+          description="이 연동을 사용하는 프로젝트는 더 이상 해당 연동으로 알림을 보내지 않습니다. 이 작업은 되돌릴 수 없습니다."
           confirmKey={removeIntegrationData?.slug ?? ""}
           isPending={isDeletingIntegration}
           onConfirm={handleRemoveIntegration}

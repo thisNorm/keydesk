@@ -1,7 +1,7 @@
 import type { JSX } from "react";
-import { SiGithub, SiYoutube } from "react-icons/si";
+import { SiGithub } from "react-icons/si";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, LayoutGrid, Users } from "lucide-react";
+import { ArrowRight, BookOpen, LayoutGrid } from "lucide-react";
 
 import {
   Badge,
@@ -38,23 +38,16 @@ const COMMUNITY_LINKS: {
   icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
 }[] = [
   {
-    label: "29k+ Stars",
-    href: "https://github.com/Infisical/infisical",
+    label: "Keydesk GitHub",
+    href: "https://github.com/thisNorm/keydesk",
     resource: "github",
     icon: SiGithub
   },
   {
-    label: "토론",
-    isNew: true,
-    href: "https://community.infisical.com/latest",
+    label: "사용 안내",
+    href: "https://github.com/thisNorm/keydesk#readme",
     resource: "discussions",
-    icon: Users
-  },
-  {
-    label: "50+ Videos",
-    href: "https://www.youtube.com/@infisical_os",
-    resource: "youtube",
-    icon: SiYoutube
+    icon: BookOpen
   }
 ];
 

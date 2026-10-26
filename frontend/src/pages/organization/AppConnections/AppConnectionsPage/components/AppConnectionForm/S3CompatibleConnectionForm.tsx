@@ -53,21 +53,18 @@ const buildFormSchema = (allowedStorageHostnames: string[]) =>
         endpoint: z
           .string()
           .trim()
-          .min(1, "Endpoint required")
+          .min(1, "엔드포인트를 입력하세요")
           .refine(
             (endpoint) => Boolean(getS3CompatibleProviderName(endpoint, allowedStorageHostnames)),
-            "Enter the S3 API endpoint of a supported provider, without the bucket name"
+            "버킷 이름을 제외한 지원 공급자의 S3 API 엔드포인트를 입력하세요"
           ),
-        accessKeyId: z.string().trim().min(1, "Access Key ID required"),
-        secretAccessKey: z.string().trim().min(1, "Secret Access Key required"),
+        accessKeyId: z.string().trim().min(1, "액세스 키 ID를 입력하세요"),
+        secretAccessKey: z.string().trim().min(1, "시크릿 액세스 키를 입력하세요"),
         region: z
           .string()
           .trim()
-          .max(64, "Region cannot exceed 64 characters")
-          .regex(
-            /^[a-zA-Z0-9_-]*$/,
-            "Region can only contain letters, numbers, hyphens and underscores"
-          )
+          .max(64, "리전은 64자를 초과할 수 없습니다")
+          .regex(/^[a-zA-Z0-9_-]*$/, "리전에는 영문자, 숫자, 하이픈, 밑줄만 사용할 수 있습니다")
           .optional()
           .transform((region) => region || undefined)
       })
@@ -125,21 +122,20 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.S3Compatible].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.S3Compatible].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(S3CompatibleConnectionMethod).map((method) => {
@@ -161,7 +157,7 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="endpoint">Endpoint</FieldLabel>
+              <FieldLabel htmlFor="endpoint">엔드포인트</FieldLabel>
               <Input
                 id="endpoint"
                 value={value}
@@ -170,7 +166,7 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
                 isError={Boolean(error?.message)}
               />
               <FieldDescription>
-                The S3 API endpoint, without the bucket name. Supports {supportedEndpoints}.
+                버킷 이름을 제외한 S3 API 엔드포인트입니다. 지원 공급자: {supportedEndpoints}.
               </FieldDescription>
               <FieldError errors={[error]} />
             </Field>
@@ -184,7 +180,7 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
                 <FieldLabel htmlFor="region">
-                  Region <span className="text-muted">(optional)</span>
+                  리전 <span className="text-muted">(선택 사항)</span>
                 </FieldLabel>
                 <Input
                   id="region"
@@ -194,7 +190,7 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
                   isError={Boolean(error?.message)}
                 />
                 <FieldDescription>
-                  Leave blank unless your server expects a region other than us-east-1.
+                  서버에 us-east-1 이외의 리전이 필요한 경우에만 입력하세요.
                 </FieldDescription>
                 <FieldError errors={[error]} />
               </Field>
@@ -207,7 +203,7 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="access-key-id">Access Key ID</FieldLabel>
+              <FieldLabel htmlFor="access-key-id">액세스 키 ID</FieldLabel>
               <Input
                 id="access-key-id"
                 value={value}
@@ -224,7 +220,7 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="secret-access-key">Secret Access Key</FieldLabel>
+              <FieldLabel htmlFor="secret-access-key">시크릿 액세스 키</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "secret-access-key-error" : undefined}
                 id="secret-access-key"
@@ -239,8 +235,8 @@ export const S3CompatibleConnectionForm = ({ appConnection, onSubmit }: Props) =
         <AppConnectionFormFooter
           submitLabel={
             isUpdate
-              ? "Update Credentials"
-              : `Connect to ${APP_CONNECTION_MAP[AppConnection.S3Compatible].name}`
+              ? "인증 정보 수정"
+              : `연결 대상: ${APP_CONNECTION_MAP[AppConnection.S3Compatible].name}`
           }
         />
       </form>

@@ -84,18 +84,18 @@ export const AwsSecretsManagerSyncFields = () => {
                 </TooltipTrigger>
                 <TooltipContent className="max-w-lg">
                   <div className="flex flex-col gap-3">
-                    <p>Specify how Infisical should map secrets to AWS Secrets Manager:</p>
+                    <p>Specify how Keydesk should map secrets to AWS Secrets Manager:</p>
                     <ul className="flex list-disc flex-col gap-3 pl-4">
                       <li>
                         <p className="text-label">
                           <span className="font-medium text-foreground-soft">One-To-One</span>: Each
-                          Infisical secret will be mapped to a separate AWS Secrets Manager secret.
+                          Keydesk secret will be mapped to a separate AWS Secrets Manager secret.
                         </p>
                       </li>
                       <li>
                         <p className="text-label">
                           <span className="font-medium text-foreground-soft">Many-To-One</span>: All
-                          Infisical secrets will be mapped to a single AWS Secrets Manager secret.
+                          Keydesk secrets will be mapped to a single AWS Secrets Manager secret.
                         </p>
                       </li>
                     </ul>

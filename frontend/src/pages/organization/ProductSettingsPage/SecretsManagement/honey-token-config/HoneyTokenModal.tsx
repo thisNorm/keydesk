@@ -214,7 +214,7 @@ export const HoneyTokenModal = ({ isOpen, onOpenChange }: Props) => {
           <SheetHeader>
             <SheetTitle>Configure AWS Honey Tokens</SheetTitle>
             <SheetDescription>
-              Plant a decoy IAM credential in your AWS account. Infisical alerts on every access
+              Plant a decoy IAM credential in your AWS account. Keydesk alerts on every access
               attempt.
             </SheetDescription>
           </SheetHeader>
@@ -338,7 +338,7 @@ export const HoneyTokenModal = ({ isOpen, onOpenChange }: Props) => {
                 </div>
                 <p className="mb-3 text-sm text-muted">
                   Run this command to create the CloudFormation stack that provisions the decoy IAM
-                  user and wires CloudTrail alerts back to Infisical.
+                  user and wires CloudTrail alerts back to Keydesk.
                 </p>
                 <div className="relative">
                   <pre className="rounded-md border border-border bg-card p-4 pr-12 font-mono text-xs leading-relaxed break-all whitespace-pre-wrap text-foreground">

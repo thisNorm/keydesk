@@ -41,7 +41,7 @@ const initialSyncBehaviors = [
     value: IntegrationSyncBehavior.PREFER_TARGET
   },
   {
-    label: "Import non-sensitive - Prefer values from Infisical",
+    label: "Import non-sensitive - Prefer values from Keydesk",
     value: IntegrationSyncBehavior.PREFER_SOURCE
   }
 ];
@@ -142,7 +142,7 @@ export const TerraformCloudConfigurePage = () => {
             <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/terraform-cloud" />
           </CardTitle>
           <CardDescription>
-            Specify the encironment and path within Infisical that you want to push to which project
+            Specify the encironment and path within Keydesk that you want to push to which project
             in Terraform.
           </CardDescription>
         </CardHeader>

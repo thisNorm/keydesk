@@ -132,7 +132,7 @@ export const OrgOauthClientsTab = () => {
             OAuth Applications
           </CardTitle>
           <CardDescription>
-            Register external platforms to request delegated access to Infisical on a user&apos;s
+            Register external platforms to request delegated access to Keydesk on a user&apos;s
             behalf via OAuth 2.0, limited to that user&apos;s permissions.
           </CardDescription>
           <CardAction>
@@ -173,8 +173,8 @@ export const OrgOauthClientsTab = () => {
                   <EmptyHeader>
                     <EmptyTitle>No OAuth applications found</EmptyTitle>
                     <EmptyDescription>
-                      Add an application to let an external platform access Infisical on a
-                      user&apos;s behalf via OAuth 2.0.
+                      Add an application to let an external platform access Keydesk on a user&apos;s
+                      behalf via OAuth 2.0.
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
@@ -323,7 +323,7 @@ export const OrgOauthClientsTab = () => {
         isOpen={popUp.deleteClient.isOpen}
         onOpenChange={(isOpen) => handlePopUpToggle("deleteClient", isOpen)}
         title={`Delete "${clientPendingDeletion?.name ?? ""}"?`}
-        description="External platforms using this application will no longer be able to access Infisical on a user's behalf, and existing tokens will be revoked."
+        description="External platforms using this application will no longer be able to access Keydesk on a user's behalf, and existing tokens will be revoked."
         confirmKey={clientPendingDeletion?.name ?? ""}
         confirmLabel="Delete Application"
         onConfirm={onDeleteClient}

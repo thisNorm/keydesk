@@ -324,7 +324,7 @@ export const InitialStep = ({ isAdmin }: Props) => {
         <AuthPagePanel>
           <CardHeader className="mb-8 gap-2">
             <CardTitle className="bg-linear-to-b from-foreground-inverse to-foreground-soft bg-clip-text font-alliance text-2xl font-normal text-transparent">
-              Infisical 로그인
+              Keydesk 로그인
             </CardTitle>
             <CardAction>
               <RegionSelect compact />
@@ -356,7 +356,7 @@ export const InitialStep = ({ isAdmin }: Props) => {
             로그인
           </CardTitle>
           <CardDescription className="ml-0.5 text-base">
-            {isAdmin ? "최고 관리자 화면에 로그인하세요." : "Infisical 계정에 로그인하세요."}
+            {isAdmin ? "최고 관리자 화면에 로그인하세요." : "Keydesk 계정에 로그인하세요."}
           </CardDescription>
           <CardAction>
             <RegionSelect compact />

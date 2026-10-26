@@ -45,7 +45,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(DigiCertConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required"),
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요"),
       region: z.nativeEnum(DigiCertRegion)
     })
   })
@@ -77,21 +77,21 @@ export const DigiCertConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.DigiCert].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(DigiCertConnectionMethod).map((method) => {
@@ -114,20 +114,20 @@ export const DigiCertConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="region">
-                CertCentral Region
+                CertCentral 리전
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Select the CertCentral tenant your API key was issued in. US and EU are
-                    independent. A US key cannot be used against EU and vice-versa.
+                    API 키가 발급된 CertCentral 테넌트를 선택하세요. 미국과 유럽은 서로 독립적이므로
+                    각 리전에서 발급한 키를 다른 리전에서 사용할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="region" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a region..." />
+                  <SelectValue placeholder="리전을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   <SelectItem value={DigiCertRegion.US}>US</SelectItem>
@@ -144,7 +144,7 @@ export const DigiCertConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key">CertCentral API Key</FieldLabel>
+              <FieldLabel htmlFor="api-key">CertCentral API 키</FieldLabel>
               <SecretInput
                 aria-describedby={
                   error ? "api-key-description api-key-error" : "api-key-description"
@@ -156,16 +156,14 @@ export const DigiCertConnectionForm = ({ appConnection, onSubmit }: Props) => {
               />
               {!error && (
                 <FieldDescription id="api-key-description">
-                  Generate an API key in CertCentral under Automation &gt; API Keys.
+                  CertCentral의 Automation &gt; API Keys에서 API 키를 만드세요.
                 </FieldDescription>
               )}
               <FieldError id="api-key-error" errors={[error]} />
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to DigiCert"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "DigiCert에 연결"} />
       </form>
     </FormProvider>
   );

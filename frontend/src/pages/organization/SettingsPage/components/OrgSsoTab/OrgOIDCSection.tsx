@@ -176,7 +176,7 @@ export const OrgOIDCSection = ({ onSwitchProvider }: Props): JSX.Element => {
                 <FieldContent>
                   <FieldTitle>Enable OIDC</FieldTitle>
                   <FieldDescription>
-                    Allow members to authenticate into Infisical with OIDC.
+                    Allow members to authenticate into Keydesk with OIDC.
                   </FieldDescription>
                 </FieldContent>
                 {!isPending && (
@@ -247,7 +247,7 @@ export const OrgOIDCSection = ({ onSwitchProvider }: Props): JSX.Element => {
                   </HoverCard>
                 </FieldTitle>
                 <FieldDescription>
-                  Infisical will manage user group memberships based on the OIDC provider.
+                  Keydesk will manage user group memberships based on the OIDC provider.
                 </FieldDescription>
               </FieldContent>
               <OrgPermissionCan I={OrgPermissionActions.Edit} a={OrgPermissionSubjects.Sso}>

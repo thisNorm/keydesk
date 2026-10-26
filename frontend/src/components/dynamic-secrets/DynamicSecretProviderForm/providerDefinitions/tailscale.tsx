@@ -56,7 +56,7 @@ const TailscaleFields = () => {
       name: "inputs.description",
       type: "text",
       label: "Description",
-      placeholder: "Infisical dynamic access",
+      placeholder: "Keydesk dynamic access",
       isOptional: true
     },
     {

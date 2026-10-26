@@ -526,7 +526,7 @@ export const CreatePkiSyncForm = ({
             <AlertDialogTitle>Certificate Sync Behavior</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="flex flex-col gap-2">
-                <p>Infisical is the source of truth for synced destinations.</p>
+                <p>Keydesk is the source of truth for synced destinations.</p>
                 <p>
                   Certificates in the destination will be overwritten, and any direct edits there
                   may be overwritten by future syncs.

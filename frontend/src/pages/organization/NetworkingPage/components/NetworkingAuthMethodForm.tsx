@@ -572,7 +572,7 @@ export const NetworkingAuthMethodForm = ({
                     </TooltipTrigger>
                     <TooltipContent className="max-w-md">
                       Routes the TokenReview through an existing gateway, for clusters whose API
-                      server Infisical cannot reach. It must be a different gateway that is already
+                      server Keydesk cannot reach. It must be a different gateway that is already
                       enrolled and connected, since a gateway cannot vouch for itself.
                     </TooltipContent>
                   </Tooltip>
@@ -637,7 +637,7 @@ export const NetworkingAuthMethodForm = ({
                         Who performs the TokenReview. Gateway as Reviewer has the gateway do it with
                         its own service account, which needs no host or reviewer token but requires
                         that gateway to run as a pod in the cluster. Manual Token Reviewer JWT has
-                        Infisical do it, tunnelling through the gateway to the host below.
+                        Keydesk do it, tunnelling through the gateway to the host below.
                       </TooltipContent>
                     </Tooltip>
                   </FieldLabel>
@@ -681,7 +681,7 @@ export const NetworkingAuthMethodForm = ({
                             cluster-info&apos;
                           </p>
                           <p>
-                            Must be reachable from Infisical, which reviews the token on each login.
+                            Must be reachable from Keydesk, which reviews the token on each login.
                           </p>
                         </div>
                       </TooltipContent>
@@ -816,7 +816,7 @@ export const NetworkingAuthMethodForm = ({
                     </TooltipTrigger>
                     <TooltipContent className="max-w-md">
                       An optional audience claim that the service account JWT token must have to
-                      authenticate with Infisical. Leave empty to allow any audience claim.
+                      authenticate with Keydesk. Leave empty to allow any audience claim.
                     </TooltipContent>
                   </Tooltip>
                 </FieldLabel>
@@ -860,8 +860,8 @@ export const NetworkingAuthMethodForm = ({
                           <TooltipContent className="max-w-md">
                             <div className="flex flex-col gap-2">
                               <p>
-                                When enabled, Infisical validates the Kubernetes API server&apos;s
-                                TLS certificate against the CA certificate below.
+                                When enabled, Keydesk validates the Kubernetes API server&apos;s TLS
+                                certificate against the CA certificate below.
                               </p>
                               <p>
                                 With a CA certificate below, the server is verified against it.

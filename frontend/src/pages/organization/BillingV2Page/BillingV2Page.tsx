@@ -335,7 +335,7 @@ export const BillingV2Page = () => {
     <>
       <Helmet>
         <title>{t("common.head-title", { title: t("billing.title") })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <div className="mb-8 flex w-full justify-center bg-page text-foreground-inverse">

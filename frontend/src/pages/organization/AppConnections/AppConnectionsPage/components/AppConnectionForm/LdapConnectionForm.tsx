@@ -65,21 +65,21 @@ const formSchema = z.discriminatedUnion("method", [
       provider: z.nativeEnum(LdapConnectionProvider),
       url: z
         .string()
-        .regex(/^ldaps?:\/\//, 'Must start with "ldaps://" or "ldap://"')
+        .regex(/^ldaps?:\/\//, '"ldaps://" 또는 "ldap://"로 시작해야 합니다')
         .url()
         .trim()
-        .min(1, "LDAP URL required"),
+        .min(1, "LDAP URL을 입력하세요"),
       dn: z
         .string()
         .trim()
-        .min(1, "DN/UPN required")
+        .min(1, "DN/UPN을 입력하세요")
         .refine(
           (value) => DistinguishedNameRegex.test(value) || UserPrincipalNameRegex.test(value),
           {
-            message: "Invalid DN/UPN format"
+            message: "올바른 DN/UPN 형식을 입력하세요"
           }
         ),
-      password: z.string().trim().min(1, "Password required"),
+      password: z.string().trim().min(1, "비밀번호를 입력하세요"),
       sslRejectUnauthorized: z.boolean(),
       sslCertificate: z
         .string()
@@ -153,7 +153,7 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
           >
             {(isAllowed) => (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 {isAllowed ? (
                   <GatewayPicker
                     isDisabled={!isAllowed}
@@ -181,8 +181,7 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -197,21 +196,21 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
                 <FieldLabel>
-                  Method
+                  방식
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Info />
                     </TooltipTrigger>
                     <TooltipContent className="max-w-sm">
-                      {`The method you would like to use to connect with ${
+                      {`연결 방식: ${
                         APP_CONNECTION_MAP[AppConnection.LDAP].name
-                      }. This field cannot be changed after creation.`}
+                      }. 이 필드는 생성 후 변경할 수 없습니다.`}
                     </TooltipContent>
                   </Tooltip>
                 </FieldLabel>
                 <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                   <SelectTrigger className="w-full" isError={Boolean(error)}>
-                    <SelectValue placeholder="Select a method..." />
+                    <SelectValue placeholder="방식을 선택하세요..." />
                   </SelectTrigger>
                   <SelectContent position="popper">
                     {Object.values(LdapConnectionMethod).map((method) => {
@@ -232,10 +231,10 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel>LDAP Provider</FieldLabel>
+                <FieldLabel>LDAP 공급자</FieldLabel>
                 <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                   <SelectTrigger className="w-full capitalize" isError={Boolean(error)}>
-                    <SelectValue placeholder="Select a provider..." />
+                    <SelectValue placeholder="공급자를 선택하세요..." />
                   </SelectTrigger>
                   <SelectContent position="popper">
                     {Object.values(LdapConnectionProvider).map((provider) => {
@@ -254,8 +253,8 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
         </div>
         <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mb-4">
           <TabsList variant={scopeVariant}>
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
-            <TabsTrigger value="ssl">SSL ({sslEnabled ? "Enabled" : "Disabled"})</TabsTrigger>
+            <TabsTrigger value="configuration">구성</TabsTrigger>
+            <TabsTrigger value="ssl">SSL ({sslEnabled ? "켜짐" : "꺼짐"})</TabsTrigger>
           </TabsList>
           <TabsContent value="configuration">
             <Controller
@@ -280,7 +279,7 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="credentials-dn">Binding DN/UPN</FieldLabel>
+                    <FieldLabel htmlFor="credentials-dn">바인딩 DN/UPN</FieldLabel>
                     <Input
                       id="credentials-dn"
                       {...field}
@@ -296,7 +295,7 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 control={control}
                 render={({ field: { value, onChange }, fieldState: { error } }) => (
                   <Field className="mb-4">
-                    <FieldLabel htmlFor="app-connection-ldap-password">Binding Password</FieldLabel>
+                    <FieldLabel htmlFor="app-connection-ldap-password">바인딩 비밀번호</FieldLabel>
                     <SecretInput
                       aria-describedby={error ? "app-connection-ldap-password-error" : undefined}
                       id="app-connection-ldap-password"
@@ -312,14 +311,14 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
             <CredentialRotationForm />
           </TabsContent>
           <TabsContent value="ssl">
-            <p className="mb-3 text-xs text-muted">Requires ldaps:// URL</p>
+            <p className="mb-3 text-xs text-muted">ldaps:// URL이 필요합니다</p>
             <Controller
               name="credentials.sslCertificate"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Field className={sslEnabled ? "mb-4" : "mb-4 opacity-50"}>
                   <FieldLabel htmlFor="ssl-certificate">
-                    SSL Certificate <span className="text-muted">(optional)</span>
+                    SSL 인증서 <span className="text-muted">(선택 사항)</span>
                   </FieldLabel>
                   <TextArea
                     id="ssl-certificate"
@@ -339,10 +338,10 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 <Field className={sslEnabled ? undefined : "opacity-50"}>
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                      <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                       <FieldDescription>
-                        If enabled, Infisical will only connect to the server if it has a valid,
-                        trusted SSL certificate.
+                        켜면 서버가 유효하고 신뢰할 수 있는 SSL 인증서를 제공할 때만 Keydesk가
+                        연결합니다.
                       </FieldDescription>
                     </FieldContent>
                     <Toggle
@@ -363,8 +362,8 @@ export const LdapConnectionForm = ({ appConnection, onSubmit }: Props) => {
         <AppConnectionFormFooter
           submitLabel={
             isUpdate
-              ? "Update Credentials"
-              : `Connect to ${selectedProvider
+              ? "인증 정보 수정"
+              : `연결 대상: ${selectedProvider
                   .replace("-", " ")
                   .replace(/\b\w/g, (char) => char.toUpperCase())}`
           }

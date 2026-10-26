@@ -76,7 +76,7 @@ export const PkiSyncHealthCheckCommandFields = ({
           one in quotes yourself.
         </>
       }
-      description="Checks the host before Infisical writes any certificate. If the command fails, or does not finish within 15 seconds, the sync stops and nothing is delivered. Infisical also runs this check once a day, so a broken host surfaces before a renewal reaches it."
+      description="Checks the host before Keydesk writes any certificate. If the command fails, or does not finish within 15 seconds, the sync stops and nothing is delivered. Keydesk also runs this check once a day, so a broken host surfaces before a renewal reaches it."
       noPermissionDescription="You do not have permission to set a health check on this sync. Ask an administrator to change it."
       action={
         canEditCommand !== false && (

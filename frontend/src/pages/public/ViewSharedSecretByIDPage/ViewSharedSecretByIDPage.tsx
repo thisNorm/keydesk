@@ -20,8 +20,8 @@ import {
   SecretErrorContainer
 } from "@app/pages/public/ViewSharedSecretByIDPage/components";
 
-export const DEFAULT_LOGO_URL = "/images/gradientLogo.svg";
-export const DEFAULT_FAVICON_URL = "/infisical.ico";
+export const DEFAULT_LOGO_URL = "/images/keydesk-wordmark.svg";
+export const DEFAULT_FAVICON_URL = "/keydesk.svg";
 export const DEFAULT_BRAND_PRIMARY_COLOR = "#0e1014";
 export const DEFAULT_BRAND_SECONDARY_COLOR = "#1e1f22";
 
@@ -270,7 +270,7 @@ export const ViewSharedSecretByIDPage = () => {
   return (
     <>
       <Helmet>
-        <title>Securely Share Secrets | Infisical</title>
+        <title>Securely Share Secrets | Keydesk</title>
         <meta property="og:image" content="/images/message.png" />
       </Helmet>
       <AuthPageLayout variant="focused" contentClassName="max-w-xl">

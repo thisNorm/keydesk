@@ -77,7 +77,7 @@ export const SlackConfigRow = ({ handlePopUpOpen, slackConfig }: Props) => {
         <div className="flex items-center justify-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <IconButton variant="ghost" size="xs" aria-label="Actions for Slack integration">
+              <IconButton variant="ghost" size="xs" aria-label="Slack 연동 작업">
                 <MoreHorizontal />
               </IconButton>
             </DropdownMenuTrigger>
@@ -96,7 +96,7 @@ export const SlackConfigRow = ({ handlePopUpOpen, slackConfig }: Props) => {
                     }
                   >
                     <Pencil />
-                    Edit
+                    수정
                   </DropdownMenuItem>
                 )}
               </ProjectPermissionCan>
@@ -116,7 +116,7 @@ export const SlackConfigRow = ({ handlePopUpOpen, slackConfig }: Props) => {
                     }
                   >
                     <Trash2 />
-                    Remove
+                    제거
                   </DropdownMenuItem>
                 )}
               </ProjectPermissionCan>

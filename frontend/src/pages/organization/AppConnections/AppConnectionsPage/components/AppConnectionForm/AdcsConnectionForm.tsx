@@ -47,9 +47,9 @@ const formSchema = z
     rootSchema.extend({
       method: z.literal(AdcsConnectionMethod.UsernamePassword),
       credentials: z.object({
-        host: z.string().trim().min(1, "CA Host required"),
-        username: z.string().trim().min(1, "Username required"),
-        password: z.string().trim().min(1, "Password required")
+        host: z.string().trim().min(1, "CA 호스트를 입력하세요"),
+        username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+        password: z.string().trim().min(1, "비밀번호를 입력하세요")
       })
     })
   ])
@@ -57,7 +57,7 @@ const formSchema = z
     if (!data.gatewayId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Gateway required",
+        message: "게이트웨이를 선택하세요",
         path: ["gatewayId"]
       });
     }
@@ -98,21 +98,21 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.ADCS].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(AdcsConnectionMethod).map((method) => {
@@ -138,7 +138,7 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
               control={control}
               render={({ fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel>Gateway</FieldLabel>
+                  <FieldLabel>게이트웨이</FieldLabel>
                   {isAllowed ? (
                     <GatewayPicker
                       isError={Boolean(error)}
@@ -173,8 +173,7 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
                         </div>
                       </TooltipTrigger>
                       <TooltipContent>
-                        Restricted access. You don&apos;t have permission to attach gateways to
-                        resources.
+                        접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                       </TooltipContent>
                     </Tooltip>
                   )}
@@ -189,7 +188,7 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
           control={control}
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="ca-host">CA Host</FieldLabel>
+              <FieldLabel htmlFor="ca-host">CA 호스트</FieldLabel>
               <Input
                 id="ca-host"
                 {...field}
@@ -197,7 +196,7 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 isError={Boolean(error?.message)}
               />
               <FieldDescription>
-                The address the Gateway uses to reach the CA server: an FQDN, hostname, or IP.
+                게이트웨이가 CA 서버에 접근하는 데 사용할 FQDN, 호스트 이름 또는 IP 주소입니다.
               </FieldDescription>
               <FieldError errors={[error]} />
             </Field>
@@ -209,7 +208,7 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="username">Username</FieldLabel>
+                <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
                 <Input
                   id="username"
                   {...field}
@@ -225,7 +224,7 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <FieldLabel htmlFor="password">비밀번호</FieldLabel>
                 <SecretInput
                   aria-describedby={error ? "password-error" : undefined}
                   id="password"
@@ -238,9 +237,7 @@ export const AdcsConnectionForm = ({ appConnection, onSubmit }: Props) => {
             )}
           />
         </div>
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to ADCS"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "ADCS에 연결"} />
       </form>
     </FormProvider>
   );

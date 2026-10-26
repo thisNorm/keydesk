@@ -664,7 +664,7 @@ const SettingsTab = ({
                         Automatically rotate credentials
                       </p>
                       <p className="text-xs text-muted">
-                        Infisical rotates credentials on a fixed schedule. When off, credentials
+                        Keydesk rotates credentials on a fixed schedule. When off, credentials
                         rotate only when triggered manually.
                       </p>
                     </div>
@@ -755,8 +755,7 @@ const SettingsTab = ({
         <CardHeader className="border-b">
           <CardTitle className="text-base">Credential Health</CardTitle>
           <CardDescription>
-            Infisical checks that stored credentials still work, and shows the result on each
-            account.
+            Keydesk checks that stored credentials still work, and shows the result on each account.
           </CardDescription>
         </CardHeader>
         <CardContent>

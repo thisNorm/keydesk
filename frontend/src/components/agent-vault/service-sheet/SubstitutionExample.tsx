@@ -46,7 +46,7 @@ export const SubstitutionExample = () => (
     <Wire title="Agent sends" token={PLACEHOLDER} />
     <p className="flex items-center gap-1.5 text-[11px] text-muted">
       <ArrowDownIcon className="size-3 shrink-0" />
-      Infisical substitutes in the parts you select
+      Keydesk substitutes in the parts you select
     </p>
     <Wire title="Service receives" token={REAL_VALUE} isResolved />
     <p className="text-[11px] text-muted">

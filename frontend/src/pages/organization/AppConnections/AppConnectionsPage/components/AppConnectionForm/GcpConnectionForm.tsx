@@ -45,7 +45,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(GcpConnectionMethod.ServiceAccountImpersonation),
     credentials: z.object({
-      serviceAccountEmail: z.string().email().trim().min(1, "Service account email required")
+      serviceAccountEmail: z.string().email().trim().min(1, "서비스 계정 이메일을 입력하세요")
     })
   })
 ]);
@@ -79,21 +79,21 @@ export const GcpConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.GCP].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger id="method" className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(GcpConnectionMethod).map((method) => {
@@ -115,7 +115,7 @@ export const GcpConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="group mb-4">
-              <FieldLabel htmlFor="service-account-email">Service Account Email</FieldLabel>
+              <FieldLabel htmlFor="service-account-email">서비스 계정 이메일</FieldLabel>
               <SecretInput
                 aria-describedby={
                   error
@@ -130,13 +130,13 @@ export const GcpConnectionForm = ({ appConnection, onSubmit }: Props) => {
               {!error && (
                 <FieldDescription id="service-account-email-description">
                   <span className="block">
-                    {`Service account ID must be suffixed with "${expectedAccountIdSuffix}"`}
+                    {`서비스 계정 ID에 필요한 접미사: "${expectedAccountIdSuffix}"`}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <IconButton
                           variant="ghost-muted"
                           size="xs"
-                          aria-label="copy"
+                          aria-label="복사"
                           onClick={() => {
                             if (isCopied) {
                               return;
@@ -145,7 +145,7 @@ export const GcpConnectionForm = ({ appConnection, onSubmit }: Props) => {
                             navigator.clipboard.writeText(expectedAccountIdSuffix);
 
                             createNotification({
-                              text: "Copied to clipboard",
+                              text: "클립보드에 복사했습니다",
                               type: "info"
                             });
 
@@ -160,11 +160,11 @@ export const GcpConnectionForm = ({ appConnection, onSubmit }: Props) => {
                           )}
                         </IconButton>
                       </TooltipTrigger>
-                      <TooltipContent side="bottom">Copy</TooltipContent>
+                      <TooltipContent side="bottom">복사</TooltipContent>
                     </Tooltip>
                   </span>
                   <span className="block">
-                    Example:
+                    예:
                     <span className="ml-1">service-account-</span>
                     <span className="font-medium">{expectedAccountIdSuffix}</span>
                     <span>@my-project.iam.gserviceaccount.com</span>
@@ -175,7 +175,7 @@ export const GcpConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter submitLabel={isUpdate ? "Update Credentials" : "Connect to GCP"} />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "GCP에 연결"} />
       </form>
     </FormProvider>
   );

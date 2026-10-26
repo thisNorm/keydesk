@@ -24,15 +24,13 @@ const getCustomSlackAppCreationUrl = () =>
   `https://api.slack.com/apps?new_app=1&manifest_json=${encodeURIComponent(
     JSON.stringify({
       display_information: {
-        name: "Infisical",
-        description: "Get real-time Infisical updates in Slack",
+        name: "Keydesk",
+        description: "Slack에서 Keydesk의 실시간 업데이트 받기",
         background_color: "#c2d62b",
-        long_description: `This Slack application is designed specifically for use with your self-hosted Infisical instance, allowing seamless integration between your Infisical projects and your Slack workspace. With this integration, your team can stay up-to-date with the latest events, changes, and notifications directly inside Slack.
-        - Notifications: Receive real-time updates and alerts about critical events in your Infisical projects. Whether it's a new project being created, updates to secrets, or changes to your team's configuration, you will be promptly notified within the designated Slack channels of your choice.
-        - Customization: Tailor the notifications to your team's specific needs by configuring which types of events trigger alerts and in which channels they are sent.
-        - Collaboration: Keep your entire team in the loop with notifications that help facilitate more efficient collaboration by ensuring that everyone is aware of important developments in your Infisical projects.
-
-        By integrating Infisical with Slack, you can enhance your workflow by combining the power of secure secrets management with the communication capabilities of Slack.`
+        long_description: `자체 호스팅 Keydesk 인스턴스와 Slack 워크스페이스를 연결하는 앱입니다.
+        - 알림: Keydesk 프로젝트의 시크릿과 팀 구성 변경 등 주요 이벤트를 지정한 Slack 채널에서 확인합니다.
+        - 설정: 알림을 보낼 이벤트와 채널을 팀에 맞게 선택합니다.
+        - 협업: 프로젝트의 주요 변경 사항을 팀과 공유합니다.`
       },
       features: {
         app_home: {
@@ -41,7 +39,7 @@ const getCustomSlackAppCreationUrl = () =>
           messages_tab_read_only_enabled: true
         },
         bot_user: {
-          display_name: "Infisical",
+          display_name: "Keydesk",
           always_online: true
         }
       },
@@ -88,7 +86,7 @@ export const SlackIntegrationForm = ({ adminIntegrationsConfig }: Props) => {
     });
 
     createNotification({
-      text: "Updated admin slack configuration",
+      text: "관리자 Slack 구성을 수정했습니다",
       type: "success"
     });
   };
@@ -112,27 +110,25 @@ export const SlackIntegrationForm = ({ adminIntegrationsConfig }: Props) => {
           </AccordionTrigger>
           <AccordionContent className="p-6">
             <div className="flex w-full flex-col gap-4">
-              <div className="max-w-lg text-sm text-label">
-                Step 1: Create your Infisical Slack App
-              </div>
+              <div className="max-w-lg text-sm text-label">1단계: Keydesk Slack 앱 만들기</div>
               <div>
                 <Button
                   variant="neutral"
                   onClick={() => window.open(getCustomSlackAppCreationUrl())}
                 >
-                  Create Slack app
+                  Slack 앱 만들기
                 </Button>
               </div>
               <div className="max-w-lg text-sm text-label">
-                Step 2: Configure your instance-wide settings to enable integration with Slack. Copy
-                the values from the App Credentials page of your custom Slack App.
+                2단계: Slack과 연동하려면 인스턴스 전체 설정을 구성하세요. 사용자 지정 Slack 앱의
+                App Credentials 페이지에서 값을 복사하세요.
               </div>
               <Controller
                 control={control}
                 name="clientId"
                 render={({ field, fieldState: { error } }) => (
                   <Field className="max-w-96">
-                    <FieldLabel htmlFor="slack-client-id">Client ID</FieldLabel>
+                    <FieldLabel htmlFor="slack-client-id">클라이언트 ID</FieldLabel>
                     <Input
                       id="slack-client-id"
                       {...field}
@@ -149,7 +145,7 @@ export const SlackIntegrationForm = ({ adminIntegrationsConfig }: Props) => {
                 name="clientSecret"
                 render={({ field, fieldState: { error } }) => (
                   <Field className="max-w-96">
-                    <FieldLabel htmlFor="slack-client-secret">Client secret</FieldLabel>
+                    <FieldLabel htmlFor="slack-client-secret">클라이언트 시크릿</FieldLabel>
                     <SecretInput
                       id="slack-client-secret"
                       {...field}
@@ -167,7 +163,7 @@ export const SlackIntegrationForm = ({ adminIntegrationsConfig }: Props) => {
                   isPending={isSubmitting}
                   isDisabled={!isDirty}
                 >
-                  Save
+                  저장
                 </Button>
               </div>
             </div>

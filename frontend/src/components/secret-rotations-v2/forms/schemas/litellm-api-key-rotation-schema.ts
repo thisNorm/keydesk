@@ -84,7 +84,7 @@ export const LiteLLMApiKeyRotationSchema = z
           if (reservedKeys.length) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `The following options are managed by Infisical and cannot be set: ${reservedKeys.join(", ")}.`
+              message: `The following options are managed by Keydesk and cannot be set: ${reservedKeys.join(", ")}.`
             });
           }
         }),

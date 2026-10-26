@@ -100,7 +100,7 @@ export default function OrgNameStep({ onComplete, callbackPort }: OrgNameStepPro
             </Field>
             <Field>
               <FieldLabel htmlFor="signup-attribution-source">
-                Infisical을 알게 된 경로 <span className="font-normal text-muted"> (선택)</span>
+                Keydesk를 알게 된 경로 <span className="font-normal text-muted"> (선택)</span>
               </FieldLabel>
               <Input
                 variant="outlined"

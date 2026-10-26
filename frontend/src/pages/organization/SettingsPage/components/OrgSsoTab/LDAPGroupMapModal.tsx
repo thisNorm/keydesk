@@ -181,7 +181,7 @@ export const LDAPGroupMapModal = ({ popUp, handlePopUpOpen, handlePopUpToggle }:
                         defaultValue=""
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
                           <Field className="flex-1">
-                            <FieldLabel htmlFor="ldap-group-slug">Infisical Group</FieldLabel>
+                            <FieldLabel htmlFor="ldap-group-slug">Keydesk Group</FieldLabel>
                             <Select value={value} onValueChange={onChange}>
                               <SelectTrigger
                                 id="ldap-group-slug"
@@ -212,7 +212,7 @@ export const LDAPGroupMapModal = ({ popUp, handlePopUpOpen, handlePopUpToggle }:
                       <TableHeader>
                         <TableRow>
                           <TableHead>LDAP Group CN</TableHead>
-                          <TableHead>Infisical Group</TableHead>
+                          <TableHead>Keydesk Group</TableHead>
                           <TableHead className="w-px text-right" aria-label="Actions" />
                         </TableRow>
                       </TableHeader>
@@ -258,7 +258,7 @@ export const LDAPGroupMapModal = ({ popUp, handlePopUpOpen, handlePopUpToggle }:
                       <EmptyHeader>
                         <EmptyTitle>No LDAP group mappings</EmptyTitle>
                         <EmptyDescription>
-                          Add a mapping above to assign LDAP groups to Infisical groups.
+                          Add a mapping above to assign LDAP groups to Keydesk groups.
                         </EmptyDescription>
                       </EmptyHeader>
                     </Empty>
@@ -268,9 +268,9 @@ export const LDAPGroupMapModal = ({ popUp, handlePopUpOpen, handlePopUpToggle }:
               {groups && groups.length === 0 && (
                 <Empty className="border">
                   <EmptyHeader>
-                    <EmptyTitle>No Infisical groups</EmptyTitle>
+                    <EmptyTitle>No Keydesk groups</EmptyTitle>
                     <EmptyDescription>
-                      Create an Infisical group in your organization before mapping LDAP groups.
+                      Create an Keydesk group in your organization before mapping LDAP groups.
                     </EmptyDescription>
                     <EmptyContent>
                       <Button
@@ -308,7 +308,7 @@ export const LDAPGroupMapModal = ({ popUp, handlePopUpOpen, handlePopUpToggle }:
               &quot;?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Members of this LDAP group will no longer be added to the mapped Infisical group.
+              Members of this LDAP group will no longer be added to the mapped Keydesk group.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -35,8 +35,8 @@ export const CloudflareWorkersSyncOptionsFields = () => {
               <FieldContent>
                 <Label htmlFor="sync-non-secret-bindings">Sync plaintext and JSON variables</Label>
                 <FieldDescription>
-                  When enabled, Infisical will also sync plaintext and JSON variable bindings in
-                  addition to secret bindings. Infisical can only update existing plaintext and JSON
+                  When enabled, Keydesk will also sync plaintext and JSON variable bindings in
+                  addition to secret bindings. Keydesk can only update existing plaintext and JSON
                   bindings on Cloudflare Workers, not create new ones.
                 </FieldDescription>
               </FieldContent>
@@ -58,8 +58,8 @@ export const CloudflareWorkersSyncOptionsFields = () => {
           <AlertDescription>
             With &quot;Prevent secret deletion&quot; turned off and non-secret binding sync turned
             on, any plaintext or JSON variables in Cloudflare Workers that are not present in
-            Infisical will be removed during a sync. Turn on &quot;Prevent secret deletion&quot;
-            above to keep them.
+            Keydesk will be removed during a sync. Turn on &quot;Prevent secret deletion&quot; above
+            to keep them.
           </AlertDescription>
         </Alert>
       )}

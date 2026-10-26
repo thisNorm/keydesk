@@ -57,7 +57,7 @@ const getFormSteps = (secretSync: TSecretSync, destinationName: string): FormSte
       name: "Source",
       description: "Pick env and path",
       title: "Source Secrets",
-      subtitle: "Pick the Infisical environment and path to sync from.",
+      subtitle: "Pick the Keydesk environment and path to sync from.",
       rightLabel: "SOURCE",
       rightDescription:
         "Choose what gets synced. The environment + path together define the set of secrets this sync will push out."
@@ -69,7 +69,7 @@ const getFormSteps = (secretSync: TSecretSync, destinationName: string): FormSte
       title: `Connect to ${destinationName}`,
       subtitle: "Choose a connection and configure the target location.",
       rightLabel: "DESTINATION",
-      rightDescription: `Tell Infisical where to write. Pick a ${destinationName} connection and the exact destination, like a workspace, project, namespace, or whatever this provider expects.`
+      rightDescription: `Tell Keydesk where to write. Pick a ${destinationName} connection and the exact destination, like a workspace, project, namespace, or whatever this provider expects.`
     }
   ];
 
@@ -79,10 +79,10 @@ const getFormSteps = (secretSync: TSecretSync, destinationName: string): FormSte
       name: "Initial Sync",
       description: "First-run behavior",
       title: "Initial Sync Behavior",
-      subtitle: `Choose how Infisical should reconcile existing secrets in ${destinationName} the first time this sync runs.`,
+      subtitle: `Choose how Keydesk should reconcile existing secrets in ${destinationName} the first time this sync runs.`,
       rightLabel: "INITIAL SYNC",
       rightDescription:
-        "The first run is special. Infisical can either overwrite everything in the destination or import existing secrets back into Infisical. Subsequent runs follow your sync options."
+        "The first run is special. Keydesk can either overwrite everything in the destination or import existing secrets back into Keydesk. Subsequent runs follow your sync options."
     });
   }
 
@@ -94,7 +94,7 @@ const getFormSteps = (secretSync: TSecretSync, destinationName: string): FormSte
     subtitle: "Control how secrets are written and whether they sync automatically.",
     rightLabel: "SYNC OPTIONS",
     rightDescription:
-      "Decide how Infisical reconciles changes on every run, including auto-sync, key schema, and how conflicts are handled."
+      "Decide how Keydesk reconciles changes on every run, including auto-sync, key schema, and how conflicts are handled."
   });
 
   steps.push({

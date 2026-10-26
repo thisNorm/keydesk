@@ -1630,7 +1630,7 @@ export const SecretEditTableRow = ({
                 : isImportedSecret
                   ? "Cannot Edit Imported Secret"
                   : isHoneyTokenSecret
-                    ? "Honey token secrets are managed by Infisical and can't be edited"
+                    ? "Honey token secrets are managed by Keydesk and can't be edited"
                     : isRotatedSecret
                       ? "Rotated secrets are managed by their secret rotation and can't be edited"
                       : revokedProjectFolderGrant

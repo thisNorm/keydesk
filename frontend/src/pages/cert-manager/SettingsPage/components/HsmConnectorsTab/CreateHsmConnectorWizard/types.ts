@@ -39,7 +39,7 @@ export const STEPS: WizardStep[] = [
     name: "Connection",
     shortDescription: "Gateway that reaches the HSM",
     title: "Connection",
-    subtitle: "Choose the Gateway that connects Infisical to your HSM.",
+    subtitle: "Choose the Gateway that connects Keydesk to your HSM.",
     rightLabel: "CONNECTION",
     rightDescription:
       "Select which Gateway will route key operations to your HSM. Only Gateways with PKCS#11 support enabled appear in the list."
@@ -48,9 +48,9 @@ export const STEPS: WizardStep[] = [
     name: "Credentials",
     shortDescription: "Slot and PIN",
     title: "Credentials",
-    subtitle: "How Infisical signs in to your HSM.",
+    subtitle: "How Keydesk signs in to your HSM.",
     rightLabel: "CREDENTIALS",
     rightDescription:
-      "The slot label is the PKCS#11 token label of the slot Infisical will use on the HSM. The PIN authenticates Infisical to that slot. The key label prefix is prepended to every key Infisical creates so you can identify them in your HSM tooling."
+      "The slot label is the PKCS#11 token label of the slot Keydesk will use on the HSM. The PIN authenticates Keydesk to that slot. The key label prefix is prepended to every key Keydesk creates so you can identify them in your HSM tooling."
   }
 ];

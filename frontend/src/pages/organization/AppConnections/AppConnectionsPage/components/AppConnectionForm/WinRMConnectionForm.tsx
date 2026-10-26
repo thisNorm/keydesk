@@ -51,10 +51,10 @@ const formSchema = z
     rootSchema.extend({
       method: z.literal(WinRMConnectionMethod.UsernamePassword),
       credentials: z.object({
-        host: z.string().trim().min(1, "Host required"),
+        host: z.string().trim().min(1, "호스트를 입력하세요"),
         port: z.coerce.number().int().min(1).max(65535),
-        username: z.string().trim().min(1, "Username required"),
-        password: z.string().min(1, "Password required"),
+        username: z.string().trim().min(1, "사용자 이름을 입력하세요"),
+        password: z.string().min(1, "비밀번호를 입력하세요"),
         sslEnabled: z.boolean(),
         sslRejectUnauthorized: z.boolean(),
         sslCertificate: z.string().optional()
@@ -65,7 +65,7 @@ const formSchema = z
     if (!data.gatewayId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Gateway required",
+        message: "게이트웨이를 선택하세요",
         path: ["gatewayId"]
       });
     }
@@ -111,21 +111,21 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.WinRM].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(WinRMConnectionMethod).map((method) => {
@@ -151,7 +151,7 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
               control={control}
               render={({ fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel>Gateway</FieldLabel>
+                  <FieldLabel>게이트웨이</FieldLabel>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div>
@@ -172,13 +172,12 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
                     </TooltipTrigger>
                     {!isAllowed && (
                       <TooltipContent>
-                        Restricted access. You don&apos;t have permission to attach gateways to
-                        resources.
+                        접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                       </TooltipContent>
                     )}
                   </Tooltip>
                   <FieldDescription>
-                    Windows hosts are reached over WinRM through a Gateway inside your network.
+                    네트워크 내부의 게이트웨이를 통해 WinRM으로 Windows 호스트에 접근합니다.
                   </FieldDescription>
                   <FieldError errors={[error]} />
                 </Field>
@@ -192,7 +191,7 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <Field className="col-span-2 mb-4">
-                <FieldLabel htmlFor="host">Host</FieldLabel>
+                <FieldLabel htmlFor="host">호스트</FieldLabel>
                 <Input
                   id="host"
                   {...field}
@@ -208,7 +207,7 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="port">Port</FieldLabel>
+                <FieldLabel htmlFor="port">포트</FieldLabel>
                 <Input
                   id="port"
                   type="number"
@@ -227,7 +226,7 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="username">Username</FieldLabel>
+                <FieldLabel htmlFor="username">사용자 이름</FieldLabel>
                 <Input
                   id="username"
                   {...field}
@@ -243,7 +242,7 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
             control={control}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <FieldLabel htmlFor="password">비밀번호</FieldLabel>
                 <SecretInput
                   aria-describedby={error ? "password-error" : undefined}
                   id="password"
@@ -263,10 +262,10 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
             <Field className="mt-2 mb-4">
               <Field orientation="horizontal">
                 <FieldContent>
-                  <Label htmlFor="ssl-enabled">Enable SSL</Label>
+                  <Label htmlFor="ssl-enabled">SSL 사용</Label>
                   <FieldDescription>
-                    Connect over HTTPS. When disabled, HTTP with NTLM message encryption is used and
-                    no server certificate is required.
+                    HTTPS로 연결합니다. 끄면 NTLM 메시지 암호화가 적용된 HTTP를 사용하며 서버
+                    인증서가 필요하지 않습니다.
                   </FieldDescription>
                 </FieldContent>
                 <Toggle
@@ -286,7 +285,7 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className={sslEnabled ? "mb-4" : "mb-4 opacity-50"}>
               <FieldLabel htmlFor="ssl-certificate">
-                SSL Certificate <span className="text-muted">(optional)</span>
+                SSL 인증서 <span className="text-muted">(선택 사항)</span>
               </FieldLabel>
               <TextArea
                 id="ssl-certificate"
@@ -297,8 +296,8 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
                 isError={Boolean(error?.message)}
               />
               <FieldDescription>
-                Leave empty to verify against the system trust store, or paste the listener&apos;s
-                certificate to verify a self-signed WinRM HTTPS listener.
+                비워 두면 시스템 신뢰 저장소로 검증합니다. 자체 서명 WinRM HTTPS 리스너를 검증하려면
+                리스너 인증서를 붙여 넣으세요.
               </FieldDescription>
               <FieldError errors={[error]} />
             </Field>
@@ -311,10 +310,9 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
             <Field className={sslEnabled ? "mb-4" : "mb-4 opacity-50"}>
               <Field orientation="horizontal">
                 <FieldContent>
-                  <Label htmlFor="ssl-reject-unauthorized">Reject Unauthorized</Label>
+                  <Label htmlFor="ssl-reject-unauthorized">신뢰할 수 없는 인증서 거부</Label>
                   <FieldDescription>
-                    If enabled, Infisical only connects when the listener presents a valid, trusted
-                    certificate.
+                    켜면 리스너가 유효하고 신뢰할 수 있는 인증서를 제공할 때만 Keydesk가 연결합니다.
                   </FieldDescription>
                 </FieldContent>
                 <Toggle
@@ -330,7 +328,7 @@ export const WinRMConnectionForm = ({ appConnection, onSubmit }: Props) => {
           )}
         />
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Windows (WinRM)"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "Windows (WinRM)에 연결"}
         />
       </form>
     </FormProvider>

@@ -12,7 +12,7 @@ export const SecretSharingPage = () => {
     <>
       <Helmet>
         <title>{t("common.head-title", { title: "Secret Sharing" })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
         <meta property="og:image" content="/images/message.png" />
         <meta property="og:title" content="Secret Sharing" />
         <meta

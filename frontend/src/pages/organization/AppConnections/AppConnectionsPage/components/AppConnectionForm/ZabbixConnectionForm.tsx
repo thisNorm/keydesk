@@ -40,8 +40,8 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(ZabbixConnectionMethod.ApiToken),
     credentials: z.object({
-      apiToken: z.string().trim().min(1, "API Token required"),
-      instanceUrl: z.string().trim().url("Invalid instance URL")
+      apiToken: z.string().trim().min(1, "API 토큰을 입력하세요"),
+      instanceUrl: z.string().trim().url("올바른 인스턴스 URL을 입력하세요")
     })
   })
 ]);
@@ -71,21 +71,20 @@ export const ZabbixConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Zabbix].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.Zabbix].name}. 이
+                    필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(ZabbixConnectionMethod).map((method) => {
@@ -107,12 +106,12 @@ export const ZabbixConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-token">API Token</FieldLabel>
+              <FieldLabel htmlFor="api-token">API 토큰</FieldLabel>
               <Input
                 id="api-token"
                 {...field}
                 type="password"
-                placeholder="Enter your API Token"
+                placeholder="API 토큰을 입력하세요"
                 isError={Boolean(error?.message)}
               />
               <FieldError errors={[error]} />
@@ -125,7 +124,7 @@ export const ZabbixConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="instance-url">Instance URL</FieldLabel>
+              <FieldLabel htmlFor="instance-url">인스턴스 URL</FieldLabel>
               <Input
                 id="instance-url"
                 {...field}
@@ -136,9 +135,7 @@ export const ZabbixConnectionForm = ({ appConnection, onSubmit }: Props) => {
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Zabbix"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Zabbix에 연결"} />
       </form>
     </FormProvider>
   );

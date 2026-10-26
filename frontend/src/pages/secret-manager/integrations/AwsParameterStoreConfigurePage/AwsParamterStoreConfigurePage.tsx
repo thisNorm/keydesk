@@ -193,8 +193,7 @@ export const AWSParameterStoreConfigurePage = () => {
             <span>AWS Parameter Store Integration</span>
           </CardTitle>
           <CardDescription>
-            Choose which environment in Infisical you want to sync to secerts in AWS Parameter
-            Store.
+            Choose which environment in Keydesk you want to sync to secerts in AWS Parameter Store.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>
@@ -399,7 +398,7 @@ export const AWSParameterStoreConfigurePage = () => {
         <span className="mt-4 text-sm text-label">
           After creating an integration, your secrets will start syncing immediately. This might
           cause an unexpected override of current secrets in AWS Parameter Store with secrets from
-          Infisical.
+          Keydesk.
         </span>
       </div>
     </div>
@@ -410,10 +409,11 @@ export const AWSParameterStoreConfigurePage = () => {
       </Helmet>
       {isintegrationAuthLoading || isIntegrationAuthAwsKmsKeysLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

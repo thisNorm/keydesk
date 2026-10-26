@@ -43,7 +43,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(ChecklyConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "Service API Key required")
+      apiKey: z.string().trim().min(1, "서비스 API 키를 입력하세요")
     })
   })
 ]);
@@ -73,21 +73,20 @@ export const ChecklyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Token Type
+                토큰 유형
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The type of token you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.Checkly].name}. This field cannot be changed
-                    after creation.
+                    다음에 연결할 토큰 유형입니다: {APP_CONNECTION_MAP[AppConnection.Checkly].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(ChecklyConnectionMethod).map((method) => {
@@ -109,7 +108,7 @@ export const ChecklyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key">API Key Value</FieldLabel>
+              <FieldLabel htmlFor="api-key">API 키 값</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-key-error" : undefined}
                 id="api-key"
@@ -122,9 +121,7 @@ export const ChecklyConnectionForm = ({ appConnection, onSubmit }: Props) => {
           )}
         />
 
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Checkly"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Checkly에 연결"} />
       </form>
     </FormProvider>
   );

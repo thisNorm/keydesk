@@ -4,7 +4,7 @@ import { Badge } from "../../generic/Badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../generic/Tooltip";
 import { cn } from "../../utils";
 
-const LABEL = "Documentation";
+const LABEL = "문서";
 
 type TDocumentationLinkBadgeProps = {
   href: string;

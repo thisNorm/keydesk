@@ -65,7 +65,7 @@ export const OAuthCallbackPage = () => {
 
   const clearState = (app: AppConnection) => {
     if (!consumeCsrfToken(state)) {
-      throw new Error("Invalid CSRF token");
+      throw new Error("유효하지 않은 CSRF 토큰입니다");
     }
 
     const dataFieldName = formDataStorageFieldMap[app];
@@ -82,7 +82,7 @@ export const OAuthCallbackPage = () => {
     connection: TAppConnection;
   }) => {
     createNotification({
-      text: `Successfully ${data.connectionId ? "updated" : "added"} ${data.appConnectionName ? APP_CONNECTION_MAP[data.appConnectionName as AppConnection].name : ""} Connection`,
+      text: `연결 처리 완료: ${data.connectionId ? "수정" : "추가"} ${data.appConnectionName ? APP_CONNECTION_MAP[data.appConnectionName as AppConnection].name : ""} 연결`,
       type: "success"
     });
 
@@ -115,7 +115,7 @@ export const OAuthCallbackPage = () => {
     if (result.status === "missing") {
       createNotification({
         type: "error",
-        text: `Your ${app ? APP_CONNECTION_MAP[app as AppConnection].name : ""} Connection session has expired or was already completed. Please restart the connection flow.`
+        text: `${app ? APP_CONNECTION_MAP[app as AppConnection].name : ""} 연결 세션이 만료되었거나 이미 완료되었습니다. 연결을 다시 시작하세요.`
       });
       navigate({ to: "/" });
       return null;
@@ -124,7 +124,7 @@ export const OAuthCallbackPage = () => {
     if (result.status === "corrupt") {
       createNotification({
         type: "error",
-        text: `Invalid ${app || ""} form state, redirecting...`
+        text: `잘못된 ${app || ""} 양식 상태입니다. 이동 중...`
       });
       navigate({ to: "/" });
       return null;
@@ -362,7 +362,7 @@ export const OAuthCallbackPage = () => {
 
     try {
       if (!("tenantId" in formData)) {
-        throw new Error("Expected OAuth form data but got access token data");
+        throw new Error("OAuth 양식 데이터가 필요하지만 액세스 토큰 데이터를 받았습니다");
       }
 
       if (connectionId) {
@@ -436,7 +436,7 @@ export const OAuthCallbackPage = () => {
     if (isAppMethod && !installationId) {
       createNotification({
         type: "error",
-        text: "The GitHub App was not installed. If you requested it on an organization, an owner may need to approve the installation first. Please complete the installation and try again."
+        text: "GitHub App이 설치되지 않았습니다. 조직에 설치를 요청한 경우 먼저 소유자의 승인이 필요할 수 있습니다. 설치를 완료한 뒤 다시 시도하세요."
       });
       navigate(getConnectionFlowReturnNavigateOptions({ returnUrl, projectId }));
       return null;
@@ -495,7 +495,7 @@ export const OAuthCallbackPage = () => {
         type: "error",
         text:
           (err as { response?: { data?: { message?: string } } })?.response?.data?.message ??
-          `Failed to ${connectionId ? "update" : "create"} GitHub Connection`
+          `실패한 작업: ${connectionId ? "수정" : "생성"} GitHub 연결`
       });
       navigate(getConnectionFlowReturnNavigateOptions({ returnUrl, projectId }));
       return null;
@@ -704,7 +704,7 @@ export const OAuthCallbackPage = () => {
       } catch {
         createNotification({
           type: "error",
-          text: "Your connection session is invalid or has expired. Please restart the connection flow."
+          text: "연결 세션이 유효하지 않거나 만료되었습니다. 연결을 다시 시작하세요."
         });
         await navigate({ to: "/" });
         return;

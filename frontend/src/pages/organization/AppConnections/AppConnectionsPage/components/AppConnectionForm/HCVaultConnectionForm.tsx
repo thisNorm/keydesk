@@ -47,8 +47,8 @@ const rootSchema = genericAppConnectionFieldsSchema.extend({
 const InstanceUrlSchema = z
   .string()
   .trim()
-  .min(1, "Instance URL required")
-  .url("Invalid Instance URL");
+  .min(1, "인스턴스 URL을 입력하세요")
+  .url("올바른 인스턴스 URL을 입력하세요");
 
 const NamespaceSchema = z.string().trim().optional();
 
@@ -58,7 +58,7 @@ const formSchema = z.discriminatedUnion("method", [
     credentials: z.object({
       instanceUrl: InstanceUrlSchema,
       namespace: NamespaceSchema,
-      accessToken: z.string().trim().min(1, "Access Token required")
+      accessToken: z.string().trim().min(1, "액세스 토큰을 입력하세요")
     })
   }),
   rootSchema.extend({
@@ -66,8 +66,8 @@ const formSchema = z.discriminatedUnion("method", [
     credentials: z.object({
       instanceUrl: InstanceUrlSchema,
       namespace: NamespaceSchema,
-      roleId: z.string().trim().min(1, "Role ID required"),
-      secretId: z.string().trim().min(1, "Secret ID required")
+      roleId: z.string().trim().min(1, "역할 ID를 입력하세요"),
+      secretId: z.string().trim().min(1, "시크릿 ID를 입력하세요")
     })
   })
 ]);
@@ -105,21 +105,21 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel>
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    {`The method you would like to use to connect with ${
+                    {`연결 방식: ${
                       APP_CONNECTION_MAP[AppConnection.HCVault].name
-                    }. This field cannot be changed after creation.`}
+                    }. 이 필드는 생성 후 변경할 수 없습니다.`}
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(HCVaultConnectionMethod).map((method) => {
@@ -143,7 +143,7 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
           >
             {(isAllowed) => (
               <Field className="mb-4">
-                <FieldLabel>Gateway</FieldLabel>
+                <FieldLabel>게이트웨이</FieldLabel>
                 {isAllowed ? (
                   <GatewayPicker
                     isDisabled={!isAllowed}
@@ -171,8 +171,7 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      Restricted access. You don&apos;t have permission to attach gateways to
-                      resources.
+                      접근이 제한되었습니다. 리소스에 게이트웨이를 연결할 권한이 없습니다.
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -187,13 +186,13 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials-instance-url">
-                Instance URL
+                인스턴스 URL
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The URL at which your Hashicorp Vault instance is hosted.
+                    HashiCorp Vault 인스턴스가 호스팅되는 URL입니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -214,13 +213,14 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
           render={({ field, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="credentials-namespace">
-                Namespace <span className="text-muted">(optional)</span>
+                네임스페이스 <span className="text-muted">(선택 사항)</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    On self-hosted and enterprise clusters there may not be namespaces.
+                    직접 호스팅하는 클러스터나 엔터프라이즈 클러스터에는 네임스페이스가 없을 수
+                    있습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -241,7 +241,7 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
             shouldUnregister
             render={({ field, fieldState: { error } }) => (
               <Field className="mb-4">
-                <FieldLabel htmlFor="app-connection-hcvault-access-token">Access Token</FieldLabel>
+                <FieldLabel htmlFor="app-connection-hcvault-access-token">액세스 토큰</FieldLabel>
                 <SecretInput
                   aria-describedby={error ? "app-connection-hcvault-access-token-error" : undefined}
                   id="app-connection-hcvault-access-token"
@@ -260,7 +260,7 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
               shouldUnregister
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="credentials-role-id">Role ID</FieldLabel>
+                  <FieldLabel htmlFor="credentials-role-id">역할 ID</FieldLabel>
                   <Input
                     id="credentials-role-id"
                     {...field}
@@ -277,7 +277,7 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
               shouldUnregister
               render={({ field, fieldState: { error } }) => (
                 <Field className="mb-4">
-                  <FieldLabel htmlFor="app-connection-hcvault-secret-id">Secret ID</FieldLabel>
+                  <FieldLabel htmlFor="app-connection-hcvault-secret-id">시크릿 ID</FieldLabel>
                   <SecretInput
                     aria-describedby={error ? "app-connection-hcvault-secret-id-error" : undefined}
                     id="app-connection-hcvault-secret-id"
@@ -291,7 +291,7 @@ export const HCVaultConnectionForm = ({ appConnection, onSubmit }: Props) => {
           </>
         )}
         <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Hashicorp Vault"}
+          submitLabel={isUpdate ? "인증 정보 수정" : "Hashicorp Vault에 연결"}
         />
       </form>
     </FormProvider>

@@ -196,7 +196,7 @@ export default function UserInfoStep({
           </CardTitle>
           {isInvite ? (
             <CardDescription className="ml-0.5 font-sans text-base break-words text-accent">
-              Infisical 계정 설정
+              Keydesk 계정 설정
             </CardDescription>
           ) : null}
         </CardHeader>
@@ -257,7 +257,7 @@ export default function UserInfoStep({
           {!isInvite && (
             <Field>
               <FieldLabel htmlFor="signup-attribution-source">
-                Infisical을 알게 된 경로 <span className="font-normal text-muted"> (선택)</span>
+                Keydesk를 알게 된 경로 <span className="font-normal text-muted"> (선택)</span>
               </FieldLabel>
               <Input
                 variant="outlined"

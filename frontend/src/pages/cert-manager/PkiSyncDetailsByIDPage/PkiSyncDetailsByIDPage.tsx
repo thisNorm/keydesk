@@ -188,8 +188,8 @@ export const PkiSyncDetailsByIDPage = () => {
   return (
     <>
       <Helmet>
-        <title>PKI Sync | Infisical</title>
-        <link rel="icon" href="/infisical.ico" />
+        <title>PKI Sync | Keydesk</title>
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <PageContent />
     </>

@@ -88,7 +88,7 @@ export const AzureDevopsAuthorizePage = () => {
           </CardTitle>
           <CardDescription>
             After adding the details below, you will be prompted to set up an integration for a
-            particular Infisical project and environment.
+            particular Keydesk project and environment.
           </CardDescription>
           <CardAction>
             <Badge variant="info" asChild>

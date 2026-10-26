@@ -259,13 +259,13 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
       {
         onSuccess: () => {
           createNotification({
-            text: "Credential rotation has been triggered",
+            text: "인증 정보 교체를 시작했습니다",
             type: "success"
           });
         },
         onError: (error) => {
           createNotification({
-            text: `Failed to trigger credential rotation: ${error.message}`,
+            text: `인증 정보 교체를 시작하지 못했습니다: ${error.message}`,
             type: "error"
           });
         }
@@ -284,7 +284,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
       {
         onSuccess: () => {
           createNotification({
-            text: `Auto-rotation ${enabling ? "enabled" : "disabled"}`,
+            text: `자동 교체 ${enabling ? "켜짐" : "꺼짐"}`,
             type: "success"
           });
         }
@@ -299,18 +299,16 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
       <Card>
         <CardHeader>
           <CardTitle>
-            App Connections
+            앱 연결
             <DocumentationLinkBadge href="https://infisical.com/docs/integrations/app-connections/overview" />
           </CardTitle>
           <CardDescription>
             {/* eslint-disable-next-line no-nested-ternary */}
             {isCertManagerView
-              ? "Create and configure connections with third-party apps for your Applications and Signers."
+              ? "애플리케이션과 서명자에서 사용할 타사 앱 연결을 만들고 구성하세요."
               : isSecretScanningView
-                ? "Create and configure connections with third-party apps for your Data Sources."
-                : `Create and configure connections with third-party apps for re-use across your project${
-                    isProjectView ? "" : "s"
-                  }.`}
+                ? "데이터 소스에서 사용할 타사 앱 연결을 만들고 구성하세요."
+                : "프로젝트에서 재사용할 타사 앱 연결을 만들고 구성하세요."}
           </CardDescription>
           <CardAction>
             <VariablePermissionCan
@@ -333,7 +331,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                   isDisabled={!isAllowed}
                 >
                   <PlusIcon />
-                  Add Connection
+                  연결 추가
                 </Button>
               )}
             </VariablePermissionCan>
@@ -350,8 +348,8 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                 }}
               >
                 <TabsList variant="filled">
-                  <TabsTrigger value={View.Scope}>Organization</TabsTrigger>
-                  <TabsTrigger value={View.All}>All</TabsTrigger>
+                  <TabsTrigger value={View.Scope}>조직</TabsTrigger>
+                  <TabsTrigger value={View.All}>전체</TabsTrigger>
                 </TabsList>
               </Tabs>
             )}
@@ -361,7 +359,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
               </InputGroupAddon>
               <InputGroupInput
                 ref={searchInputRef}
-                placeholder="Search connections..."
+                placeholder="연결 검색..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -369,7 +367,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <IconButton
-                  aria-label="Filter Connections"
+                  aria-label="연결 필터"
                   variant={isTableFiltered ? scopeVariant : "outline"}
                 >
                   <FilterIcon />
@@ -380,7 +378,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                 className="max-h-[70vh] thin-scrollbar overflow-y-auto"
                 align="end"
               >
-                <DropdownMenuLabel>Filter by Apps</DropdownMenuLabel>
+                <DropdownMenuLabel>앱별 필터</DropdownMenuLabel>
                 {appConnections.length ? (
                   [...new Set(appConnections.map(({ app }) => app))]
                     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
@@ -400,7 +398,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                       >
                         <div className="flex items-center gap-2">
                           <ProviderIcon
-                            alt={`${APP_CONNECTION_MAP[app].name} integration`}
+                            alt={`${APP_CONNECTION_MAP[app].name} 연동`}
                             icon={APP_CONNECTION_MAP[app].image}
                             className="h-4 w-4"
                           />
@@ -410,7 +408,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                     ))
                 ) : (
                   <DropdownMenuLabel className="font-normal text-muted">
-                    No Connections Configured
+                    구성된 연결이 없습니다
                   </DropdownMenuLabel>
                 )}
               </DropdownMenuContent>
@@ -422,13 +420,13 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                 <EmptyHeader>
                   <EmptyTitle>
                     {appConnections.length
-                      ? "No App Connections match search"
-                      : "No App Connections have been configured"}
+                      ? "검색 결과에 일치하는 앱 연결이 없습니다"
+                      : "구성된 앱 연결이 없습니다"}
                   </EmptyTitle>
                   <EmptyDescription>
                     {appConnections.length
-                      ? "Adjust your search or filters to view connections."
-                      : "Add a connection to a third-party app to get started."}
+                      ? "연결을 확인하려면 검색어나 필터를 변경하세요."
+                      : "타사 앱 연결을 추가해 시작하세요."}
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>
@@ -441,21 +439,20 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                         className="w-1/4 cursor-pointer"
                         onClick={() => handleSort(AppConnectionsOrderBy.App)}
                       >
-                        App
-                        {renderSortIcon(AppConnectionsOrderBy.App)}
+                        앱{renderSortIcon(AppConnectionsOrderBy.App)}
                       </TableHead>
                       <TableHead
                         className="w-1/3 cursor-pointer"
                         onClick={() => handleSort(AppConnectionsOrderBy.Name)}
                       >
-                        Name
+                        이름
                         {renderSortIcon(AppConnectionsOrderBy.Name)}
                       </TableHead>
                       <TableHead
                         className="cursor-pointer"
                         onClick={() => handleSort(AppConnectionsOrderBy.Method)}
                       >
-                        Method
+                        방식
                         {renderSortIcon(AppConnectionsOrderBy.Method)}
                       </TableHead>
                       {!isProjectView && (
@@ -463,7 +460,7 @@ export const AppConnectionsTable = ({ projectId, projectType }: Props) => {
                           className="cursor-pointer"
                           onClick={() => handleSort(AppConnectionsOrderBy.ManagedBy)}
                         >
-                          Managed By
+                          관리 주체
                           {renderSortIcon(AppConnectionsOrderBy.ManagedBy)}
                         </TableHead>
                       )}

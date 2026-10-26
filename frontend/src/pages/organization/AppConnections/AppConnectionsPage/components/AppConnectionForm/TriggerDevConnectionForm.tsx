@@ -44,7 +44,7 @@ const formSchema = z.discriminatedUnion("method", [
   rootSchema.extend({
     method: z.literal(TriggerDevConnectionMethod.ApiKey),
     credentials: z.object({
-      apiKey: z.string().trim().min(1, "API Key required"),
+      apiKey: z.string().trim().min(1, "API 키를 입력하세요"),
       instanceUrl: z.string().url().optional()
     })
   })
@@ -76,13 +76,13 @@ export const TriggerDevConnectionForm = ({ appConnection, onSubmit }: Props) => 
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="instance-url">
-                Instance URL <span className="text-muted">(optional)</span>
+                인스턴스 URL <span className="text-muted">(선택 사항)</span>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    Will default to Trigger.dev Cloud if not specified.
+                    지정하지 않으면 Trigger.dev Cloud를 사용합니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
@@ -103,21 +103,20 @@ export const TriggerDevConnectionForm = ({ appConnection, onSubmit }: Props) => 
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
               <FieldLabel htmlFor="method">
-                Method
+                방식
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
-                    The method you would like to use to connect with{" "}
-                    {APP_CONNECTION_MAP[AppConnection.TriggerDev].name}. This field cannot be
-                    changed after creation.
+                    다음에 연결할 방식입니다: {APP_CONNECTION_MAP[AppConnection.TriggerDev].name}.
+                    이 필드는 생성 후 변경할 수 없습니다.
                   </TooltipContent>
                 </Tooltip>
               </FieldLabel>
               <Select disabled={isUpdate} value={value} onValueChange={(val) => onChange(val)}>
                 <SelectTrigger className="w-full" isError={Boolean(error)}>
-                  <SelectValue placeholder="Select a method..." />
+                  <SelectValue placeholder="방식을 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent position="popper">
                   {Object.values(TriggerDevConnectionMethod).map((method) => {
@@ -139,7 +138,7 @@ export const TriggerDevConnectionForm = ({ appConnection, onSubmit }: Props) => 
           shouldUnregister
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <Field className="mb-4">
-              <FieldLabel htmlFor="api-key">Personal Access Token</FieldLabel>
+              <FieldLabel htmlFor="api-key">개인 액세스 토큰</FieldLabel>
               <SecretInput
                 aria-describedby={error ? "api-key-error" : undefined}
                 id="api-key"
@@ -151,9 +150,7 @@ export const TriggerDevConnectionForm = ({ appConnection, onSubmit }: Props) => 
             </Field>
           )}
         />
-        <AppConnectionFormFooter
-          submitLabel={isUpdate ? "Update Credentials" : "Connect to Trigger.dev"}
-        />
+        <AppConnectionFormFooter submitLabel={isUpdate ? "인증 정보 수정" : "Trigger.dev에 연결"} />
       </form>
     </FormProvider>
   );

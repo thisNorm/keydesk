@@ -42,7 +42,7 @@ const initialSyncBehaviors = [
     value: IntegrationSyncBehavior.OVERWRITE_TARGET
   },
   { label: "Import - Prefer values from Heroku", value: IntegrationSyncBehavior.PREFER_TARGET },
-  { label: "Import - Prefer values from Infisical", value: IntegrationSyncBehavior.PREFER_SOURCE }
+  { label: "Import - Prefer values from Keydesk", value: IntegrationSyncBehavior.PREFER_SOURCE }
 ];
 
 const schema = z.object({
@@ -137,7 +137,7 @@ export const HerokuConfigurePage = () => {
               <DocumentationLinkBadge href="https://infisical.com/docs/integrations/cloud/heroku" />
             </CardTitle>
             <CardDescription>
-              Select which environment or folder in Infisical you want to sync to Heroku&apos;s
+              Select which environment or folder in Keydesk you want to sync to Heroku&apos;s
               environment variables.
             </CardDescription>
           </CardHeader>
@@ -317,7 +317,7 @@ export const HerokuConfigurePage = () => {
         </div>
         <span className="mt-4 text-sm text-label">
           After creating an integration, your secrets will start syncing immediately. This might
-          cause an unexpected override of current secrets in Heroku with secrets from Infisical.
+          cause an unexpected override of current secrets in Heroku with secrets from Keydesk.
         </span>
       </div></>} */}
     </div>
@@ -328,10 +328,11 @@ export const HerokuConfigurePage = () => {
       </Helmet>
       {isIntegrationAuthAppsLoading ? (
         <img
-          src="/images/loading/loading.gif"
+          src="/keydesk.svg"
+          className="object-contain motion-safe:animate-pulse"
           height={70}
           width={120}
-          alt="infisical loading indicator"
+          alt="Keydesk 로딩 중"
         />
       ) : (
         <div className="flex h-max max-w-md flex-col rounded-md border border-border-control bg-surface-raised p-6 text-center text-foreground-secondary">

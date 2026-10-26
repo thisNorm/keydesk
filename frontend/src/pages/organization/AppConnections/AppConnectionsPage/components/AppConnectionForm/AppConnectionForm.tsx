@@ -140,13 +140,12 @@ const RotationConfirmation = ({
       <div className="flex flex-col rounded-xs border border-l-2 border-border-control border-l-project bg-surface-hover/80 px-4 py-3">
         <div className="mb-1 flex items-center text-sm">
           <InfoIcon className="mr-1.5 size-4 text-project" />
-          Automatic Credential Rotation
+          인증 정보 자동 교체
         </div>
         <p className="bor mt-1 text-sm text-foreground-soft">
-          Enabling automatic credential rotation will give Infisical full control over the lifecycle
-          of this credential. Infisical will automatically rotate the credential on the schedule you
-          configured and you will no longer be able to manage it manually. The original credential
-          provided will be revoked and replaced.
+          인증 정보 자동 교체를 켜면 Keydesk가 이 인증 정보의 전체 수명 주기를 관리합니다. 설정한
+          일정에 따라 인증 정보를 자동으로 교체하며, 이후에는 수동으로 관리할 수 없습니다. 처음
+          제공한 인증 정보는 폐기되고 새 인증 정보로 대체됩니다.
         </p>
       </div>
       <div className="mt-4 flex gap-3">
@@ -156,10 +155,10 @@ const RotationConfirmation = ({
           isPending={isSubmitting}
           isDisabled={isSubmitting}
         >
-          I Understand
+          확인했습니다
         </Button>
         <Button variant="outline" onClick={onCancel} isDisabled={isSubmitting}>
-          Cancel
+          취소
         </Button>
       </div>
     </div>
@@ -194,7 +193,7 @@ const CreateForm = ({ app, onComplete, projectId, projectType }: CreateFormProps
         projectId
       });
       createNotification({
-        text: `Successfully added ${appName} Connection`,
+        text: `연결 추가 완료: ${appName} 연결`,
         type: "success"
       });
       onComplete(connection);
@@ -398,7 +397,7 @@ const CreateForm = ({ app, onComplete, projectId, projectType }: CreateFormProps
       case AppConnection.PowerDns:
         return <PowerDnsConnectionForm onSubmit={onSubmit} />;
       default:
-        throw new Error(`Unhandled App ${app}`);
+        throw new Error(`지원되지 않는 앱: ${app}`);
     }
   };
 
@@ -451,7 +450,7 @@ const UpdateForm = ({ appConnection, onComplete }: UpdateFormProps) => {
         ...formData
       });
       createNotification({
-        text: `Successfully updated ${appName} Connection`,
+        text: `연결 수정 완료: ${appName} 연결`,
         type: "success"
       });
       onComplete(connection);
@@ -716,7 +715,7 @@ const UpdateForm = ({ appConnection, onComplete }: UpdateFormProps) => {
       case AppConnection.MicrosoftIntune:
         return <MicrosoftIntuneConnectionForm onSubmit={onSubmit} appConnection={appConnection} />;
       default:
-        throw new Error(`Unhandled App ${(appConnection as TAppConnection).app}`);
+        throw new Error(`지원되지 않는 앱: ${(appConnection as TAppConnection).app}`);
     }
   };
 

@@ -186,7 +186,7 @@ export const PkiSyncActionTriggers = ({ pkiSync, onEdit, onDelete }: Props) => {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={14}>
-                  Import certificates from this {destinationName} destination into Infisical.
+                  Import certificates from this {destinationName} destination into Keydesk.
                 </TooltipContent>
               </Tooltip>
             </DropdownMenuItem>
@@ -204,7 +204,7 @@ export const PkiSyncActionTriggers = ({ pkiSync, onEdit, onDelete }: Props) => {
                 </div>
               </TooltipTrigger>
               <TooltipContent side="right" sideOffset={14}>
-                Remove certificates synced by Infisical from this {destinationName} destination.
+                Remove certificates synced by Keydesk from this {destinationName} destination.
               </TooltipContent>
             </Tooltip>
           </DropdownMenuItem>

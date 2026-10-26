@@ -115,9 +115,7 @@ export const GcpSecretManagerAuthorizePage = () => {
             />
             <span>GCP Secret Manager Integration</span>
           </CardTitle>
-          <CardDescription>
-            Connect Infisical to GCP Secret Manager to sync secrets.
-          </CardDescription>
+          <CardDescription>Connect Keydesk to GCP Secret Manager to sync secrets.</CardDescription>
           <CardAction>
             <Badge variant="info" asChild>
               <a

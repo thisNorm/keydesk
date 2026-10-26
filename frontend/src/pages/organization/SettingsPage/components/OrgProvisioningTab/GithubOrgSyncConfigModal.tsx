@@ -126,7 +126,7 @@ export const GithubOrgSyncConfigModal = ({
           <DialogHeader>
             <DialogTitle>Manage GitHub Organization Sync</DialogTitle>
             <DialogDescription>
-              Sync your GitHub teams to Infisical organization groups.
+              Sync your GitHub teams to Keydesk organization groups.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onFormSubmit)}>

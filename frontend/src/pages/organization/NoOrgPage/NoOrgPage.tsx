@@ -102,7 +102,7 @@ export const NoOrgPage = () => {
     <>
       <Helmet>
         <title>{t("common.head-title", { title: t("settings.org.title") })}</title>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <div className="min-h-screen bg-page">
         {failed ? (

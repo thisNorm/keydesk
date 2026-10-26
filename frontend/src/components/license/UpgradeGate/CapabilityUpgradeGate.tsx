@@ -109,8 +109,8 @@ const CapabilityUpgradeDialog = ({
     window.location.assign(getCapabilityUpgradeUrl(intent, currentOrg));
   };
 
-  let scopeName = intent.productName ?? "Infisical Platform";
-  if (isInstance) scopeName = "Infisical Instance";
+  let scopeName = intent.productName ?? "Keydesk 플랫폼";
+  if (isInstance) scopeName = "Keydesk 인스턴스";
   else if (isAgentVault) scopeName = "Agent Vault";
 
   let scopeIcon = <Shield className="size-10 text-muted" />;

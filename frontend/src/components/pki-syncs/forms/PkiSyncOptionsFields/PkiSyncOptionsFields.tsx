@@ -71,10 +71,10 @@ export const PkiSyncOptionsFields = ({ destination, isUpdate }: Props) => {
           label="Remove certificates from destination"
           description={
             <>
-              When enabled, Infisical deletes a certificate from the destination once this sync
-              stops holding it, whether it stopped being active, was deleted, was removed from the
-              sync, or stopped matching the sync&apos;s filters. Disable this if you manage some
-              certificates manually outside of Infisical.
+              When enabled, Keydesk deletes a certificate from the destination once this sync stops
+              holding it, whether it stopped being active, was deleted, was removed from the sync,
+              or stopped matching the sync&apos;s filters. Disable this if you manage some
+              certificates manually outside of Keydesk.
               {currentDestination === PkiSync.AwsElasticLoadBalancer &&
                 " For AWS Elastic Load Balancer, this removes the certificate from both the load balancer listeners and AWS Certificate Manager, affecting only certificates managed by this sync."}
             </>
@@ -169,8 +169,8 @@ export const PkiSyncOptionsFields = ({ destination, isUpdate }: Props) => {
               />
               <FieldDescription>
                 {currentDestination === PkiSync.AwsElasticLoadBalancer
-                  ? "Set a Certificate Name Schema so Infisical only manages the specific certificates you intend to, keeping everything else untouched."
-                  : "The Certificate Name Schema ensures Infisical only manages the specific certificates you intend to, keeping everything else untouched."}
+                  ? "Set a Certificate Name Schema so Keydesk only manages the specific certificates you intend to, keeping everything else untouched."
+                  : "The Certificate Name Schema ensures Keydesk only manages the specific certificates you intend to, keeping everything else untouched."}
               </FieldDescription>
               <FieldError errors={[error]} />
             </Field>

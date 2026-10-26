@@ -18,9 +18,7 @@ describe("Korean localization", () => {
   it("loads Korean as the default namespace without fetching catalogs", () => {
     expect(i18n.language).toBe("ko");
     expect(i18n.t("login.login")).toBe("로그인");
-    expect(i18n.t("common.head-title", { title: "내 API 보관함" })).toBe(
-      "내 API 보관함 | Infisical"
-    );
+    expect(i18n.t("common.head-title", { title: "내 API 보관함" })).toBe("내 API 보관함 | Keydesk");
   });
 
   it("covers English catalog keys and preserves interpolation parameters", () => {

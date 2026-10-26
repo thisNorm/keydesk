@@ -18,7 +18,7 @@ export const ApprovalsPage = () => {
   return (
     <div className="mx-auto flex flex-col justify-between bg-page text-foreground-inverse">
       <Helmet>
-        <link rel="icon" href="/infisical.ico" />
+        <link rel="icon" href="/keydesk.svg" />
       </Helmet>
       <div className="mx-auto mb-6 flex w-full max-w-8xl flex-col">
         <PageHeader
