@@ -114,4 +114,42 @@ describe("personal API vault project isolation", () => {
     ).toBe("local");
     expect(() => getApiVaultEnvironment(project({ environments: [] }))).toThrow("환경");
   });
+
+  it("sets an expiry reminder for active keys and clears it otherwise", async () => {
+    vi.useFakeTimers({ now: new Date(2026, 9, 1, 12) });
+    try {
+      patch.mockResolvedValue({ data: { secret: { id: "secret-id" } } });
+      post.mockResolvedValue({ data: {} });
+      remove.mockResolvedValue({ data: {} });
+      const draft = {
+        ...createEmptyApiVaultDraft(),
+        name: "지도 API",
+        provider: "테스트",
+        expiresAt: "2026-12-31",
+        credentials: [{ label: "API Key", value: "fake-test-only" }]
+      };
+      await saveApiVaultEntry(project(), draft, "TEST_KEY");
+      expect(post).toHaveBeenCalledWith("/api/v1/reminders/secrets/secret-id", {
+        nextReminderDate: "2026-12-24T00:00:00.000Z",
+        message: "지도 API (테스트) API 키가 2026-12-31에 만료됩니다."
+      });
+      await saveApiVaultEntry(project(), { ...draft, status: "revoked" }, "TEST_KEY");
+      expect(remove).toHaveBeenCalledWith("/api/v1/reminders/secrets/secret-id");
+
+      post.mockReset();
+      post.mockResolvedValueOnce({ data: { secret: { id: "new-id" } } });
+      await saveApiVaultEntry(project(), { ...draft, expiresAt: "" });
+      expect(post).toHaveBeenCalledTimes(1);
+
+      post.mockReset();
+      post
+        .mockResolvedValueOnce({ data: { secret: { id: "new-id" } } })
+        .mockRejectedValueOnce(new Error("smtp"));
+      await expect(saveApiVaultEntry(project(), draft)).resolves.toEqual({
+        reminderWarning: expect.stringContaining("만료 알림")
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

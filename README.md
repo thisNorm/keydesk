@@ -25,8 +25,25 @@ Windows에서 Docker Desktop을 설치한 뒤 `Start-Keydesk.cmd`를 실행합�
 | `Stop-Keydesk.cmd` | 데이터 보존 후 중지 |
 | `Status-Keydesk.cmd` | 실행 상태 확인 |
 | `Rebuild-Keydesk.cmd` | 수정한 소스를 다시 빌드하고 실행 |
+| `Backup-Keydesk.cmd` | DB와 `.env`를 `backups\날짜-시각` 폴더에 백업 |
 
 로그인 후 **내 API 보관함 → 보관함 만들기 → API 등록**으로 시작합니다. 웹 주소를 공개하거나 개발 프로젝트의 공개 주소를 등록할 필요는 없습니다. 기존 CLI·연동은 **전체 프로젝트** 메뉴에서 사용할 수 있습니다.
+
+### 만료 알림
+
+API를 저장할 때 상태가 **사용 중**이고 만료일이 있으면, 만료 7일 전(7일이 안 남았으면 당일)에 프로젝트 구성원에게 알림 메일을 한 번 보냅니다. 상태를 바꾸거나 만료일을 지우면 알림도 삭제됩니다. 메일은 `.env`에 `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM_ADDRESS`, `SMTP_USERNAME`, `SMTP_PASSWORD`를 설정해야 발송됩니다. 메일에는 API 이름·제공사·만료일만 들어가고 키 값은 들어가지 않습니다. 이미 저장된 API는 한 번 다시 저장해야 알림이 등록됩니다.
+
+### 백업과 복원
+
+`Backup-Keydesk.cmd`는 DB 덤프와 `.env`를 같은 폴더에 저장합니다. `.env`의 `ENCRYPTION_KEY`가 없으면 덤프를 읽을 수 없으므로, 백업 폴더는 이 PC가 아닌 안전한 곳에 함께 복사해 두세요. 백업 폴더는 Git에 포함되지 않습니다.
+
+복원은 PowerShell에서 실행합니다. 현재 데이터를 먼저 자동 백업한 뒤, `RESTORE`를 입력해야 진행됩니다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File personal\Manage-Keydesk.ps1 -Action Restore -From backups\20261105-120000
+```
+
+다른 PC로 옮길 때는 백업 폴더의 `.env`를 Keydesk 폴더에 먼저 복사한 뒤 복원하세요.
 
 `.env`와 DB에는 개인 데이터가 들어갑니다. 이 저장소에는 포함하지 않습니다. 기존 설치를 옮길 때는 기존 `.env`와 DB를 함께 보존하세요. 실행 구성은 이전 개인 설치와 같은 `infisical-personal` 볼륨 이름을 사용합니다.
 

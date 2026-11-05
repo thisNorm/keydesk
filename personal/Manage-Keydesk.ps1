@@ -1,6 +1,7 @@
 param(
-    [ValidateSet('Start', 'Build', 'Stop', 'Status')]
+    [ValidateSet('Start', 'Build', 'Stop', 'Status', 'Backup', 'Restore')]
     [string]$Action = 'Start',
+    [string]$From,
     [switch]$NoBrowser
 )
 
@@ -33,6 +34,74 @@ function Test-DockerEngine {
     finally { if ($null -ne $taskProbe) { $taskProbe.Dispose() } }
 }
 
+function Protect-OwnerOnly([string]$taskPath) {
+    $taskAcl = Get-Acl -LiteralPath $taskPath
+    $taskAcl.SetAccessRuleProtection($true, $false)
+    $taskIdentity = [Security.Principal.WindowsIdentity]::GetCurrent().User
+    $taskAcl.SetAccessRule([Security.AccessControl.FileSystemAccessRule]::new($taskIdentity, 'FullControl', 'Allow'))
+    Set-Acl -LiteralPath $taskPath -AclObject $taskAcl
+}
+
+function Start-Database {
+    & $taskDocker @taskCompose up -d --no-build --wait --wait-timeout 120 db | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'Database did not become healthy. Run Status-Keydesk.cmd.' }
+}
+
+function Get-EnvValue([string]$taskPath, [string]$taskName) {
+    $taskLine = Get-Content -LiteralPath $taskPath | Where-Object { $_ -like "$taskName=*" } | Select-Object -First 1
+    if (-not $taskLine) { return $null }
+    return $taskLine.Substring($taskName.Length + 1)
+}
+
+# The dump is unreadable without the .env that holds ENCRYPTION_KEY, so both go into one owner-only folder.
+function New-KeydeskBackup {
+    Start-Database
+    $taskDir = Join-Path $taskRepo ('backups\' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    New-Item -ItemType Directory -Path $taskDir | Out-Null
+    Protect-OwnerOnly $taskDir
+    & $taskDocker @taskCompose exec -T db sh -c 'pg_dump -U $POSTGRES_USER -d $POSTGRES_DB -Fc -f /tmp/keydesk.dump && pg_restore -l /tmp/keydesk.dump > /dev/null' | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'Database backup failed. Existing data was not changed.' }
+    & $taskDocker @taskCompose cp db:/tmp/keydesk.dump (Join-Path $taskDir 'keydesk.dump') | Out-Host
+    $taskCopyExit = $LASTEXITCODE
+    & $taskDocker @taskCompose exec -T db rm -f /tmp/keydesk.dump | Out-Host
+    if ($taskCopyExit -ne 0) { throw 'Copying the backup out of the database container failed.' }
+    Copy-Item -LiteralPath $taskEnv -Destination (Join-Path $taskDir '.env')
+    Write-Host "Backup saved: $taskDir"
+    Write-Host 'It contains your encryption key. Keep a copy somewhere safe, off this PC.' -ForegroundColor Yellow
+    return $taskDir
+}
+
+function Restore-KeydeskBackup([string]$taskDir) {
+    $taskDump = Join-Path $taskDir 'keydesk.dump'
+    $taskBackupEnv = Join-Path $taskDir '.env'
+    if (-not (Test-Path -LiteralPath $taskDump) -or -not (Test-Path -LiteralPath $taskBackupEnv)) {
+        throw 'Pass -From with a backup folder that contains keydesk.dump and .env.'
+    }
+    if ((Get-EnvValue $taskBackupEnv 'ENCRYPTION_KEY') -cne (Get-EnvValue $taskEnv 'ENCRYPTION_KEY')) {
+        throw 'This backup uses a different encryption key. Stop Keydesk, replace .env with the backup''s .env, then run Restore again.'
+    }
+    Write-Host 'Restore replaces all current Keydesk data with the backup.' -ForegroundColor Yellow
+    if ((Read-Host 'Type RESTORE to continue') -cne 'RESTORE') { throw 'Restore cancelled. Nothing was changed.' }
+    $taskSafety = New-KeydeskBackup
+    Write-Host "Current data was backed up first: $taskSafety"
+    & $taskDocker @taskCompose stop backend | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'Stopping Keydesk failed. Nothing was restored.' }
+    # Restoring into a fresh database and swapping names drops tables newer than the backup, which a
+    # restore over the live schema would keep and the next migration run would trip on.
+    $taskRestoreScript = 'set -e; dropdb -U $POSTGRES_USER --if-exists keydesk_restore; dropdb -U $POSTGRES_USER --if-exists keydesk_previous; createdb -U $POSTGRES_USER -O $POSTGRES_USER keydesk_restore; pg_restore -U $POSTGRES_USER -d keydesk_restore --no-owner --exit-on-error /tmp/keydesk-restore.dump; psql -U $POSTGRES_USER -d postgres -v ON_ERROR_STOP=1 -c ''ALTER DATABASE ''$POSTGRES_DB'' RENAME TO keydesk_previous''; psql -U $POSTGRES_USER -d postgres -v ON_ERROR_STOP=1 -c ''ALTER DATABASE keydesk_restore RENAME TO ''$POSTGRES_DB; dropdb -U $POSTGRES_USER keydesk_previous'
+    & $taskDocker @taskCompose cp $taskDump db:/tmp/keydesk-restore.dump | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'Copying the backup into the database container failed. Nothing was restored.' }
+    & $taskDocker @taskCompose exec -T db sh -c $taskRestoreScript | Out-Host
+    $taskRestoreExit = $LASTEXITCODE
+    & $taskDocker @taskCompose exec -T db rm -f /tmp/keydesk-restore.dump | Out-Host
+    if ($taskRestoreExit -ne 0) { throw "Restore failed. If Keydesk does not start, restore the safety backup: $taskSafety" }
+    # Cached secrets and sessions in Redis still describe the replaced data.
+    & $taskDocker @taskCompose up -d --no-build --wait --wait-timeout 120 redis | Out-Host
+    & $taskDocker @taskCompose exec -T redis redis-cli FLUSHALL | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw 'Clearing the Redis cache failed. Run: docker compose exec redis redis-cli FLUSHALL' }
+    Write-Host 'Restore finished. Starting Keydesk...'
+}
+
 function New-LocalEnvironment {
     $taskExistingVolume = & $taskDocker --context desktop-linux volume ls --quiet --filter 'name=infisical-personal_pg_data'
     if ($LASTEXITCODE -ne 0) { throw 'Could not check existing data volumes.' }
@@ -56,11 +125,7 @@ function New-LocalEnvironment {
             'TELEMETRY_ENABLED=false'
         )
         [IO.File]::WriteAllLines($taskEnv, $taskLines, [Text.UTF8Encoding]::new($false))
-        $taskAcl = Get-Acl -LiteralPath $taskEnv
-        $taskAcl.SetAccessRuleProtection($true, $false)
-        $taskIdentity = [Security.Principal.WindowsIdentity]::GetCurrent().User
-        $taskAcl.SetAccessRule([Security.AccessControl.FileSystemAccessRule]::new($taskIdentity, 'FullControl', 'Allow'))
-        Set-Acl -LiteralPath $taskEnv -AclObject $taskAcl
+        Protect-OwnerOnly $taskEnv
         Write-Host 'Generated local encryption and database settings in .env.'
     }
     finally { $taskRng.Dispose() }
@@ -94,6 +159,15 @@ try {
     if ($Action -eq 'Status') {
         & $taskDocker @taskCompose ps
         exit $LASTEXITCODE
+    }
+    if ($Action -eq 'Backup') {
+        New-KeydeskBackup | Out-Null
+        exit 0
+    }
+    if ($Action -eq 'Restore') {
+        if (-not $From) { throw 'Pass -From with the backup folder to restore.' }
+        Restore-KeydeskBackup $From
+        $NoBrowser = $true
     }
     & $taskDocker @taskCompose config --quiet
     if ($LASTEXITCODE -ne 0) { throw 'Compose configuration is invalid.' }

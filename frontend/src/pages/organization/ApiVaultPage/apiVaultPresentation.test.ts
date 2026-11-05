@@ -4,6 +4,7 @@ import {
   emptyApiDraft,
   expiryDays,
   expiryLabel,
+  expiryReminderDate,
   filterApiEntries,
   isCalendarDate,
   safeApiUrl
@@ -63,5 +64,13 @@ describe("API inventory presentation", () => {
     expect(
       filterApiEntries([{ ...entry, expiresAt: "2026-11-24" }], "", "all", "expiring", today)
     ).toEqual([]);
+  });
+
+  it("schedules the expiry reminder a week ahead, never before today, and not for expired keys", () => {
+    expect(expiryReminderDate("2026-11-30", today)).toBe("2026-11-23T00:00:00.000Z");
+    expect(expiryReminderDate("2026-10-27", today)).toBe("2026-10-24T00:00:00.000Z");
+    expect(expiryReminderDate("2026-10-24", today)).toBe("2026-10-24T00:00:00.000Z");
+    expect(expiryReminderDate("2026-10-23", today)).toBeUndefined();
+    expect(expiryReminderDate("", today)).toBeUndefined();
   });
 });

@@ -92,3 +92,6 @@ __pycache__
 /Status-Infisical.cmd
 /Fix-Docker-Windows.cmd
 /Infisical-CLI.cmd
+
+# Keydesk backups (contain the encryption key)
+/backups/

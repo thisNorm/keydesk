@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { ZodError } from "zod";
 
+import { createNotification } from "@app/components/notifications";
 import { useOrganization } from "@app/context";
 
 import {
@@ -73,8 +74,9 @@ export const ApiVaultPage = () => {
   const onSave = (draft: ApiVaultDraft, entryId?: string) =>
     runWrite(async () => {
       if (entryId) requireEntry(entryId);
-      await saveApiVaultEntry(requireProject(), draft, entryId);
+      const { reminderWarning } = await saveApiVaultEntry(requireProject(), draft, entryId);
       await queryClient.invalidateQueries({ queryKey: entriesKey });
+      if (reminderWarning) createNotification({ type: "warning", text: reminderWarning });
     });
 
   const onDelete = (entry: ApiVaultEntry) =>

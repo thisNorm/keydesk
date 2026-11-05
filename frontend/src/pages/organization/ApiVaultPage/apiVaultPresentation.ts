@@ -37,6 +37,18 @@ export const expiryDays = (expiresAt: string, now = new Date()): number | undefi
   return Math.round((new Date(`${expiresAt}T00:00:00Z`).getTime() - today) / 86_400_000);
 };
 
+export const EXPIRY_REMINDER_DAYS = 7;
+
+// Reminders dated before today are never dispatched, so a key expiring within the lead time is reminded today.
+export const expiryReminderDate = (expiresAt: string, now = new Date()): string | undefined => {
+  const days = expiryDays(expiresAt, now);
+  if (days === undefined || days < 0) return undefined;
+  const leadDays = Math.min(days, EXPIRY_REMINDER_DAYS);
+  return new Date(
+    new Date(`${expiresAt}T00:00:00Z`).getTime() - leadDays * 86_400_000
+  ).toISOString();
+};
+
 export const expiryLabel = (expiresAt: string, now = new Date()) => {
   const days = expiryDays(expiresAt, now);
   if (days === undefined) return "만료일 미등록";

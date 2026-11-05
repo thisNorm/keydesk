@@ -2,6 +2,7 @@ import { Project, ProjectType } from "@app/hooks/api/projects/types";
 import type { SecretV3Raw, SecretV3RawResponse } from "@app/hooks/api/secrets/types";
 
 import { parseApiCredentials, parseApiVaultEntry, serializeApiVaultDraft } from "./apiVaultModel";
+import { expiryReminderDate } from "./apiVaultPresentation";
 import type { ApiVaultDraft, ApiVaultEntry } from "./apiVaultTypes";
 
 const VAULT_MARKER = "personal-api-vault/v1";
@@ -110,16 +111,41 @@ export const saveApiVaultEntry = async (
   project: Project,
   draft: ApiVaultDraft,
   entryId?: string
-): Promise<void> => {
+): Promise<{ reminderWarning?: string }> => {
   const serialized = serializeApiVaultDraft(draft);
   const client = await getClient();
   const key = entryId ?? `PERSONAL_API_${crypto.randomUUID().replaceAll("-", "").toUpperCase()}`;
   const body = { ...vaultScope(project), ...serialized, skipMultilineEncoding: true };
   const path = `/api/v4/secrets/${encodeURIComponent(key)}`;
   const { data } = entryId
-    ? await client.patch<{ approval?: unknown }>(path, body)
-    : await client.post<{ approval?: unknown }>(path, body);
+    ? await client.patch<{ approval?: unknown; secret?: { id: string } }>(path, body)
+    : await client.post<{ approval?: unknown; secret?: { id: string } }>(path, body);
   requireAppliedChange(data);
+  if (!data.secret?.id) throw new Error("저장 결과를 확인할 수 없습니다. 보관함을 새로고침하세요.");
+
+  const reminderPath = `/api/v1/reminders/secrets/${data.secret.id}`;
+  const reminderDate = draft.status === "active" ? expiryReminderDate(draft.expiresAt) : undefined;
+  try {
+    if (reminderDate) {
+      await client.post(reminderPath, {
+        nextReminderDate: reminderDate,
+        message:
+          `${draft.name.trim()} (${draft.provider.trim()}) API 키가 ${draft.expiresAt}에 만료됩니다.`.slice(
+            0,
+            1024
+          )
+      });
+    } else if (entryId) {
+      await client.delete(reminderPath);
+    }
+  } catch {
+    // The entry is already saved; failing the save here would invite a second create of the same API.
+    return {
+      reminderWarning:
+        "API 정보는 저장했지만 만료 알림을 설정하지 못했습니다. 목록에서 이 API를 열어 다시 저장해 보세요."
+    };
+  }
+  return {};
 };
 
 export const deleteApiVaultEntry = async (
