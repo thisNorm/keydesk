@@ -17,6 +17,8 @@ export async function api<T>(path: string, method = 'GET', body?: unknown): Prom
       ...(method === 'GET' ? {} : { 'X-CSRF-Token': csrfToken }),
     },
     body: body === undefined ? undefined : JSON.stringify(body),
+  }).catch(() => {
+    throw new Error('서버에 연결할 수 없습니다. 연결 상태를 확인해 주세요.');
   });
   if (response.status === 401 && !['/auth/login', '/auth/setup', '/auth/state'].includes(path)) {
     const state = await fetch('/api/auth/state', { credentials: 'same-origin', cache: 'no-store' })
@@ -31,7 +33,8 @@ export async function api<T>(path: string, method = 'GET', body?: unknown): Prom
     );
   return result as T;
 }
-export async function copyText(value: string): Promise<boolean> {
+export async function copyText(value: string, isCurrent = () => true): Promise<boolean> {
+  if (!isCurrent()) return false;
   try {
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(value);
@@ -40,12 +43,13 @@ export async function copyText(value: string): Promise<boolean> {
   } catch {
     /* 아래의 선택 복사로 재시도 */
   }
+  if (!isCurrent()) return false;
   const previous = document.activeElement as HTMLElement | null,
     area = document.createElement('textarea');
   area.value = value;
   area.className = 'clipboard-fallback';
   area.setAttribute('aria-label', '복사할 값');
-  document.body.append(area);
+  (previous?.closest('dialog[open]') ?? document.body).append(area);
   area.select();
   let copied = false;
   try {

@@ -15,12 +15,16 @@ export function Modal({
   children,
   wide = false,
   closeDisabled = false,
+  className = '',
+  focusTitle = false,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   wide?: boolean;
   closeDisabled?: boolean;
+  className?: string;
+  focusTitle?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null),
     close = useRef(onClose),
@@ -29,13 +33,17 @@ export function Modal({
   close.current = onClose;
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
-    ref.current?.showModal();
+    const dialog = ref.current;
+    dialog?.showModal();
     (
-      ref.current?.querySelector<HTMLElement>('input,select,textarea') ??
-      ref.current?.querySelector<HTMLElement>('button')
+      dialog?.querySelector<HTMLElement>('[data-dialog-focus]') ??
+      dialog?.querySelector<HTMLElement>('input, select, textarea') ??
+      dialog?.querySelector<HTMLElement>('button')
     )?.focus();
     return () => {
-      previous?.isConnected && previous.focus();
+      dialog?.close();
+      if (previous?.isConnected) previous.focus();
+      else document.getElementById('main')?.focus({ preventScroll: true });
     };
   }, []);
   return (
@@ -48,7 +56,7 @@ export function Modal({
         composing.current = false;
       }}
       ref={ref}
-      className={wide ? 'dialog wide' : 'dialog'}
+      className={['dialog', wide ? 'wide' : '', className].filter(Boolean).join(' ')}
       onCancel={(e) => {
         if (
           composing.current ||
@@ -74,7 +82,13 @@ export function Modal({
       }}
     >
       <header className="modal-head">
-        <h2 id={titleId}>{title}</h2>
+        <h2
+          id={titleId}
+          tabIndex={focusTitle ? -1 : undefined}
+          data-dialog-focus={focusTitle || undefined}
+        >
+          {title}
+        </h2>
         <button type="button" aria-label="닫기" disabled={closeDisabled} onClick={onClose}>
           닫기
         </button>
@@ -104,7 +118,8 @@ export function Form({
     lastComposition = useRef(0);
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (busy || submitDisabled || composing.current || Date.now() - lastComposition.current < 50) return;
+    if (busy || submitDisabled || composing.current || Date.now() - lastComposition.current < 50)
+      return;
     setBusy(true);
     setError('');
     try {
@@ -201,7 +216,19 @@ export function Confirm({
   const [busy, setBusy] = useState(false);
   return (
     <Modal title={title} onClose={onClose} closeDisabled={busy}>
-      <Form onSubmit={async () => { setBusy(true); try { await onConfirm(); } finally { setBusy(false); } }} label={confirmLabel} cancelLabel={cancelLabel} onCancel={onClose}>
+      <Form
+        onSubmit={async () => {
+          setBusy(true);
+          try {
+            await onConfirm();
+          } finally {
+            setBusy(false);
+          }
+        }}
+        label={confirmLabel}
+        cancelLabel={cancelLabel}
+        onCancel={onClose}
+      >
         {children}
       </Form>
     </Modal>

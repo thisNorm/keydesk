@@ -17,6 +17,7 @@ export function CredentialDateField({
   onChange,
   zone = 'Asia/Seoul',
   id: suppliedId,
+  initialFocus = false,
   'aria-describedby': describedBy,
 }: {
   label: string;
@@ -24,6 +25,7 @@ export function CredentialDateField({
   onChange: (value: string) => void;
   zone?: string;
   id?: string;
+  initialFocus?: boolean;
   'aria-describedby'?: string;
 }) {
   const generatedId = useId(),
@@ -80,6 +82,7 @@ export function CredentialDateField({
         <input
           id={id}
           type="text"
+          data-dialog-focus={initialFocus || undefined}
           inputMode={exact ? 'text' : 'numeric'}
           autoComplete="off"
           spellCheck={false}

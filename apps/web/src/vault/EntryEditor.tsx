@@ -13,6 +13,8 @@ export function EntryEditor({
   onClose,
   onSaved,
   defaultProjectId,
+  focusExpiryFor,
+  expiryContext,
   notify,
   zone = 'Asia/Seoul',
 }: {
@@ -22,6 +24,8 @@ export function EntryEditor({
   onClose: () => void;
   onSaved: (id: string) => Promise<void>;
   defaultProjectId?: string;
+  focusExpiryFor?: string;
+  expiryContext?: string;
   notify?: (message: string) => void;
   zone?: string;
 }) {
@@ -97,6 +101,11 @@ export function EntryEditor({
         closeDisabled={busy || creating}
         wide
       >
+        {expiryContext && (
+          <p className="field-help" id="expiry-edit-context">
+            만료일 등록: {expiryContext}
+          </p>
+        )}
         <Form
           onCancel={close}
           submitDisabled={creating}
@@ -176,6 +185,12 @@ export function EntryEditor({
                   </Field>
                   <CredentialDateField
                     label="만료일"
+                    initialFocus={Boolean(focusExpiryFor && credential.id === focusExpiryFor)}
+                    aria-describedby={
+                      expiryContext && credential.id === focusExpiryFor
+                        ? 'expiry-edit-context'
+                        : undefined
+                    }
                     value={credential.expiresAt}
                     zone={zone}
                     onChange={(value) => setKey(index, { expiresAt: value })}

@@ -9,6 +9,7 @@ import { createRotationDraft, finishSaved } from './editor-model.ts';
 export function RotateCredential({
   entry,
   credential,
+  contextLabel,
   zone,
   onClose,
   onSaved,
@@ -16,6 +17,7 @@ export function RotateCredential({
 }: {
   entry: Entry;
   credential: Credential;
+  contextLabel: string;
   zone: string;
   onClose: () => void;
   onSaved: (id: string) => Promise<void>;
@@ -80,6 +82,7 @@ export function RotateCredential({
             ‘{entry.name}’의 ‘{credential.label}’을 교체합니다. 현재 버전은 {credential.version}
             입니다.
           </p>
+          <p className="field-help">사용처: {contextLabel}</p>
           <p className="field-help">
             기존 값은 교체 기록에 남습니다. 새 키의 날짜를 확인해 입력해 주세요. 만료일은 자동으로
             채우지 않습니다.

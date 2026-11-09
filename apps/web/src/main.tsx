@@ -8,6 +8,7 @@ import { GatewayPage, UsagePage } from './Gateway.tsx';
 import { SettingsPage } from './Settings.tsx';
 import { Confirm, Empty, Field, Form } from './ui.tsx';
 import './style.css';
+import './desk.css';
 function Auth({
   state,
   onState,
@@ -95,7 +96,8 @@ function App() {
     [selectedEntry, setSelectedEntry] = useState(''),
     [notice, setNotice] = useState(''),
     [loadError, setLoadError] = useState(''),
-    [loading, setLoading] = useState(false),
+    [loading, setLoading] = useState(true),
+    [loadAttempt, setLoadAttempt] = useState(0),
     [theme, setTheme] = useState<ThemeMode>(initialTheme);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined),
     lastActivity = useRef(Date.now()),
@@ -111,14 +113,19 @@ function App() {
     setAuth(state);
     setAuthState(state);
     lastActivity.current = Date.now();
-    if (!state.authenticated) {
+    setLoadError('');
+    setLoading(true);
+    if (state.authenticated) {
+      setNotice('');
+      clearTimeout(timer.current);
+    } else {
+      hideRevealedSecrets();
       setEntries([]);
       setProjects([]);
       setNotifications([]);
       setSettings(null);
       setPage('vault');
       setSelectedEntry('');
-      setLoadError('');
     }
   }, []);
   const reloadEntries = useCallback(async () => {
@@ -150,22 +157,34 @@ function App() {
     if (gen === authGeneration.current) setSettings(result.settings);
   }, []);
   useEffect(() => {
-    onUnauthorized(() => changeAuth({ initialized: true, authenticated: false }));
+    let current = true;
+    onUnauthorized(() => {
+      changeAuth({ initialized: true, authenticated: false });
+      notify('세션이 끝났습니다. 다시 로그인해 주세요.');
+    });
     void api<AuthState>('/auth/state')
-      .then(changeAuth)
-      .catch((e) => setFatal(e.message));
+      .then((state) => { if (current) changeAuth(state); })
+      .catch((error: Error) => { if (current) setFatal(error.message); });
     return () => {
+      current = false;
       clearTimeout(timer.current);
     };
-  }, [changeAuth]);
+  }, [changeAuth, notify]);
   useEffect(() => {
     if (!auth?.authenticated) return;
+    const gen = authGeneration.current;
+    let current = true;
     setLoading(true);
     setLoadError('');
     void Promise.all([reloadEntries(), reloadProjects(), reloadNotifications(), reloadSettings()])
-      .catch((e) => setLoadError(e.message))
-      .finally(() => setLoading(false));
-  }, [auth?.authenticated, reloadEntries, reloadProjects, reloadNotifications, reloadSettings]);
+      .catch((error: Error) => {
+        if (current && gen === authGeneration.current) setLoadError(error.message);
+      })
+      .finally(() => {
+        if (current && gen === authGeneration.current) setLoading(false);
+      });
+    return () => { current = false; };
+  }, [auth, loadAttempt, reloadEntries, reloadProjects, reloadNotifications, reloadSettings]);
   async function lock() {
     const logout = api('/auth/logout', 'POST');
     changeAuth({ initialized: true, authenticated: false });
@@ -228,10 +247,10 @@ function App() {
   if (!auth.authenticated) return <Auth state={auth} onState={changeAuth} notice={notice} />;
   const zone = settings?.timeZone ?? 'Asia/Seoul';
   return (
-    <div className="shell">
+    <div className={page === 'vault' ? 'shell rack-shell' : 'shell'}>
       <a className="skip" href="#main">본문으로 건너뛰기</a>
       <header className="app-header">
-        <button className="wordmark" onClick={() => navigate('vault')} aria-label="Keydesk 보관함">keydesk</button>
+        <button className="wordmark" onClick={() => navigate('vault')} aria-label="Keydesk 보관함"><svg className="desk-mark" viewBox="0 0 28 28" aria-hidden="true"><path d="M0 0h28v28H0z" fill="currentColor"/><path d="M6 6h9v6.5L22 6v5l-4 3 4 3v5l-7-6.5V22H6V6Zm3 3v10h3V9H9Z" fill="var(--page)"/></svg><span>keydesk</span></button>
         <nav className="main-nav" aria-label="주요 메뉴">
           <button aria-current={page === 'vault' ? 'page' : undefined} onClick={() => navigate('vault')}>보관함</button>
           <button aria-current={page === 'projects' ? 'page' : undefined} onClick={() => navigate('projects')}>프로젝트</button>
@@ -241,9 +260,16 @@ function App() {
         <div className="account-nav"><span className="owner">{auth.user?.name}</span><button aria-current={page === 'settings' ? 'page' : undefined} onClick={() => navigate('settings')}>설정</button><button aria-label="잠금·로그아웃" onClick={() => void lock()}>잠금</button></div>
       </header>
       <main className="main" id="main" tabIndex={-1}>
-        {loadError && <p className="error" role="alert">{loadError} <button onClick={() => location.reload()}>다시 연결</button></p>}
-        {loading ? <p role="status">보관함을 불러오는 중…</p> : page === 'vault' ? <Vault entries={entries} projects={projects} reload={reloadEntries} reloadProjects={reloadProjects} notify={notify} project={project} setProject={setProject} zone={zone} initialEntryId={selectedEntry} /> : page === 'projects' ? <Projects projects={projects} entries={entries} onSaved={reloadProjects} notify={notify} onViewProject={id => navigate('vault', { projectId: id, entryId: entries.find(entry => entry.projectIds.includes(id))?.id })} /> : page === 'notifications' ? <Notifications notifications={notifications} onSaved={reloadNotifications} onEntry={id => { if (entries.some(entry => entry.id === id)) navigate('vault', { projectId: '', entryId: id }); }} zone={zone} /> : page === 'gateway' ? <GatewayPage entries={entries} projects={projects} notify={notify} zone={zone} /> : page === 'usage' ? <UsagePage projects={projects} zone={zone} /> : <SettingsPage notify={notify} onAuth={changeAuth} onSaved={reloadSettings} theme={theme} onThemeChange={setTheme} />}
-        <footer className="app-footer"><span>keydesk / 개인 API 키 보관함</span><span>{zone === 'Asia/Seoul' ? '한국 시간 · Asia/Seoul' : zone}</span></footer>
+        {loading ? (
+          <p className="app-load-state" role="status">보관함을 불러오는 중…</p>
+        ) : loadError ? (
+          <section className="app-load-state" aria-labelledby="load-state-title">
+            <h1 id="load-state-title">보관함을 불러오지 못했습니다</h1>
+            <p role="alert">{loadError}</p>
+            <button type="button" onClick={() => { setLoading(true); setLoadAttempt((attempt) => attempt + 1); }}>다시 연결</button>
+          </section>
+        ) : page === 'vault' ? <Vault entries={entries} projects={projects} reload={reloadEntries} reloadProjects={reloadProjects} notify={notify} project={project} setProject={setProject} zone={zone} initialEntryId={selectedEntry} /> : page === 'projects' ? <Projects projects={projects} entries={entries} onSaved={reloadProjects} notify={notify} onViewProject={id => navigate('vault', { projectId: id })} /> : page === 'notifications' ? <Notifications notifications={notifications} onSaved={reloadNotifications} onEntry={id => { if (entries.some(entry => entry.id === id)) navigate('vault', { projectId: '', entryId: id }); }} zone={zone} /> : page === 'gateway' ? <GatewayPage entries={entries} projects={projects} notify={notify} zone={zone} /> : page === 'usage' ? <UsagePage projects={projects} zone={zone} /> : <SettingsPage notify={notify} onAuth={changeAuth} onSaved={reloadSettings} theme={theme} onThemeChange={setTheme} />}
+        <footer className="app-footer"><span>개인 API 키 보관함</span><span>{zone === 'Asia/Seoul' ? '한국 시간 기준' : zone}</span></footer>
       </main>
       {notice && <div className="toast" role="status"><span>{notice}</span><button aria-label="알림 닫기" onClick={() => setNotice('')}>닫기</button></div>}
     </div>

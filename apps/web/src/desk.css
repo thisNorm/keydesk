@@ -1,0 +1,403 @@
+:root {
+  --desk-gutter: clamp(18px, 5vw, 72px);
+}
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --page: #f8f6ef;
+  --side: #eeebe1;
+  --panel: #fffdf7;
+  --field: #fffdf7;
+  --text: #202b35;
+  --muted: #58616a;
+  --line: #d8d3c7;
+  --hover: #eeebe1;
+  --selection: #eae7dd;
+  --accent: #46315e;
+  --accent-ink: #fffdf6;
+  --warning: #825921;
+  --danger: #9d3c26;
+  --focus: #225e91;
+  --desk-edge: #918b7e;
+  --desk-accent-hover: #36234c;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --page: #1d2228;
+  --side: #232930;
+  --panel: #262c34;
+  --field: #262c34;
+  --text: #f1eee5;
+  --muted: #bac0c7;
+  --line: #454e57;
+  --hover: #2c333c;
+  --selection: #363e47;
+  --accent: #e3d2ee;
+  --accent-ink: #2d213b;
+  --warning: #e0c28c;
+  --danger: #ffbb9f;
+  --focus: #a9d4f8;
+  --desk-edge: #78838d;
+  --desk-accent-hover: #f0f5f8;
+}
+
+/* Keep the app bar and main content on the same 1200px measure. */
+.shell:has(> .app-header) {
+  display: block;
+}
+
+.app-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(16px, 5vw, 72px);
+  min-height: 70px;
+  padding-inline: max(var(--desk-gutter), calc((100% - 1200px) / 2));
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.shell > .app-header ~ .main {
+  width: min(1200px, calc(100% - 2 * var(--desk-gutter)));
+  padding-inline: 0;
+  margin-inline: auto;
+}
+
+.app-load-state {
+  margin: 0;
+  padding: 28px 0 24px;
+}
+.app-load-state h1 {
+  margin: 0;
+  font-size: 24px;
+}
+.app-load-state button {
+  min-height: 44px;
+}
+
+.app-header .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  justify-self: start;
+  width: auto;
+  min-height: 44px;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  font:
+    750 27px/1 system-ui,
+    sans-serif;
+  letter-spacing: -0.085em;
+}
+
+.app-header .wordmark span {
+  color: inherit;
+}
+
+.desk-mark {
+  --mark-cut: var(--page);
+  width: 25px;
+  height: 25px;
+  stroke: none;
+}
+
+.app-header :is(.main-nav, .account-nav) {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.app-header .main-nav {
+  flex-wrap: wrap;
+}
+
+.app-header .account-nav {
+  justify-content: flex-end;
+}
+
+.app-header .account-nav .owner {
+  display: block;
+  min-width: 0;
+  max-width: 9em;
+  padding: 0;
+  margin: 0 5px 0 0;
+  overflow: hidden;
+  border: 0;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-header :is(.main-nav, .account-nav) > button,
+.app-header .nav-menu > summary {
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--muted);
+  font-size: inherit;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.app-header .account-nav > button {
+  flex: none;
+  color: var(--text);
+}
+
+.app-header .main-nav small {
+  margin-inline-start: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.app-header .nav-menu {
+  position: relative;
+  margin: 0;
+}
+
+.app-header :is(.main-nav, .account-nav) > button:hover,
+.app-header .nav-menu > summary:hover,
+.app-header .nav-menu[open] > summary {
+  background: var(--hover);
+}
+
+.app-header :is(.main-nav, .account-nav, .nav-menu-items) > button[aria-current='page'],
+.app-header .nav-menu > summary.current {
+  background: var(--selection);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.app-header .nav-menu-items {
+  position: absolute;
+  z-index: 5;
+  inset-block-start: calc(100% + 4px);
+  inset-inline-end: 0;
+  display: grid;
+  min-width: max-content;
+  padding: 4px;
+  border: 1px solid var(--desk-edge);
+  border-radius: 3px;
+  background: var(--panel);
+}
+
+.app-header .nav-menu-items button {
+  min-height: 44px;
+  border: 0;
+  text-align: start;
+}
+
+.dialog.desk-detail-modal {
+  width: min(580px, calc(100% - 34px));
+  max-height: calc(100% - 42px);
+  padding: 24px 26px 26px;
+  border-color: var(--desk-edge);
+  border-radius: 4px;
+  background: var(--panel);
+}
+
+.desk-detail-modal::backdrop {
+  background: rgb(18 25 34 / 50%);
+}
+
+.desk-detail-modal .modal-head {
+  align-items: flex-start;
+  margin-bottom: 7px;
+}
+
+.desk-detail-modal .modal-head h2 {
+  padding-top: 3px;
+  font-size: clamp(22px, 5vw, 33px);
+  font-weight: 700;
+  line-height: 1.23;
+  letter-spacing: -0.046em;
+  overflow-wrap: anywhere;
+}
+
+.desk-detail-modal .modal-head button {
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  font-size: 13px;
+}
+
+.desk-detail {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.desk-detail-subtitle {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.desk-detail-message:empty {
+  margin: 0;
+}
+
+.desk-detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--desk-edge);
+}
+
+.desk-detail-head :is(h2, h3) {
+  margin: 0;
+}
+
+.desk-detail-head .actions {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.desk-detail-modal .credential {
+  padding-block: 12px;
+}
+
+.desk-detail-modal .credential-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.desk-detail-modal .credential-heading strong {
+  font-size: 15px;
+}
+
+.desk-detail-modal .credential-heading button {
+  margin-inline-start: auto;
+}
+
+.desk-detail-modal .key-value {
+  flex-wrap: wrap;
+}
+
+.desk-detail-modal .key-value .secret {
+  flex: 1 1 12ch;
+  min-height: 36px;
+  padding-inline: 0;
+  background: transparent;
+  color: var(--text);
+}
+
+.desk-detail-modal .key-value button {
+  min-height: 44px;
+  min-width: 44px;
+  border-color: transparent;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.desk-detail-modal .entry-information {
+  margin-top: 12px;
+}
+
+.desk-detail-modal .entry-information summary {
+  min-height: 44px;
+  padding-block: 11px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.desk-detail-modal .entry-information dl > div {
+  display: grid;
+  grid-template-columns: 7em minmax(0, 1fr);
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.desk-detail-modal .entry-information dt {
+  color: var(--muted);
+}
+
+.desk-detail-modal .entry-information dd {
+  margin: 0;
+}
+
+.desk-detail-modal .detail-management {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 760px) {
+  .app-header :is(.main-nav, .account-nav) > button,
+  .app-header .nav-menu > summary {
+    padding-inline: 8px;
+  }
+}
+
+@media (max-width: 700px) {
+  .app-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'brand brand' 'menu account';
+    gap: 1px 8px;
+    min-height: 0;
+    padding-block: 5px 4px;
+  }
+
+  .app-header .wordmark {
+    grid-area: brand;
+    font-size: 25px;
+  }
+
+  .desk-mark {
+    width: 23px;
+    height: 23px;
+  }
+
+  .app-header .main-nav {
+    grid-area: menu;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .app-header .account-nav {
+    grid-area: account;
+  }
+
+  .app-header .account-nav .owner {
+    display: none;
+  }
+}
+
+@media (max-width: 550px) {
+  .app-header {
+    column-gap: 4px;
+    font-size: 12px;
+  }
+  .app-header :is(.main-nav, .account-nav) {
+    gap: 2px;
+  }
+  .app-header :is(.main-nav, .account-nav) > button,
+  .app-header .nav-menu > summary {
+    padding-inline: 6px;
+  }
+  .dialog.desk-detail-modal {
+    padding: 18px 17px 21px;
+  }
+}
+
+@media (max-width: 365px) {
+  :root {
+    --desk-gutter: 14px;
+  }
+}
