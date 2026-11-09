@@ -730,43 +730,52 @@ test('CLI backup and password reset support Korean space paths and revoke existi
     newPassword: '새로운 소유자 비밀번호 입니다',
   });
   const restarted = await createApp({ dataDir, origin, backgroundJobs: false });
-  t.after(() => restarted.close());
-  assert.equal(
-    (await restarted.inject({ url: '/api/entries', headers: auth.headers })).statusCode,
-    401,
-  );
-  assert.equal(
-    (
-      await restarted.inject({
-        method: 'POST',
-        url: '/api/auth/login',
-        headers: { origin },
-        payload: { password },
-      })
-    ).statusCode,
-    401,
-  );
-  assert.equal(
-    (
-      await restarted.inject({
-        method: 'POST',
-        url: '/api/auth/login',
-        headers: { origin },
-        payload: { password: '새로운 소유자 비밀번호 입니다' },
-      })
-    ).statusCode,
-    200,
-  );
+  try {
+    assert.equal(
+      (await restarted.inject({ url: '/api/entries', headers: auth.headers })).statusCode,
+      401,
+    );
+    assert.equal(
+      (
+        await restarted.inject({
+          method: 'POST',
+          url: '/api/auth/login',
+          headers: { origin },
+          payload: { password },
+        })
+      ).statusCode,
+      401,
+    );
+    assert.equal(
+      (
+        await restarted.inject({
+          method: 'POST',
+          url: '/api/auth/login',
+          headers: { origin },
+          payload: { password: '새로운 소유자 비밀번호 입니다' },
+        })
+      ).statusCode,
+      200,
+    );
+  } finally {
+    await restarted.close();
+  }
 });
-test('wrong root keys fail with recovery guidance and private SQLite sidecar permissions', async (t) => {
+test('wrong root keys fail with recovery guidance and SQLite files use private POSIX modes', async (t) => {
   const { stat, writeFile } = await import('node:fs/promises');
   const { randomBytes } = await import('node:crypto');
   const dataDir = await mkdtemp(join(tmpdir(), 'keydesk-rootguard-'));
   t.after(() => rm(dataDir, { recursive: true, force: true }));
   const app = await createApp({ dataDir, origin, backgroundJobs: false });
-  for (const file of ['root-key', 'keydesk.sqlite', 'keydesk.sqlite-wal', 'keydesk.sqlite-shm'])
-    assert.equal((await stat(join(dataDir, file))).mode & 0o077, 0, file);
-  await app.close();
+  try {
+    for (const file of ['root-key', 'keydesk.sqlite', 'keydesk.sqlite-wal', 'keydesk.sqlite-shm']) {
+      const info = await stat(join(dataDir, file));
+      assert.ok(info.isFile(), file);
+      if (process.platform !== 'win32') assert.equal(info.mode & 0o077, 0, file);
+    }
+  } finally {
+    await app.close();
+  }
   await writeFile(join(dataDir, 'root-key'), randomBytes(32));
   await assert.rejects(createApp({ dataDir, origin, backgroundJobs: false }), /루트 암호화 키/);
 });

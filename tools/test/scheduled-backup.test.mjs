@@ -1,4 +1,4 @@
-import test from 'node:test';
+import test, { after, before } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   mkdtemp,
@@ -13,7 +13,8 @@ import {
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
+import { promisify } from 'node:util';
 import { createApp } from '../../apps/server/src/app.ts';
 import { root, configuration } from '../lib.mjs';
 import { scheduledBackup } from '../scheduled-backup.mjs';
@@ -21,6 +22,48 @@ import { runAdmin } from '../../apps/server/src/cli.ts';
 const password = 'scheduled-owner-password-2026';
 const backupPassword = 'scheduled-backup-password-2026';
 const pattern = /^keydesk-scheduled-\d{8}T\d{9}Z-[a-f0-9]{32}\.keydesk$/;
+const execFileAsync = promisify(execFile);
+
+if (process.platform === 'win32') {
+  const modulePath = process.env.PSModulePath;
+  before(() => {
+    // The backup launches Windows PowerShell, even when the tests start from PowerShell 7.
+    const nativeModules = path.join(
+      process.env.SystemRoot,
+      'System32/WindowsPowerShell/v1.0/Modules',
+    );
+    process.env.PSModulePath = [nativeModules, modulePath].filter(Boolean).join(path.delimiter);
+  });
+  after(() => {
+    if (modulePath === undefined) delete process.env.PSModulePath;
+    else process.env.PSModulePath = modulePath;
+  });
+}
+
+async function setWindowsPasswordFileAcl(passwordFile, allowEveryoneRead = false) {
+  const script = `
+    $ErrorActionPreference = 'Stop'
+    $acl = [System.Security.AccessControl.FileSecurity]::new()
+    $acl.SetAccessRuleProtection($true, $false)
+    $sid = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
+    $acl.AddAccessRule([System.Security.AccessControl.FileSystemAccessRule]::new($sid, 'FullControl', 'Allow'))
+    if (${allowEveryoneRead ? '$true' : '$false'}) {
+      $everyone = [System.Security.Principal.SecurityIdentifier]::new('S-1-1-0')
+      $acl.AddAccessRule([System.Security.AccessControl.FileSystemAccessRule]::new($everyone, 'Read', 'Allow'))
+    }
+    [System.IO.File]::SetAccessControl($env:KEYDESK_TEST_PASSWORD_FILE, $acl)
+  `;
+  await execFileAsync(
+    'powershell.exe',
+    ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', script],
+    {
+      windowsHide: true,
+      timeout: 10000,
+      env: { ...process.env, KEYDESK_TEST_PASSWORD_FILE: passwordFile },
+    },
+  );
+}
+
 function run(args, env) {
   return new Promise((resolve, reject) => {
     const child = spawn(
@@ -62,6 +105,7 @@ async function fixture(t) {
     await app.close();
     await rm(dir, { recursive: true, force: true });
   });
+  if (process.platform === 'win32') await setWindowsPasswordFileAcl(passwordFile);
   return {
     dir,
     dataDir,
@@ -203,7 +247,21 @@ test('서버가 중지된 상태에서도 기본 보존 개수로 백업하고 �
   assert.equal(result.code, 0, result.output);
   assert.equal((await readdir(f.directory)).filter((name) => pattern.test(name)).length, 1);
   const before = await readdir(f.directory);
-  if (process.platform !== 'win32') {
+  if (process.platform === 'win32') {
+    await setWindowsPasswordFileAcl(f.passwordFile, true);
+    try {
+      await assert.rejects(
+        scheduledBackup(configuration(f.env), {
+          directory: f.directory,
+          passwordFile: f.passwordFile,
+          keep: 7,
+        }),
+        /Windows 읽기 권한/,
+      );
+    } finally {
+      await setWindowsPasswordFileAcl(f.passwordFile);
+    }
+  } else {
     await chmod(f.passwordFile, 0o644);
     assert.equal(
       (await run(['--directory', f.directory, '--password-file', f.passwordFile], f.env)).code,
