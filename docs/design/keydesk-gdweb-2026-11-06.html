@@ -1,0 +1,1923 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>Keydesk · GDWEB 검토 후 화면 제안</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic',
+          'Noto Sans CJK KR', sans-serif;
+        font-synthesis: none;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 2px solid var(--accent, #2e6048);
+        outline-offset: 3px;
+      }
+      button:disabled {
+        cursor: default;
+      }
+      button {
+        color: inherit;
+      }
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .mono {
+        font-family: 'SFMono-Regular', Consolas, monospace;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0;
+      }
+      .draft {
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+        background: #dedfd8;
+        color: #50574f;
+        font-size: 11px;
+        gap: 12px;
+      }
+      .draft strong {
+        font-weight: 600;
+      }
+      .draft span:last-child {
+        color: #697164;
+      }
+      .app {
+        --canvas: #eef0ee;
+        --paper: #fafbf9;
+        --ink: #272f2c;
+        --muted: #69756e;
+        --line: #dce2dc;
+        --field: #f2f5f1;
+        --hover: #f1f5ef;
+        --selected: #eaf0e7;
+        --accent: #315b43;
+        --accent-ink: #fff;
+        --warning: #91602a;
+        --danger: #a54838;
+        --sidebar: #202824;
+        --side-text: #ccd2cc;
+        --side-muted: #9ba89b;
+        --side-active: #344438;
+        --navline: #3b473d;
+        display: grid;
+        grid-template-columns: 178px minmax(0, 1fr);
+        height: calc(100dvh - 36px);
+        min-height: 640px;
+        background: var(--canvas);
+        color: var(--ink);
+        font-size: 13px;
+        letter-spacing: -0.25px;
+        line-height: 1.6;
+      }
+      .app.night {
+        color-scheme: dark;
+        --canvas: #1c1f20;
+        --paper: #25292a;
+        --ink: #e4e9e6;
+        --muted: #a9b5ad;
+        --line: #414948;
+        --field: #1f2424;
+        --hover: #2b3430;
+        --selected: #344139;
+        --accent: #b5cdb8;
+        --accent-ink: #1e2e24;
+        --warning: #e1ba85;
+        --danger: #e3a798;
+        --sidebar: #191f1c;
+        --side-active: #303d33;
+        --navline: #374239;
+      }
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        background: var(--sidebar);
+        color: var(--side-text);
+        padding: 27px 16px 19px;
+        border-right: 1px solid var(--navline);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 0 9px 29px;
+      }
+      .brand-mark {
+        width: 16px;
+        height: 20px;
+        position: relative;
+        border: 1.5px solid #acc6b0;
+        border-right: 0;
+      }
+      .brand-mark:before {
+        content: '';
+        position: absolute;
+        width: 10px;
+        top: 6px;
+        left: 5px;
+        border-top: 1.5px solid #acc6b0;
+      }
+      .brand-mark:after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        top: 10px;
+        left: 9px;
+        border-top: 1.5px solid #acc6b0;
+      }
+      .brand-name {
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -1.2px;
+        line-height: 1;
+      }
+      .side-section {
+        color: var(--side-muted);
+        font-size: 10px;
+        letter-spacing: 0.4px;
+        margin: 20px 11px 8px;
+      }
+      .nav {
+        display: grid;
+        gap: 3px;
+      }
+      .nav button,
+      .project {
+        border: 0;
+        background: transparent;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 10px 11px;
+        font-size: 13px;
+        min-height: 41px;
+        width: 100%;
+        color: var(--side-text);
+        border-radius: 3px;
+      }
+      .nav button.active {
+        background: var(--side-active);
+        color: #f2f5ed;
+        position: relative;
+      }
+      .nav button.active:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 11px;
+        bottom: 11px;
+        width: 2px;
+        background: #b6cbb2;
+      }
+      .nav svg {
+        color: #b5c1b5;
+      }
+      .side-count {
+        margin-left: auto;
+        font-size: 11px;
+        color: var(--side-muted);
+        font-variant-numeric: tabular-nums;
+      }
+      .project {
+        padding: 8px 11px;
+        font-size: 12px;
+        min-height: 34px;
+        color: #c0cbbf;
+      }
+      .project.selected {
+        color: #f0f5e9;
+      }
+      .project.selected:before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        background: #b4c9ad;
+        border-radius: 1px;
+      }
+      .sidebar-bottom {
+        margin-top: auto;
+        padding-top: 28px;
+      }
+      .bottom-button {
+        border: 0;
+        background: transparent;
+        text-align: left;
+        width: 100%;
+        padding: 8px 11px;
+        color: var(--side-muted);
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+      .profile {
+        padding: 15px 10px 0;
+        margin-top: 12px;
+        border-top: 1px solid var(--navline);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #c4cfc0;
+      }
+      .profile span:last-child {
+        font-size: 10px;
+        color: var(--side-muted);
+      }
+      .mobile-menu {
+        display: none;
+      }
+      .main {
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 0 28px 23px;
+      }
+      .heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 97px;
+        flex-shrink: 0;
+      }
+      .heading-title {
+        display: flex;
+        align-items: baseline;
+        gap: 13px;
+      }
+      h1 {
+        font-size: 27px;
+        letter-spacing: -1px;
+        font-weight: 650;
+        line-height: 1.4;
+        margin: 0;
+      }
+      .heading-count {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .button {
+        min-height: 35px;
+        border: 1px solid var(--line);
+        background: transparent;
+        padding: 7px 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 12px;
+        line-height: 1.4;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+      .button.primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--accent-ink);
+      }
+      .button:hover {
+        filter: brightness(0.96);
+      }
+      .button svg {
+        width: 14px;
+        height: 14px;
+      }
+      .desk {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 344px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+      }
+      .list-area {
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .list-tools {
+        padding: 14px 21px 0;
+        flex-shrink: 0;
+      }
+      .filter-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .filters {
+        display: flex;
+        gap: 21px;
+      }
+      .filter {
+        border: 0;
+        background: transparent;
+        font-size: 12px;
+        color: var(--muted);
+        padding: 0 0 12px;
+        white-space: nowrap;
+      }
+      .filter.active {
+        border-bottom: 2px solid var(--accent);
+        color: var(--ink);
+        font-weight: 600;
+        margin-bottom: -1px;
+      }
+      .filter small {
+        font-size: 11px;
+        font-weight: 400;
+        margin-left: 5px;
+        color: var(--muted);
+      }
+      .sort {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        font-size: 11px;
+        max-width: 114px;
+        padding: 0 0 12px;
+      }
+      .search-row {
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 0 16px;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        background: var(--field);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        min-width: 0;
+        flex: 1;
+        min-height: 35px;
+      }
+      .search svg {
+        width: 14px;
+        height: 14px;
+        color: var(--muted);
+      }
+      .search input {
+        color: var(--ink);
+        border: 0;
+        background: transparent;
+        outline: 0;
+        min-width: 0;
+        flex: 1;
+        font-size: 12px;
+        padding: 0;
+      }
+      .search input::placeholder {
+        color: var(--muted);
+        opacity: 1;
+      }
+      kbd {
+        font-family: inherit;
+        font-size: 10px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .density {
+        padding: 7px 0 7px 4px;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        font-size: 11px;
+        white-space: nowrap;
+      }
+      .mobile-project {
+        display: none;
+      }
+      .columns,
+      .entry {
+        display: grid;
+        grid-template-columns: minmax(160px, 1fr) 55px 101px 115px;
+        gap: 16px;
+        align-items: center;
+      }
+      .columns {
+        flex-shrink: 0;
+        font-size: 11px;
+        color: var(--muted);
+        padding: 10px 21px;
+        background: var(--field);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .columns .expiry-head {
+        text-align: right;
+      }
+      .list-scroll {
+        overflow: auto;
+        min-height: 0;
+        flex: 1;
+        scrollbar-width: thin;
+        scrollbar-color: var(--line) transparent;
+      }
+      .entry {
+        position: relative;
+        width: 100%;
+        padding: 17px 21px;
+        border: 0;
+        background: transparent;
+        border-bottom: 1px solid var(--line);
+        min-height: 78px;
+        text-align: left;
+      }
+      .entry:hover {
+        background: var(--hover);
+      }
+      .entry.selected {
+        background: var(--selected);
+      }
+      .entry.selected:before {
+        content: '';
+        position: absolute;
+        width: 3px;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: var(--accent);
+      }
+      .entry-name {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.45px;
+      }
+      .entry-purpose {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+      .entry-keys,
+      .entry-project {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .entry-expiry {
+        text-align: right;
+      }
+      .days {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        white-space: nowrap;
+        letter-spacing: -0.4px;
+        font-variant-numeric: tabular-nums;
+      }
+      .expiry-date {
+        display: block;
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 3px;
+        font-variant-numeric: tabular-nums;
+      }
+      .soon {
+        color: var(--warning);
+      }
+      .expired {
+        color: var(--danger);
+      }
+      .no-expiry .days {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--muted);
+      }
+      .entry-project-mobile {
+        display: none;
+      }
+      .list-footer {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 12px 21px;
+        color: var(--muted);
+        font-size: 11px;
+        border-top: 1px solid var(--line);
+        min-height: 42px;
+      }
+      .empty {
+        text-align: center;
+        color: var(--muted);
+        padding: 60px 20px;
+        font-size: 13px;
+      }
+      .compact .entry {
+        min-height: 65px;
+        padding-top: 11px;
+        padding-bottom: 11px;
+      }
+      .compact .entry-purpose {
+        margin-top: 2px;
+      }
+      .detail {
+        padding: 20px 23px 25px;
+        border-left: 1px solid var(--line);
+        min-height: 0;
+        overflow: auto;
+        scrollbar-width: thin;
+      }
+      .detail-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 17px;
+      }
+      .overline {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.1px;
+      }
+      .plain {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .close-detail {
+        min-width: 30px;
+        min-height: 30px;
+        font-size: 18px;
+        line-height: 1;
+      }
+      .detail-title {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 15px;
+      }
+      .detail-title h2 {
+        font-size: 25px;
+        line-height: 1.35;
+        letter-spacing: -1px;
+        margin: 0;
+        font-weight: 650;
+      }
+      .edit {
+        margin-top: 4px;
+        font-size: 11px;
+        min-height: 27px;
+      }
+      .detail-purpose {
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--muted);
+        margin: 6px 0 10px;
+      }
+      .detail-project {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 19px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .detail-project svg {
+        width: 12px;
+        height: 12px;
+      }
+      .key-block {
+        border-top: 1px solid var(--line);
+        padding: 18px 0 20px;
+      }
+      .key-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+      }
+      .key-label {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .key-status {
+        font-size: 11px;
+        color: var(--accent);
+      }
+      .key-expiry {
+        font-size: 12px;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .key-expiry span:last-child {
+        font-size: 11px;
+      }
+      .key-value-row {
+        display: flex;
+        align-items: stretch;
+        gap: 6px;
+        margin-top: 13px;
+      }
+      .key-mask {
+        background: var(--field);
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        font-size: 12px;
+        letter-spacing: 2px;
+        padding: 7px 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        flex: 1;
+        min-width: 0;
+      }
+      .key-value-row .button {
+        font-size: 11px;
+        padding: 5px 8px;
+        min-height: 32px;
+        border-radius: 3px;
+      }
+      .key-variable {
+        font-size: 9px;
+        color: var(--muted);
+        word-break: break-all;
+        margin-top: 7px;
+        letter-spacing: 0;
+      }
+      .key-version {
+        margin-top: 11px;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .key-version summary {
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+      }
+      .key-version summary:after {
+        content: '⌄';
+        font-size: 12px;
+      }
+      .history-row {
+        padding: 8px 0 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .detail-section {
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+      }
+      .section-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin: 0 0 10px;
+      }
+      .facts {
+        margin: 0;
+      }
+      .facts-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 14px;
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+      dt {
+        color: var(--muted);
+      }
+      dd {
+        margin: 0;
+        text-align: right;
+      }
+      .memo {
+        font-size: 12px;
+        line-height: 1.9;
+        white-space: pre-line;
+      }
+      .detail-links {
+        display: flex;
+        gap: 18px;
+        margin-top: 22px;
+      }
+      .detail-links button {
+        font-size: 11px;
+      }
+      .last-edit {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 20px;
+      }
+      .main-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        flex-shrink: 0;
+        color: var(--muted);
+        font-size: 10px;
+        padding-top: 12px;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 11px 17px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: var(--paper);
+        box-shadow: 0 5px 25px #0002;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 30;
+        max-width: calc(100vw - 30px);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .no-detail .desk {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .no-detail .detail {
+        display: none;
+      }
+      .backdrop {
+        position: fixed;
+        inset: 0;
+        background: #101d1980;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .dialog {
+        background: var(--paper);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        width: 580px;
+        max-width: 100%;
+        max-height: calc(100dvh - 48px);
+        overflow: auto;
+        padding: 28px;
+      }
+      .dialog-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+      .dialog h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 650;
+        letter-spacing: -0.8px;
+      }
+      .dialog-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .field {
+        display: grid;
+        gap: 7px;
+        margin-bottom: 17px;
+        font-size: 12px;
+        min-width: 0;
+      }
+      .field input,
+      .field select {
+        width: 100%;
+        min-width: 0;
+        padding: 9px 10px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: var(--field);
+        color: var(--ink);
+        font-size: 13px;
+        min-height: 38px;
+      }
+      .form-section {
+        border-top: 1px solid var(--line);
+        padding-top: 18px;
+        margin-top: 3px;
+      }
+      .form-section h3 {
+        font-size: 13px;
+        margin: 0 0 15px;
+      }
+      .form-more {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 5px;
+      }
+      .form-more summary {
+        cursor: pointer;
+      }
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 23px;
+        padding-top: 19px;
+        border-top: 1px solid var(--line);
+      }
+      .required-note {
+        color: var(--muted);
+        font-size: 11px;
+        margin: 0 0 18px;
+      }
+      @media (max-width: 1180px) {
+        .app {
+          grid-template-columns: 160px minmax(0, 1fr);
+        }
+        .sidebar {
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+        .brand-name {
+          font-size: 23px;
+        }
+        .main {
+          padding: 0 22px 20px;
+        }
+        .desk {
+          grid-template-columns: minmax(0, 1fr) 310px;
+        }
+        .detail {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .columns,
+        .entry {
+          grid-template-columns: minmax(140px, 1fr) 39px 108px;
+          gap: 13px;
+        }
+        .project-column,
+        .entry-project {
+          display: none;
+        }
+        .entry-project-mobile {
+          display: inline;
+        }
+        .filters {
+          gap: 16px;
+        }
+        .sort {
+          font-size: 10px;
+          max-width: 96px;
+        }
+        .filter {
+          font-size: 11px;
+        }
+        .list-tools {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+        .columns,
+        .entry {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+      }
+      @media (max-width: 930px) {
+        .app {
+          grid-template-columns: 142px minmax(0, 1fr);
+        }
+        .sidebar {
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+        .brand {
+          gap: 7px;
+          padding-left: 7px;
+        }
+        .brand-name {
+          font-size: 21px;
+        }
+        .brand-mark {
+          width: 13px;
+          height: 17px;
+        }
+        .nav button {
+          font-size: 12px;
+          padding: 9px;
+          gap: 8px;
+        }
+        .side-count {
+          font-size: 10px;
+        }
+        .main {
+          padding: 0 18px 18px;
+        }
+        .desk {
+          grid-template-columns: minmax(0, 1fr) 285px;
+        }
+        .detail {
+          padding: 18px;
+        }
+        .list-tools {
+          padding: 14px 14px 0;
+        }
+        .columns,
+        .entry {
+          padding-left: 14px;
+          padding-right: 14px;
+          grid-template-columns: minmax(100px, 1fr) 94px;
+        }
+        .keys-column,
+        .entry-keys {
+          display: none;
+        }
+        .sort {
+          display: none;
+        }
+        .filters {
+          gap: 17px;
+        }
+        .filter {
+          font-size: 11px;
+        }
+        .entry-purpose {
+          font-size: 11px;
+        }
+        .days {
+          font-size: 14px;
+        }
+        .density {
+          display: none;
+        }
+        .key-value-row {
+          gap: 4px;
+        }
+        .key-value-row .button {
+          padding: 5px 7px;
+        }
+        .key-mask {
+          letter-spacing: 1px;
+          font-size: 11px;
+        }
+      }
+      @media (max-width: 650px) {
+        .draft {
+          height: 34px;
+          padding: 0 16px;
+          font-size: 9px;
+        }
+        .draft span:last-child {
+          display: none;
+        }
+        .app {
+          display: flex;
+          flex-direction: column;
+          height: auto;
+          min-height: calc(100dvh - 34px);
+          position: relative;
+        }
+        .sidebar {
+          padding: 18px 18px 16px;
+          min-height: 0;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          border: 0;
+        }
+        .brand {
+          padding: 0;
+          gap: 8px;
+        }
+        .brand-name {
+          font-size: 24px;
+        }
+        .brand-mark {
+          height: 19px;
+          width: 15px;
+        }
+        .sidebar .nav,
+        .sidebar .side-section,
+        .sidebar .projects,
+        .sidebar .sidebar-bottom {
+          display: none;
+        }
+        .mobile-menu {
+          display: flex;
+          align-items: center;
+          gap: 18px;
+        }
+        .mobile-menu button {
+          border: 0;
+          background: transparent;
+          color: #d6e0d2;
+          padding: 5px 0;
+          font-size: 12px;
+        }
+        .main {
+          padding: 0 15px 18px;
+          overflow: visible;
+          min-height: 0;
+          flex: 1;
+        }
+        .heading {
+          min-height: 90px;
+          gap: 12px;
+        }
+        .heading-title {
+          gap: 9px;
+        }
+        h1 {
+          font-size: 25px;
+        }
+        .heading-count {
+          font-size: 11px;
+        }
+        .actions .import {
+          display: none;
+        }
+        .actions .button {
+          padding: 7px 10px;
+          font-size: 11px;
+          min-height: 34px;
+        }
+        .desk {
+          display: flex;
+          flex-direction: column;
+          overflow: visible;
+          min-height: 0;
+          flex: 1;
+        }
+        .list-area {
+          min-height: 0;
+          flex: 1;
+        }
+        .list-tools {
+          padding: 15px 13px 0;
+        }
+        .filters {
+          gap: 20px;
+        }
+        .filter {
+          font-size: 11px;
+          padding-bottom: 13px;
+        }
+        .filter:last-child {
+          display: none;
+        }
+        .filter small {
+          font-size: 10px;
+        }
+        .search-row {
+          padding: 13px 0;
+        }
+        .search {
+          padding: 8px;
+          min-height: 34px;
+        }
+        .search input {
+          font-size: 11px;
+        }
+        .search kbd {
+          display: none;
+        }
+        .mobile-project {
+          display: block;
+          border: 0;
+          background: transparent;
+          color: var(--muted);
+          font-size: 10px;
+          width: 92px;
+          min-width: 0;
+          max-width: 100%;
+          padding: 0;
+        }
+        .columns,
+        .entry {
+          padding-left: 13px;
+          padding-right: 13px;
+          grid-template-columns: minmax(0, 1fr) 102px;
+          gap: 12px;
+        }
+        .columns {
+          font-size: 10px;
+          padding-top: 9px;
+          padding-bottom: 9px;
+        }
+        .list-scroll {
+          overflow: visible;
+          flex: 0;
+        }
+        .entry {
+          min-height: 78px;
+          padding-top: 16px;
+          padding-bottom: 16px;
+        }
+        .entry-name {
+          font-size: 14px;
+        }
+        .entry-purpose {
+          font-size: 11px;
+          line-height: 1.6;
+          margin-top: 4px;
+        }
+        .days {
+          font-size: 15px;
+        }
+        .expiry-date {
+          font-size: 10px;
+        }
+        .entry-project-mobile {
+          display: none;
+        }
+        .entry-keys,
+        .entry-project,
+        .keys-column {
+          display: none;
+        }
+        .list-footer {
+          font-size: 10px;
+          padding: 12px 13px;
+        }
+        .list-footer span:last-child {
+          display: none;
+        }
+        .main-footer {
+          font-size: 9px;
+        }
+        .main-footer span:last-child {
+          display: none;
+        }
+        .detail {
+          display: none;
+        }
+        .app.mobile-detail .detail {
+          display: block;
+          position: fixed;
+          inset: 79px 10px 10px;
+          z-index: 20;
+          border: 1px solid var(--line);
+          background: var(--paper);
+          padding: 20px;
+          box-shadow: 0 0 0 150vmax #0005;
+          border-radius: 6px;
+          overflow: auto;
+        }
+        .app.mobile-detail .detail .close-detail {
+          font-size: 14px;
+          min-height: 34px;
+          min-width: 40px;
+        }
+        .key-value-row .button {
+          padding: 6px 9px;
+          font-size: 12px;
+        }
+        .key-mask {
+          padding: 8px 10px;
+          font-size: 13px;
+          letter-spacing: 2px;
+        }
+        .key-block {
+          padding-top: 18px;
+          padding-bottom: 19px;
+        }
+        .backdrop {
+          padding: 12px;
+        }
+        .dialog {
+          padding: 22px;
+          max-height: calc(100dvh - 24px);
+        }
+        .dialog-grid {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+        .dialog .date-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+        .dialog .date-grid input {
+          font-size: 11px;
+          padding: 8px 7px;
+        }
+        .mobile-nav-open .sidebar {
+          position: fixed;
+          inset: 34px 0 auto;
+          z-index: 25;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          box-shadow: 0 12px 0 100vmax #0006;
+          max-height: calc(100dvh - 60px);
+          overflow: auto;
+          padding: 20px;
+        }
+        .mobile-nav-open .brand {
+          margin-bottom: 18px;
+        }
+        .mobile-nav-open .sidebar .nav,
+        .mobile-nav-open .sidebar .side-section,
+        .mobile-nav-open .sidebar .projects {
+          display: grid;
+        }
+        .mobile-nav-open .mobile-menu {
+          position: absolute;
+          right: 20px;
+          top: 17px;
+        }
+        .mobile-nav-open .mobile-menu button:first-child {
+          display: none;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .entry,
+        .button {
+          transition:
+            background-color 0.12s ease,
+            border-color 0.12s ease;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="draft">
+      <strong>Keydesk · GDWEB 검토 반영 시안</strong><span>목록 · 남은 기간 · 키별 관리</span
+      ><span>예시 데이터 / 실제 앱과 분리된 초안</span>
+    </div>
+    <div class="app" id="app">
+      <aside class="sidebar" aria-label="메뉴와 프로젝트">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span><span class="brand-name">keydesk</span>
+        </div>
+        <nav class="nav" aria-label="주 메뉴">
+          <button class="active" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="3" y="3" width="14" height="14" rx="1" />
+              <path d="M3 7h14M7 7v10" /></svg
+            >보관함<span class="side-count">8</span>
+          </button>
+          <button type="button" data-demo="프로젝트별로 연결한 API 키를 모아보는 화면입니다.">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 6h6l2-2h7v12h-15z" /></svg
+            >프로젝트
+          </button>
+          <button type="button" data-demo="등록한 키의 만료 알림을 확인합니다.">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M4 14h12l-2-3V7a4 4 0 0 0-8 0v4zM8 17h4" /></svg
+            >만료 알림<span class="side-count">3</span>
+          </button>
+        </nav>
+        <div class="side-section">프로젝트별 보기</div>
+        <div class="projects" id="projects"></div>
+        <div class="side-section">서버 운영</div>
+        <nav class="nav" aria-label="서버 운영 메뉴">
+          <button
+            type="button"
+            data-demo="상시 서버에서 사용할 중계 경로와 클라이언트 키를 설정합니다."
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h13l-3-3M17 14H4l3 3" /></svg
+            >게이트웨이
+          </button>
+          <button type="button" data-demo="게이트웨이로 관측한 사용량과 추정 비용을 확인합니다.">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M3 4v13h14M6 12l3-4 3 2 4-6" /></svg
+            >사용량·비용
+          </button>
+        </nav>
+        <div class="sidebar-bottom">
+          <button
+            type="button"
+            class="bottom-button"
+            data-demo="메일 알림, 백업·복원과 기본 설정을 관리합니다."
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <circle cx="10" cy="10" r="3" />
+              <path
+                d="M10 2v3m0 10v3M2 10h3m10 0h3M4.3 4.3l2 2m7.4 7.4 2 2m0-11.4-2 2m-7.4 7.4-2 2"
+              /></svg
+            >설정·백업</button
+          ><button type="button" class="bottom-button" id="theme-toggle">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M15.8 12.7A7 7 0 0 1 7.3 4.2a7 7 0 1 0 8.5 8.5z" /></svg
+            ><span id="theme-label">어두운 화면</span></button
+          ><button
+            type="button"
+            class="bottom-button"
+            data-demo="실제 앱에서는 조회한 키를 지우고 보관함을 잠급니다."
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <rect x="4" y="9" width="12" height="8" rx="1" />
+              <path d="M7 9V6a3 3 0 0 1 6 0v3" /></svg
+            >보관함 잠금
+          </button>
+          <div class="profile"><span>Norm</span><span>개인 보관함</span></div>
+        </div>
+        <div class="mobile-menu">
+          <button type="button" id="mobile-theme">어둡게</button
+          ><button type="button" id="mobile-menu-button">메뉴</button>
+        </div>
+      </aside>
+      <main class="main">
+        <header class="heading">
+          <div class="heading-title">
+            <h1>보관함</h1>
+            <span class="heading-count">API 8개</span>
+          </div>
+          <div class="actions">
+            <button
+              type="button"
+              class="button import"
+              data-demo=".env 파일의 내용을 미리 확인한 뒤 항목으로 가져옵니다."
+            >
+              가져오기</button
+            ><button type="button" class="button primary" id="add">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12" /></svg>키 추가
+            </button>
+          </div>
+        </header>
+        <div class="desk">
+          <section class="list-area" aria-label="API 목록">
+            <div class="list-tools">
+              <div class="filter-row">
+                <div class="filters" role="group" aria-label="만료 상태">
+                  <button type="button" class="filter active" data-filter="all">
+                    전체<small>8</small></button
+                  ><button type="button" class="filter" data-filter="soon">
+                    30일 이내<small>3</small></button
+                  ><button type="button" class="filter" data-filter="expired">
+                    만료됨<small>1</small></button
+                  ><button type="button" class="filter" data-filter="none">
+                    만료일 없음<small>3</small>
+                  </button>
+                </div>
+                <select class="sort" aria-label="정렬 순서">
+                  <option value="expires">만료 가까운 순</option>
+                  <option value="name">이름순</option>
+                  <option value="updated">최근 수정순</option>
+                </select>
+              </div>
+              <div class="search-row">
+                <label class="search"
+                  ><svg viewBox="0 0 20 20" aria-hidden="true">
+                    <circle cx="8.5" cy="8.5" r="5.5" />
+                    <path d="m13 13 4 4" /></svg
+                  ><input
+                    id="search"
+                    aria-label="API 검색"
+                    placeholder="이름·제공사·사용처 검색"
+                    autocomplete="off"
+                  /><kbd id="shortcut">Ctrl K</kbd></label
+                ><button type="button" class="density" id="density">간격 좁게</button
+                ><select class="mobile-project" aria-label="프로젝트 선택">
+                  <option value="all">모든 프로젝트</option>
+                  <option>Pinmate</option>
+                  <option>Keydesk</option>
+                  <option>사진 정리</option>
+                  <option>홈서버</option>
+                </select>
+              </div>
+            </div>
+            <div class="columns">
+              <span>API / 용도</span><span class="keys-column">키</span
+              ><span class="project-column">사용 프로젝트</span
+              ><span class="expiry-head">가장 빠른 만료</span>
+            </div>
+            <div class="list-scroll" id="entries"></div>
+            <footer class="list-footer">
+              <span id="list-count">8개 항목 · 인증값 12개</span><span>한국 시간 기준</span>
+            </footer>
+          </section>
+          <aside class="detail" aria-label="선택한 API 상세">
+            <div class="detail-top">
+              <span class="overline">선택한 API</span
+              ><button type="button" class="plain close-detail" aria-label="상세 닫기">×</button>
+            </div>
+            <div class="detail-title">
+              <h2 id="detail-name">OpenAI</h2>
+              <button type="button" class="button edit" id="edit">수정</button>
+            </div>
+            <p class="detail-purpose" id="detail-purpose">Pinmate의 문장 생성</p>
+            <div class="detail-project">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 6h6l2-2h7v12h-15z" /></svg
+              ><span id="detail-project">Pinmate</span>
+            </div>
+            <div id="credential-blocks"></div>
+            <div class="detail-section">
+              <dl class="facts">
+                <div class="facts-row">
+                  <dt>요금제 메모</dt>
+                  <dd>사용량별 과금</dd>
+                </div>
+                <div class="facts-row">
+                  <dt>한도 메모</dt>
+                  <dd>월 20달러</dd>
+                </div>
+              </dl>
+              <div class="section-label" style="margin-top: 21px">메모</div>
+              <div class="memo" id="detail-memo">
+                Pinmate 문장 생성 기능에 사용. 운영용과 개발용 키를 구분해서 관리.
+              </div>
+              <div class="detail-links">
+                <button
+                  type="button"
+                  class="plain"
+                  data-demo="실제 앱에서는 등록한 제공사 관리 페이지를 엽니다."
+                >
+                  제공사 관리 ↗</button
+                ><button
+                  type="button"
+                  class="plain"
+                  data-demo="실제 앱에서는 등록한 API 문서를 엽니다."
+                >
+                  API 문서 ↗
+                </button>
+              </div>
+              <div class="last-edit">최근 수정 2026. 11. 6. 오전 10:24</div>
+            </div>
+          </aside>
+        </div>
+        <footer class="main-footer">
+          <span>keydesk / 개인 API 키 보관함</span><span>Asia/Seoul</span>
+        </footer>
+      </main>
+      <div class="toast" role="status" hidden></div>
+      <div class="backdrop" id="editor" hidden>
+        <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+          <form id="editor-form">
+            <header class="dialog-header">
+              <h2 id="editor-title">키 추가</h2>
+              <button
+                type="button"
+                class="plain close-detail"
+                data-close-editor
+                aria-label="편집 닫기"
+              >
+                ×
+              </button>
+            </header>
+            <p class="required-note">이름과 인증값을 먼저 등록할 수 있습니다.</p>
+            <div class="dialog-grid">
+              <label class="field"
+                >이름<input
+                  id="entry-name-input"
+                  required
+                  placeholder="예: OpenAI"
+                  autocomplete="off" /></label
+              ><label class="field"
+                >사용 프로젝트<select>
+                  <option>선택 안 함</option>
+                  <option selected>Pinmate</option>
+                  <option>Keydesk</option>
+                  <option>사진 정리</option>
+                </select></label
+              >
+            </div>
+            <label class="field"
+              >용도<input id="entry-purpose-input" placeholder="어디에 사용하는 키인가요?"
+            /></label>
+            <div class="form-section">
+              <h3>인증값</h3>
+              <label class="field"
+                >키 이름<input id="credential-label-input" value="운영용" /></label
+              ><label class="field"
+                >API 키<input
+                  id="credential-value-input"
+                  type="password"
+                  autocomplete="off"
+                  placeholder="시안에는 실제 키를 입력하지 마세요"
+              /></label>
+              <div class="dialog-grid date-grid">
+                <label class="field"
+                  >발급일<input
+                    type="text"
+                    inputmode="numeric"
+                    placeholder="2026. 11. 13."
+                    aria-description="연·월·일 순서로 입력" /></label
+                ><label class="field"
+                  >만료일<input
+                    type="text"
+                    inputmode="numeric"
+                    placeholder="2026. 11. 13."
+                    aria-description="연·월·일 순서로 입력"
+                /></label>
+              </div>
+            </div>
+            <details class="form-more">
+              <summary>제공사·주소·요금제·메모</summary>
+              <label class="field" style="margin-top: 16px"
+                >제공사<input placeholder="예: OpenAI" /></label
+              ><label class="field">관리 페이지<input type="url" placeholder="https://" /></label>
+            </details>
+            <footer class="form-actions">
+              <button type="button" class="button" data-close-editor>취소</button
+              ><button type="submit" class="button primary">저장</button>
+            </footer>
+          </form>
+        </section>
+      </div>
+    </div>
+    <script>
+      const records = [
+        {
+          name: 'OpenAI',
+          purpose: 'Pinmate의 문장 생성',
+          projects: ['Pinmate'],
+          keys: 2,
+          days: 7,
+          date: '2026.11.13',
+          variable: 'PINMATE_OPENAI_API_KEY',
+          memo: 'Pinmate 문장 생성 기능에 사용.\n운영용과 개발용 키를 구분해서 관리.',
+        },
+        {
+          name: 'Anthropic',
+          purpose: '코드 도우미 · 개인 개발',
+          projects: ['Pinmate', 'Keydesk'],
+          keys: 2,
+          days: null,
+          date: '',
+          variable: 'ANTHROPIC_API_KEY',
+          memo: '개발과 실험에 사용하는 개인 키.',
+        },
+        {
+          name: 'Kakao Maps',
+          purpose: '장소 검색 · 지도',
+          projects: ['Pinmate'],
+          keys: 1,
+          days: 145,
+          date: '2027.03.31',
+          variable: 'KAKAO_REST_API_KEY',
+          memo: '허용 도메인과 앱 설정은 제공사에서 관리.',
+        },
+        {
+          name: 'Naver Search',
+          purpose: '검색 데이터 가져오기',
+          projects: ['Pinmate'],
+          keys: 1,
+          days: -2,
+          date: '2026.11.04',
+          variable: 'NAVER_CLIENT_SECRET',
+          memo: '만료된 키. 프로젝트 연결을 확인하고 새 값으로 교체.',
+        },
+        {
+          name: 'Google Cloud',
+          purpose: '사진 속 글자 인식',
+          projects: ['사진 정리'],
+          keys: 2,
+          days: 25,
+          date: '2026.12.01',
+          variable: 'GOOGLE_VISION_API_KEY',
+          memo: '사진 정리 프로젝트 전용. 개발용 키와 구분해서 관리.',
+        },
+        {
+          name: 'Supabase',
+          purpose: '데이터베이스 · 인증',
+          projects: ['Pinmate'],
+          keys: 2,
+          days: null,
+          date: '',
+          variable: 'SUPABASE_SERVICE_KEY',
+          memo: '서버에서만 사용하는 관리 키.',
+        },
+        {
+          name: 'Resend',
+          purpose: '만료 알림 메일',
+          projects: ['Keydesk'],
+          keys: 1,
+          days: 14,
+          date: '2026.11.20',
+          variable: 'RESEND_API_KEY',
+          memo: '메일 발송 권한만 있는 키로 관리.',
+        },
+        {
+          name: 'Cloudflare',
+          purpose: '홈서버 도메인 관리',
+          projects: ['홈서버'],
+          keys: 1,
+          days: null,
+          date: '',
+          variable: 'CLOUDFLARE_API_TOKEN',
+          memo: '홈서버를 올린 뒤 도메인 연결에 사용.',
+        },
+      ];
+      const app = document.querySelector('#app'),
+        editor = document.querySelector('#editor');
+      let selected = 0,
+        project = 'all',
+        filter = 'all',
+        toastTimer,
+        previousFocus,
+        editing = false;
+      const timers = new Map();
+      const escaped = (value) =>
+        String(value).replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        );
+      const remaining = (record) =>
+        record.days === null
+          ? '만료일 없음'
+          : record.days < 0
+            ? `${-record.days}일 지남`
+            : record.days === 0
+              ? '오늘 만료'
+              : `${record.days}일 남음`;
+      const stateClass = (record) =>
+        record.days === null
+          ? 'no-expiry'
+          : record.days < 0
+            ? 'expired'
+            : record.days <= 30
+              ? 'soon'
+              : '';
+      const koreanDate = (date) =>
+        date
+          ? `${date.slice(0, 4) === '2026' ? '' : date.slice(0, 4) + '. '}${Number(date.slice(5, 7))}${date.slice(0, 4) === '2026' ? '월 ' : '. '}${Number(date.slice(8))}${date.slice(0, 4) === '2026' ? '일' : '.'} 만료`
+          : '';
+      function notify(text) {
+        const node = document.querySelector('.toast');
+        node.textContent = text;
+        node.hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => (node.hidden = true), 3300);
+      }
+      function hideValues() {
+        timers.forEach(clearTimeout);
+        timers.clear();
+        document.querySelectorAll('[data-value]').forEach((node) => {
+          node.textContent = '•••• •••• ••••';
+          node.style.letterSpacing = '2px';
+        });
+        document.querySelectorAll('[data-reveal]').forEach((node) => (node.textContent = '보기'));
+      }
+      function drawDetail() {
+        const record = records[selected];
+        if (!record) return;
+        hideValues();
+        document.querySelector('#detail-name').textContent = record.name;
+        document.querySelector('#detail-purpose').textContent = record.purpose;
+        document.querySelector('#detail-project').textContent = record.projects.join(' · ');
+        document.querySelector('#detail-memo').textContent = record.memo;
+        document.querySelector('#credential-blocks').innerHTML = Array.from(
+          { length: record.keys },
+          (_, index) => {
+            const credential = index === 0 ? record : { ...record, days: null, date: '' };
+            const label = record.keys > 1 ? (index === 0 ? '운영용' : '개발용') : 'API 키';
+            const version = selected === 0 && index === 0 ? 3 : 1;
+            return `<section class="key-block" aria-label="${label}"><div class="key-head"><span class="key-label">${label}</span><span class="key-status ${credential.days !== null && credential.days < 0 ? 'expired' : ''}">${credential.days !== null && credential.days < 0 ? '만료됨' : '사용 중'}</span></div><div class="key-expiry ${stateClass(credential)}"><span>${credential.date ? credential.date.replaceAll('.', '. ') + '.' : '만료일 없음'}</span><span>${credential.days === null ? '' : remaining(credential)}</span></div><div class="key-value-row"><div class="key-mask mono" data-value="${index}">•••• •••• ••••</div><button type="button" class="button" data-reveal="${index}" aria-label="${label} 보기">보기</button><button type="button" class="button primary" data-copy="${index}" aria-label="${label} 복사">복사</button></div><div class="key-variable mono">${escaped(index === 0 ? record.variable : record.variable + '_DEV')}</div><details class="key-version"><summary><span>교체 기록 · 버전 ${version}</span><span>최근 10.08</span></summary><div class="history-row"><span>2026. 10. 8.</span><span>현재 버전 ${version}</span></div>${version > 1 ? '<div class="history-row"><span>2026. 9. 1.</span><span>이전 버전 2</span></div>' : ''}</details></section>`;
+          },
+        ).join('');
+        document.querySelectorAll('[data-reveal]').forEach((button) =>
+          button.addEventListener('click', () => {
+            const index = button.dataset.reveal,
+              node = document.querySelector(`[data-value="${index}"]`);
+            if (button.textContent === '숨김') {
+              clearTimeout(timers.get(index));
+              timers.delete(index);
+              node.textContent = '•••• •••• ••••';
+              node.style.letterSpacing = '2px';
+              button.textContent = '보기';
+              return;
+            }
+            node.textContent = '시안용 인증값';
+            node.style.letterSpacing = '0';
+            button.textContent = '숨김';
+            timers.set(
+              index,
+              setTimeout(() => {
+                node.textContent = '•••• •••• ••••';
+                node.style.letterSpacing = '2px';
+                button.textContent = '보기';
+                timers.delete(index);
+              }, 20000),
+            );
+          }),
+        );
+        document
+          .querySelectorAll('[data-copy]')
+          .forEach((button) =>
+            button.addEventListener('click', () =>
+              notify('예시 화면에는 복사할 실제 API 키가 없습니다.'),
+            ),
+          );
+      }
+      function render() {
+        const query = document
+          .querySelector('#search')
+          .value.normalize('NFC')
+          .toLocaleLowerCase('ko');
+        let visible = records
+          .map((record, id) => ({ ...record, id }))
+          .filter(
+            (record) =>
+              (project === 'all' || record.projects.includes(project)) &&
+              (filter === 'all' ||
+                (filter === 'none' && record.days === null) ||
+                (filter === 'expired' && record.days !== null && record.days < 0) ||
+                (filter === 'soon' &&
+                  record.days !== null &&
+                  record.days >= 0 &&
+                  record.days <= 30)) &&
+              [record.name, record.purpose, ...record.projects]
+                .join(' ')
+                .normalize('NFC')
+                .toLocaleLowerCase('ko')
+                .includes(query),
+          );
+        const order = document.querySelector('.sort').value;
+        if (order === 'name') visible.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+        if (order === 'expires')
+          visible.sort((a, b) => (a.days ?? Infinity) - (b.days ?? Infinity));
+        if (visible.length && !visible.some((record) => record.id === selected)) {
+          selected = visible[0].id;
+          drawDetail();
+        }
+        document.querySelector('#entries').innerHTML = visible.length
+          ? visible
+              .map(
+                (record) =>
+                  `<button type="button" class="entry ${selected === record.id ? 'selected' : ''}" data-entry="${record.id}" aria-pressed="${selected === record.id}"><span><span class="entry-name">${escaped(record.name)}</span><span class="entry-purpose">${escaped(record.purpose)}<span class="entry-project-mobile"> · ${escaped(record.projects[0])}</span></span></span><span class="entry-keys">${record.keys}개</span><span class="entry-project">${escaped(record.projects[0])}${record.projects.length > 1 ? ' 외 1' : ''}</span><span class="entry-expiry ${stateClass(record)}"><span class="days">${remaining(record)}</span>${record.date ? `<span class="expiry-date">${koreanDate(record.date)}</span>` : ''}</span></button>`,
+              )
+              .join('')
+          : '<div class="empty">조건에 맞는 항목이 없습니다.</div>';
+        document.querySelectorAll('[data-entry]').forEach((button) =>
+          button.addEventListener('click', () => {
+            selected = Number(button.dataset.entry);
+            app.classList.remove('no-detail');
+            if (innerWidth <= 650) app.classList.add('mobile-detail');
+            drawDetail();
+            render();
+          }),
+        );
+        document.querySelector('#list-count').textContent =
+          `${visible.length}개 항목 · 인증값 ${visible.reduce((n, record) => n + record.keys, 0)}개`;
+        document.querySelector('#projects').innerHTML = [
+          'all',
+          'Pinmate',
+          'Keydesk',
+          '사진 정리',
+          '홈서버',
+        ]
+          .map(
+            (value) =>
+              `<button type="button" class="project ${project === value ? 'selected' : ''}" data-project="${value}" aria-pressed="${project === value}"><span>${value === 'all' ? '전체 프로젝트' : escaped(value)}</span><span class="side-count">${records.filter((record) => value === 'all' || record.projects.includes(value)).length}</span></button>`,
+          )
+          .join('');
+        document.querySelectorAll('[data-project]').forEach((button) =>
+          button.addEventListener('click', () => {
+            project = button.dataset.project;
+            document.querySelector('.mobile-project').value = project;
+            app.classList.remove('mobile-nav-open');
+            render();
+          }),
+        );
+      }
+      function toggleTheme() {
+        const dark = app.classList.toggle('night');
+        document.querySelector('#theme-label').textContent = dark ? '밝은 화면' : '어두운 화면';
+        document.querySelector('#mobile-theme').textContent = dark ? '밝게' : '어둡게';
+      }
+      function openEditor(isEdit = false) {
+        editing = isEdit;
+        previousFocus = document.activeElement;
+        document.querySelector('#editor-form').reset();
+        document.querySelector('#editor-title').textContent = isEdit ? '항목 수정' : '키 추가';
+        document.querySelector('#entry-name-input').value = isEdit ? records[selected].name : '';
+        document.querySelector('#entry-purpose-input').value = isEdit
+          ? records[selected].purpose
+          : '';
+        document.querySelector('#credential-value-input').required = !isEdit;
+        document.querySelector('#credential-value-input').placeholder = isEdit
+          ? '교체할 때만 새 인증값 입력'
+          : '시안에는 실제 키를 입력하지 마세요';
+        editor.hidden = false;
+        hideValues();
+        document.querySelector('#entry-name-input').focus();
+      }
+      function closeEditor() {
+        editor.hidden = true;
+        document.querySelector('#editor-form').reset();
+        previousFocus?.focus();
+      }
+      document.querySelector('#search').addEventListener('input', render);
+      document.querySelector('.sort').addEventListener('change', render);
+      document.querySelector('.mobile-project').addEventListener('change', (event) => {
+        project = event.target.value;
+        render();
+      });
+      document.querySelectorAll('[data-filter]').forEach((button) =>
+        button.addEventListener('click', () => {
+          filter = button.dataset.filter;
+          document
+            .querySelectorAll('[data-filter]')
+            .forEach((node) => node.classList.toggle('active', node === button));
+          render();
+        }),
+      );
+      document
+        .querySelectorAll('[data-demo]')
+        .forEach((button) => button.addEventListener('click', () => notify(button.dataset.demo)));
+      document.querySelector('#density').addEventListener('click', (event) => {
+        const compact = app.classList.toggle('compact');
+        event.currentTarget.textContent = compact ? '간격 넓게' : '간격 좁게';
+      });
+      document.querySelector('#theme-toggle').addEventListener('click', toggleTheme);
+      document.querySelector('#mobile-theme').addEventListener('click', toggleTheme);
+      document
+        .querySelector('#mobile-menu-button')
+        .addEventListener('click', () => app.classList.toggle('mobile-nav-open'));
+      document.querySelector('.detail .close-detail').addEventListener('click', () => {
+        app.classList.remove('mobile-detail');
+        app.classList.add('no-detail');
+        hideValues();
+      });
+      document.querySelector('#add').addEventListener('click', () => openEditor(false));
+      document.querySelector('#edit').addEventListener('click', () => openEditor(true));
+      document
+        .querySelectorAll('[data-close-editor]')
+        .forEach((button) => button.addEventListener('click', closeEditor));
+      editor.addEventListener('click', (event) => {
+        if (event.target === editor) closeEditor();
+      });
+      document.querySelector('#editor-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        closeEditor();
+        notify('등록 흐름을 확인했습니다. 시안에는 데이터를 저장하지 않습니다.');
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.isComposing) return;
+        if (event.key === 'Escape') {
+          if (!editor.hidden) closeEditor();
+          app.classList.remove('mobile-detail', 'mobile-nav-open');
+          hideValues();
+        }
+        if (!editor.hidden && event.key === 'Tab') {
+          const nodes = [...editor.querySelectorAll('button,input,select,summary')].filter(
+            (node) => node.getClientRects().length && !node.disabled,
+          );
+          const first = nodes[0],
+            last = nodes[nodes.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+        if (editor.hidden && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+          event.preventDefault();
+          app.classList.remove('mobile-nav-open');
+          document.querySelector('#search').focus();
+        }
+      });
+      window.addEventListener('blur', hideValues);
+      if (/Mac|iPhone|iPad/.test(navigator.platform))
+        document.querySelector('#shortcut').textContent = '⌘ K';
+      if (new URLSearchParams(location.search).get('theme') === 'dark') toggleTheme();
+      drawDetail();
+      render();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+name: keydesk
+services:
+  keydesk:
+    build:
+      context: .
+    image: keydesk:local
+    init: true
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8088:8088'
+    environment:
+      KEYDESK_HOST: '0.0.0.0'
+      KEYDESK_PORT: '8088'
+      KEYDESK_DATA_DIR: /data
+      KEYDESK_ORIGIN: '${KEYDESK_ORIGIN:-http://127.0.0.1:8088}'
+    volumes:
+      - keydesk-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 20s
+volumes:
+  keydesk-data:

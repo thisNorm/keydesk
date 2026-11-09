@@ -1,1 +1,0 @@
-export const DIGICERT_AUTH_HEADER = "X-DC-DEVKEY";
