@@ -33,6 +33,17 @@ export function openStorage(dataDir: string): Storage {
   chmodSync(keyPath, 0o600);
   const db = new DatabaseSync(dbPath);
   try {
+    // SQLite uses the database's current mode when creating the WAL and shared memory files.
+    chmodSync(dbPath, 0o600);
+    if (process.platform !== 'win32') {
+      for (const suffix of ['-wal', '-shm']) {
+        try {
+          chmodSync(dbPath + suffix, 0o600);
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+        }
+      }
+    }
     db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;');
     const version = Number((db.prepare('PRAGMA user_version').get() as any).user_version);
     if (version > 1)
@@ -62,7 +73,6 @@ export function openStorage(dataDir: string): Storage {
         digest(bootstrap),
       );
     }
-    chmodSync(dbPath, 0o600);
     return { db, rootKey, dataDir };
   } catch (error) {
     db.close();

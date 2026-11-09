@@ -762,7 +762,7 @@ test('CLI backup and password reset support Korean space paths and revoke existi
   }
 });
 test('wrong root keys fail with recovery guidance and SQLite files use private POSIX modes', async (t) => {
-  const { stat, writeFile } = await import('node:fs/promises');
+  const { chmod, stat, writeFile } = await import('node:fs/promises');
   const { randomBytes } = await import('node:crypto');
   const dataDir = await mkdtemp(join(tmpdir(), 'keydesk-rootguard-'));
   t.after(() => rm(dataDir, { recursive: true, force: true }));
@@ -772,6 +772,19 @@ test('wrong root keys fail with recovery guidance and SQLite files use private P
       const info = await stat(join(dataDir, file));
       assert.ok(info.isFile(), file);
       if (process.platform !== 'win32') assert.equal(info.mode & 0o077, 0, file);
+    }
+    if (process.platform !== 'win32') {
+      const sidecars = ['keydesk.sqlite-wal', 'keydesk.sqlite-shm'];
+      for (const file of sidecars) await chmod(join(dataDir, file), 0o644);
+      const reopened = await createApp({ dataDir, origin, backgroundJobs: false });
+      try {
+        for (const file of sidecars) {
+          const info = await stat(join(dataDir, file));
+          assert.equal(info.mode & 0o077, 0, file);
+        }
+      } finally {
+        await reopened.close();
+      }
     }
   } finally {
     await app.close();
