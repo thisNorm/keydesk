@@ -1,1 +1,0 @@
-export { SecretSyncStatusBadgeOverview } from "./SecretSyncStatusBadgeOverview";

@@ -1,1 +1,0 @@
-export { TagsTab } from "./TagsTab";

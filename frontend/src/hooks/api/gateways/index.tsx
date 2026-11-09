@@ -1,1 +1,0 @@
-export { gatewaysQueryKeys } from "./queries";

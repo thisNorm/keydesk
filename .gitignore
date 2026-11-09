@@ -1,94 +1,15 @@
-# backend
-node_modules
+node_modules/
+.local/
+.superpowers/
+.keydesk-data/
+apps/web/dist/
+coverage/
+*.log
+*.tsbuildinfo
 .env
-.env.test
-.env.dev
-.env.gamma
-.env.prod
-.env.infisical
-.env.migration
-*~
-*.swp
-*.swo
-
+.env.*
+!.env.example
 .DS_Store
-
-/dist
-/completions/
-/manpages/
-
-# frontend
-
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnpm-store/
-/.pnp
-.pnp.js
-
-.env
-
-# testing
-coverage
-reports
-junit.xml
-
-# next.js
-.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.vercel
-.env.infisical
-
-# Infisical init
-.infisical.yaml
-.infisical.json
-
-.infisicalignore
-
-# Editor specific
-.vscode/*
-.idea/*
-.claude/
-
-frontend-build
-
-*.tgz
-cli/infisical-merge
-cli/test/infisical-merge
-/backend/binary
-backend/bdd/.bdd-infisical-bootstrap-result.json
-upgrade-impact/.local-output/
-
-/npm/bin
-__pycache__
-
-# Local Codex design QA artifacts
-/.design-qa/
-/design-qa.md
-
-# Personal machine configuration and credentials
-/.local/
-/compose.personal.yml
-/Start-Infisical.cmd
-/Stop-Infisical.cmd
-/Status-Infisical.cmd
-/Fix-Docker-Windows.cmd
-/Infisical-CLI.cmd
+Thumbs.db
+.vscode/
+.idea/

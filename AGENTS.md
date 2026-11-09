@@ -1,43 +1,18 @@
-## Feature Development
+# Keydesk 개발 안내
 
-Check out CLAUDE.md for additional context on project file structure and general feature development.
+개인용 API 키 보관함과 호출 게이트웨이다. 제품 화면, 오류, 메일과 문서는 한국어로 작성한다. Node 26과 npm workspaces를 사용한다.
 
-## Backend Development
+- `apps/server`: Fastify, SQLite, 인증·암호화·백업·알림과 게이트웨이
+- `apps/web`: React 보관함과 관리 화면
+- `packages/contracts`: HTTP 데이터 형식
+- `tools`: Windows·macOS·Linux 관리 명령
 
-**Read the [Backend Code Quality Guide](backend/CODE_QUALITY.md) for any change under `backend/`, and check your work against it before reporting the task done.** Features, refactors, bug fixes, and reviews all count.
+`npm ci`, `npm test`, `npm run build`로 설치와 검증을 수행한다. 브라우저 검사는 `apps/web/test/browser.py`를 사용하며 Python Playwright와 Chromium이 필요하다. Linux에서 확인한 결과를 Windows·macOS·ARM64 실기 검증으로 보고하지 않는다.
 
-It is a short, deliberately non-exhaustive floor: error messages users can understand (and no pointless 500s), validation on every API input, correct pagination when calling third-party APIs, no deadlock conditions on a small connection pool, REST-aligned API interfaces, and audit log events an admin can actually read.
+키·세션·비밀번호를 로그, URL, 로컬 스토리지나 테스트 산출물에 넣지 않는다. 테스트에는 사용할 수 없는 값과 별도 임시 데이터 경로를 쓴다. 실제 사용자 데이터와 루트 키를 덮어쓰거나 초기화하지 않는다.
 
-Treat that list as a summary of the guide's current contents, not as a condition for reading it. A change that does not look like any of those topics still gets checked, because the guide grows and because the items apply in places they are not obviously about (a bug fix that adds a query inside an existing transaction, a refactor that moves a third-party list call).
+인증은 매칭된 관리 API 경로 기준으로 판별한다. 게이트웨이 클라이언트 키와 소유자 세션을 구분한다. 비동기 인증 뒤에는 상태 변경 여부를 확인하고, 복원은 진행 중 작업과 경합하지 않게 한다. 네트워크 호출·암호 유도 중 SQLite 쓰기 트랜잭션을 유지하지 않는다.
 
-Some of it needs judgment rather than a mechanical check. The deadlock rules cannot be caught by testing one request at a time. And a design that breaks REST should be raised with the author, with the conforming alternative proposed, rather than implemented silently or quietly "fixed" (some deviations are deliberate).
+게이트웨이는 저장된 목적지만 사용하고 IP·DNS·경로와 헤더를 검증한다. 비용은 원래 통화와 정확한 고정소수점을 보존하며, 미확인 사용량을 0으로 만들지 않는다. 외부 API의 실제 청구액을 측정한 것으로 표현하지 않는다.
 
-## Documentation
-
-**Use the `docs-style` skill for any work under `docs/`** (`.agents/skills/docs-style/`). It carries the procedure for the [Documentation Style Guide](docs/STYLE_GUIDE.md), including the sentence-level review pass Vale cannot check.
-
-If the user wrote or edited the docs prose themselves, don't just accept it. Tell them the `docs-style` skill can run the review pass over their changes, and offer to run it.
-
-The style guide covers writing for users (not implementers), Mintlify component usage, cross-referencing, page structure, the sentence-level writing rules in section 5, and the bolding and UI conventions in section 11.
-
-Run `make lint-docs-branch` after any change under `docs/` (or `make lint-docs` for the whole site; the `Check docs style` CI check runs the branch variant). It runs [Vale](https://vale.sh) over the docs and enforces the mechanical half of the style guide. A clean run is not a substitute for reading the guide: the judgment calls it cannot check are the ones that matter most. Vale cannot see prose indented inside Mintlify components, so a clean run is not evidence that nested content was checked, and `Infisical.EmDashes` reports at warning level, so its findings never change the exit code.
-
-## UI Development
-
-When building frontend UI, follow [DESIGN.md](DESIGN.md) for the v3 design system — colors, typography, components, and voice.
-
-Before changing a shared frontend component's lifecycle, read the [shared component lifecycle ledger](frontend/src/components/COMPONENT_LIFECYCLE.md) for current deprecations, blockers, and replacement decisions.
-
-Pickers for entities a user may need to create first (app connections, gateways, and similar) must offer an inline "Create new X" row, gated on the create permission, so the user never has to leave the flow. Build them with the v3 `Combobox` and its `creation` prop, which renders that row; `Combobox` replaces both the deprecated `FilterableSelect` and `CreatableSelect`. For app connections, use `creation.mode = "dialog"` and have `renderForm` render `AppConnectionForm` with the app preset, selecting the new connection and calling `complete` in its `onComplete`, and route `onDismiss` and the form's cancel through `useDiscardChangesGuard` (see `CaInstallCertModal/useConnectionCreation.tsx`). A v2 `Modal` parent sits at `z-[60]`, above v3 overlays, so migrate it to the v3 `Dialog` when it hosts one (see `CaInstallCertModal/CaInstallCertModal.tsx`).
-
-## Issue and PR Guidelines
-
-- Never create a GitHub issue.
-- When creating a pull request, use and fully complete the repository's
-  `.github/pull_request_template.md` template.
-
-## Workflow Guardrails
-
-- Do not reformat existing code as incidental cleanup. Preserve the repository's current formatting unless a review agent, CI check, or user explicitly asks for a formatting change.
-- Never push changes to `license-fns` or local UI fixtures to a remote branch. Those edits are local-only support for review and test passes; keep them out of commits and pull requests.
-- When resolving merge conflicts, optimize for a correct, minimal, strategically unblocking resolution. Do not let a slow or stalled local check block the push when the corresponding frontend or backend CI checks on GitHub can validate the branch; push the resolved code and use CI to complete the expensive verification.
+`DESIGN.md`의 목록 중심 화면과 한국어 표기 원칙을 따른다. 한글 조합 입력, Ctrl/Command, 좁은 화면, 긴 이름과 복사 실패를 고려한다. 공용 형식 변경은 서버·웹·테스트를 함께 검증한다.
