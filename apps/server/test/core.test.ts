@@ -1,6 +1,7 @@
-import test from 'node:test';
+import test, { type TestContext } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm, unlink } from 'node:fs/promises';
+import fs, { mkdtemp, readFile, rm, unlink } from 'node:fs/promises';
+import { syncBuiltinESMExports } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createApp } from '../src/app.ts';
@@ -1055,8 +1056,35 @@ test('restore fences concurrent management writes so acknowledged changes cannot
     watcher.close();
   }
 });
+async function withRestoreSnapshotHook<T>(
+  t: TestContext,
+  dataDir: string,
+  onSnapshot: () => void,
+  restore: () => Promise<T>,
+) {
+  const chmod = fs.chmod;
+  const prefix = join(dataDir, 'pre-restore-');
+  let reached = false;
+  // Restore awaits chmod after SQLite backup and before the final authorization check.
+  const hook = t.mock.method(fs, 'chmod', async (...args: Parameters<typeof chmod>) => {
+    await chmod(...args);
+    const [path] = args;
+    if (typeof path === 'string' && path.startsWith(prefix) && path.endsWith('.sqlite')) {
+      reached = true;
+      onSnapshot();
+    }
+  });
+  syncBuiltinESMExports();
+  try {
+    const response = await restore();
+    assert.ok(reached, 'restore did not reach the pre-restore snapshot');
+    return response;
+  } finally {
+    hook.mock.restore();
+    syncBuiltinESMExports();
+  }
+}
 test('restore rechecks session and owner authorization after the asynchronous snapshot before cutover', async (t) => {
-  const { watch } = await import('node:fs');
   const { hashPassword } = await import('../src/crypto.ts');
   const { app, dataDir } = await fixture(t);
   const auth = await owner(app, dataDir);
@@ -1075,37 +1103,34 @@ test('restore rechecks session and owner authorization after the asynchronous sn
     payload: { name: '반드시 유지' },
   });
   const replacement = await hashPassword('new owner password reset');
-  let fired = false;
-  const watcher = watch(dataDir, (_event, name) => {
-    if (fired || !name?.startsWith('pre-restore-')) return;
-    fired = true;
-    app.context.db.prepare('UPDATE owner SET password_hash=? WHERE id=1').run(replacement);
-    app.context.db.prepare('DELETE FROM sessions').run();
-  });
-  try {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/backups/restore',
-      headers: auth.headers,
-      payload: { password: 'backup-passphrase', ownerPassword: password, backup },
-    });
-    assert.equal(fired, true);
-    assert.equal(response.statusCode, 401, response.body);
-    assert.equal(app.context.db.prepare('SELECT count(*) AS count FROM projects').get()!.count, 1);
-    assert.equal(
-      (
-        await app.inject({
-          method: 'POST',
-          url: '/api/auth/login',
-          headers: { origin },
-          payload: { password: 'new owner password reset' },
-        })
-      ).statusCode,
-      200,
-    );
-  } finally {
-    watcher.close();
-  }
+  const response = await withRestoreSnapshotHook(
+    t,
+    dataDir,
+    () => {
+      app.context.db.prepare('UPDATE owner SET password_hash=? WHERE id=1').run(replacement);
+      app.context.db.prepare('DELETE FROM sessions').run();
+    },
+    () =>
+      app.inject({
+        method: 'POST',
+        url: '/api/backups/restore',
+        headers: auth.headers,
+        payload: { password: 'backup-passphrase', ownerPassword: password, backup },
+      }),
+  );
+  assert.equal(response.statusCode, 401, response.body);
+  assert.equal(app.context.db.prepare('SELECT count(*) AS count FROM projects').get()!.count, 1);
+  assert.equal(
+    (
+      await app.inject({
+        method: 'POST',
+        url: '/api/auth/login',
+        headers: { origin },
+        payload: { password: 'new owner password reset' },
+      })
+    ).statusCode,
+    200,
+  );
 });
 test('restore rejects malformed gateway prices atomically and permits revoked clients with deleted historical routes', async (t) => {
   const { derive, decrypt, encrypt } = await import('../src/crypto.ts');
@@ -1255,7 +1280,6 @@ test('restore rejects malformed gateway prices atomically and permits revoked cl
   );
 });
 test('restore also refuses a revoked session when the verified owner password remains unchanged', async (t) => {
-  const { watch } = await import('node:fs');
   const { app, dataDir } = await fixture(t);
   const auth = await owner(app, dataDir);
   const backup = (
@@ -1272,23 +1296,18 @@ test('restore also refuses a revoked session when the verified owner password re
     headers: auth.headers,
     payload: { name: '세션 폐기 후 유지' },
   });
-  let fired = false;
-  const watcher = watch(dataDir, (_event, name) => {
-    if (fired || !name?.startsWith('pre-restore-')) return;
-    fired = true;
-    app.context.db.prepare('DELETE FROM sessions').run();
-  });
-  try {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/backups/restore',
-      headers: auth.headers,
-      payload: { password: 'backup-passphrase', ownerPassword: password, backup },
-    });
-    assert.equal(fired, true);
-    assert.equal(response.statusCode, 401, response.body);
-    assert.equal(app.context.db.prepare('SELECT count(*) AS count FROM projects').get()!.count, 1);
-  } finally {
-    watcher.close();
-  }
+  const response = await withRestoreSnapshotHook(
+    t,
+    dataDir,
+    () => app.context.db.prepare('DELETE FROM sessions').run(),
+    () =>
+      app.inject({
+        method: 'POST',
+        url: '/api/backups/restore',
+        headers: auth.headers,
+        payload: { password: 'backup-passphrase', ownerPassword: password, backup },
+      }),
+  );
+  assert.equal(response.statusCode, 401, response.body);
+  assert.equal(app.context.db.prepare('SELECT count(*) AS count FROM projects').get()!.count, 1);
 });
