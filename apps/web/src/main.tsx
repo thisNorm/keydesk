@@ -246,15 +246,16 @@ function App() {
     );
   if (!auth.authenticated) return <Auth state={auth} onState={changeAuth} notice={notice} />;
   const zone = settings?.timeZone ?? 'Asia/Seoul';
+  const unreadCount = notifications.filter((notification) => !notification.read).length;
   return (
-    <div className={page === 'vault' ? 'shell rack-shell' : 'shell'}>
+    <div className="shell">
       <a className="skip" href="#main">본문으로 건너뛰기</a>
       <header className="app-header">
         <button className="wordmark" onClick={() => navigate('vault')} aria-label="Keydesk 보관함"><svg className="desk-mark" viewBox="0 0 28 28" aria-hidden="true"><path d="M0 0h28v28H0z" fill="currentColor"/><path d="M6 6h9v6.5L22 6v5l-4 3 4 3v5l-7-6.5V22H6V6Zm3 3v10h3V9H9Z" fill="var(--page)"/></svg><span>keydesk</span></button>
         <nav className="main-nav" aria-label="주요 메뉴">
           <button aria-current={page === 'vault' ? 'page' : undefined} onClick={() => navigate('vault')}>보관함</button>
           <button aria-current={page === 'projects' ? 'page' : undefined} onClick={() => navigate('projects')}>프로젝트</button>
-          <button aria-label="알림" aria-current={page === 'notifications' ? 'page' : undefined} onClick={() => navigate('notifications')}>알림{notifications.some(n => !n.read) && <small aria-hidden="true">{notifications.filter(n => !n.read).length}</small>}</button>
+          <button title={unreadCount ? `${unreadCount}개 읽지 않음` : undefined} aria-current={page === 'notifications' ? 'page' : undefined} onClick={() => navigate('notifications')}>알림{unreadCount > 0 && <> <small>{unreadCount}</small></>}</button>
           <details className="nav-menu" ref={serverMenu}><summary className={page === 'gateway' || page === 'usage' ? 'current' : ''}>서버</summary><div className="nav-menu-items"><button aria-current={page === 'gateway' ? 'page' : undefined} onClick={() => navigate('gateway')}>게이트웨이</button><button aria-current={page === 'usage' ? 'page' : undefined} onClick={() => navigate('usage')}>사용량·비용</button></div></details>
         </nav>
         <div className="account-nav"><span className="owner">{auth.user?.name}</span><button aria-current={page === 'settings' ? 'page' : undefined} onClick={() => navigate('settings')}>설정</button><button aria-label="잠금·로그아웃" onClick={() => void lock()}>잠금</button></div>
@@ -268,7 +269,7 @@ function App() {
             <p role="alert">{loadError}</p>
             <button type="button" onClick={() => { setLoading(true); setLoadAttempt((attempt) => attempt + 1); }}>다시 연결</button>
           </section>
-        ) : page === 'vault' ? <Vault entries={entries} projects={projects} reload={reloadEntries} reloadProjects={reloadProjects} notify={notify} project={project} setProject={setProject} zone={zone} initialEntryId={selectedEntry} /> : page === 'projects' ? <Projects projects={projects} entries={entries} onSaved={reloadProjects} notify={notify} onViewProject={id => navigate('vault', { projectId: id })} /> : page === 'notifications' ? <Notifications notifications={notifications} onSaved={reloadNotifications} onEntry={id => { if (entries.some(entry => entry.id === id)) navigate('vault', { projectId: '', entryId: id }); }} zone={zone} /> : page === 'gateway' ? <GatewayPage entries={entries} projects={projects} notify={notify} zone={zone} /> : page === 'usage' ? <UsagePage projects={projects} zone={zone} /> : <SettingsPage notify={notify} onAuth={changeAuth} onSaved={reloadSettings} theme={theme} onThemeChange={setTheme} />}
+        ) : page === 'vault' ? <Vault entries={entries} projects={projects} reload={reloadEntries} reloadProjects={reloadProjects} notify={notify} project={project} setProject={setProject} zone={zone} initialEntryId={selectedEntry} /> : <div className="workspace-sheet">{page === 'projects' ? <Projects projects={projects} entries={entries} onSaved={reloadProjects} notify={notify} onViewProject={id => navigate('vault', { projectId: id })} /> : page === 'notifications' ? <Notifications notifications={notifications} onSaved={reloadNotifications} onEntry={id => { if (entries.some(entry => entry.id === id)) navigate('vault', { projectId: '', entryId: id }); }} zone={zone} /> : page === 'gateway' ? <GatewayPage entries={entries} projects={projects} notify={notify} zone={zone} /> : page === 'usage' ? <UsagePage projects={projects} zone={zone} /> : <SettingsPage notify={notify} onAuth={changeAuth} onSaved={reloadSettings} theme={theme} onThemeChange={setTheme} />}</div>}
         <footer className="app-footer"><span>개인 API 키 보관함</span><span>{zone === 'Asia/Seoul' ? '한국 시간 기준' : zone}</span></footer>
       </main>
       {notice && <div className="toast" role="status"><span>{notice}</span><button aria-label="알림 닫기" onClick={() => setNotice('')}>닫기</button></div>}
@@ -316,6 +317,7 @@ function Projects({
           </Field>
         </Form>
       </div>
+      <div className="table-scroll project-table" role="region" aria-label="프로젝트 목록" tabIndex={0}>
       <table className="table">
         <thead>
           <tr>
@@ -330,7 +332,7 @@ function Projects({
               <td>{p.name}</td>
               <td><button type="button" className="text-button" onClick={() => onViewProject(p.id)}>{entries.filter((e) => e.projectIds.includes(p.id)).length}개 보기</button></td>
               <td>
-                <button className="danger-text" onClick={() => setDeleting(p)}>
+                <button className="danger-text" aria-label={`${p.name} 프로젝트 삭제`} onClick={() => setDeleting(p)}>
                   삭제
                 </button>
               </td>
@@ -338,10 +340,12 @@ function Projects({
           ))}
         </tbody>
       </table>
+      </div>
       {!projects.length && <Empty>등록한 프로젝트가 없습니다.</Empty>}
       {deleting && (
         <Confirm
           title="프로젝트 삭제"
+          confirmLabel="프로젝트 삭제"
           onClose={() => setDeleting(null)}
           onConfirm={async () => {
             await api(`/projects/${deleting.id}`, 'DELETE');
@@ -402,7 +406,7 @@ function Notifications({
         {notifications.map((n) => (
           <li key={n.id}>
             <div>
-              <button className="row-name" onClick={() => onEntry(n.entryId)}>
+              <button className="row-name" aria-label={`${n.title} · ${n.message} 상세 보기`} onClick={() => onEntry(n.entryId)}>
                 {n.title}
               </button>
               <p>{n.message}</p>
@@ -422,6 +426,7 @@ function Notifications({
             </div>
             <button
               disabled={n.read}
+              aria-label={`${n.message} ${n.read ? '읽음' : '읽음으로 표시'}`}
               onClick={async () => {
                 try {
                   await api(`/notifications/${n.id}`, 'PUT', { read: true });

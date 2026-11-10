@@ -1,51 +1,14 @@
 :root {
-  --desk-gutter: clamp(18px, 5vw, 72px);
+  --desk-gutter: clamp(16px, 4vw, 48px);
+  --desk-width: 1200px;
+  --workspace-gutter: clamp(16px, 3.1vw, 44px);
+  --title-size: clamp(28px, 3vw, 36px);
 }
 
-:root,
-:root[data-theme='light'] {
-  color-scheme: light;
-  --page: #f8f6ef;
-  --side: #eeebe1;
-  --panel: #fffdf7;
-  --field: #fffdf7;
-  --text: #202b35;
-  --muted: #58616a;
-  --line: #d8d3c7;
-  --hover: #eeebe1;
-  --selection: #eae7dd;
-  --accent: #46315e;
-  --accent-ink: #fffdf6;
-  --warning: #825921;
-  --danger: #9d3c26;
-  --focus: #225e91;
-  --desk-edge: #918b7e;
-  --desk-accent-hover: #36234c;
-}
-
-:root[data-theme='dark'] {
-  color-scheme: dark;
-  --page: #1d2228;
-  --side: #232930;
-  --panel: #262c34;
-  --field: #262c34;
-  --text: #f1eee5;
-  --muted: #bac0c7;
-  --line: #454e57;
-  --hover: #2c333c;
-  --selection: #363e47;
-  --accent: #e3d2ee;
-  --accent-ink: #2d213b;
-  --warning: #e0c28c;
-  --danger: #ffbb9f;
-  --focus: #a9d4f8;
-  --desk-edge: #78838d;
-  --desk-accent-hover: #f0f5f8;
-}
-
-/* Keep the app bar and main content on the same 1200px measure. */
-.shell:has(> .app-header) {
+.shell {
   display: block;
+  min-height: 100dvh;
+  background: var(--case);
 }
 
 .app-header {
@@ -54,20 +17,47 @@
   align-items: center;
   gap: clamp(16px, 5vw, 72px);
   min-height: 70px;
-  padding-inline: max(var(--desk-gutter), calc((100% - 1200px) / 2));
-  border-bottom: 1px solid var(--line);
+  padding-inline: max(
+    calc(var(--desk-gutter) + var(--workspace-gutter)),
+    calc((100% - var(--desk-width)) / 2 + var(--workspace-gutter))
+  );
+  border-bottom: 1px solid var(--case-line);
+  color: var(--case-text);
   font-size: 14px;
 }
 
 .shell > .app-header ~ .main {
-  width: min(1200px, calc(100% - 2 * var(--desk-gutter)));
-  padding-inline: 0;
+  width: min(var(--desk-width), calc(100% - 2 * var(--desk-gutter)));
+  padding: 0;
+  min-width: 0;
   margin-inline: auto;
 }
 
+.workspace-sheet {
+  min-width: 0;
+  min-height: 440px;
+  margin-top: clamp(18px, 3vw, 42px);
+  padding: clamp(18px, 2.2vw, 28px) var(--workspace-gutter) 28px;
+  border-radius: 2px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.app-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 14px 0 22px;
+  color: var(--case-muted);
+  font-size: 12px;
+}
+
 .app-load-state {
-  margin: 0;
-  padding: 28px 0 24px;
+  margin: clamp(18px, 3vw, 42px) 0 0;
+  padding: 28px var(--workspace-gutter);
+  background: var(--panel);
+  color: var(--text);
 }
 .app-load-state h1 {
   margin: 0;
@@ -100,10 +90,13 @@
 }
 
 .desk-mark {
-  --mark-cut: var(--page);
   width: 25px;
   height: 25px;
   stroke: none;
+}
+
+.desk-mark path:last-child {
+  fill: var(--case);
 }
 
 .app-header :is(.main-nav, .account-nav) {
@@ -141,7 +134,7 @@
   border: 0;
   border-radius: 3px;
   background: transparent;
-  color: var(--muted);
+  color: var(--case-muted);
   font-size: inherit;
   line-height: 22px;
   white-space: nowrap;
@@ -149,7 +142,11 @@
 
 .app-header .account-nav > button {
   flex: none;
-  color: var(--text);
+  color: var(--case-text);
+}
+
+.app-header :is(button, summary):focus-visible {
+  outline-color: var(--notice);
 }
 
 .app-header .main-nav small {
@@ -165,13 +162,13 @@
 .app-header :is(.main-nav, .account-nav) > button:hover,
 .app-header .nav-menu > summary:hover,
 .app-header .nav-menu[open] > summary {
-  background: var(--hover);
+  background: var(--case-tab-hover);
 }
 
 .app-header :is(.main-nav, .account-nav, .nav-menu-items) > button[aria-current='page'],
 .app-header .nav-menu > summary.current {
-  background: var(--selection);
-  color: var(--text);
+  background: var(--case-tab);
+  color: var(--case-text);
   font-weight: 700;
 }
 
@@ -186,12 +183,23 @@
   border: 1px solid var(--desk-edge);
   border-radius: 3px;
   background: var(--panel);
+  color: var(--text);
 }
 
 .app-header .nav-menu-items button {
   min-height: 44px;
   border: 0;
   text-align: start;
+  color: var(--text);
+}
+
+.app-header .nav-menu-items > button[aria-current='page'] {
+  background: var(--selection);
+  color: var(--text);
+}
+
+.app-header .nav-menu-items button:focus-visible {
+  outline-color: var(--focus);
 }
 
 .dialog.desk-detail-modal {
@@ -214,7 +222,7 @@
 
 .desk-detail-modal .modal-head h2 {
   padding-top: 3px;
-  font-size: clamp(22px, 5vw, 33px);
+  font-size: 22px;
   font-weight: 700;
   line-height: 1.23;
   letter-spacing: -0.046em;
@@ -288,7 +296,7 @@
 
 .desk-detail-modal .key-value .secret {
   flex: 1 1 12ch;
-  min-height: 36px;
+  min-height: 44px;
   padding-inline: 0;
   background: transparent;
   color: var(--text);

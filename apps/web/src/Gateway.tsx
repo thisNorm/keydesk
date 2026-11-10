@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import type {
   Entry,
   Project,
@@ -35,25 +35,43 @@ export function GatewayPage({
     [token, setToken] = useState(''),
     [deleting, setDeleting] = useState<GatewayRoute | null>(null),
     [revoking, setRevoking] = useState<GatewayClient | null>(null),
-    [error, setError] = useState('');
+    [loadError, setLoadError] = useState(''),
+    [actionError, setActionError] = useState(''),
+    [loading, setLoading] = useState(true);
+  const id = useId(),
+    now = new Date(),
+    today = calendarDay(now, zone),
+    tabs = [
+      ['routes', '중계 경로'],
+      ['clients', '클라이언트 키'],
+      ['prices', '모델 단가'],
+    ] as const;
   async function reload() {
-    const results = await Promise.all([
-      api<{
-        routes: GatewayRoute[];
-      }>('/gateway/routes'),
-      api<{
-        clients: GatewayClient[];
-      }>('/gateway/clients'),
-      api<{
-        prices: ModelPrice[];
-      }>('/gateway/prices'),
-    ]);
-    setRoutes(results[0].routes);
-    setClients(results[1].clients);
-    setPrices(results[2].prices);
+    setLoading(true);
+    setLoadError('');
+    try {
+      const results = await Promise.all([
+        api<{
+          routes: GatewayRoute[];
+        }>('/gateway/routes'),
+        api<{
+          clients: GatewayClient[];
+        }>('/gateway/clients'),
+        api<{
+          prices: ModelPrice[];
+        }>('/gateway/prices'),
+      ]);
+      setRoutes(results[0].routes);
+      setClients(results[1].clients);
+      setPrices(results[2].prices);
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : '게이트웨이를 불러오지 못했습니다.');
+    } finally {
+      setLoading(false);
+    }
   }
   useEffect(() => {
-    void reload().catch((e) => setError(e.message));
+    void reload();
   }, []);
   useEffect(() => {
     if (!token) return;
@@ -73,6 +91,7 @@ export function GatewayPage({
         <h1>게이트웨이</h1>
         <button
           className="primary"
+          disabled={loading || Boolean(loadError)}
           onClick={() =>
             tab === 'routes' ? setRoute(null) : tab === 'clients' ? setClient(null) : setPrice(true)
           }
@@ -84,181 +103,238 @@ export function GatewayPage({
               : '모델 단가 추가'}
         </button>
       </header>
-      <div className="filterline">
-        {[
-          ['routes', '중계 경로'],
-          ['clients', '클라이언트 키'],
-          ['prices', '모델 단가'],
-        ].map(([v, t]) => (
+      <div className="filterline" role="tablist" aria-label="게이트웨이 항목">
+        {tabs.map(([v, t], index) => (
           <button
             key={v}
+            type="button"
+            id={`${id}-tab-${v}`}
+            role="tab"
+            aria-selected={tab === v}
+            aria-controls={`${id}-panel-${v}`}
+            tabIndex={tab === v ? 0 : -1}
             className={`tab ${tab === v ? 'current' : ''}`}
-            onClick={() => setTab(v!)}
+            onClick={() => setTab(v)}
+            onKeyDown={(event) => {
+              if (event.nativeEvent.isComposing) return;
+              let next: number;
+              if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+              else if (event.key === 'ArrowLeft') next = (index + tabs.length - 1) % tabs.length;
+              else if (event.key === 'Home') next = 0;
+              else if (event.key === 'End') next = tabs.length - 1;
+              else return;
+              event.preventDefault();
+              const nextTab = tabs[next][0];
+              setTab(nextTab);
+              document.getElementById(`${id}-tab-${nextTab}`)?.focus();
+            }}
           >
             {t}
           </button>
         ))}
       </div>
-      {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      )}
-      {tab === 'routes' && (
-        <>
-          <p className="muted">
-            프로젝트가 /gw/별칭/아래경로로 호출하면 선택한 보관 인증값을 주입합니다.
-          </p>
-          <div className="table-scroll">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>이름 / 중계 경로</th>
-                  <th>프로젝트</th>
-                  <th>목적지</th>
-                  <th>상태</th>
-                  <th>관리</th>
-                </tr>
-              </thead>
-              <tbody>
-                {routes.map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      {r.name}
-                      <div className="purpose mono">/gw/{r.slug}/</div>
-                    </td>
-                    <td>{projects.find((p) => p.id === r.projectId)?.name}</td>
-                    <td className="break">
-                      {r.baseUrl}
-                      <div className="purpose">
-                        {r.allowedMethods.join(', ')} ·{' '}
-                        {r.adapter === 'generic'
-                          ? `${r.authHeader ?? 'Authorization'} / ${r.authScheme === 'raw' ? '키 값 그대로' : 'Bearer'}`
-                          : r.adapter}
-                      </div>
-                    </td>
-                    <td>{r.enabled ? '사용 중' : '중지'}</td>
-                    <td>
-                      <div className="actions">
-                        <button onClick={() => setRoute(r)}>수정</button>
-                        <button className="danger-text" onClick={() => setDeleting(r)}>
-                          삭제
-                        </button>
-                      </div>
-                    </td>
+      <section
+        id={`${id}-panel-${tab}`}
+        role="tabpanel"
+        aria-labelledby={`${id}-tab-${tab}`}
+        aria-busy={loading}
+        tabIndex={0}
+      >
+        {loading && <p role="status">게이트웨이를 불러오는 중…</p>}
+        {loadError && (
+          <>
+            <p className="error" role="alert">
+              게이트웨이 목록을 불러오지 못했습니다. {loadError}
+            </p>
+            <button type="button" disabled={loading} onClick={() => void reload()}>
+              다시 불러오기
+            </button>
+          </>
+        )}
+        {!loading && !loadError && tab === 'routes' && (
+          <>
+            <p className="muted">
+              프로젝트가 /gw/별칭/아래경로로 호출하면 선택한 보관 인증값을 주입합니다.
+            </p>
+            <div className="table-scroll" tabIndex={0} role="region" aria-label="중계 경로 목록">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>이름 / 중계 경로</th>
+                    <th>프로젝트</th>
+                    <th>목적지</th>
+                    <th>상태</th>
+                    <th>관리</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {!routes.length && (
-            <Empty>먼저 보관함에 인증값과 프로젝트를 등록한 뒤 중계 경로를 추가하세요.</Empty>
-          )}
-        </>
-      )}
-      {tab === 'clients' && (
-        <>
-          <p className="muted">
-            발급한 토큰은 한 번만 표시됩니다. 일일 호출 수는 전송 전 제한하며 토큰·비용은 사용량
-            알림 기준입니다.
-          </p>
-          <div className="table-scroll">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>이름 / 식별 접두사</th>
-                  <th>프로젝트 · 허용 경로</th>
-                  <th>한도와 만료</th>
-                  <th>마지막 사용</th>
-                  <th>관리</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clients.map((c) => (
-                  <tr key={c.id}>
-                    <td>
-                      {c.name}
-                      <div className="purpose mono">{c.prefix}…</div>
-                    </td>
-                    <td>
-                      {projects.find((p) => p.id === c.projectId)?.name}
-                      <div className="purpose">
-                        {routes
-                          .filter((r) => c.routeIds.includes(r.id))
-                          .map((r) => r.name)
-                          .join(', ')}
-                      </div>
-                    </td>
-                    <td>
-                      호출 {c.dailyRequestLimit ?? '제한 없음'}/일
-                      <div className="purpose">
-                        {c.expiresAt || '만료일 없음'} · {c.revoked ? '폐기' : '사용 중'}
-                      </div>
-                    </td>
-                    <td>
-                      {c.lastUsedAt
-                        ? new Date(c.lastUsedAt).toLocaleString('ko-KR', { timeZone: zone })
-                        : '아직 없음'}
-                    </td>
-                    <td>
-                      <div className="actions">
-                        <button disabled={c.revoked} onClick={() => setClient(c)}>
-                          한도 수정
-                        </button>
-                        <button
-                          className="danger-text"
-                          disabled={c.revoked}
-                          onClick={() => setRevoking(c)}
-                        >
-                          폐기
-                        </button>
-                      </div>
-                    </td>
+                </thead>
+                <tbody>
+                  {routes.map((r) => (
+                    <tr key={r.id}>
+                      <td>
+                        {r.name}
+                        <div className="purpose mono">/gw/{r.slug}/</div>
+                      </td>
+                      <td>{projects.find((p) => p.id === r.projectId)?.name}</td>
+                      <td className="break">
+                        {r.baseUrl}
+                        <div className="purpose">
+                          {r.allowedMethods.join(', ')} ·{' '}
+                          {r.adapter === 'generic'
+                            ? `${r.authHeader ?? 'Authorization'} / ${r.authScheme === 'raw' ? '키 값 그대로' : 'Bearer'}`
+                            : r.adapter}
+                        </div>
+                      </td>
+                      <td>{r.enabled ? '사용 중' : '중지'}</td>
+                      <td>
+                        <div className="actions">
+                          <button
+                            aria-label={`${r.name} 중계 경로 수정`}
+                            onClick={() => setRoute(r)}
+                          >
+                            수정
+                          </button>
+                          <button
+                            className="danger-text"
+                            aria-label={`${r.name} 중계 경로 삭제`}
+                            onClick={() => {
+                              setActionError('');
+                              setDeleting(r);
+                            }}
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {!routes.length && (
+              <Empty>먼저 보관함에 인증값과 프로젝트를 등록한 뒤 중계 경로를 추가하세요.</Empty>
+            )}
+          </>
+        )}
+        {!loading && !loadError && tab === 'clients' && (
+          <>
+            <p className="muted">
+              발급한 토큰은 한 번만 표시됩니다. 일일 호출 수는 전송 전 제한하며 토큰·비용은 사용량
+              알림 기준입니다.
+            </p>
+            <div className="table-scroll" tabIndex={0} role="region" aria-label="클라이언트 키 목록">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>이름 / 식별 접두사</th>
+                    <th>프로젝트 · 허용 경로</th>
+                    <th>한도와 만료</th>
+                    <th>마지막 사용</th>
+                    <th>관리</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {!clients.length && <Empty>발급한 클라이언트 키가 없습니다.</Empty>}
-        </>
-      )}
-      {tab === 'prices' && (
-        <>
-          <p className="muted">
-            100만 토큰당 원래 통화의 단가를 입력합니다. 호출 당시 단가를 보존하며 제공사 청구액과
-            차이가 날 수 있습니다.
-          </p>
-          <div className="table-scroll">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>제공사 / 모델</th>
-                  <th>통화</th>
-                  <th>입력</th>
-                  <th>출력</th>
-                  <th>캐시 입력</th>
-                  <th>적용 시작</th>
-                </tr>
-              </thead>
-              <tbody>
-                {prices.map((p) => (
-                  <tr key={p.id}>
-                    <td>
-                      {p.adapter} / {p.model}
-                    </td>
-                    <td>{p.currency}</td>
-                    <td>{p.inputPerMillion}</td>
-                    <td>{p.outputPerMillion}</td>
-                    <td>{p.cachedInputPerMillion}</td>
-                    <td>{new Date(p.startsAt).toLocaleString('ko-KR', { timeZone: zone })}</td>
+                </thead>
+                <tbody>
+                  {clients.map((c) => (
+                    <tr key={c.id}>
+                      <td>
+                        {c.name}
+                        <div className="purpose mono">{c.prefix}…</div>
+                      </td>
+                      <td>
+                        {projects.find((p) => p.id === c.projectId)?.name}
+                        <div className="purpose">
+                          {routes
+                            .filter((r) => c.routeIds.includes(r.id))
+                            .map((r) => r.name)
+                            .join(', ')}
+                        </div>
+                      </td>
+                      <td>
+                        호출 {c.dailyRequestLimit ?? '제한 없음'}/일
+                        <div className="purpose">
+                          {c.expiresAt || '만료일 없음'} ·{' '}
+                          {c.revoked
+                            ? '폐기'
+                            : c.expiresAt !== '' &&
+                                (c.expiresAt.length === 10
+                                  ? c.expiresAt < today
+                                  : Date.parse(c.expiresAt) <= now.getTime())
+                              ? '만료됨'
+                              : '사용 중'}
+                        </div>
+                      </td>
+                      <td>
+                        {c.lastUsedAt
+                          ? new Date(c.lastUsedAt).toLocaleString('ko-KR', { timeZone: zone })
+                          : '아직 없음'}
+                      </td>
+                      <td>
+                        <div className="actions">
+                          <button
+                            aria-label={`${c.name} 클라이언트 한도 수정`}
+                            disabled={c.revoked}
+                            onClick={() => setClient(c)}
+                          >
+                            한도 수정
+                          </button>
+                          <button
+                            className="danger-text"
+                            aria-label={`${c.name} 클라이언트 키 폐기`}
+                            disabled={c.revoked}
+                            onClick={() => {
+                              setActionError('');
+                              setRevoking(c);
+                            }}
+                          >
+                            폐기
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {!clients.length && <Empty>발급한 클라이언트 키가 없습니다.</Empty>}
+          </>
+        )}
+        {!loading && !loadError && tab === 'prices' && (
+          <>
+            <p className="muted">
+              100만 토큰당 원래 통화의 단가를 입력합니다. 호출 당시 단가를 보존하며 제공사 청구액과
+              차이가 날 수 있습니다.
+            </p>
+            <div className="table-scroll" tabIndex={0} role="region" aria-label="모델 단가 목록">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>제공사 / 모델</th>
+                    <th>통화</th>
+                    <th>입력</th>
+                    <th>출력</th>
+                    <th>캐시 입력</th>
+                    <th>적용 시작</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {!prices.length && <Empty>등록한 모델 단가가 없습니다.</Empty>}
-        </>
-      )}
+                </thead>
+                <tbody>
+                  {prices.map((p) => (
+                    <tr key={p.id}>
+                      <td>
+                        {p.adapter} / {p.model}
+                      </td>
+                      <td>{p.currency}</td>
+                      <td>{p.inputPerMillion}</td>
+                      <td>{p.outputPerMillion}</td>
+                      <td>{p.cachedInputPerMillion}</td>
+                      <td>{new Date(p.startsAt).toLocaleString('ko-KR', { timeZone: zone })}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {!prices.length && <Empty>등록한 모델 단가가 없습니다.</Empty>}
+          </>
+        )}
+      </section>
       {route !== undefined && (
         <RouteEditor
           route={route ?? undefined}
@@ -275,8 +351,11 @@ export function GatewayPage({
           projects={projects}
           onClose={() => setClient(undefined)}
           onSaved={async (t) => {
+            if (t) {
+              setToken(t);
+              setClient(undefined);
+            }
             await reload();
-            if (t) setToken(t);
           }}
         />
       )}
@@ -317,22 +396,49 @@ export function GatewayPage({
       {deleting && (
         <Confirm
           title="중계 경로 삭제"
+          confirmLabel="중계 경로 삭제"
           onClose={() => setDeleting(null)}
           onConfirm={async () => {
-            await api(`/gateway/routes/${deleting.id}`, 'DELETE');
+            setActionError('');
+            try {
+              await api(`/gateway/routes/${deleting.id}`, 'DELETE');
+            } catch (error) {
+              setActionError(
+                error instanceof Error && error.message
+                  ? error.message
+                  : '중계 경로를 삭제하지 못했습니다.',
+              );
+              return;
+            }
             await reload();
             setDeleting(null);
           }}
         >
           <p>‘{deleting.name}’ 중계 경로를 삭제합니다.</p>
+          {actionError && (
+            <p className="error" role="alert">
+              {actionError}
+            </p>
+          )}
         </Confirm>
       )}
       {revoking && (
         <Confirm
           title="클라이언트 키 폐기"
+          confirmLabel="클라이언트 키 폐기"
           onClose={() => setRevoking(null)}
           onConfirm={async () => {
-            await api(`/gateway/clients/${revoking.id}`, 'PUT', { revoked: true });
+            setActionError('');
+            try {
+              await api(`/gateway/clients/${revoking.id}`, 'PUT', { revoked: true });
+            } catch (error) {
+              setActionError(
+                error instanceof Error && error.message
+                  ? error.message
+                  : '클라이언트 키를 폐기하지 못했습니다.',
+              );
+              return;
+            }
             await reload();
             setRevoking(null);
           }}
@@ -340,6 +446,11 @@ export function GatewayPage({
           <p>
             ‘{revoking.name}’의 이후 호출을 차단합니다. 다시 사용하려면 새 키를 발급해야 합니다.
           </p>
+          {actionError && (
+            <p className="error" role="alert">
+              {actionError}
+            </p>
+          )}
         </Confirm>
       )}
     </>
@@ -373,21 +484,44 @@ function RouteEditor({
       authScheme: 'bearer',
     },
   );
+  const [saving, setSaving] = useState(false);
+  const credentials = entries
+    .filter((entry) => entry.projectIds.includes(draft.projectId))
+    .flatMap((entry) =>
+      entry.credentials
+        .filter((credential) => credential.status === 'active')
+        .map((credential) => ({ id: credential.id, label: `${entry.name} · ${credential.label}` })),
+    );
   const set = (key: keyof GatewayRouteDraft, value: unknown) =>
     setDraft((d) => ({ ...d, [key]: value }));
   return (
-    <Modal title={route ? '중계 경로 수정' : '중계 경로 추가'} onClose={onClose} wide>
+    <Modal
+      title={route ? '중계 경로 수정' : '중계 경로 추가'}
+      onClose={onClose}
+      closeDisabled={saving}
+      wide
+    >
       <Form
         onCancel={onClose}
+        submitDisabled={
+          !draft.projectId ||
+          !credentials.some((credential) => credential.id === draft.credentialId) ||
+          !draft.allowedMethods.length
+        }
         onSubmit={async () => {
           if (!draft.allowedMethods.length) throw Error('허용할 메서드를 선택해 주세요.');
-          await api(
-            route ? `/gateway/routes/${route.id}` : '/gateway/routes',
-            route ? 'PUT' : 'POST',
-            routePayload(draft),
-          );
-          await onSaved();
-          onClose();
+          setSaving(true);
+          try {
+            await api(
+              route ? `/gateway/routes/${route.id}` : '/gateway/routes',
+              route ? 'PUT' : 'POST',
+              routePayload(draft),
+            );
+            await onSaved();
+            onClose();
+          } finally {
+            setSaving(false);
+          }
         }}
       >
         <div className="form-grid">
@@ -402,9 +536,13 @@ function RouteEditor({
               onChange={(e) => set('slug', e.target.value)}
             />
           </Field>
-          <Field label="프로젝트">
+          <Field
+            label="프로젝트"
+            hint={!projects.length ? '프로젝트 메뉴에서 프로젝트를 먼저 만드세요.' : undefined}
+          >
             <select
               required
+              disabled={!projects.length}
               value={draft.projectId}
               onChange={(e) => {
                 set('projectId', e.target.value);
@@ -419,24 +557,28 @@ function RouteEditor({
               ))}
             </select>
           </Field>
-          <Field label="주입할 인증값">
+          <Field
+            label="주입할 인증값"
+            hint={
+              !draft.projectId
+                ? '프로젝트를 먼저 선택해 주세요.'
+                : !credentials.length
+                  ? '선택한 프로젝트에 사용 중인 인증값이 없습니다. 보관함에서 인증값을 등록하고 프로젝트에 연결해 주세요.'
+                  : undefined
+            }
+          >
             <select
               required
+              disabled={!draft.projectId || !credentials.length}
               value={draft.credentialId}
               onChange={(e) => set('credentialId', e.target.value)}
             >
               <option value="">선택</option>
-              {entries
-                .filter((e) => e.projectIds.includes(draft.projectId))
-                .flatMap((e) =>
-                  e.credentials
-                    .filter((c) => c.status === 'active')
-                    .map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {e.name} · {c.label}
-                      </option>
-                    )),
-                )}
+              {credentials.map((credential) => (
+                <option key={credential.id} value={credential.id}>
+                  {credential.label}
+                </option>
+              ))}
             </select>
           </Field>
         </div>
@@ -480,7 +622,7 @@ function RouteEditor({
             </Field>
           </div>
         )}
-        <div className="field">
+        <div className="field" role="group" aria-label="허용할 메서드">
           <span>허용할 메서드</span>
           <div className="checkboxes">
             {['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'].map((m) => (
@@ -502,6 +644,9 @@ function RouteEditor({
             ))}
           </div>
         </div>
+        {!draft.allowedMethods.length && (
+          <p className="hint">허용할 메서드를 한 개 이상 선택해 주세요.</p>
+        )}
         <label className="check">
           <input
             type="checkbox"
@@ -547,29 +692,44 @@ function ClientEditor({
       dailyCostAlertMicros: null,
     },
   );
+  const [saving, setSaving] = useState(false);
+  const projectRoutes = routes.filter((route) => route.projectId === draft.projectId);
   const set = (key: keyof GatewayClientDraft, value: unknown) =>
     setDraft((d) => ({ ...d, [key]: value }));
   return (
-    <Modal title={client ? '클라이언트 한도 수정' : '클라이언트 키 발급'} onClose={onClose}>
+    <Modal
+      title={client ? '클라이언트 한도 수정' : '클라이언트 키 발급'}
+      onClose={onClose}
+      closeDisabled={saving}
+    >
       <Form
         label={client ? '저장' : '발급'}
         onCancel={onClose}
+        submitDisabled={
+          !client &&
+          (!draft.projectId || !projectRoutes.some((route) => draft.routeIds.includes(route.id)))
+        }
         onSubmit={async () => {
-          if (client) {
-            await api(`/gateway/clients/${client.id}`, 'PUT', {
-              dailyRequestLimit: draft.dailyRequestLimit,
-              dailyTokenAlert: draft.dailyTokenAlert,
-              dailyCostAlertMicros: draft.dailyCostAlertMicros,
-            });
-            await onSaved();
-          } else {
-            if (!draft.routeIds.length) throw Error('허용할 경로를 선택해 주세요.');
-            const result = await api<{
-              token: string;
-            }>('/gateway/clients', 'POST', draft);
-            await onSaved(result.token);
+          if (!client && !draft.routeIds.length) throw Error('허용할 경로를 선택해 주세요.');
+          setSaving(true);
+          try {
+            if (client) {
+              await api(`/gateway/clients/${client.id}`, 'PUT', {
+                dailyRequestLimit: draft.dailyRequestLimit,
+                dailyTokenAlert: draft.dailyTokenAlert,
+                dailyCostAlertMicros: draft.dailyCostAlertMicros,
+              });
+              await onSaved();
+            } else {
+              const result = await api<{
+                token: string;
+              }>('/gateway/clients', 'POST', draft);
+              await onSaved(result.token);
+            }
+            onClose();
+          } finally {
+            setSaving(false);
           }
-          onClose();
         }}
       >
         {!client && (
@@ -577,9 +737,13 @@ function ClientEditor({
             <Field label="클라이언트 이름">
               <input required value={draft.name} onChange={(e) => set('name', e.target.value)} />
             </Field>
-            <Field label="프로젝트">
+            <Field
+              label="프로젝트"
+              hint={!projects.length ? '프로젝트 메뉴에서 프로젝트를 먼저 만드세요.' : undefined}
+            >
               <select
                 required
+                disabled={!projects.length}
                 value={draft.projectId}
                 onChange={(e) => {
                   set('projectId', e.target.value);
@@ -594,27 +758,35 @@ function ClientEditor({
                 ))}
               </select>
             </Field>
-            <div className="field">
+            <div className="field" role="group" aria-label="허용할 중계 경로">
               <span>허용할 중계 경로</span>
-              {routes
-                .filter((r) => r.projectId === draft.projectId)
-                .map((r) => (
-                  <label className="check" key={r.id}>
-                    <input
-                      type="checkbox"
-                      checked={draft.routeIds.includes(r.id)}
-                      onChange={(e) =>
-                        set(
-                          'routeIds',
-                          e.target.checked
-                            ? [...draft.routeIds, r.id]
-                            : draft.routeIds.filter((id) => id !== r.id),
-                        )
-                      }
-                    />
-                    {r.name}
-                  </label>
-                ))}
+              {!draft.projectId ? (
+                <p className="hint">프로젝트를 먼저 선택해 주세요.</p>
+              ) : (
+                !projectRoutes.length && (
+                  <p className="hint">
+                    선택한 프로젝트의 중계 경로가 없습니다. 게이트웨이의 ‘중계 경로’에서 경로를 먼저
+                    추가해 주세요.
+                  </p>
+                )
+              )}
+              {projectRoutes.map((r) => (
+                <label className="check" key={r.id}>
+                  <input
+                    type="checkbox"
+                    checked={draft.routeIds.includes(r.id)}
+                    onChange={(e) =>
+                      set(
+                        'routeIds',
+                        e.target.checked
+                          ? [...draft.routeIds, r.id]
+                          : draft.routeIds.filter((id) => id !== r.id),
+                      )
+                    }
+                  />
+                  {r.name}
+                </label>
+              ))}
             </div>
             <Field label="만료일 (선택)">
               <input
@@ -675,25 +847,31 @@ function PriceEditor({ onClose, onSaved }: { onClose: () => void; onSaved: () =>
     adapter: 'openai',
     model: '',
     currency: 'USD',
-    inputPerMillion: '0',
-    outputPerMillion: '0',
-    cachedInputPerMillion: '0',
+    inputPerMillion: '',
+    outputPerMillion: '',
+    cachedInputPerMillion: '',
     startsAt: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
       .slice(0, 16),
   });
+  const [saving, setSaving] = useState(false);
   const set = (key: keyof PriceDraft, value: string) => setDraft((d) => ({ ...d, [key]: value }));
   return (
-    <Modal title="모델 단가 추가" onClose={onClose}>
+    <Modal title="모델 단가 추가" onClose={onClose} closeDisabled={saving}>
       <Form
         onCancel={onClose}
         onSubmit={async () => {
-          await api('/gateway/prices', 'POST', {
-            ...draft,
-            startsAt: new Date(draft.startsAt).toISOString(),
-          });
-          await onSaved();
-          onClose();
+          setSaving(true);
+          try {
+            await api('/gateway/prices', 'POST', {
+              ...draft,
+              startsAt: new Date(draft.startsAt).toISOString(),
+            });
+            await onSaved();
+            onClose();
+          } finally {
+            setSaving(false);
+          }
         }}
       >
         <Field label="해석기">
@@ -715,6 +893,7 @@ function PriceEditor({ onClose, onSaved }: { onClose: () => void; onSaved: () =>
             onChange={(e) => set('currency', e.target.value.toUpperCase())}
           />
         </Field>
+        <p className="hint">세 단가를 모두 입력해 주세요. 무료인 항목은 0을 입력하세요.</p>
         {(
           [
             ['inputPerMillion', '100만 입력 토큰당'],
@@ -843,7 +1022,7 @@ export function UsagePage({ projects, zone }: { projects: Project[]; zone: strin
           <p className="muted">
             아래에는 최근 1,000개까지 표시합니다. 토큰 사용량과 비용의 미확인은 각각 구분합니다.
           </p>
-          <div className="table-scroll">
+          <div className="table-scroll" tabIndex={0} role="region" aria-label="사용량과 비용 호출 기록">
             <table className="table">
               <thead>
                 <tr>

@@ -33,9 +33,7 @@ const buckets = [
 ] as const;
 const iconPaths = {
   search: 'M15 15l4 4 M16 10.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 1 1 11 0Z',
-  plus: 'M12 5v14M5 12h14',
   check: 'm5 12 4 4L19 6',
-  arrow: 'M5 12h13m-5-5 5 5-5 5',
   chevron: 'm7 10 5 5 5-5',
   copy: 'M9 8h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1ZM15 5H6a1 1 0 0 0-1 1v9',
 };
@@ -424,12 +422,12 @@ export function Vault({
           <button
             className="rack-work-tab"
             type="button"
-            aria-label={dueCount ? `만료 정리, 정리 대상 키 ${dueCount}개` : '만료 정리'}
+            data-has-due={dueCount > 0 || undefined}
+            title={dueCount ? `정리 대상 키 ${dueCount}개` : undefined}
             aria-pressed={mode === 'work'}
             onClick={() => changeMode('work')}
           >
-            만료 정리{dueCount > 0 && <span>{dueCount}</span>}
-            {mode === 'keys' && <DeskIcon name="arrow" />}
+            만료 정리{dueCount > 0 && <> <span>{dueCount}</span></>}
           </button>
         </div>
       </div>
@@ -510,8 +508,8 @@ export function Vault({
                 <button type="button" onClick={startImport}>
                   가져오기
                 </button>
-                <button type="button" className="rack-add" onClick={() => edit(null)}>
-                  <DeskIcon name="plus" /> 키 추가
+                <button type="button" className="primary" onClick={() => edit(null)}>
+                  키 추가
                 </button>
               </div>
             )}
@@ -560,7 +558,6 @@ export function Vault({
                             onClick={() => openEntry(entry.id)}
                           >
                             {entry.name}
-                            <DeskIcon name="arrow" />
                           </button>
                           {metadata && <span>{metadata}</span>}
                         </div>
@@ -659,7 +656,7 @@ export function Vault({
                   </button>
                 )}
                 {!entries.length && (
-                  <button type="button" className="rack-add" onClick={() => edit(null)}>
+                  <button type="button" className="primary" onClick={() => edit(null)}>
                     첫 키 등록
                   </button>
                 )}
@@ -705,7 +702,7 @@ export function Vault({
                           <button
                             type="button"
                             className="rack-task-action"
-                            aria-label={`${entry.name} ${credential.label} ${bucket === 'unset' ? '만료일 등록' : '교체'}${scope}`}
+                            aria-label={`${entry.name} ${credential.label} ${bucket === 'unset' ? '만료일 등록' : '키 교체'}${scope}`}
                             onClick={() =>
                               bucket === 'unset'
                                 ? edit(entry, credential.id)
