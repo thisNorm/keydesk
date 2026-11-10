@@ -1,102 +1,23 @@
-.rack-shell {
-  --rack-case: #282539;
-  --rack-case-text: #f4ede4;
-  --rack-case-muted: #c2bacd;
-  --rack-case-line: #51495e;
-  --rack-tab: #423b52;
-  --rack-tab-hover: #514661;
-  --rack-paper: #faf6e9;
-  --rack-ink: #272235;
-  --rack-muted: #655a6a;
-  --rack-line: #d4cbbb;
-  --rack-edge: #857a89;
-  --rack-soft: #eee7dd;
-  --rack-action: #46315e;
-  --rack-action-text: #fff9ef;
-  --rack-gold: #f1cd86;
-  --rack-gold-ink: #432d23;
-  --rack-focus: #513a87;
-  --rack-past: #9d3b2b;
-  --rack-gutter: clamp(16px, 3.1vw, 44px);
-  min-height: 100dvh;
-  background: var(--rack-case);
-}
-
-:root[data-theme='dark'] .rack-shell {
-  --rack-case: #171621;
-  --rack-case-line: #484256;
-  --rack-tab: #343043;
-  --rack-tab-hover: #423952;
-  --rack-paper: #272431;
-  --rack-ink: #f4ede4;
-  --rack-muted: #cbc0cf;
-  --rack-line: #524a5e;
-  --rack-edge: #93869d;
-  --rack-soft: #383242;
-  --rack-action: #e3d2ee;
-  --rack-action-text: #2d213b;
-  --rack-focus: #d2b7f7;
-  --rack-past: #ffae99;
-}
-
-.rack-shell > .app-header {
-  padding-inline: max(var(--desk-gutter), calc((100% - 1120px) / 2));
-  border-color: var(--rack-case-line);
-  color: var(--rack-case-text);
-}
-
-.rack-shell
-  .app-header
-  :is(.wordmark, .main-nav > button, .account-nav > button, .nav-menu > summary) {
-  color: inherit;
-}
-
-.rack-shell .desk-mark path:last-child {
-  fill: var(--rack-case);
-}
-.rack-shell .app-header .owner {
-  color: var(--rack-case-muted);
-}
-.rack-shell .app-header :is(.main-nav > button, .account-nav > button, .nav-menu > summary):hover,
-.rack-shell .app-header :is(.main-nav > button[aria-current='page'], .nav-menu[open] > summary) {
-  background: var(--rack-tab);
-  color: var(--rack-case-text);
-}
-.rack-shell .app-header :is(button, summary):focus-visible {
-  outline-color: var(--rack-gold);
-}
-.rack-shell .app-header .nav-menu-items {
-  color: var(--text);
-}
-.rack-shell > .main {
-  padding-block: 0;
-  color: var(--rack-case-text);
-}
-.rack-shell > .app-header ~ .main {
-  width: min(1120px, calc(100% - 2 * var(--desk-gutter)));
-}
-.rack-shell .app-load-state button {
-  background: var(--rack-gold);
-  color: var(--rack-gold-ink);
-  border-color: transparent;
-}
-.rack-shell .app-load-state button:hover {
-  background: #ffdfa2;
-}
-.rack-shell .app-load-state button:focus-visible {
-  outline-color: var(--rack-gold);
-}
-.rack-shell > .main > .app-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin: 0;
-  padding: 14px 0 22px;
-  border: 0;
-  color: var(--rack-case-muted);
-}
-
 .vault-rack {
+  --rack-case: var(--case);
+  --rack-case-text: var(--case-text);
+  --rack-case-muted: var(--case-muted);
+  --rack-case-line: var(--case-line);
+  --rack-tab: var(--case-tab);
+  --rack-tab-hover: var(--case-tab-hover);
+  --rack-paper: var(--panel);
+  --rack-ink: var(--text);
+  --rack-muted: var(--muted);
+  --rack-line: var(--line);
+  --rack-edge: var(--desk-edge);
+  --rack-soft: var(--hover);
+  --rack-action: var(--accent);
+  --rack-action-text: var(--accent-ink);
+  --rack-gold: var(--notice);
+  --rack-gold-ink: var(--notice-ink);
+  --rack-focus: var(--focus);
+  --rack-past: var(--danger);
+  --rack-gutter: var(--workspace-gutter);
   padding-top: clamp(18px, 3vw, 42px);
 }
 .vault-rack button,
@@ -197,13 +118,17 @@
   padding-inline: 13px;
   border: 1px solid transparent;
   border-radius: 2px;
-  background: var(--rack-gold);
-  color: var(--rack-gold-ink);
+  background: var(--rack-tab);
+  color: var(--rack-case-text);
   font-weight: 750;
   white-space: nowrap;
 }
+.rack-index .rack-work-tab[data-has-due] {
+  background: var(--rack-gold);
+  color: var(--rack-gold-ink);
+}
 .rack-index .rack-work-tab:hover {
-  background: #ffdfa2;
+  border-color: currentColor;
 }
 .rack-index .rack-work-tab:focus-visible {
   outline-color: var(--rack-gold);
@@ -243,10 +168,6 @@
 }
 .rack-heading h1 {
   margin: 0;
-  font-size: clamp(29px, 2.8vw, 40px);
-  font-weight: 750;
-  letter-spacing: -0.062em;
-  line-height: 1.14;
   overflow-wrap: anywhere;
 }
 .rack-heading-meta {
@@ -311,31 +232,6 @@
   display: flex;
   gap: 5px;
 }
-.rack-sheet :where(.rack-actions button, .rack-empty button, .rack-empty-key button) {
-  min-height: 44px;
-  padding: 0 11px;
-  border: 1px solid var(--rack-edge);
-  border-radius: 2px;
-  background: transparent;
-  color: var(--rack-ink);
-  font-weight: 650;
-  white-space: nowrap;
-}
-.rack-sheet :where(.rack-actions button, .rack-empty button, .rack-empty-key button):hover {
-  background: var(--rack-soft);
-}
-.rack-sheet .rack-add {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border-color: var(--rack-action);
-  background: var(--rack-action);
-  color: var(--rack-action-text);
-}
-.rack-sheet .rack-add:hover {
-  background: color-mix(in srgb, var(--rack-action) 88%, var(--rack-paper));
-}
 .rack-sort {
   display: inline-flex;
   position: relative;
@@ -344,7 +240,7 @@
 }
 .rack-sort select {
   appearance: none;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 29px 0 9px;
   border: 0;
   border-radius: 0;
@@ -402,7 +298,7 @@
   gap: 5px;
   min-width: 0;
   max-width: 100%;
-  min-height: 27px;
+  min-height: 44px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -411,12 +307,10 @@
   font-size: 17px;
   line-height: 1.22;
   text-align: start;
+  text-decoration: underline;
+  text-decoration-color: var(--rack-edge);
+  text-underline-offset: 0.2em;
   overflow-wrap: anywhere;
-}
-.rack-service button .desk-icon {
-  width: 13px;
-  height: 13px;
-  color: var(--rack-muted);
 }
 .rack-service button:hover,
 .rack-task-key button:hover {
@@ -656,7 +550,7 @@
   .rack-work-switch {
     display: flex;
     justify-content: end;
-    padding: 8px 14px 0;
+    padding: 8px var(--rack-gutter) 0;
     background: var(--rack-paper);
   }
   .rack-index .rack-tab {
@@ -683,11 +577,8 @@
     padding-inline-start: 6px;
   }
   .rack-sheet {
-    padding-inline: 14px;
+    padding-inline: var(--rack-gutter);
     padding-bottom: 18px;
-  }
-  .rack-heading h1 {
-    font-size: 31px;
   }
   .rack-search input {
     font-size: 16px;

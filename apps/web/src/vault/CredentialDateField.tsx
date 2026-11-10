@@ -188,7 +188,8 @@ export function CredentialDateField({
                           type="button"
                           data-day={day}
                           tabIndex={day === focused ? 0 : -1}
-                          aria-label={formatCredentialDate(day, zone)}
+                          aria-describedby={`${id}-month`}
+                          title={formatCredentialDate(day, zone)}
                           aria-current={day === calendarDay(new Date(), zone) ? 'date' : undefined}
                           onClick={() => {
                             onChange(day);
