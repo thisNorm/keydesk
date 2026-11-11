@@ -193,7 +193,7 @@ test('query auth bindings encode once and replace caller keys without forwarding
     });
     const c = await f.client([route.id]);
     const response = await f.app.inject({
-      url: '/gw/test/cities?serviceKey=caller&q=two%20words&flag&serviceKey=duplicate&tag=a%2fb&SERVICEKEY=upper&tag=a+b&city=seoul',
+      url: '/gw/test/cities?serviceKey=caller&?note=kept&q=two%20words&flag&serviceKey=duplicate&tag=a%2fb&SERVICEKEY=upper&tag=a+b&city=seoul',
       headers: { authorization: `Bearer ${c.token}` },
     });
     assert.equal(response.statusCode, 200, response.body);
@@ -202,7 +202,7 @@ test('query auth bindings encode once and replace caller keys without forwarding
     assert.equal(received.query.get('city'), 'seoul');
     assert.equal(
       received.rawQuery,
-      '?q=two%20words&flag&tag=a%2fb&tag=a+b&city=seoul&' +
+      '??note=kept&q=two%20words&flag&tag=a%2fb&tag=a+b&city=seoul&' +
         new URLSearchParams([['serviceKey', secret]]).toString(),
     );
     assert.equal(received.headers.authorization, undefined);

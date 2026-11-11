@@ -43,5 +43,5 @@ export function replaceQueryAuthentication(url: URL, auth: URLSearchParams): voi
         })
     : [];
   fields.push(auth.toString());
-  url.search = fields.join('&');
+  url.search = '?' + fields.join('&');
 }
