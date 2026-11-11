@@ -172,8 +172,10 @@ test('query auth bindings encode once and replace caller keys without forwarding
   let received: any;
   const f = await fixture(
     (req: any, res: any) => {
+      const url = new URL(req.url, 'https://example.invalid');
       received = {
-        query: new URL(req.url, 'https://example.invalid').searchParams,
+        query: url.searchParams,
+        rawQuery: url.search,
         headers: req.headers,
       };
       res.end('{"ok":true}');
@@ -191,13 +193,18 @@ test('query auth bindings encode once and replace caller keys without forwarding
     });
     const c = await f.client([route.id]);
     const response = await f.app.inject({
-      url: '/gw/test/cities?serviceKey=caller&serviceKey=duplicate&SERVICEKEY=upper&city=seoul',
+      url: '/gw/test/cities?serviceKey=caller&q=two%20words&flag&serviceKey=duplicate&tag=a%2fb&SERVICEKEY=upper&tag=a+b&city=seoul',
       headers: { authorization: `Bearer ${c.token}` },
     });
     assert.equal(response.statusCode, 200, response.body);
     assert.deepEqual(received.query.getAll('serviceKey'), [secret]);
     assert.equal(received.query.has('SERVICEKEY'), false);
     assert.equal(received.query.get('city'), 'seoul');
+    assert.equal(
+      received.rawQuery,
+      '?q=two%20words&flag&tag=a%2fb&tag=a+b&city=seoul&' +
+        new URLSearchParams([['serviceKey', secret]]).toString(),
+    );
     assert.equal(received.headers.authorization, undefined);
     assert.equal(
       JSON.stringify(f.db.prepare('SELECT * FROM gateway_usage').all()).includes(secret),

@@ -28,7 +28,11 @@ import {
   validateBase,
 } from './transport.ts';
 import { GatewayAdmission } from './limits.ts';
-import { authenticationBindings, routeCredentialIds } from './authentication.ts';
+import {
+  authenticationBindings,
+  replaceQueryAuthentication,
+  routeCredentialIds,
+} from './authentication.ts';
 import {
   UsageParser,
   priceCost,
@@ -443,17 +447,17 @@ export async function registerGateway(
         const value = req.headers[key];
         if (typeof value === 'string') headers[key] = value;
       }
+      let queryAuth: URLSearchParams | undefined;
       for (const binding of authenticationBindings(route)) {
         const value = credentials.get(binding.credentialId)!.value;
         if (binding.location === 'query') {
-          for (const name of [...url.searchParams.keys()])
-            if (name.toLowerCase() === binding.name.toLowerCase()) url.searchParams.delete(name);
-          url.searchParams.set(binding.name, value);
+          (queryAuth ??= new URLSearchParams()).append(binding.name, value);
         } else {
           headers[binding.name.toLowerCase()] =
             (binding.prefix ? binding.prefix + ' ' : '') + value;
         }
       }
+      if (queryAuth) replaceQueryAuthentication(url, queryAuth);
       if (route.adapter === 'anthropic') {
         headers['anthropic-version'] =
           typeof req.headers['anthropic-version'] === 'string'
