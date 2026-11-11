@@ -1,194 +1,161 @@
-<h1 align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="/img/logoname-white.svg">
-    <img width="300" src="/img/logoname-black.svg" alt="infisical">
-  </picture>
-</h1>
+# Keydesk
+
+**프로젝트별로 꺼내 쓰는 개인 API 키 보관함.**
+
+키를 보관하고, 교체할 기한을 챙기고, 프로젝트별 API 호출을 중계하는 한국어 웹 앱입니다.
+직접 운영하는 하나의 서버에 보관함을 두고 브라우저에서 사용합니다.
+
+[화면 둘러보기](#화면-둘러보기) · [빠른 시작](#빠른-시작) · [Docker 실행](#docker로-실행) · [운영 안내](docs/운영.md)
+
+<img src="assets/readme/workbench.png" alt="프로젝트별 서랍과 개별 키 복사 버튼을 보여 주는 Keydesk 보관함" width="100%">
+
+모든 화면은 실제 Keydesk에 예시 데이터를 넣어 캡처했습니다. 실제 API 키나 비밀번호 등 인증정보는 포함하지 않았습니다.
+
+보관함·프로젝트·알림·게이트웨이·사용량·설정은 같은 작업면과 글자·버튼·입력 규칙을 사용합니다. 밝은 화면과 어두운 화면을 지원합니다.
+
+## 주요 기능
+
+| 필요한 작업     | Keydesk에서 하는 일                                                                                   |
+| --------------- | ----------------------------------------------------------------------------------------------------- |
+| 키 찾기와 복사  | 프로젝트별 서랍에서 항목을 찾고, 항목 안의 인증값을 각각 복사합니다.                                  |
+| 만료 정리       | 기한이 지난 키, 30일 안에 만료될 키, 만료일이 없는 키를 모아 교체하거나 날짜를 등록합니다.            |
+| 가져오기와 이력 | `.env` 파일이나 붙여넣은 내용을 미리 확인해 가져오고, 교체한 키의 이전 버전을 조회합니다.             |
+| 호출 중계       | 보관한 인증값으로 중계 경로를 구성하고, 프로젝트와 허용 경로를 지정한 클라이언트 토큰을 발급합니다.   |
+| 사용량 확인     | 일일 호출 수를 제한하고 토큰·비용 알림 기준을 설정합니다. 확인한 사용량과 미확인 사용량을 구분합니다. |
+| 백업과 복원     | 별도 암호로 보호한 백업을 만들고 복원합니다. 예약 백업 명령으로 보존 개수도 관리합니다.               |
+
+토큰·비용 기준은 **알림 기준**이며 호출을 차단하는 강제 상한이 아닙니다.
+게이트웨이 비용은 원래 통화를 보존한 추정치이며, 원화 환산에는 설정한 환율을 적용합니다.
+실제 청구액은 제공사의 청구서에서 확인하세요. 보관함의 요금제·한도 메모는 호출 측정값과 별개입니다.
+
+## 화면 둘러보기
+
+### 1. 교체할 키부터 확인
+
+전체 프로젝트의 만료 대상을 한곳에서 보고, 해당 인증값의 교체나 만료일 등록으로 이어갑니다.
+
+<details>
+<summary>만료 정리 화면 보기</summary>
+
+![기한이 지난 키와 만료 예정 키, 만료일 미등록 키를 모은 만료 정리 화면](assets/readme/expiry.png)
+
+</details>
+
+### 2. 프로젝트별 중계 경로 구성
+
+프로젝트, 보관한 인증값, 목적지를 연결합니다. 클라이언트 토큰마다 사용할 경로와 일일 호출 수 제한을 설정할 수 있습니다.
+
+<details>
+<summary>게이트웨이 중계 경로 화면 보기</summary>
+
+![프로젝트별 목적지와 인증 방식을 연결한 게이트웨이 중계 경로 목록](assets/readme/gateway.png)
+
+</details>
+
+### 3. 프로젝트와 설정도 같은 작업면에서
+
+<details>
+<summary>프로젝트와 설정 화면 보기</summary>
+
+![프로젝트별 항목 조회와 프로젝트 생성·삭제를 같은 작업면에서 처리하는 화면](assets/readme/projects.png)
+
+![공통 제목·탭·입력칸·저장 버튼을 사용하는 Keydesk 일반 설정 화면](assets/readme/settings.png)
+
+</details>
+
+### 4. 좁은 화면에서도 같은 보관함
+
+휴대폰에서도 접속 가능한 서버를 운영하면 같은 보관함을 브라우저로 열 수 있습니다.
+기기마다 별도로 설치한 보관함 사이에는 자동 동기화가 제공되지 않습니다.
+
 <p align="center">
-  <p align="center"><b>The open-source security infrastructure platform</b>: Manage secrets, certificates, keys, privileged access, and AI agent access in one platform.</p>
+  <img src="assets/readme/mobile.png" alt="좁은 모바일 화면에서 프로젝트와 보관한 키를 확인하는 Keydesk" width="360">
 </p>
 
-<h4 align="center">
-  <a href="https://community.infisical.com/">Community</a> |
-  <a href="https://infisical.com/">Infisical Cloud</a> |
-  <a href="https://infisical.com/docs/self-hosting/overview">Self-Hosting</a> |
-  <a href="https://infisical.com/docs/documentation/getting-started/introduction">Docs</a> |
-  <a href="https://www.infisical.com">Website</a> |
-  <a href="https://x.com/infisical">X</a> |
-  <a href="https://infisical.com/careers">Hiring (Remote/SF)</a>
-</h4>
+## 빠른 시작
 
-<h4 align="center">
-  <a href="https://github.com/Infisical/infisical/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Infisical is released under the MIT license." />
-  </a>
-  <a href="https://github.com/Infisical/infisical/releases">
-    <img src="https://img.shields.io/github/v/release/Infisical/infisical?label=Release&color=brightgreen" alt="Latest Infisical release" />
-  </a>
-  <a href="https://cloudsmith.io/~infisical/repos/">
-    <img src="https://img.shields.io/badge/Downloads-6.95M-orange" alt="Cloudsmith downloads" />
-  </a>
-  <a href="https://community.infisical.com/">
-    <img src="https://img.shields.io/badge/community-forum-blueviolet" alt="Infisical community forum" />
-  </a>
-</h4>
+Node.js **26.12.1**, npm **11.10 이상**을 준비하고 프로젝트 루트에서 실행하세요.
 
-<img src="/img/infisical_github_repo4.png" width="100%" alt="Infisical secrets management dashboard" />
-
-## Introduction
-
-**[Infisical](https://infisical.com)** is the open source security infrastructure platform that teams use for secrets, certificates, privileged access management, and AI agent access.
-
-We're on a mission to make security tooling more accessible to everyone, not just security teams, and that means redesigning the entire developer experience from ground up.
-
-## Features
-
-### Secrets Management
-
-Centralize your application secrets and configuration across every environment, with versioning, rotation, and leak prevention built in.
-
-- **[Dashboard](https://infisical.com/docs/documentation/platform/project)**: Manage secrets across projects and environments (e.g. development, production, etc.) through a user-friendly interface.
-- **[Secret Syncs](https://infisical.com/docs/integrations/secret-syncs/overview)**: Sync secrets to platforms like [GitHub](https://infisical.com/docs/integrations/secret-syncs/github), [Vercel](https://infisical.com/docs/integrations/secret-syncs/vercel), [AWS](https://infisical.com/docs/integrations/secret-syncs/aws-secrets-manager), and use tools like [Terraform](https://infisical.com/docs/integrations/frameworks/terraform), [Ansible](https://infisical.com/docs/integrations/platforms/ansible), and more.
-- **[Secret versioning](https://infisical.com/docs/documentation/platform/secret-versioning)** and **[Point-in-Time Recovery](https://infisical.com/docs/documentation/platform/pit-recovery)**: Keep track of every secret and project state; roll back when needed.
-- **[Secret Rotation](https://infisical.com/docs/documentation/platform/secret-rotation/overview)**: Rotate secrets at regular intervals for services like [PostgreSQL](https://infisical.com/docs/documentation/platform/secret-rotation/postgres-credentials), [MySQL](https://infisical.com/docs/documentation/platform/secret-rotation/mysql-credentials), [AWS IAM](https://infisical.com/docs/documentation/platform/secret-rotation/aws-iam-user-secret), and more.
-- **[Dynamic Secrets](https://infisical.com/docs/documentation/platform/dynamic-secrets/overview)**: Generate ephemeral secrets on-demand for services like [PostgreSQL](https://infisical.com/docs/documentation/platform/dynamic-secrets/postgresql), [MySQL](https://infisical.com/docs/documentation/platform/dynamic-secrets/mysql), [RabbitMQ](https://infisical.com/docs/documentation/platform/dynamic-secrets/rabbit-mq), and more.
-- **[Secret Sharing](https://infisical.com/docs/documentation/platform/secret-sharing)**: Share a secret with anyone through a link that expires after a set time or number of views.
-- **[Infisical Kubernetes Operator](https://infisical.com/docs/documentation/guides/kubernetes-operator)**: Deliver secrets to your Kubernetes workloads and automatically reload deployments.
-- **[Infisical Agent](https://infisical.com/docs/integrations/platforms/infisical-agent)**: Inject secrets into applications without modifying any code logic.
-- **[Honey Tokens](https://infisical.com/docs/documentation/platform/honey-tokens/overview)**: Plant decoy credentials alongside your real secrets, and get an alert as soon as someone tries to use them.
-
-### Secret Scanning
-
-Find secrets that were committed to your code, and block commits that add new ones.
-
-- **[Repository Scanning](https://infisical.com/docs/documentation/platform/secret-scanning/scan-repositories)**: Scan the full history of your [GitHub](https://infisical.com/docs/documentation/platform/secret-scanning/github), [GitLab](https://infisical.com/docs/documentation/platform/secret-scanning/gitlab), and [Bitbucket](https://infisical.com/docs/documentation/platform/secret-scanning/bitbucket) repositories and each new push, then review the [findings](https://infisical.com/docs/documentation/platform/secret-scanning/findings) in Infisical.
-- **[Local Scanning](https://infisical.com/docs/documentation/platform/secret-scanning/scan-locally)**: Scan files, directories, and git history from the CLI, and install a [pre-commit hook](https://infisical.com/docs/documentation/platform/secret-scanning/pre-commit-hook) that blocks any commit containing a secret.
-
-### Certificate Management
-
-Issue, track, and renew X.509 certificates from internal or external CAs, and sign software artifacts.
-
-- **[Internal CA](https://infisical.com/docs/documentation/platform/pki/ca/private-ca)**: Create and manage a private CA hierarchy directly within Infisical.
-- **[External CA](https://infisical.com/docs/documentation/platform/pki/ca/external-ca)**: Integrate with third-party certificate authorities such as Let’s Encrypt, DigiCert, Microsoft AD CS, and more to leverage existing PKI infrastructure or issue publicly trusted certificates.
-- **[Certificate Lifecycle Management](https://infisical.com/docs/documentation/platform/pki/applications/certificates)**: Create certificate [profiles](https://infisical.com/docs/documentation/platform/pki/settings/profiles) and [policies](https://infisical.com/docs/documentation/platform/pki/settings/policies) to control how certificates are issued, including [enrollment methods](https://infisical.com/docs/documentation/platform/pki/applications/enrollment-methods/overview) such as API, ACME, EST, or SCEP. Manage the full lifecycle from issuance to renewal and [revocation](https://infisical.com/docs/documentation/platform/pki/applications/certificates#revocation) with CRL and inventory tracking.
-- **[Certificate Discovery](https://infisical.com/docs/documentation/platform/pki/discovery/overview)**: Scan your network to find certificates and track them in Infisical.
-- **[Certificate Syncs](https://infisical.com/docs/documentation/platform/pki/applications/certificate-syncs/overview)**: Sync certificates to external platforms like [AWS Certificate Manager](https://infisical.com/docs/documentation/platform/pki/applications/certificate-syncs/aws-certificate-manager) and [Azure Key Vault](https://infisical.com/docs/documentation/platform/pki/applications/certificate-syncs/azure-key-vault).
-- **[Alerting](https://infisical.com/docs/documentation/platform/pki/applications/alerting/overview)**: Get notified when certificates are issued, renewed, revoked, or about to expire.
-- **[Code Signing](https://infisical.com/docs/documentation/platform/pki/code-signing/overview)**: Sign software artifacts like containers, installers, and packages with managed code-signing certificates, central approval, and a full audit trail.
-
-### Infisical Key Management System (KMS)
-
-Keep cryptographic keys in Infisical and use them through the API, so your applications never hold the keys.
-
-- **[Cryptographic Keys](https://infisical.com/docs/documentation/platform/kms/keys)**: Create keys in the Infisical UI or through the API, then [rotate](https://infisical.com/docs/documentation/platform/kms/key-rotation), [import, and export](https://infisical.com/docs/documentation/platform/kms/export-import) them.
-- **Cryptographic Operations**: [Encrypt and decrypt](https://infisical.com/docs/documentation/platform/kms/encrypt-decrypt) data, [sign data and verify signatures](https://infisical.com/docs/documentation/platform/kms/sign-verify), and [generate and verify MACs](https://infisical.com/docs/documentation/platform/kms/mac).
-- **[KMIP](https://infisical.com/docs/documentation/platform/kms/kmip)**: Let storage arrays, databases, and other KMIP clients manage their keys in Infisical.
-- **Integrations**: Use your keys for [Kubernetes encryption at rest](https://infisical.com/docs/documentation/platform/kms/kubernetes-encryption) and [Sigstore Cosign](https://infisical.com/docs/documentation/platform/kms/sigstore-cosign) signing.
-
-### Privileged Access Management (PAM)
-
-Manage and secure access to critical infrastructure like databases and servers with policy-based controls, approvals, and full session visibility.
-
-- **[Privileged Access Management](https://infisical.com/docs/documentation/platform/pam/overview)**: Decouple user identity from infrastructure credentials. Users authenticate with their SSO identity while Infisical brokers just-in-time access to resources like [PostgreSQL](https://infisical.com/docs/documentation/platform/pam/accounts/postgresql), [SSH servers](https://infisical.com/docs/documentation/platform/pam/accounts/ssh), [Kubernetes](https://infisical.com/docs/documentation/platform/pam/accounts/kubernetes), [Active Directory](https://infisical.com/docs/documentation/platform/pam/accounts/windows-ad), and more.
-- **[Session Recording](https://infisical.com/docs/documentation/platform/pam/sessions/session-recording)**: Capture and replay privileged sessions for audit and compliance.
-- **[Credential Rotation](https://infisical.com/docs/documentation/platform/pam/product-reference/credential-rotation/overview)**: Rotate the passwords of your PAM accounts on a fixed schedule.
-- **[Web Access](https://infisical.com/docs/documentation/platform/pam/accounts/overview#web-access)**: Connect from the browser to SSH servers, Windows servers over RDP, and databases such as PostgreSQL, MySQL, and Redis.
-- **[Access Requests](https://infisical.com/docs/documentation/platform/pam/access-requests/overview)**: Require approval before a member can use a sensitive account.
-- **[Discovery](https://infisical.com/docs/documentation/platform/pam/discovery/overview)**: Scan Active Directory, databases, and Unix servers for privileged accounts and import them into PAM.
-
-### Agent Vault
-
-Give AI agents access to the APIs they call, like LLM providers, GitHub, and Slack, without ever handing them a real credential.
-
-- **[Agent Vault](https://infisical.com/docs/documentation/platform/agent-vault/overview)**: Agents send requests through a proxy that attaches the real credential at the network boundary, so a prompt-injected agent has no secret to leak. Works with any agent, including [Claude Code](https://infisical.com/docs/documentation/platform/agent-vault/guides/claude-code), [Codex](https://infisical.com/docs/documentation/platform/agent-vault/guides/codex), [OpenCode](https://infisical.com/docs/documentation/platform/agent-vault/guides/opencode), and [agents you build yourself](https://infisical.com/docs/documentation/platform/agent-vault/guides/custom-agent).
-- **[Access Bundles](https://infisical.com/docs/documentation/platform/agent-vault/access-bundles)**: Group the [services](https://infisical.com/docs/documentation/platform/agent-vault/services) an agent can call, each with its host, authentication method, and credential.
-- **[Sessions](https://infisical.com/docs/documentation/platform/agent-vault/sessions)**: Issue time-bound grants scoped to one access bundle, from the [CLI](https://infisical.com/docs/documentation/platform/agent-vault/sessions-cli) for cron jobs, containers, and CI, or from the [API](https://infisical.com/docs/documentation/platform/agent-vault/sessions-api) for each run of your own code.
-- **[Session Logs](https://infisical.com/docs/documentation/platform/agent-vault/session-logs)**: Keep an encrypted record of every request an agent makes, stored in your own Amazon S3 bucket.
-
-### General Platform
-
-Capabilities that span every Infisical product.
-
-- **User Authentication**: Sign users in with [SSO](https://infisical.com/docs/documentation/platform/sso/overview) or [LDAP](https://infisical.com/docs/documentation/platform/ldap/overview), and provision them with [SCIM](https://infisical.com/docs/documentation/platform/scim/overview).
-- **Machine Authentication Methods**: Authenticate machine identities with Infisical using a cloud-native or platform agnostic authentication method ([Kubernetes Auth](https://infisical.com/docs/documentation/platform/identities/kubernetes-auth), [GCP Auth](https://infisical.com/docs/documentation/platform/identities/gcp-auth), [Azure Auth](https://infisical.com/docs/documentation/platform/identities/azure-auth), [AWS Auth](https://infisical.com/docs/documentation/platform/identities/aws-auth), [OIDC Auth](https://infisical.com/docs/documentation/platform/identities/oidc-auth/general), [Universal Auth](https://infisical.com/docs/documentation/platform/identities/universal-auth)).
-- **[Access Controls](https://infisical.com/docs/documentation/platform/access-controls/overview)**: Define advanced authorization controls for users and machine identities with [RBAC](https://infisical.com/docs/documentation/platform/access-controls/role-based-access-controls), [additional privileges](https://infisical.com/docs/documentation/platform/access-controls/additional-privileges), [temporary access](https://infisical.com/docs/documentation/platform/access-controls/temporary-access), [access requests](https://infisical.com/docs/documentation/platform/access-controls/access-requests), [approval workflows](https://infisical.com/docs/documentation/platform/pr-workflows), and more.
-- **[Audit logs](https://infisical.com/docs/documentation/platform/audit-logs)**: Track every action taken on the platform, with optional [audit log streaming](https://infisical.com/docs/documentation/platform/audit-log-streams/audit-log-streams) to external logging providers.
-- **[Gateway](https://infisical.com/docs/documentation/platform/gateways/overview)**: Securely reach private network resources from Infisical without opening inbound connections to your environment.
-- **[Self-hosting](https://infisical.com/docs/self-hosting/overview)**: Deploy Infisical on-prem or cloud with ease; keep data on your own infrastructure.
-- **[Infisical SDK](https://infisical.com/docs/sdks/overview)**: Interact with Infisical via client SDKs ([Node](https://infisical.com/docs/sdks/languages/node), [Python](https://infisical.com/docs/sdks/languages/python), [Go](https://infisical.com/docs/sdks/languages/go), [Ruby](https://infisical.com/docs/sdks/languages/ruby), [Java](https://infisical.com/docs/sdks/languages/java), [.NET](https://infisical.com/docs/sdks/languages/dotnet), [PHP](https://infisical.com/docs/sdks/languages/php), [Rust](https://infisical.com/docs/sdks/languages/rust), [C++](https://infisical.com/docs/sdks/languages/cpp)).
-- **[Infisical CLI](https://infisical.com/docs/cli/overview)**: Interact with Infisical via CLI; useful for injecting secrets into local development and CI/CD pipelines.
-- **[Infisical API](https://infisical.com/docs/api-reference/overview/introduction)**: Interact with Infisical via API.
-
-## Getting started
-
-Check out the [Quickstart Guides](https://infisical.com/docs/documentation/getting-started/overview)
-
-| Use Infisical Cloud                                                                                                                                     | Deploy Infisical on premise                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| The fastest and most reliable way to <br> get started with Infisical is signing up <br> for free to [Infisical Cloud](https://app.infisical.com/login). | <br> View all [deployment options](https://infisical.com/docs/self-hosting/overview) <br><br> Already self-hosting? Plan version upgrades with the [Infisical Upgrade Tool](https://upgrade.infisical.com/). |
-
-### Run Infisical locally
-
-To set up and run Infisical locally, make sure you have [Git](https://git-scm.com/downloads) and [Docker](https://www.docker.com/get-started/) installed on your system.
-
-**Linux/macOS:**
-
-```console
-git clone https://github.com/Infisical/infisical && cd "$(basename $_ .git)" && cp .env.example .env && docker compose -f docker-compose.prod.yml up
+```sh
+npm ci
+npm run setup
+npm run build
+npm start
+npm run status
 ```
 
-**Windows (Command Prompt):**
+`setup`은 데이터 저장소와 첫 설정용 토큰을 준비합니다. 소유자 계정은 다음 순서로 직접 등록합니다.
 
-```console
-git clone https://github.com/Infisical/infisical && cd infisical && copy .env.example .env && docker compose -f docker-compose.prod.yml up
+1. 브라우저에서 [http://127.0.0.1:8088](http://127.0.0.1:8088)을 엽니다.
+2. `.local/keydesk/bootstrap-token` 파일을 직접 확인해 첫 설정 화면에 입력합니다.
+3. 소유자 이름과 12자 이상의 비밀번호를 등록한 뒤 로그인합니다.
+
+토큰 파일은 PowerShell에서 `Get-Content .local\keydesk\bootstrap-token`, macOS·Linux에서 `cat .local/keydesk/bootstrap-token`으로 확인합니다.
+토큰과 인증값을 채팅·이슈·화면 캡처에 공유하지 마세요.
+
+기본 데이터 경로는 `.local/keydesk`입니다. 서버를 실행하는 계정만 접근하도록 권한을 설정하세요.
+`npm start`는 백그라운드에서 실행하며, 중지는 `npm run stop`으로 합니다. 시스템 재부팅 후 자동 시작은 별도로 설정해야 합니다.
+
+처음에는 키와 프로젝트를 등록하세요. 만료 알림은 앱에서 확인할 수 있고, 메일 알림은 SMTP 설정 후 사용할 수 있습니다.
+포트·데이터 경로 변경은 [설정 안내](docs/운영.md#데이터-경로와-포트)를 참고하세요.
+
+## Docker로 실행
+
+Docker Engine과 Compose 플러그인 또는 Docker Desktop을 준비하세요.
+[compose.yaml](compose.yaml)은 화면과 API를 하나의 이미지로 빌드합니다. 프로젝트 루트에서 실행합니다.
+
+```sh
+docker compose up -d --build
+docker compose ps
+docker compose exec keydesk node tools/manage.mjs setup --owner
 ```
 
-Once running, create an account at [http://localhost:80](http://localhost:80).
+마지막 명령에서 소유자 이름과 비밀번호를 직접 등록한 뒤 [http://127.0.0.1:8088](http://127.0.0.1:8088)에서 로그인하세요.
+Docker에서는 첫 계정을 컨테이너 내부의 이 명령으로 만듭니다.
 
-> **Contributing?** Check out our guide to see how to [get started](https://infisical.com/docs/contributing/getting-started/overview).
+SQLite 데이터베이스와 루트 키는 `keydesk-data` 영구 볼륨의 `/data`에 함께 저장됩니다.
+기본 포트는 호스트의 `127.0.0.1:8088`에만 공개됩니다. 일반 중지는 `docker compose stop`으로 합니다.
+`docker compose down -v`는 영구 데이터를 삭제합니다.
 
-### Scan and prevent secret leaks
+업데이트와 컨테이너 백업 방법은 [Docker 운영 안내](docs/운영.md#docker-운영)에 있습니다.
 
-With the [Infisical CLI](https://infisical.com/docs/cli/overview), you can [scan for 140+ secret types](https://infisical.com/docs/documentation/platform/secret-scanning/scan-locally) in your files, directories, and git repositories.
+## 백업과 운영
 
-To scan your full git history, run:
+화면에서 암호화 백업을 내려받거나, 서버를 중지하고 로컬 명령으로 만들 수 있습니다.
 
-```console
-infisical scan --verbose
+```sh
+npm run stop
+npm run backup -- --output "내 백업.keydesk"
+npm start
 ```
 
-To block any commit that contains a secret, install a pre-commit hook:
+명령은 현재 소유자 비밀번호와 별도의 백업 암호를 숨김 입력으로 받습니다.
+백업 암호를 잃으면 복원할 수 없습니다. 복원은 현재 데이터를 교체하므로 대상 경로와 기존 백업을 먼저 확인하세요.
 
-```console
-infisical scan install --pre-commit-hook
+| 운영할 때 필요한 내용          | 안내                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| 시작·중지·업데이트             | [실행 관리](docs/운영.md#시작-중지와-업데이트)                            |
+| 다른 기기로 이전하거나 복구    | [백업과 복원](docs/운영.md#백업과-복원)                                   |
+| 서버를 중지하지 않는 예약 백업 | [예약 백업과 보존 개수](docs/운영.md#예약-백업과-보존-개수)               |
+| 소유자 비밀번호 재설정         | [비밀번호 재설정과 자동화](docs/운영.md#비밀번호-재설정과-자동화)         |
+| 외부 게이트웨이와 TLS 설정     | [게이트웨이만 외부에 공개하기](docs/운영.md#게이트웨이만-외부에-공개하기) |
+
+## 개발
+
+```sh
+npm run dev
 ```
 
-To scan every push to your GitHub, GitLab, and Bitbucket repositories, see [Secret Scanning](https://infisical.com/docs/documentation/platform/secret-scanning/overview).
+API와 화면 개발 서버를 함께 실행합니다. 개발 화면은 [http://127.0.0.1:5173](http://127.0.0.1:5173)이며, 종료는 `Ctrl+C`입니다.
 
-## Open-source vs. paid
+| 명령                | 용도                   |
+| ------------------- | ---------------------- |
+| `npm test`          | 테스트 실행            |
+| `npm run typecheck` | 워크스페이스 타입 검사 |
+| `npm run build`     | 웹 빌드와 타입 검사    |
 
-This repo is available under the [MIT expat license](https://github.com/Infisical/infisical/blob/main/LICENSE), with the exception of the `ee` directories, which contain premium enterprise features requiring an Infisical license.
+서버는 `apps/server`, 웹은 `apps/web`, 공용 HTTP 형식은 `packages/contracts`, 관리 명령은 `tools`에 있습니다.
 
-If you are interested in managed Infisical Cloud or self-hosted Enterprise Offering, take a look at [our website](https://infisical.com/) or [book a meeting with us](https://infisical.cal.com/vlad/infisical-demo).
+## 라이선스
 
-## Security
-
-Please do not file GitHub issues or post on our public forum for security vulnerabilities, as they are public!
-
-Infisical takes security issues very seriously. If you have any concerns about Infisical or believe you have uncovered a vulnerability, please report it privately through our vulnerability disclosure policy at <https://infisical.com/vulnerability-disclosure>. Scope, safe harbour and disclosure terms are all set out there. See also [SECURITY.md](./SECURITY.md).
-
-Please report any security problems to us before disclosing them publicly. For compliance documentation and security questionnaires, use security@infisical.com instead.
-
-## Contributing
-
-Whether it's big or small, we love contributions. Check out our guide to see how to [get started](https://infisical.com/docs/contributing/getting-started/overview).
-
-Not sure where to get started? You can:
-
-- Join our <a href="https://community.infisical.com/">community</a>, and ask us any questions there.
-
-## We are hiring!
-
-If you're reading this, there is a strong chance you like the products we created.
-
-You might also make a great addition to our team. We're growing fast and would love for you to [join us](https://infisical.com/careers).
+[MIT](LICENSE) · Copyright (c) 2026 thisNorm

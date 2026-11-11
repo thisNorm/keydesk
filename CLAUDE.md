@@ -1,5 +1,3 @@
-# CLAUDE.md
+# Keydesk
 
-Agent guidance for this repository lives in AGENTS.md files: the root [AGENTS.md](AGENTS.md) and one in each package directory.
-
-@AGENTS.md
+개발 규칙과 검증 명령은 [AGENTS.md](AGENTS.md), 화면 기준은 [DESIGN.md](DESIGN.md)를 따른다.

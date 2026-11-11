@@ -1,0 +1,12 @@
+# Caddy는 Keydesk와 같은 호스트에서 실행한다.
+# 관리 화면은 로컬의 http://127.0.0.1:8088 에서만 사용한다.
+# 실제 도메인을 사용하고 DNS를 서버로 지정한 뒤 80/443 포트를 연다.
+gateway.example.com {
+    @gateway path /gw/*
+    handle @gateway {
+        reverse_proxy 127.0.0.1:8088
+    }
+    handle {
+        respond "허용되지 않은 경로입니다." 404
+    }
+}
