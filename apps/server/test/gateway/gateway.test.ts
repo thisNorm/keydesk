@@ -2,6 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { createServer } from 'node:http';
+import { createServer as createHttpsServer } from 'node:https';
+import { readFileSync } from 'node:fs';
+import { getCACertificates, setDefaultCACertificates } from 'node:tls';
 import { once } from 'node:events';
 import Fastify from 'fastify';
 import { registerGateway } from '../../src/gateway/index.ts';
@@ -12,8 +15,23 @@ async function fixture(
   handler: Parameters<typeof createServer>[0] extends never ? never : any = (_req: any, res: any) =>
     res.end('{"ok":true}'),
   options: GatewayOptions = {},
+  secure = false,
 ) {
-  const provider = createServer(handler);
+  const previousRoots = secure ? getCACertificates() : undefined;
+  const certificate = secure
+    ? readFileSync(new URL('../fixtures/query-relay-cert.pem', import.meta.url), 'utf8')
+    : undefined;
+  // Trust this disposable fixture certificate without disabling TLS validation.
+  if (certificate) setDefaultCACertificates([...previousRoots!, certificate]);
+  const provider = certificate
+    ? createHttpsServer(
+        {
+          cert: certificate,
+          key: readFileSync(new URL('../fixtures/query-relay-key.pem', import.meta.url)),
+        },
+        handler,
+      )
+    : createServer(handler);
   provider.listen(0, '127.0.0.1');
   await once(provider, 'listening');
   const port = (provider.address() as any).port;
@@ -60,7 +78,7 @@ async function fixture(
         slug: 'test',
         projectId: 'p',
         credentialId: 'cred',
-        baseUrl: `http://127.0.0.1:${port}/v1/`,
+        baseUrl: `${secure ? 'https' : 'http'}://127.0.0.1:${port}/v1/`,
         allowedMethods: ['GET', 'POST'],
         adapter: 'openai',
         enabled: true,
@@ -100,9 +118,171 @@ async function fixture(
       await app.close();
       await new Promise<void>((r) => provider.close(() => r()));
       db.close();
+      if (previousRoots) setDefaultCACertificates(previousRoots);
     },
   };
 }
+test('generic auth bindings inject paired headers and custom prefixes without caller override', async () => {
+  let received: any;
+  const f = await fixture((req: any, res: any) => {
+    received = req.headers;
+    res.end('{"ok":true}');
+  });
+  try {
+    f.db.prepare("INSERT INTO credentials VALUES('second','entry','{}')").run();
+    const original = f.context.getCredential;
+    f.context.getCredential = (id) => ({
+      ...original(id),
+      id,
+      value: id === 'second' ? 'secondary-test-key' : 'provider-secret',
+    });
+    const route = await f.route({
+      adapter: 'generic',
+      authBindings: [
+        { credentialId: 'cred', location: 'header', name: 'X-NCP-APIGW-API-KEY' },
+        { credentialId: 'second', location: 'header', name: 'X-NCP-APIGW-API-KEY-ID' },
+        { credentialId: 'cred', location: 'header', name: 'Authorization', prefix: 'KakaoAK' },
+      ],
+    });
+    const c = await f.client([route.id]);
+    const response = await f.app.inject({
+      url: '/gw/test/models',
+      headers: {
+        authorization: `Bearer ${c.token}`,
+        'x-ncp-apigw-api-key': 'caller-key',
+        'x-ncp-apigw-api-key-id': 'caller-id',
+      },
+    });
+    assert.equal(response.statusCode, 200, response.body);
+    assert.equal(received['x-ncp-apigw-api-key'], 'provider-secret');
+    assert.equal(received['x-ncp-apigw-api-key-id'], 'secondary-test-key');
+    assert.equal(received.authorization, 'KakaoAK provider-secret');
+    assert.equal(JSON.stringify(route).includes('provider-secret'), false);
+    assert.equal(
+      JSON.stringify(f.db.prepare('SELECT * FROM gateway_usage').all()).includes(
+        'secondary-test-key',
+      ),
+      false,
+    );
+  } finally {
+    await f.close();
+  }
+});
+test('query auth bindings encode once and replace caller keys without forwarding client authorization', async () => {
+  let received: any;
+  const f = await fixture(
+    (req: any, res: any) => {
+      received = {
+        query: new URL(req.url, 'https://example.invalid').searchParams,
+        headers: req.headers,
+      };
+      res.end('{"ok":true}');
+    },
+    {},
+    true,
+  );
+  try {
+    const secret = 'test key+/=%한글';
+    const original = f.context.getCredential;
+    f.context.getCredential = (id) => ({ ...original(id), value: secret });
+    const route = await f.route({
+      adapter: 'generic',
+      authBindings: [{ credentialId: 'cred', location: 'query', name: 'serviceKey' }],
+    });
+    const c = await f.client([route.id]);
+    const response = await f.app.inject({
+      url: '/gw/test/cities?serviceKey=caller&serviceKey=duplicate&SERVICEKEY=upper&city=seoul',
+      headers: { authorization: `Bearer ${c.token}` },
+    });
+    assert.equal(response.statusCode, 200, response.body);
+    assert.deepEqual(received.query.getAll('serviceKey'), [secret]);
+    assert.equal(received.query.has('SERVICEKEY'), false);
+    assert.equal(received.query.get('city'), 'seoul');
+    assert.equal(received.headers.authorization, undefined);
+    assert.equal(
+      JSON.stringify(f.db.prepare('SELECT * FROM gateway_usage').all()).includes(secret),
+      false,
+    );
+  } finally {
+    await f.close();
+  }
+});
+test('auth bindings reject unsafe names, duplicates, mismatched primary and foreign credentials', async () => {
+  const f = await fixture();
+  try {
+    f.db.exec(
+      "INSERT INTO credentials VALUES('foreign','foreign-entry','{}'); INSERT INTO entry_projects VALUES('foreign-entry','other');",
+    );
+    const route = await f.route({ adapter: 'generic' });
+    const binding = { credentialId: 'cred', location: 'header', name: 'X-API-Key' };
+    const cases = [
+      { authBindings: [] },
+      { authBindings: [{ ...binding, name: 'Host' }] },
+      { authBindings: [{ ...binding, name: 'Cookie' }] },
+      { authBindings: [{ ...binding, prefix: 'bad\r\nprefix' }] },
+      { authBindings: [binding, { ...binding, name: 'x-api-key' }] },
+      { authBindings: [{ ...binding, credentialId: 'foreign' }] },
+      { authBindings: [binding, { ...binding, name: 'X-Other', credentialId: 'foreign' }] },
+      { authBindings: [binding, { ...binding, name: 'X-Other', credentialId: 'missing' }] },
+      { authBindings: [{ ...binding, location: 'query', name: 'bad&name' }] },
+      { baseUrl: 'not-a-url', authBindings: [{ ...binding, location: 'query', name: 'apiKey' }] },
+      { authBindings: [{ ...binding, location: 'query', prefix: 'Bearer' }] },
+      {
+        baseUrl: 'http://api.example.com/',
+        allowPrivateNetwork: false,
+        authBindings: [{ ...binding, location: 'query', name: 'apiKey' }],
+      },
+      {
+        baseUrl: 'http://127.0.0.1:8088/',
+        allowPrivateNetwork: true,
+        authBindings: [{ ...binding, location: 'query', name: 'apiKey' }],
+      },
+      { adapter: 'openai', authBindings: [binding] },
+    ];
+    for (const extra of cases) {
+      const response = await f.app.inject({
+        method: 'PUT',
+        url: `/api/gateway/routes/${route.id}`,
+        payload: { ...route, ...extra },
+      });
+      assert.equal(response.statusCode, 400, JSON.stringify(extra));
+    }
+  } finally {
+    await f.close();
+  }
+});
+test('inactive additional auth bindings never dispatch provider requests', async () => {
+  let dispatched = 0;
+  const f = await fixture((_req: any, res: any) => {
+    dispatched++;
+    res.end('{}');
+  });
+  try {
+    f.db.prepare("INSERT INTO credentials VALUES('second','entry','{}')").run();
+    const original = f.context.getCredential;
+    f.context.getCredential = (id) => ({
+      ...original(id),
+      id,
+      status: id === 'second' ? 'paused' : 'active',
+    });
+    const route = await f.route({
+      adapter: 'generic',
+      authBindings: [
+        { credentialId: 'cred', location: 'header', name: 'X-Key' },
+        { credentialId: 'second', location: 'header', name: 'X-ID' },
+      ],
+    });
+    const c = await f.client([route.id]);
+    const response = await f.app.inject({
+      url: '/gw/test/models',
+      headers: { authorization: `Bearer ${c.token}` },
+    });
+    assert.equal(response.statusCode, 403, response.body);
+    assert.equal(dispatched, 0);
+  } finally {
+    await f.close();
+  }
+});
 test('client tokens are one-time, hashed, scoped, expiring and revocable', async () => {
   const f = await fixture();
   try {

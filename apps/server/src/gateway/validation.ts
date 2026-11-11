@@ -42,6 +42,30 @@ export function allowedAuthHeader(value: string): boolean {
     !header.startsWith('x-forwarded-')
   );
 }
+const authBindingSchema = z
+  .object({
+    credentialId: id,
+    location: z.enum(['header', 'query']),
+    name: z.string().min(1).max(64),
+    prefix: z
+      .string()
+      .regex(/^[A-Za-z][A-Za-z0-9._-]{0,31}$/)
+      .optional(),
+  })
+  .strict()
+  .superRefine((binding, ctx) => {
+    if (
+      binding.location === 'header'
+        ? !allowedAuthHeader(binding.name)
+        : !/^[A-Za-z][A-Za-z0-9_.-]{0,63}$/.test(binding.name)
+    )
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: '인증 필드 이름이 올바르지 않습니다.' });
+    if (binding.location === 'query' && binding.prefix !== undefined)
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: '쿼리 인증에는 접두어를 사용할 수 없습니다.',
+      });
+  });
 export const routeSchema = z
   .object({
     name: z.string().trim().min(1).max(100),
@@ -58,8 +82,32 @@ export const routeSchema = z
     allowPrivateNetwork: z.boolean(),
     authHeader: z.string().min(1).max(64).refine(allowedAuthHeader).optional(),
     authScheme: z.enum(['bearer', 'raw']).optional(),
+    authBindings: z.array(authBindingSchema).min(1).max(8).optional(),
   })
   .superRefine((route, ctx) => {
+    if (route.authBindings) {
+      if (
+        route.authBindings.some((binding) => binding.location === 'query') &&
+        URL.canParse(route.baseUrl) &&
+        new URL(route.baseUrl).protocol !== 'https:'
+      )
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '쿼리 인증에는 HTTPS 목적지가 필요합니다.',
+        });
+      const names = route.authBindings.map(
+        (binding) => binding.location + ':' + binding.name.toLowerCase(),
+      );
+      if (
+        route.adapter !== 'generic' ||
+        route.authBindings[0]?.credentialId !== route.credentialId ||
+        new Set(names).size !== names.length
+      )
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '인증 필드의 제공사·대표 인증값·중복을 확인해 주세요.',
+        });
+    }
     if (route.adapter === 'generic') return;
     const header = route.adapter === 'anthropic' ? 'x-api-key' : 'authorization';
     const scheme = route.adapter === 'anthropic' ? 'raw' : 'bearer';

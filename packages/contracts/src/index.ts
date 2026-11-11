@@ -86,6 +86,12 @@ export interface VaultNotification {
   mailStatus: 'unconfigured' | 'pending' | 'sent' | 'failed';
 }
 export type Adapter = 'generic' | 'openai' | 'anthropic';
+export interface GatewayAuthBinding {
+  credentialId: string;
+  location: 'header' | 'query';
+  name: string;
+  prefix?: string;
+}
 export interface GatewayRouteDraft {
   name: string;
   slug: string;
@@ -98,6 +104,7 @@ export interface GatewayRouteDraft {
   allowPrivateNetwork: boolean;
   authHeader?: string;
   authScheme?: 'bearer' | 'raw';
+  authBindings?: GatewayAuthBinding[];
 }
 export interface GatewayRoute extends GatewayRouteDraft {
   id: string;

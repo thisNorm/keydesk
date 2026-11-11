@@ -4,6 +4,7 @@ import type {
   Project,
   GatewayRoute,
   GatewayRouteDraft,
+  GatewayAuthBinding,
   GatewayClient,
   GatewayClientDraft,
   ModelPrice,
@@ -180,7 +181,14 @@ export function GatewayPage({
                         <div className="purpose">
                           {r.allowedMethods.join(', ')} ·{' '}
                           {r.adapter === 'generic'
-                            ? `${r.authHeader ?? 'Authorization'} / ${r.authScheme === 'raw' ? '키 값 그대로' : 'Bearer'}`
+                            ? r.authBindings
+                              ? r.authBindings
+                                  .map(
+                                    (binding) =>
+                                      `${binding.location === 'query' ? '쿼리' : '헤더'} ${binding.name}`,
+                                  )
+                                  .join(' · ')
+                              : `${r.authHeader ?? 'Authorization'} / ${r.authScheme === 'raw' ? '키 값 그대로' : 'Bearer'}`
                             : r.adapter}
                         </div>
                       </td>
@@ -221,7 +229,12 @@ export function GatewayPage({
               발급한 토큰은 한 번만 표시됩니다. 일일 호출 수는 전송 전 제한하며 토큰·비용은 사용량
               알림 기준입니다.
             </p>
-            <div className="table-scroll" tabIndex={0} role="region" aria-label="클라이언트 키 목록">
+            <div
+              className="table-scroll"
+              tabIndex={0}
+              role="region"
+              aria-label="클라이언트 키 목록"
+            >
               <table className="table">
                 <thead>
                   <tr>
@@ -494,6 +507,17 @@ function RouteEditor({
     );
   const set = (key: keyof GatewayRouteDraft, value: unknown) =>
     setDraft((d) => ({ ...d, [key]: value }));
+  const setBindings = (bindings: GatewayAuthBinding[]) =>
+    setDraft((d) => {
+      const { authHeader, authScheme, ...base } = d;
+      return { ...base, authBindings: bindings, credentialId: bindings[0].credentialId };
+    });
+  const updateBinding = (index: number, change: Partial<GatewayAuthBinding>) =>
+    setBindings(
+      draft.authBindings!.map((binding, position) =>
+        position === index ? { ...binding, ...change } : binding,
+      ),
+    );
   return (
     <Modal
       title={route ? '중계 경로 수정' : '중계 경로 추가'}
@@ -506,6 +530,11 @@ function RouteEditor({
         submitDisabled={
           !draft.projectId ||
           !credentials.some((credential) => credential.id === draft.credentialId) ||
+          !!draft.authBindings?.some(
+            (binding) =>
+              !binding.name ||
+              !credentials.some((credential) => credential.id === binding.credentialId),
+          ) ||
           !draft.allowedMethods.length
         }
         onSubmit={async () => {
@@ -547,6 +576,7 @@ function RouteEditor({
               onChange={(e) => {
                 set('projectId', e.target.value);
                 set('credentialId', '');
+                set('authBindings', undefined);
               }}
             >
               <option value="">선택</option>
@@ -557,30 +587,32 @@ function RouteEditor({
               ))}
             </select>
           </Field>
-          <Field
-            label="주입할 인증값"
-            hint={
-              !draft.projectId
-                ? '프로젝트를 먼저 선택해 주세요.'
-                : !credentials.length
-                  ? '선택한 프로젝트에 사용 중인 인증값이 없습니다. 보관함에서 인증값을 등록하고 프로젝트에 연결해 주세요.'
-                  : undefined
-            }
-          >
-            <select
-              required
-              disabled={!draft.projectId || !credentials.length}
-              value={draft.credentialId}
-              onChange={(e) => set('credentialId', e.target.value)}
+          {!(draft.adapter === 'generic' && draft.authBindings) && (
+            <Field
+              label="주입할 인증값"
+              hint={
+                !draft.projectId
+                  ? '프로젝트를 먼저 선택해 주세요.'
+                  : !credentials.length
+                    ? '선택한 프로젝트에 사용 중인 인증값이 없습니다. 보관함에서 인증값을 등록하고 프로젝트에 연결해 주세요.'
+                    : undefined
+              }
             >
-              <option value="">선택</option>
-              {credentials.map((credential) => (
-                <option key={credential.id} value={credential.id}>
-                  {credential.label}
-                </option>
-              ))}
-            </select>
-          </Field>
+              <select
+                required
+                disabled={!draft.projectId || !credentials.length}
+                value={draft.credentialId}
+                onChange={(e) => set('credentialId', e.target.value)}
+              >
+                <option value="">선택</option>
+                {credentials.map((credential) => (
+                  <option key={credential.id} value={credential.id}>
+                    {credential.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
         </div>
         <Field label="목적지 기본 주소">
           <input
@@ -592,34 +624,150 @@ function RouteEditor({
           />
         </Field>
         <Field label="사용량 해석기">
-          <select value={draft.adapter} onChange={(e) => set('adapter', e.target.value)}>
+          <select
+            value={draft.adapter}
+            onChange={(e) => {
+              set('adapter', e.target.value);
+              set('authBindings', undefined);
+            }}
+          >
             <option value="generic">일반 REST (토큰 미확인)</option>
             <option value="openai">OpenAI</option>
             <option value="anthropic">Anthropic</option>
           </select>
         </Field>
-        {draft.adapter === 'generic' && (
-          <div className="form-grid">
-            <Field
-              label="인증 헤더"
-              hint="예: Authorization 또는 X-API-Key. 쿠키·전송 제어 헤더는 사용할 수 없습니다."
-            >
-              <input
-                required
-                maxLength={64}
-                value={draft.authHeader ?? 'Authorization'}
-                onChange={(e) => set('authHeader', e.target.value)}
-              />
-            </Field>
-            <Field label="인증값 형식">
-              <select
-                value={draft.authScheme ?? 'bearer'}
-                onChange={(e) => set('authScheme', e.target.value)}
+        {draft.adapter === 'generic' && !draft.authBindings && (
+          <>
+            <div className="form-grid">
+              <Field
+                label="인증 헤더"
+                hint="예: Authorization 또는 X-API-Key. 쿠키·전송 제어 헤더는 사용할 수 없습니다."
               >
-                <option value="bearer">Bearer 접두어</option>
-                <option value="raw">키 값 그대로</option>
-              </select>
-            </Field>
+                <input
+                  required
+                  maxLength={64}
+                  value={draft.authHeader ?? 'Authorization'}
+                  onChange={(e) => set('authHeader', e.target.value)}
+                />
+              </Field>
+              <Field label="인증값 형식">
+                <select
+                  value={draft.authScheme ?? 'bearer'}
+                  onChange={(e) => set('authScheme', e.target.value)}
+                >
+                  <option value="bearer">Bearer 접두어</option>
+                  <option value="raw">키 값 그대로</option>
+                </select>
+              </Field>
+            </div>
+            <button
+              type="button"
+              disabled={!draft.credentialId}
+              onClick={() =>
+                setBindings([
+                  {
+                    credentialId: draft.credentialId,
+                    location: 'header',
+                    name: draft.authHeader ?? 'Authorization',
+                    ...(draft.authScheme === 'raw' ? {} : { prefix: 'Bearer' }),
+                  },
+                ])
+              }
+            >
+              여러 인증 헤더·쿼리 설정
+            </button>
+          </>
+        )}
+        {draft.adapter === 'generic' && draft.authBindings && (
+          <div role="group" aria-label="제공사 인증 필드">
+            <h3>제공사 인증 필드</h3>
+            <p className="hint">
+              보관함의 인증값을 제공사 요청에 추가합니다. 첫 번째 인증값을 사용량 기록에 표시합니다.
+            </p>
+            {draft.authBindings.map((binding, index) => (
+              <div key={index}>
+                <div className="form-grid">
+                  <Field label={`인증값 ${index + 1}`}>
+                    <select
+                      required
+                      value={binding.credentialId}
+                      onChange={(e) => updateBinding(index, { credentialId: e.target.value })}
+                    >
+                      <option value="">선택</option>
+                      {credentials.map((credential) => (
+                        <option key={credential.id} value={credential.id}>
+                          {credential.label}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field label={`전달 위치 ${index + 1}`}>
+                    <select
+                      value={binding.location}
+                      onChange={(e) =>
+                        updateBinding(index, {
+                          location: e.target.value as GatewayAuthBinding['location'],
+                          prefix: undefined,
+                        })
+                      }
+                    >
+                      <option value="header">헤더</option>
+                      <option value="query">쿼리 파라미터</option>
+                    </select>
+                  </Field>
+                  <Field
+                    label={`필드 이름 ${index + 1}`}
+                    hint={
+                      binding.location === 'query'
+                        ? '예: apiKey, serviceKey'
+                        : '예: Authorization, X-API-Key'
+                    }
+                  >
+                    <input
+                      required
+                      maxLength={64}
+                      value={binding.name}
+                      onChange={(e) => updateBinding(index, { name: e.target.value })}
+                    />
+                  </Field>
+                  {binding.location === 'header' && (
+                    <Field
+                      label={`접두어 ${index + 1}`}
+                      hint="예: Bearer, KakaoAK. 키 값만 보내려면 비워두세요."
+                    >
+                      <input
+                        maxLength={32}
+                        value={binding.prefix ?? ''}
+                        onChange={(e) =>
+                          updateBinding(index, { prefix: e.target.value || undefined })
+                        }
+                      />
+                    </Field>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  disabled={draft.authBindings!.length === 1}
+                  onClick={() =>
+                    setBindings(draft.authBindings!.filter((_, position) => position !== index))
+                  }
+                >
+                  인증 필드 {index + 1} 삭제
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              disabled={draft.authBindings.length >= 8}
+              onClick={() =>
+                setBindings([
+                  ...draft.authBindings!,
+                  { credentialId: '', location: 'header', name: '' },
+                ])
+              }
+            >
+              인증 필드 추가
+            </button>
           </div>
         )}
         <div className="field" role="group" aria-label="허용할 메서드">
@@ -1022,7 +1170,12 @@ export function UsagePage({ projects, zone }: { projects: Project[]; zone: strin
           <p className="muted">
             아래에는 최근 1,000개까지 표시합니다. 토큰 사용량과 비용의 미확인은 각각 구분합니다.
           </p>
-          <div className="table-scroll" tabIndex={0} role="region" aria-label="사용량과 비용 호출 기록">
+          <div
+            className="table-scroll"
+            tabIndex={0}
+            role="region"
+            aria-label="사용량과 비용 호출 기록"
+          >
             <table className="table">
               <thead>
                 <tr>

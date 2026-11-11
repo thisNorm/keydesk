@@ -1,12 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import type { Credential, Entry } from '@keydesk/contracts';
+import type { Credential, Entry, GatewayRoute } from '@keydesk/contracts';
 import type { Storage } from './db.ts';
 import { transaction, tableExists } from './db.ts';
 import { encrypt, decrypt } from './crypto.ts';
 import { validDate } from './dates.ts';
 import { HttpError, invalid, missing } from './errors.ts';
+import { routeCredentialIds } from './gateway/authentication.ts';
 const text = z.string().max(10000);
 const url = z
   .string()
@@ -93,17 +94,24 @@ export function writeEntry(storage: Storage, raw: unknown, now: () => Date, id?:
   for (const project of body.projectIds)
     if (!db.prepare('SELECT id FROM projects WHERE id=?').get(project))
       invalid('연결할 프로젝트를 찾을 수 없습니다.');
-  if (id && tableExists(db, 'gateway_routes'))
-    for (const route of db
-      .prepare(
-        'SELECT r.project_id FROM gateway_routes r JOIN credentials c ON c.id=r.credential_id WHERE c.entry_id=?',
+  if (id && tableExists(db, 'gateway_routes')) {
+    const entryCredentials = new Set(
+      (db.prepare('SELECT id FROM credentials WHERE entry_id=?').all(id) as { id: string }[]).map(
+        (row) => row.id,
+      ),
+    );
+    for (const row of db.prepare('SELECT json FROM gateway_routes').all() as { json: string }[]) {
+      const route = JSON.parse(row.json) as GatewayRoute;
+      if (
+        routeCredentialIds(route).some((credentialId) => entryCredentials.has(credentialId)) &&
+        !body.projectIds.includes(route.projectId)
       )
-      .all(id) as any[])
-      if (!body.projectIds.includes(route.project_id))
         throw new HttpError(
           409,
           '게이트웨이 경로에서 사용하는 프로젝트 연결입니다. 경로를 먼저 변경해 주세요.',
         );
+    }
+  }
   const old = oldRow ? JSON.parse(oldRow.json) : undefined;
   const entryId = id || randomUUID(),
     at = now().toISOString();
@@ -186,7 +194,9 @@ export function writeEntry(storage: Storage, raw: unknown, now: () => Date, id?:
 function assertCredentialUnreferenced(storage: Storage, id: string) {
   if (
     tableExists(storage.db, 'gateway_routes') &&
-    storage.db.prepare('SELECT id FROM gateway_routes WHERE credential_id=?').get(id)
+    (storage.db.prepare('SELECT json FROM gateway_routes').all() as { json: string }[]).some(
+      (row) => routeCredentialIds(JSON.parse(row.json)).includes(id),
+    )
   )
     throw new HttpError(
       409,

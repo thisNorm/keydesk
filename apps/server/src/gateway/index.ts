@@ -28,6 +28,7 @@ import {
   validateBase,
 } from './transport.ts';
 import { GatewayAdmission } from './limits.ts';
+import { authenticationBindings, routeCredentialIds } from './authentication.ts';
 import {
   UsageParser,
   priceCost,
@@ -105,7 +106,8 @@ export async function registerGateway(
   }
   function checkRoute(draft: any, id?: string) {
     project(draft.projectId);
-    credentialScope(draft.credentialId, draft.projectId);
+    for (const credentialId of routeCredentialIds(draft))
+      credentialScope(credentialId, draft.projectId);
     validateBase(draft.baseUrl, draft.allowPrivateNetwork);
     if (all<GatewayRoute>('gateway_routes').some((r) => r.slug === draft.slug && r.id !== id))
       bad('이미 사용 중인 경로 별칭입니다.', 409);
@@ -296,6 +298,7 @@ export async function registerGateway(
     route: GatewayRoute;
     client: GatewayClient;
     credential: ReturnType<CoreContext['getCredential']>;
+    credentials: Map<string, ReturnType<CoreContext['getCredential']>>;
   } {
     const bearer = req.headers.authorization;
     if (typeof bearer !== 'string' || !/^Bearer kd_[A-Za-z0-9_-]{43}$/.test(bearer))
@@ -318,17 +321,25 @@ export async function registerGateway(
     )
       bad('허용되지 않는 중계 경로입니다.', 403);
     if (!route.allowedMethods.includes(req.method)) bad('허용되지 않는 요청 메서드입니다.', 405);
-    credentialScope(route.credentialId, route.projectId);
-    const credential = context.getCredential(route.credentialId);
-    if (
-      credential.status !== 'active' ||
-      expired(credential.expiresAt, context.now(), context.getSettings().timeZone)
-    )
-      bad('사용할 수 없는 제공사 인증값입니다.', 403);
+    const credentials = new Map(
+      routeCredentialIds(route).map((credentialId) => {
+        credentialScope(credentialId, route.projectId);
+        const credential = context.getCredential(credentialId);
+        if (
+          credential.status !== 'active' ||
+          expired(credential.expiresAt, context.now(), context.getSettings().timeZone)
+        )
+          bad('사용할 수 없는 제공사 인증값입니다.', 403);
+        if (/[\r\n]/.test(credential.value)) bad('제공사 인증값이 올바르지 않습니다.', 502);
+        return [credentialId, credential] as const;
+      }),
+    );
+    const credential = credentials.get(route.credentialId)!;
     return {
       route,
       client,
       credential,
+      credentials,
     };
   }
   const admission = new GatewayAdmission(() => context.now().getTime(), options.limits);
@@ -393,7 +404,7 @@ export async function registerGateway(
       authorized = authorize(req);
       if (JSON.stringify(authorized.route) !== previousRoute)
         bad('경로 설정이 변경되었습니다. 다시 요청해 주세요.', 409);
-      const { route, client, credential } = authorized;
+      const { route, client, credential, credentials } = authorized;
       let body: Buffer | undefined;
       if (req.body !== undefined) {
         if (Buffer.isBuffer(req.body)) body = req.body;
@@ -401,7 +412,6 @@ export async function registerGateway(
         else body = Buffer.from(JSON.stringify(req.body));
         if (body.length > MAX_REQUEST) bad('요청 크기 제한을 초과했습니다.', 413);
       }
-      if (/[\r\n]/.test(credential.value)) bad('제공사 인증값이 올바르지 않습니다.', 502);
       const day = localDay(context.now(), context.getSettings().timeZone);
       context.db.prepare('INSERT OR IGNORE INTO gateway_daily VALUES(?,?,0)').run(client.id, day);
       const admitted = context.db
@@ -433,16 +443,23 @@ export async function registerGateway(
         const value = req.headers[key];
         if (typeof value === 'string') headers[key] = value;
       }
+      for (const binding of authenticationBindings(route)) {
+        const value = credentials.get(binding.credentialId)!.value;
+        if (binding.location === 'query') {
+          for (const name of [...url.searchParams.keys()])
+            if (name.toLowerCase() === binding.name.toLowerCase()) url.searchParams.delete(name);
+          url.searchParams.set(binding.name, value);
+        } else {
+          headers[binding.name.toLowerCase()] =
+            (binding.prefix ? binding.prefix + ' ' : '') + value;
+        }
+      }
       if (route.adapter === 'anthropic') {
-        headers['x-api-key'] = credential.value;
         headers['anthropic-version'] =
           typeof req.headers['anthropic-version'] === 'string'
             ? req.headers['anthropic-version']
             : '2023-06-01';
-      } else if (route.adapter === 'generic')
-        headers[(route.authHeader ?? 'authorization').toLowerCase()] =
-          (route.authScheme === 'raw' ? '' : 'Bearer ') + credential.value;
-      else headers.authorization = 'Bearer ' + credential.value;
+      }
       if (body) headers['content-length'] = String(body.length);
       headers['accept-encoding'] = 'identity';
       let statusCode: number | null = null;

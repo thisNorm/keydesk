@@ -20,6 +20,7 @@ import { settingsSchema } from './settings.ts';
 import { HttpError } from './errors.ts';
 import { routeSchema, clientSchema, priceSchema } from './gateway/validation.ts';
 import { validateBase } from './gateway/transport.ts';
+import { routeCredentialIds } from './gateway/authentication.ts';
 const MAX_BYTES = 16 * 1024 * 1024;
 const TABLES = [
   'projects',
@@ -201,17 +202,18 @@ function verifyCandidate(storage: Storage, candidate: DatabaseSync) {
   }
   if (tableExists(candidate, 'gateway_routes'))
     for (const row of candidate.prepare('SELECT * FROM gateway_routes').all() as Row[]) {
-      if (
-        !candidate
-          .prepare(
-            'SELECT 1 FROM credentials c JOIN entry_projects p ON p.entry_id=c.entry_id WHERE c.id=? AND p.project_id=?',
-          )
-          .get(row.credential_id, row.project_id)
-      )
-        throw new Error('gateway membership');
       const route = json(row);
       const { id: routeId, createdAt, updatedAt, ...draft } = route;
       const validated = routeSchema.parse(draft);
+      for (const credentialId of routeCredentialIds(validated))
+        if (
+          !candidate
+            .prepare(
+              'SELECT 1 FROM credentials c JOIN entry_projects p ON p.entry_id=c.entry_id WHERE c.id=? AND p.project_id=?',
+            )
+            .get(credentialId, row.project_id)
+        )
+          throw new Error('gateway membership');
       z.object({ id, createdAt: stamp, updatedAt: stamp }).parse({
         id: routeId,
         createdAt,

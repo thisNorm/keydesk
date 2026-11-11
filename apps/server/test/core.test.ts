@@ -55,6 +55,112 @@ function draft(value = 'provider-secret-unique', expiresAt = '2026-12-05') {
     ],
   };
 }
+test('additional gateway auth references prevent unlink and deletion and survive validated backups', async (t) => {
+  const { derive, decrypt, encrypt } = await import('../src/crypto.ts');
+  const { app, dataDir } = await fixture(t);
+  const auth = await owner(app, dataDir);
+  const project = (
+    await app.inject({
+      method: 'POST',
+      url: '/api/projects',
+      headers: auth.headers,
+      payload: { name: '연결 테스트' },
+    })
+  ).json().project;
+  const entries: any[] = [];
+  for (const name of ['대표 키', '보조 키']) {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/entries',
+      headers: auth.headers,
+      payload: { ...draft(name + '-dummy-secret'), name, projectIds: [project.id] },
+    });
+    assert.equal(response.statusCode, 200, response.body);
+    entries.push(response.json().entry);
+  }
+  const authBindings = entries.map((entry, i) => ({
+    credentialId: entry.credentials[0].id,
+    location: 'header',
+    name: i ? 'X-Client-ID' : 'X-Client-Secret',
+  }));
+  const response = await app.inject({
+    method: 'POST',
+    url: '/api/gateway/routes',
+    headers: auth.headers,
+    payload: {
+      name: '복수 인증',
+      slug: 'paired',
+      projectId: project.id,
+      credentialId: authBindings[0].credentialId,
+      baseUrl: 'https://api.example.com/',
+      allowedMethods: ['GET'],
+      adapter: 'generic',
+      enabled: true,
+      allowPrivateNetwork: false,
+      authBindings,
+    },
+  });
+  assert.equal(response.statusCode, 200, response.body);
+  const route = response.json().route;
+  assert.deepEqual(route.authBindings, authBindings);
+  const secondary = entries[1];
+  for (const request of [
+    {
+      method: 'PUT' as const,
+      url: `/api/entries/${secondary.id}`,
+      payload: { ...secondary, projectIds: [] },
+    },
+    { method: 'DELETE' as const, url: `/api/entries/${secondary.id}` },
+    {
+      method: 'PUT' as const,
+      url: `/api/entries/${secondary.id}`,
+      payload: { ...secondary, credentials: [] },
+    },
+  ]) {
+    assert.equal((await app.inject({ ...request, headers: auth.headers })).statusCode, 409);
+  }
+  const backupResponse = await app.inject({
+    method: 'POST',
+    url: '/api/backups',
+    headers: auth.headers,
+    payload: { password: 'backup-passphrase', ownerPassword: password },
+  });
+  assert.equal(backupResponse.statusCode, 200, backupResponse.body);
+  const backup = backupResponse.json().backup;
+  const key = await derive('backup-passphrase', Buffer.from(backup.salt, 'base64'));
+  const logical = JSON.parse(decrypt(JSON.stringify(backup), key, 'keydesk-backup:1'));
+  const malformed = JSON.parse(logical.tables.gateway_routes[0].json);
+  malformed.authBindings[1].credentialId = '00000000-0000-4000-8000-000000000000';
+  logical.tables.gateway_routes[0].json = JSON.stringify(malformed);
+  const sealed = JSON.parse(encrypt(JSON.stringify(logical), key, 'keydesk-backup:1'));
+  key.fill(0);
+  const rejected = await app.inject({
+    method: 'POST',
+    url: '/api/backups/restore',
+    headers: auth.headers,
+    payload: {
+      password: 'backup-passphrase',
+      ownerPassword: password,
+      backup: { ...backup, ...sealed },
+    },
+  });
+  assert.equal(rejected.statusCode, 400, rejected.body);
+  const restored = await app.inject({
+    method: 'POST',
+    url: '/api/backups/restore',
+    headers: auth.headers,
+    payload: { password: 'backup-passphrase', ownerPassword: password, backup },
+  });
+  assert.equal(restored.statusCode, 200, restored.body);
+  assert.deepEqual(
+    JSON.parse(
+      String(
+        app.context.db.prepare('SELECT json FROM gateway_routes WHERE id=?').get(route.id)!.json,
+      ),
+    ).authBindings,
+    authBindings,
+  );
+});
 test('bootstrap is one use, origin is exact, session and CSRF stay separate from bearer tokens', async (t) => {
   const { app, dataDir } = await fixture(t);
   assert.deepEqual((await app.inject('/api/auth/state')).json(), {

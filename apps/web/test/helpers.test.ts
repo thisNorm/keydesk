@@ -154,10 +154,17 @@ test('제공사 전용 경로에는 일반 REST의 사용자 인증 헤더를 �
     allowPrivateNetwork: false,
     authHeader: 'X-API-Key',
     authScheme: 'raw' as const,
+    authBindings: [{ credentialId: 'c', location: 'query' as const, name: 'apiKey' }],
   };
-  assert.equal(routePayload(generic).authHeader, 'X-API-Key');
+  assert.equal(routePayload(generic).authHeader, undefined);
+  assert.equal(routePayload(generic).authScheme, undefined);
+  const { authBindings, ...legacy } = generic;
+  assert.equal(routePayload(legacy).authHeader, 'X-API-Key');
+  assert.deepEqual(routePayload(generic).authBindings, generic.authBindings);
   assert.equal(routePayload({ ...generic, adapter: 'openai' }).authHeader, undefined);
   assert.equal(routePayload({ ...generic, adapter: 'anthropic' }).authScheme, undefined);
+  assert.equal(routePayload({ ...generic, adapter: 'openai' }).authBindings, undefined);
+  assert.equal(routePayload({ ...generic, adapter: 'anthropic' }).authBindings, undefined);
 });
 
 test('명시한 ISO 시각은 오프셋을 보존하고 정확한 만료 순간부터 만료로 분류한다', () => {

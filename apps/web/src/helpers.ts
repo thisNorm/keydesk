@@ -209,8 +209,12 @@ export function usageCost(record: import('@keydesk/contracts').UsageRecord): str
 export function routePayload(
   draft: import('@keydesk/contracts').GatewayRouteDraft,
 ): import('@keydesk/contracts').GatewayRouteDraft {
-  if (draft.adapter === 'generic') return draft;
-  const { authHeader, authScheme, ...providerDraft } = draft;
+  if (draft.adapter === 'generic') {
+    if (!draft.authBindings) return draft;
+    const { authHeader, authScheme, ...bindingDraft } = draft;
+    return bindingDraft;
+  }
+  const { authHeader, authScheme, authBindings, ...providerDraft } = draft;
   return providerDraft;
 }
 
