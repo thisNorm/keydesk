@@ -1,6 +1,21 @@
 import type { Adapter, ModelPrice } from '@keydesk/contracts';
 const token = (v: unknown): v is number =>
   Number.isSafeInteger(v) && Number(v) >= 0 && Number(v) <= 1e12;
+const MAX_GENERIC_JSON_BYTES = 64 * 1024;
+
+function hasJsonError(value: unknown): boolean {
+  if (!value || typeof value !== 'object' || !('error' in value)) return false;
+  const errors: unknown[] = Array.isArray(value.error) ? value.error : [value.error];
+  return errors.some((error) => {
+    if (!error || typeof error !== 'object' || Array.isArray(error)) return false;
+    const { code, message, msg } = error as Record<string, unknown>;
+    return (
+      (typeof code === 'number' && Number.isFinite(code)) ||
+      [code, message, msg].some((field) => typeof field === 'string' && field.trim() !== '')
+    );
+  });
+}
+
 export class UsageParser {
   model: string | null = null;
   input: number | null = null;
@@ -8,15 +23,19 @@ export class UsageParser {
   cached: number | null = null;
   complete = false;
   providerIncomplete = false;
+  providerError = false;
   cacheCreationInputTokens: number | null = null;
   malformed = false;
   private buffer = '';
   private decoder = new TextDecoder();
+  private genericBytes = 0;
+  private readonly detectJsonError: boolean;
   readonly adapter: Adapter;
   readonly sse: boolean;
-  constructor(adapter: Adapter, sse: boolean) {
+  constructor(adapter: Adapter, sse: boolean, detectJsonError = false) {
     this.adapter = adapter;
     this.sse = sse;
+    this.detectJsonError = adapter === 'generic' && !sse && detectJsonError;
   }
   consume(value: any): void {
     if (!value || typeof value !== 'object') return;
@@ -76,7 +95,13 @@ export class UsageParser {
     }
   }
   push(chunk: Buffer): void {
-    if (this.adapter === 'generic') return;
+    if (this.adapter === 'generic') {
+      if (!this.detectJsonError || this.genericBytes > MAX_GENERIC_JSON_BYTES) return;
+      this.genericBytes += chunk.byteLength;
+      if (this.genericBytes > MAX_GENERIC_JSON_BYTES) this.buffer = '';
+      else this.buffer += this.decoder.decode(chunk, { stream: true });
+      return;
+    }
     this.buffer += this.decoder.decode(chunk, {
       stream: true,
     });
@@ -120,6 +145,15 @@ export class UsageParser {
   finish(): void {
     if (this.adapter === 'generic') {
       this.complete = true;
+      if (this.detectJsonError && this.buffer) {
+        try {
+          this.providerError = hasJsonError(JSON.parse(this.buffer + this.decoder.decode()));
+        } catch {
+          // Unrecognized bodies keep the HTTP-based outcome.
+        } finally {
+          this.buffer = '';
+        }
+      }
       return;
     }
     this.buffer += this.decoder.decode();

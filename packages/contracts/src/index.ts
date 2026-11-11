@@ -105,6 +105,7 @@ export interface GatewayRouteDraft {
   authHeader?: string;
   authScheme?: 'bearer' | 'raw';
   authBindings?: GatewayAuthBinding[];
+  detectJsonError?: boolean;
 }
 export interface GatewayRoute extends GatewayRouteDraft {
   id: string;

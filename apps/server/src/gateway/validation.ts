@@ -83,6 +83,7 @@ export const routeSchema = z
     authHeader: z.string().min(1).max(64).refine(allowedAuthHeader).optional(),
     authScheme: z.enum(['bearer', 'raw']).optional(),
     authBindings: z.array(authBindingSchema).min(1).max(8).optional(),
+    detectJsonError: z.boolean().optional(),
   })
   .superRefine((route, ctx) => {
     if (route.authBindings) {
@@ -109,6 +110,11 @@ export const routeSchema = z
         });
     }
     if (route.adapter === 'generic') return;
+    if (route.detectJsonError !== undefined)
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'JSON 오류 기록은 일반 REST 경로에서만 설정할 수 있습니다.',
+      });
     const header = route.adapter === 'anthropic' ? 'x-api-key' : 'authorization';
     const scheme = route.adapter === 'anthropic' ? 'raw' : 'bearer';
     if (

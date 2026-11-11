@@ -673,6 +673,87 @@ test('generic REST bytes and malformed JSON stay successful with unknown usage',
     await f.close();
   }
 });
+test('opt-in generic JSON errors change the usage outcome without changing the response', async () => {
+  const providerError = '{"error":[{"code":"500","message":"mock authentication error"}]}';
+  const responses = {
+    'array-error': ['application/json', providerError],
+    'object-error': ['text/plain; charset=utf-8', '{"error":{"msg":"연결 실패"}}'],
+    'json-suffix': ['application/problem+json', '{"error":{"code":500}}'],
+    'empty-error': ['application/json', '{"error":[],"result":[1]}'],
+    'null-error': ['application/json', '{"error":null,"result":[1]}'],
+    nonjson: ['text/plain', 'plain REST response'],
+    binary: ['application/octet-stream', providerError],
+    stream: ['text/event-stream', 'data: ' + providerError + '\n\n'],
+    large: [
+      'application/json',
+      JSON.stringify({ error: { code: 500 }, padding: 'x'.repeat(65 * 1024) }),
+    ],
+  } as const;
+  const f = await fixture((req: any, res: any) => {
+    const [contentType, body] = responses[req.url.split('/').at(-1) as keyof typeof responses];
+    res.setHeader('content-type', contentType);
+    res.end(body);
+  });
+  try {
+    const optedIn = await f.route({ adapter: 'generic', detectJsonError: true });
+    const legacy = await f.route({ adapter: 'generic', slug: 'legacy' });
+    const c = await f.client([optedIn.id, legacy.id]);
+    for (const [slug, path, expectedOutcome] of [
+      ['test', 'array-error', 'error'],
+      ['test', 'object-error', 'error'],
+      ['test', 'json-suffix', 'error'],
+      ['test', 'empty-error', 'success'],
+      ['test', 'null-error', 'success'],
+      ['test', 'nonjson', 'success'],
+      ['test', 'binary', 'success'],
+      ['test', 'stream', 'success'],
+      ['test', 'large', 'success'],
+      ['legacy', 'array-error', 'success'],
+    ] as const) {
+      const reply = await f.app.inject({
+        url: '/gw/' + slug + '/' + path,
+        headers: { authorization: `Bearer ${c.token}` },
+      });
+      assert.equal(reply.statusCode, 200);
+      assert.equal(reply.body, responses[path][1]);
+      const row = String(
+        f.db.prepare('SELECT json FROM gateway_usage ORDER BY rowid DESC LIMIT 1').get()!.json,
+      );
+      const record = JSON.parse(row);
+      assert.equal(record.outcome, expectedOutcome, slug + '/' + path);
+      assert.equal(record.statusCode, 200);
+      assert.equal(record.inputTokens, null);
+      assert.equal(row.includes('mock authentication error'), false);
+    }
+  } finally {
+    await f.close();
+  }
+});
+test('JSON error detection persists on generic routes and is rejected on AI adapters', async () => {
+  const f = await fixture();
+  try {
+    const route = await f.route({ adapter: 'generic', detectJsonError: true });
+    const listed = await f.app.inject('/api/gateway/routes');
+    assert.equal(listed.json().routes[0].detectJsonError, true);
+    for (const adapter of ['openai', 'anthropic']) {
+      const invalid = await f.app.inject({
+        method: 'PUT',
+        url: '/api/gateway/routes/' + route.id,
+        payload: { ...route, adapter, detectJsonError: true },
+      });
+      assert.equal(invalid.statusCode, 400);
+    }
+    const updated = await f.app.inject({
+      method: 'PUT',
+      url: '/api/gateway/routes/' + route.id,
+      payload: { ...route, detectJsonError: false },
+    });
+    assert.equal(updated.statusCode, 200);
+    assert.equal(updated.json().route.detectJsonError, false);
+  } finally {
+    await f.close();
+  }
+});
 test('Anthropic cached inputs survive later SSE deltas and receive cached pricing', async () => {
   const f = await fixture((_req: any, res: any) => {
     res.setHeader('content-type', 'text/event-stream');

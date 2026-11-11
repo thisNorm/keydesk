@@ -98,6 +98,7 @@ test('additional gateway auth references prevent unlink and deletion and survive
       enabled: true,
       allowPrivateNetwork: false,
       authBindings,
+      detectJsonError: true,
     },
   });
   assert.equal(response.statusCode, 200, response.body);
@@ -152,14 +153,13 @@ test('additional gateway auth references prevent unlink and deletion and survive
     payload: { password: 'backup-passphrase', ownerPassword: password, backup },
   });
   assert.equal(restored.statusCode, 200, restored.body);
-  assert.deepEqual(
-    JSON.parse(
-      String(
-        app.context.db.prepare('SELECT json FROM gateway_routes WHERE id=?').get(route.id)!.json,
-      ),
-    ).authBindings,
-    authBindings,
+  const restoredRoute = JSON.parse(
+    String(
+      app.context.db.prepare('SELECT json FROM gateway_routes WHERE id=?').get(route.id)!.json,
+    ),
   );
+  assert.deepEqual(restoredRoute.authBindings, authBindings);
+  assert.equal(restoredRoute.detectJsonError, true);
 });
 test('bootstrap is one use, origin is exact, session and CSRF stay separate from bearer tokens', async (t) => {
   const { app, dataDir } = await fixture(t);

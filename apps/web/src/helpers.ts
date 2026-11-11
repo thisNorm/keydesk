@@ -214,7 +214,7 @@ export function routePayload(
     const { authHeader, authScheme, ...bindingDraft } = draft;
     return bindingDraft;
   }
-  const { authHeader, authScheme, authBindings, ...providerDraft } = draft;
+  const { authHeader, authScheme, authBindings, detectJsonError, ...providerDraft } = draft;
   return providerDraft;
 }
 

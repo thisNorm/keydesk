@@ -629,6 +629,7 @@ function RouteEditor({
             onChange={(e) => {
               set('adapter', e.target.value);
               set('authBindings', undefined);
+              set('detectJsonError', undefined);
             }}
           >
             <option value="generic">일반 REST (토큰 미확인)</option>
@@ -768,6 +769,23 @@ function RouteEditor({
             >
               인증 필드 추가
             </button>
+          </div>
+        )}
+        {draft.adapter === 'generic' && (
+          <div className="field">
+            <label className="check">
+              <input
+                type="checkbox"
+                checked={draft.detectJsonError === true}
+                aria-describedby="route-json-error-hint"
+                onChange={(e) => set('detectJsonError', e.target.checked || undefined)}
+              />
+              JSON 응답의 제공사 오류 기록
+            </label>
+            <p id="route-json-error-hint" className="muted">
+              HTTP 200 안에 오류가 담겨 오면 호출 기록에 오류로 표시합니다. 호출 응답은 그대로
+              전달합니다.
+            </p>
           </div>
         )}
         <div className="field" role="group" aria-label="허용할 메서드">
@@ -1201,12 +1219,21 @@ export function UsagePage({ projects, zone }: { projects: Project[]; zone: strin
                       <div className="purpose">{r.usageSource}</div>
                     </td>
                     <td>
-                      {r.outcome === 'success'
-                        ? '성공'
-                        : r.outcome === 'cancelled'
-                          ? '취소'
-                          : '오류'}{' '}
-                      {r.statusCode ?? ''}
+                      {r.outcome === 'error' &&
+                      r.statusCode !== null &&
+                      r.statusCode >= 200 &&
+                      r.statusCode < 300 ? (
+                        <>응답 오류 · HTTP {r.statusCode}</>
+                      ) : (
+                        <>
+                          {r.outcome === 'success'
+                            ? '성공'
+                            : r.outcome === 'cancelled'
+                              ? '취소'
+                              : '오류'}{' '}
+                          {r.statusCode ?? ''}
+                        </>
+                      )}
                     </td>
                     <td>
                       {r.inputTokens ?? '미확인'} / {r.outputTokens ?? '미확인'} /{' '}

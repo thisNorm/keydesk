@@ -579,9 +579,18 @@ export async function registerGateway(
           response.destroy();
           throw new Error('압축 응답은 지원하지 않습니다.');
         }
+        const mediaType = contentType.split(';', 1)[0]?.trim().toLowerCase();
+        const detectJsonError =
+          route.detectJsonError === true &&
+          statusCode >= 200 &&
+          statusCode < 300 &&
+          (mediaType === 'application/json' ||
+            mediaType === 'text/plain' ||
+            mediaType?.endsWith('+json') === true);
         parser = new UsageParser(
           route.adapter,
           contentType.toLowerCase().includes('text/event-stream'),
+          detectJsonError,
         );
         reply.hijack();
         responseStarted = true;
@@ -609,6 +618,7 @@ export async function registerGateway(
           statusCode < 400 &&
           (!parser.sse || parser.complete) &&
           !parser.malformed &&
+          !parser.providerError &&
           !parser.providerIncomplete
             ? 'success'
             : 'error';

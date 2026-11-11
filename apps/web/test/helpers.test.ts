@@ -141,7 +141,7 @@ test('토큰 미확인·모델 단가 없음·캐시 쓰기 미지원은 비용�
   );
 });
 
-test('제공사 전용 경로에는 일반 REST의 사용자 인증 헤더를 전송하지 않는다', () => {
+test('제공사 전용 경로에는 일반 REST 설정을 전송하지 않는다', () => {
   const generic = {
     name: '경로',
     slug: 'path',
@@ -155,16 +155,19 @@ test('제공사 전용 경로에는 일반 REST의 사용자 인증 헤더를 �
     authHeader: 'X-API-Key',
     authScheme: 'raw' as const,
     authBindings: [{ credentialId: 'c', location: 'query' as const, name: 'apiKey' }],
+    detectJsonError: true,
   };
   assert.equal(routePayload(generic).authHeader, undefined);
   assert.equal(routePayload(generic).authScheme, undefined);
   const { authBindings, ...legacy } = generic;
   assert.equal(routePayload(legacy).authHeader, 'X-API-Key');
   assert.deepEqual(routePayload(generic).authBindings, generic.authBindings);
+  assert.equal(routePayload(generic).detectJsonError, true);
   assert.equal(routePayload({ ...generic, adapter: 'openai' }).authHeader, undefined);
   assert.equal(routePayload({ ...generic, adapter: 'anthropic' }).authScheme, undefined);
   assert.equal(routePayload({ ...generic, adapter: 'openai' }).authBindings, undefined);
   assert.equal(routePayload({ ...generic, adapter: 'anthropic' }).authBindings, undefined);
+  assert.equal(routePayload({ ...generic, adapter: 'openai' }).detectJsonError, undefined);
 });
 
 test('명시한 ISO 시각은 오프셋을 보존하고 정확한 만료 순간부터 만료로 분류한다', () => {
