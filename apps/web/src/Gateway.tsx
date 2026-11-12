@@ -9,12 +9,11 @@ import type {
   GatewayClientDraft,
   ModelPrice,
   PriceDraft,
-  UsageRecord,
-  UsageSummary,
 } from '@keydesk/contracts';
 import { api, copyText } from './api.ts';
-import { calendarDay, formatMoney, formatExactMoney, usageCost, routePayload } from './helpers.ts';
+import { calendarDay, formatMoney, routePayload } from './helpers.ts';
 import { Confirm, Empty, Field, Form, Modal } from './ui.tsx';
+import { RouteMailBudget } from './RouteMailBudget.tsx';
 export function GatewayPage({
   entries,
   projects,
@@ -507,6 +506,7 @@ function RouteEditor({
     );
   const set = (key: keyof GatewayRouteDraft, value: unknown) =>
     setDraft((d) => ({ ...d, [key]: value }));
+  const rules = draft.operationRules ?? [];
   const setBindings = (bindings: GatewayAuthBinding[]) =>
     setDraft((d) => {
       const { authHeader, authScheme, ...base } = d;
@@ -535,6 +535,8 @@ function RouteEditor({
               !binding.name ||
               !credentials.some((credential) => credential.id === binding.credentialId),
           ) ||
+          (draft.adapter === 'generic' &&
+            rules.some((rule) => !draft.allowedMethods.includes(rule.method))) ||
           !draft.allowedMethods.length
         }
         onSubmit={async () => {
@@ -635,6 +637,7 @@ function RouteEditor({
             <option value="generic">일반 REST (토큰 미확인)</option>
             <option value="openai">OpenAI</option>
             <option value="anthropic">Anthropic</option>
+            <option value="gemini">Gemini (네이티브 API)</option>
           </select>
         </Field>
         {draft.adapter === 'generic' && !draft.authBindings && (
@@ -813,6 +816,84 @@ function RouteEditor({
         {!draft.allowedMethods.length && (
           <p className="hint">허용할 메서드를 한 개 이상 선택해 주세요.</p>
         )}
+        {draft.adapter === 'generic' && (
+          <details className="editor-section">
+            <summary>API 기능 분류</summary>
+            <p className="hint">
+              네이버 Maps와 카카오 Local의 주요 기능은 자동으로 분류합니다. 다른 기능은 제공사 URL의
+              경로를 입력하세요. 예: /v1/places/&#123;id&#125;. 쿼리는 입력하지 않습니다. 메서드나
+              패턴이 겹치면 더 구체적인 규칙이 우선합니다.
+            </p>
+            {rules.map((rule, index) => {
+              const update = (change: Partial<typeof rule>) =>
+                set(
+                  'operationRules',
+                  rules.map((item, i) => (i === index ? { ...item, ...change } : item)),
+                );
+              return (
+                <div key={index} className="key-editor">
+                  <div className="form-grid">
+                    <Field label={`기능 이름 ${index + 1}`}>
+                      <input
+                        required
+                        maxLength={100}
+                        value={rule.name}
+                        onChange={(e) => update({ name: e.target.value })}
+                      />
+                    </Field>
+                    <Field label={`기능 메서드 ${index + 1}`}>
+                      <select
+                        required
+                        value={draft.allowedMethods.includes(rule.method) ? rule.method : ''}
+                        onChange={(e) => update({ method: e.target.value })}
+                      >
+                        <option value="" disabled>
+                          허용된 메서드 선택
+                        </option>
+                        {draft.allowedMethods.map((m) => (
+                          <option key={m}>{m}</option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label={`기능 경로 ${index + 1}`}>
+                      <input
+                        required
+                        maxLength={240}
+                        placeholder="/v1/places/{id}"
+                        value={rule.path}
+                        onChange={(e) => update({ path: e.target.value })}
+                      />
+                    </Field>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      set(
+                        'operationRules',
+                        rules.filter((_, i) => i !== index),
+                      )
+                    }
+                  >
+                    기능 {index + 1} 삭제
+                  </button>
+                </div>
+              );
+            })}
+            <button
+              type="button"
+              disabled={rules.length >= 24 || !draft.allowedMethods.length}
+              onClick={() =>
+                set('operationRules', [
+                  ...rules,
+                  { name: '', method: draft.allowedMethods[0]!, path: '' },
+                ])
+              }
+            >
+              기능 추가
+            </button>
+          </details>
+        )}
+        <RouteMailBudget route={draft} onChange={(budget) => set('mailBudget', budget)} />
         <label className="check">
           <input
             type="checkbox"
@@ -1087,170 +1168,5 @@ function PriceEditor({ onClose, onSaved }: { onClose: () => void; onSaved: () =>
         </Field>
       </Form>
     </Modal>
-  );
-}
-export function UsagePage({ projects, zone }: { projects: Project[]; zone: string }) {
-  const [days, setDays] = useState('7'),
-    [project, setProject] = useState(''),
-    [data, setData] = useState<{
-      records: UsageRecord[];
-      summary: UsageSummary;
-    } | null>(null),
-    [error, setError] = useState('');
-  useEffect(() => {
-    let active = true;
-    setError('');
-    setData(null);
-    void api<{
-      records: UsageRecord[];
-      summary: UsageSummary;
-    }>(`/usage?days=${encodeURIComponent(days)}&projectId=${encodeURIComponent(project)}`)
-      .then((x) => {
-        if (active) setData(x);
-      })
-      .catch((e) => {
-        if (active) setError(e.message);
-      });
-    return () => {
-      active = false;
-    };
-  }, [days, project]);
-  return (
-    <>
-      <header className="pagehead">
-        <h1>사용량과 비용</h1>
-      </header>
-      <p className="muted">
-        게이트웨이를 통과해 제공사로 전송한 호출만 측정합니다. 제공사 계정의 전체 사용량이나 잔액을
-        나타내지 않습니다.
-      </p>
-      <div className="tools">
-        <select
-          aria-label="사용량 프로젝트"
-          value={project}
-          onChange={(e) => setProject(e.target.value)}
-        >
-          <option value="">모든 프로젝트</option>
-          {projects.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
-        <select aria-label="집계 기간" value={days} onChange={(e) => setDays(e.target.value)}>
-          {[1, 7, 30, 90].map((n) => (
-            <option key={n} value={n}>
-              최근 {n}일
-            </option>
-          ))}
-        </select>
-      </div>
-      {error && (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      )}
-      {data ? (
-        <>
-          <dl className="usage-summary">
-            <div>
-              <dt>전송한 호출</dt>
-              <dd>{data.summary.requests.toLocaleString('ko-KR')}회</dd>
-            </div>
-            <div>
-              <dt>확인한 입력 / 출력 토큰</dt>
-              <dd>
-                {data.summary.inputTokens.toLocaleString('ko-KR')} /{' '}
-                {data.summary.outputTokens.toLocaleString('ko-KR')}
-              </dd>
-            </div>
-            <div>
-              <dt>토큰 사용량 미확인</dt>
-              <dd>{data.summary.unknownUsageCount}회</dd>
-            </div>
-            {data.summary.costs.map((c) => (
-              <div key={c.currency}>
-                <dt>{c.currency} 추정 비용</dt>
-                <dd>
-                  {c.overflow ? '표시 범위 초과 · ' : ''}
-                  {formatExactMoney(c.amountExactMicros, c.currency)}
-                  {c.krwEstimate !== undefined && c.krwEstimate !== null && (
-                    <small>
-                      {' '}
-                      · 약 {c.krwEstimate.toLocaleString('ko-KR', { maximumFractionDigits: 6 })}원
-                      (설정 환율 추정)
-                    </small>
-                  )}
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className="muted">
-            아래에는 최근 1,000개까지 표시합니다. 토큰 사용량과 비용의 미확인은 각각 구분합니다.
-          </p>
-          <div
-            className="table-scroll"
-            tabIndex={0}
-            role="region"
-            aria-label="사용량과 비용 호출 기록"
-          >
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>시각 / 프로젝트</th>
-                  <th>모델</th>
-                  <th>결과</th>
-                  <th>입력 / 출력 / 캐시 토큰</th>
-                  <th>비용 추정</th>
-                  <th>응답 시간</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.records.map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      {new Date(r.createdAt).toLocaleString('ko-KR', { timeZone: zone })}
-                      <div className="purpose">
-                        {projects.find((p) => p.id === r.projectId)?.name}
-                      </div>
-                    </td>
-                    <td>
-                      {r.model ?? '미확인'}
-                      <div className="purpose">{r.usageSource}</div>
-                    </td>
-                    <td>
-                      {r.outcome === 'error' &&
-                      r.statusCode !== null &&
-                      r.statusCode >= 200 &&
-                      r.statusCode < 300 ? (
-                        <>응답 오류 · HTTP {r.statusCode}</>
-                      ) : (
-                        <>
-                          {r.outcome === 'success'
-                            ? '성공'
-                            : r.outcome === 'cancelled'
-                              ? '취소'
-                              : '오류'}{' '}
-                          {r.statusCode ?? ''}
-                        </>
-                      )}
-                    </td>
-                    <td>
-                      {r.inputTokens ?? '미확인'} / {r.outputTokens ?? '미확인'} /{' '}
-                      {r.cachedInputTokens ?? '미확인'}
-                    </td>
-                    <td>{usageCost(r)}</td>
-                    <td>{r.durationMs} ms</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {!data.records.length && <Empty>선택한 기간의 호출 기록이 없습니다.</Empty>}
-        </>
-      ) : (
-        !error && <p role="status">사용량을 불러오는 중…</p>
-      )}
-    </>
   );
 }

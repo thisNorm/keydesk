@@ -1,5 +1,6 @@
 import type { DatabaseSync } from 'node:sqlite';
 import type { CredentialStatus, Settings } from '@keydesk/contracts';
+import type { MailAlerts } from './mail-alerts.ts';
 export interface ResolvedCredential {
   id: string;
   entryId: string;
@@ -14,4 +15,5 @@ export interface CoreContext {
   getSettings: () => Settings;
   getCredential: (id: string) => ResolvedCredential;
   audit: (action: string, details: Record<string, unknown>) => void;
+  mailAlerts?: MailAlerts;
 }

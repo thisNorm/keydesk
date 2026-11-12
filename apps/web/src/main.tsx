@@ -4,7 +4,8 @@ import type { AuthState, Entry, Project, Settings, VaultNotification } from '@ke
 import { api, onUnauthorized, setAuth } from './api.ts';
 import { Vault } from './Vault.tsx';
 import { hideRevealedSecrets } from './Secret.tsx';
-import { GatewayPage, UsagePage } from './Gateway.tsx';
+import { GatewayPage } from './Gateway.tsx';
+import { UsagePage } from './UsagePage.tsx';
 import { SettingsPage } from './Settings.tsx';
 import { Confirm, Empty, Field, Form } from './ui.tsx';
 import './style.css';
@@ -269,7 +270,7 @@ function App() {
             <p role="alert">{loadError}</p>
             <button type="button" onClick={() => { setLoading(true); setLoadAttempt((attempt) => attempt + 1); }}>다시 연결</button>
           </section>
-        ) : page === 'vault' ? <Vault entries={entries} projects={projects} reload={reloadEntries} reloadProjects={reloadProjects} notify={notify} project={project} setProject={setProject} zone={zone} initialEntryId={selectedEntry} /> : <div className="workspace-sheet">{page === 'projects' ? <Projects projects={projects} entries={entries} onSaved={reloadProjects} notify={notify} onViewProject={id => navigate('vault', { projectId: id })} /> : page === 'notifications' ? <Notifications notifications={notifications} onSaved={reloadNotifications} onEntry={id => { if (entries.some(entry => entry.id === id)) navigate('vault', { projectId: '', entryId: id }); }} zone={zone} /> : page === 'gateway' ? <GatewayPage entries={entries} projects={projects} notify={notify} zone={zone} /> : page === 'usage' ? <UsagePage projects={projects} zone={zone} /> : <SettingsPage notify={notify} onAuth={changeAuth} onSaved={reloadSettings} theme={theme} onThemeChange={setTheme} />}</div>}
+        ) : page === 'vault' ? <Vault entries={entries} projects={projects} reload={reloadEntries} reloadProjects={reloadProjects} notify={notify} project={project} setProject={setProject} zone={zone} initialEntryId={selectedEntry} /> : <div className="workspace-sheet">{page === 'projects' ? <Projects projects={projects} entries={entries} onSaved={reloadProjects} notify={notify} onViewProject={id => navigate('vault', { projectId: id })} /> : page === 'notifications' ? <Notifications notifications={notifications} onSaved={reloadNotifications} onEntry={id => { if (entries.some(entry => entry.id === id)) navigate('vault', { projectId: '', entryId: id }); }} zone={zone} /> : page === 'gateway' ? <GatewayPage entries={entries} projects={projects} notify={notify} zone={zone} /> : page === 'usage' ? <UsagePage projects={projects} entries={entries} zone={zone} /> : <SettingsPage notify={notify} onAuth={changeAuth} onSaved={reloadSettings} theme={theme} onThemeChange={setTheme} />}</div>}
         <footer className="app-footer"><span>개인 API 키 보관함</span><span>{zone === 'Asia/Seoul' ? '한국 시간 기준' : zone}</span></footer>
       </main>
       {notice && <div className="toast" role="status"><span>{notice}</span><button aria-label="알림 닫기" onClick={() => setNotice('')}>닫기</button></div>}

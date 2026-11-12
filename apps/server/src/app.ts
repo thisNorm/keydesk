@@ -10,11 +10,14 @@ import { registerNotifications } from './notifications.ts';
 import { registerBackups } from './backup.ts';
 import { registerGateway } from './gateway/index.ts';
 import { installMaintenance } from './maintenance.ts';
+import { createMailAlerts } from './mail-alerts.ts';
+import type { MailLookupOptions } from './mail-provider.ts';
 export interface AppOptions {
   dataDir: string;
   origin: string;
   now?: () => Date;
   backgroundJobs?: boolean;
+  mailLookup?: MailLookupOptions;
 }
 declare module 'fastify' {
   interface FastifyInstance {
@@ -48,9 +51,11 @@ export async function createApp(options: AppOptions) {
   };
   app.decorate('context', context);
   let interval: ReturnType<typeof setInterval> | undefined;
+  let initialRefresh: ReturnType<typeof setTimeout> | undefined;
   let notifications: Awaited<ReturnType<typeof registerNotifications>> | undefined;
   app.addHook('onClose', async () => {
     if (interval) clearInterval(interval);
+    if (initialRefresh) clearTimeout(initialRefresh);
     await notifications?.drain();
     storage.db.close();
     storage.rootKey.fill(0);
@@ -106,16 +111,21 @@ export async function createApp(options: AppOptions) {
     });
     await registerAuth(app, storage, options.origin, now);
     app.get('/api/status', async () => ({ status: 'ok' }));
-    await registerVault(app, storage, now, audit);
-    await registerSettings(app, storage);
-    notifications = await registerNotifications(app, storage, now);
+    const mail = createMailAlerts(storage, context, options.mailLookup);
+    context.mailAlerts = mail;
+    await registerVault(app, storage, now, audit, mail);
+    await registerSettings(app, storage, now);
+    notifications = await registerNotifications(app, storage, now, mail);
     await registerGateway(app, context);
+    mail.register(app);
     await registerBackups(app, storage, now, maintenance);
     if (options.backgroundJobs !== false) {
-      await maintenance.background(() => notifications!.refresh());
-      interval = setInterval(() => {
+      const refresh = () => {
         void maintenance.background(() => notifications!.refresh()).catch(() => {});
-      }, 60000);
+      };
+      initialRefresh = setTimeout(refresh, 0);
+      initialRefresh.unref();
+      interval = setInterval(refresh, 60000);
       interval.unref();
     }
     return app;

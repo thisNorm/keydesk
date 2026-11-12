@@ -3,9 +3,17 @@ import { z } from 'zod';
 import nodemailer from 'nodemailer';
 import type { Settings } from '@keydesk/contracts';
 import type { Storage } from './db.ts';
+import { transaction } from './db.ts';
 import { encrypt, decrypt } from './crypto.ts';
 import { HttpError } from './errors.ts';
 import { validDate } from './dates.ts';
+import { resetBudgetsForTimeZone } from './gateway/mail-budget.ts';
+import {
+  advanceMailEpoch,
+  cancelPendingMail,
+  invalidatePendingMail,
+  MAIL_ALERTS_OFF,
+} from './mail-outbox.ts';
 const email = z
   .string()
   .max(254)
@@ -32,6 +40,18 @@ export const settingsSchema = z.object({
     .string()
     .max(10)
     .refine((v) => !v || (/^\d{4}-\d{2}-\d{2}$/.test(v) && validDate(v))),
+  mailAlerts: z
+    .object({
+      registration: z.boolean(),
+      requestLimit: z.boolean(),
+      budget: z.boolean(),
+      openRouterKeys: z
+        .array(z.string().uuid())
+        .max(40)
+        .transform((ids) => [...new Set(ids)].sort()),
+    })
+    .strict()
+    .optional(),
   smtp: z.object({
     host: z
       .string()
@@ -76,26 +96,41 @@ export function smtpPassword(storage: Storage) {
   const encrypted = row ? JSON.parse(row.json).smtp.passwordEncrypted : undefined;
   return encrypted ? decrypt(encrypted, storage.rootKey, 'smtp-password') : undefined;
 }
-export function saveSettings(storage: Storage, raw: unknown) {
+export function saveSettings(storage: Storage, raw: unknown, now: () => Date = () => new Date()) {
   const settings = settingsSchema.parse(raw);
   const old = storage.db.prepare('SELECT json FROM settings WHERE id=1').get() as any;
+  const prior = old ? JSON.parse(old.json) : undefined;
   const { password, passwordConfigured, ...smtp } = settings.smtp;
   const passwordEncrypted =
     password === undefined
-      ? old
-        ? JSON.parse(old.json).smtp.passwordEncrypted
-        : undefined
+      ? prior?.smtp.passwordEncrypted
       : password
         ? encrypt(password, storage.rootKey, 'smtp-password')
         : undefined;
-  storage.db
-    .prepare('INSERT INTO settings VALUES (1,?) ON CONFLICT(id) DO UPDATE SET json=excluded.json')
-    .run(
-      JSON.stringify({
-        ...settings,
-        smtp: { ...smtp, ...(passwordEncrypted ? { passwordEncrypted } : {}) },
-      }),
-    );
+  const mailAlerts = settings.mailAlerts ?? prior?.mailAlerts;
+  transaction(storage.db, () => {
+    storage.db
+      .prepare('INSERT INTO settings VALUES (1,?) ON CONFLICT(id) DO UPDATE SET json=excluded.json')
+      .run(
+        JSON.stringify({
+          ...settings,
+          mailAlerts,
+          smtp: { ...smtp, ...(passwordEncrypted ? { passwordEncrypted } : {}) },
+        }),
+      );
+    if (smtp.to !== (prior?.smtp.to ?? '')) invalidatePendingMail(storage.db);
+    else {
+      const before: NonNullable<Settings['mailAlerts']> = prior?.mailAlerts ?? MAIL_ALERTS_OFF;
+      const after: NonNullable<Settings['mailAlerts']> = mailAlerts ?? MAIL_ALERTS_OFF;
+      for (const kind of ['registration', 'requestLimit', 'budget'] as const)
+        if (before[kind] && !after[kind]) cancelPendingMail(storage.db, kind);
+      const removed = before.openRouterKeys.filter((id) => !after.openRouterKeys.includes(id));
+      for (const id of removed) cancelPendingMail(storage.db, 'providerLimit', id);
+      if (removed.length) advanceMailEpoch(storage.db);
+    }
+    if (settings.timeZone !== (prior?.timeZone ?? DEFAULT_SETTINGS.timeZone))
+      resetBudgetsForTimeZone(storage.db, settings, now());
+  });
   return getSettings(storage);
 }
 export async function sendMail(storage: Storage, subject: string, text: string) {
@@ -130,10 +165,10 @@ export async function sendMail(storage: Storage, subject: string, text: string) 
     transport.close();
   }
 }
-export async function registerSettings(app: FastifyInstance, storage: Storage) {
+export async function registerSettings(app: FastifyInstance, storage: Storage, now: () => Date) {
   app.get('/api/settings', async () => ({ settings: getSettings(storage) }));
   app.put('/api/settings', async (request) => ({
-    settings: saveSettings(storage, request.body),
+    settings: saveSettings(storage, request.body, now),
   }));
   app.post('/api/settings/smtp/test', async (request) => {
     z.object({}).parse(request.body ?? {});

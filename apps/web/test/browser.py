@@ -1,6 +1,8 @@
 """실제 임시 Keydesk 서버와 Chromium을 사용하는 브라우저 회귀 검증."""
 import json, os, pathlib, re, shutil, socket, subprocess, tempfile, time, urllib.request
 from contextlib import contextmanager
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from threading import Thread
 from playwright.sync_api import sync_playwright, expect
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -52,6 +54,27 @@ def chromium_options():
     if not executable:
         executable = next((path for path in candidates if path and pathlib.Path(path).exists()), None)
     return {'executable_path': executable, 'args': ['--no-sandbox']} if executable else {}
+
+@contextmanager
+def usage_provider():
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(b'{"modelVersion":"gemini-observed","usageMetadata":{"promptTokenCount":8,"candidatesTokenCount":3,"totalTokenCount":11}}')
+
+        def log_message(self, *args):
+            pass
+
+    with ThreadingHTTPServer(('127.0.0.1', 0), Handler) as server:
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            yield f'http://127.0.0.1:{server.server_port}'
+        finally:
+            server.shutdown()
+            thread.join()
 
 with test_server() as (ORIGIN, DATA), sync_playwright() as p:
     browser = p.chromium.launch(**chromium_options())
@@ -113,6 +136,14 @@ with test_server() as (ORIGIN, DATA), sync_playwright() as p:
         dialog.get_by_label('키 이름',exact=True).nth(1).fill('개발용')
         dialog.locator('.key-editor').nth(1).get_by_label('인증값',exact=True).fill('browser-test-key-second')
         dialog.get_by_label('만료일',exact=True).nth(1).fill('2026-12-31')
+        dialog.locator('summary').filter(has_text='제공사 사용량 기록').click()
+        dialog.get_by_role('button',name='사용량 기록 추가',exact=True).click()
+        dialog.get_by_label('집계 이름 1',exact=True).fill('월간 주소 검색')
+        dialog.get_by_label('적용 범위 1',exact=True).fill('Maps 앱 · 주소 검색')
+        dialog.get_by_label('기간 1',exact=True).fill('11월 (KST)')
+        dialog.get_by_label('사용량 1',exact=True).fill('0')
+        dialog.get_by_label('한도 상태 1',exact=True).select_option('set')
+        dialog.get_by_label('최대치 1',exact=True).fill('1000')
         dialog.get_by_role('button',name='저장',exact=True).click(); expect(dialog).not_to_be_visible()
         close_detail()
         stored = api('/entries')['entries'][0]
@@ -227,13 +258,64 @@ with test_server() as (ORIGIN, DATA), sync_playwright() as p:
         dialog.get_by_label('100만 출력 토큰당',exact=True).fill('5')
         dialog.get_by_label('100만 캐시 입력 토큰당',exact=True).fill('0')
         dialog.get_by_role('button',name='저장',exact=True).click(); expect(dialog).not_to_be_visible()
-        menu('사용량·비용'); menu('알림')
+        with usage_provider() as target:
+            usage_route = {'name':'집계 테스트', 'projectId':route['projectId'], 'credentialId':route['credentialId'],
+                           'baseUrl':target, 'allowedMethods':['GET'], 'enabled':True, 'allowPrivateNetwork':True}
+            rest = api('/gateway/routes', 'POST', {**usage_route, 'slug':'usage-rest', 'adapter':'generic',
+                'operationRules':[{'name':'주소 검색','method':'GET','path':'/address'},
+                                  {'name':'키워드 검색','method':'GET','path':'/keyword'}]})['route']
+            ai = api('/gateway/routes', 'POST', {**usage_route, 'slug':'usage-ai', 'adapter':'gemini'})['route']
+            client = api('/gateway/clients', 'POST', {'name':'집계 클라이언트', 'projectId':route['projectId'],
+                'routeIds':[rest['id'],ai['id']], 'dailyRequestLimit':5})
+            for path in ('usage-rest/address?query=test-private','usage-rest/keyword','usage-ai/generate'):
+                response = page.request.get(ORIGIN+'/gw/'+path, headers={'Authorization':'Bearer '+client['token']})
+                assert response.ok, response.status
+        menu('사용량·비용')
+        operations = page.get_by_role('table', name='API 기능별 호출', exact=True)
+        expect(operations.get_by_role('row').filter(has_text='주소 검색')).to_contain_text('1회')
+        expect(operations.get_by_role('row').filter(has_text='키워드 검색')).to_contain_text('1회')
+        expect(page.get_by_role('table', name='AI 모델별 사용량', exact=True).get_by_role('row').filter(
+            has_text='gemini-observed')).to_contain_text('11')
+        expect(page.get_by_role('table', name='오늘 호출 제한', exact=True).get_by_role('row').filter(
+            has_text='집계 클라이언트')).to_contain_text('3 / 5')
+        expect(page.get_by_role('table', name='콘솔에서 확인한 값', exact=True).get_by_role('row').filter(
+            has_text='월간 주소 검색')).to_contain_text('0 / 1000')
+        expect(page.locator('main')).not_to_contain_text('test-private')
+        menu('알림')
         page.get_by_role('button',name='만료 상태 새로 확인',exact=True).click()
         expect(page.get_by_role('button',name='만료 상태 새로 확인',exact=True)).to_be_enabled()
         print('PASS import and gateway token retention, expired status, rejected deletion and prices',flush=True)
 
+        budget_route = api('/gateway/routes','POST',{'name':'브라우저 예산 경로','slug':'mail-budget',
+            'projectId':route['projectId'],'credentialId':route['credentialId'],
+            'baseUrl':'https://api.example.test/v1/','allowedMethods':['POST'],'adapter':'openai',
+            'enabled':True,'allowPrivateNetwork':False})['route']
+        menu('게이트웨이')
+        page.get_by_role('button',name='브라우저 예산 경로 중계 경로 수정',exact=True).click()
+        dialog=page.get_by_role('dialog',name='중계 경로 수정',exact=True)
+        dialog.get_by_text('월 비용 예산',exact=True).click()
+        dialog.get_by_role('checkbox',name='월 비용 예산 사용',exact=True).check()
+        dialog.get_by_label('월 예산 금액',exact=True).fill('10')
+        dialog.get_by_role('button',name='저장',exact=True).click(); expect(dialog).not_to_be_visible()
+        assert next(r for r in api('/gateway/routes')['routes'] if r['id']==budget_route['id'])['mailBudget']=={
+            'amount':'10','currency':'USD','basis':'estimate'}
+        menu('설정'); page.get_by_role('tab',name='알림 메일',exact=True).click()
+        page.get_by_role('checkbox',name='신규 등록 및 프로젝트 연결 변경',exact=True).check()
+        page.get_by_role('checkbox',name='일일 호출 한도 임박 및 도달',exact=True).check()
+        page.get_by_role('checkbox',name='월 비용 예산 임박 및 도달',exact=True).check()
+        page.get_by_role('button',name='메일 설정 저장',exact=True).click()
+        expect(page.get_by_role('status').filter(has_text='메일 설정을 저장했습니다')).to_be_visible()
+        assert api('/settings')['settings']['mailAlerts']['budget']
+        page.get_by_text('최근 메일 발송',exact=True).click()
+        expect(page.get_by_text('표시할 발송 기록이 없습니다.',exact=True)).to_be_visible()
+        page.set_viewport_size({'width':390,'height':1000})
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        page.set_viewport_size({'width':1440,'height':1000})
+        print('PASS alert settings and per-route monthly budget with no external mail',flush=True)
+
         for theme in ('light','dark'):
-            menu('설정'); page.get_by_label('화면',exact=True).select_option(theme)
+            menu('설정'); page.get_by_role('tab',name='일반',exact=True).click()
+            page.get_by_label('화면',exact=True).select_option(theme)
             for width in (390,768,1440):
                 page.set_viewport_size({'width':width,'height':1000}); headings=[]
                 for name in ('보관함','프로젝트','알림','게이트웨이','사용량·비용','설정'):
@@ -275,6 +357,8 @@ with test_server() as (ORIGIN, DATA), sync_playwright() as p:
         page.get_by_role('dialog').get_by_role('button',name='전체 복원 실행',exact=True).click()
         expect(page.get_by_role('heading',name='보관함 열기',exact=True)).to_be_visible(timeout=15000)
         login()
+        assert not api('/settings')['settings']['mailAlerts']['budget']
+        assert next(r for r in api('/gateway/routes')['routes'] if r['id']==budget_route['id'])['mailBudget']['amount']=='10'
         page.get_by_role('button',name=ENTRY+' 상세 보기',exact=True).click()
         detail=page.get_by_role('dialog',name=ENTRY,exact=True)
         detail.get_by_role('button',name='보기',exact=True).first.click()
