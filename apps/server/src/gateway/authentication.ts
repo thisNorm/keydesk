@@ -2,6 +2,8 @@ import type { GatewayAuthBinding, GatewayRouteDraft } from '@keydesk/contracts';
 
 export function authenticationBindings(route: GatewayRouteDraft): GatewayAuthBinding[] {
   if (route.adapter === 'generic' && route.authBindings) return route.authBindings;
+  if (route.adapter === 'gemini')
+    return [{ credentialId: route.credentialId, location: 'header', name: 'x-goog-api-key' }];
   const anthropic = route.adapter === 'anthropic';
   return [
     {

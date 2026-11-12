@@ -22,6 +22,17 @@ export interface CredentialDraft {
   issuedAt: string;
   expiresAt: string;
 }
+export interface ProviderUsageMeter {
+  name: string;
+  scope: string;
+  period: string;
+  unit: string;
+  used: string | null;
+  max: string | null;
+  limitStatus: 'set' | 'unset' | 'unknown';
+  checkedAt: string;
+  tier?: 'free' | 'paid';
+}
 export interface EntryDraft {
   name: string;
   provider: string;
@@ -36,6 +47,7 @@ export interface EntryDraft {
   quota: string;
   notes: string;
   projectIds: string[];
+  providerUsageMeters?: ProviderUsageMeter[];
   credentials?: CredentialDraft[];
 }
 export interface Entry extends Omit<EntryDraft, 'credentials'> {
@@ -74,6 +86,24 @@ export interface Settings {
   krwExchangeRate: string;
   exchangeRateDate: string;
   smtp: SmtpSettings;
+  mailAlerts?: MailAlertSettings;
+}
+export interface MailAlertSettings {
+  registration: boolean;
+  requestLimit: boolean;
+  budget: boolean;
+  openRouterKeys: string[];
+}
+export interface MailDelivery {
+  id: string;
+  kind: 'registration' | 'requestLimit' | 'budget' | 'providerLimit' | 'expiry';
+  subject: string;
+  createdAt: string;
+  status: 'pending' | 'sending' | 'sent' | 'failed' | 'uncertain' | 'cancelled';
+}
+export interface MailOverview {
+  deliveries: MailDelivery[];
+  openRouterKeys: { credentialId: string; name: string; project: string }[];
 }
 export interface VaultNotification {
   id: string;
@@ -85,7 +115,12 @@ export interface VaultNotification {
   read: boolean;
   mailStatus: 'unconfigured' | 'pending' | 'sent' | 'failed';
 }
-export type Adapter = 'generic' | 'openai' | 'anthropic';
+export type Adapter = 'generic' | 'openai' | 'anthropic' | 'gemini';
+export interface GatewayOperationRule {
+  name: string;
+  method: string;
+  path: string;
+}
 export interface GatewayAuthBinding {
   credentialId: string;
   location: 'header' | 'query';
@@ -106,6 +141,13 @@ export interface GatewayRouteDraft {
   authScheme?: 'bearer' | 'raw';
   authBindings?: GatewayAuthBinding[];
   detectJsonError?: boolean;
+  operationRules?: GatewayOperationRule[];
+  mailBudget?: GatewayMailBudget | null;
+}
+export interface GatewayMailBudget {
+  amount: string;
+  currency: string;
+  basis: 'reported' | 'estimate';
 }
 export interface GatewayRoute extends GatewayRouteDraft {
   id: string;
@@ -129,7 +171,7 @@ export interface GatewayClient extends GatewayClientDraft {
   lastUsedAt: string | null;
 }
 export interface PriceDraft {
-  adapter: Adapter;
+  adapter: Exclude<Adapter, 'gemini'>;
   model: string;
   currency: string;
   inputPerMillion: string;
@@ -162,6 +204,75 @@ export interface UsageRecord {
   costExactMicros?: string | null;
   costStatus?: 'estimated' | 'unpriced' | 'unknown-usage' | 'unsupported-cache-write' | 'overflow';
   cacheCreationInputTokens?: number | null;
+  adapter?: Adapter;
+  provider?: UsageProvider;
+  originId?: string;
+  operation?: { id: string; name: string };
+  totalTokens?: number | null;
+  reasoningTokens?: number | null;
+  reportedCostUsd?: string;
+}
+export type UsageProvider =
+  | 'naver-maps'
+  | 'kakao-local'
+  | 'kakao-mobility'
+  | 'openrouter'
+  | 'gemini'
+  | 'openai'
+  | 'anthropic';
+interface UsageGroup {
+  projectId: string;
+  routeId: string;
+  requests: number;
+}
+export interface UsageOperationSummary extends UsageGroup {
+  operationId: string | null;
+  name: string | null;
+  provider: UsageProvider | null;
+}
+export interface UsageModelSummary extends UsageGroup {
+  adapter: Adapter | null;
+  originId: string | null;
+  provider: UsageProvider | null;
+  model: string | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  totalTokens: number | null;
+  cachedInputTokens: number | null;
+  reasoningTokens: number | null;
+  tokenReports: number;
+  reportedCostUsd: string | null;
+  costReports: number;
+}
+export interface UsageReport {
+  records: UsageRecord[];
+  summary: UsageSummary;
+  routeTotals: (UsageGroup & { name: string | null; currentProvider: UsageProvider | null })[];
+  operations: UsageOperationSummary[];
+  models: UsageModelSummary[];
+  dailyLimits: {
+    clientId: string;
+    name: string;
+    projectId: string;
+    used: number;
+    max: number | null;
+  }[];
+  day: string;
+  timeZone: string;
+  retentionDays: number;
+  openRouterSources: { routeId: string; name: string; projectId: string }[];
+}
+export interface OpenRouterUsage {
+  checkedAt: string;
+  freeRequests: { used: number | null; max: number | null; remaining: number | null } | null;
+  usage: string | null;
+  usageDaily: string | null;
+  usageWeekly: string | null;
+  usageMonthly: string | null;
+  limit: string | null;
+  limitStatus: 'set' | 'unset' | 'unknown';
+  limitRemaining: string | null;
+  limitReset: 'daily' | 'weekly' | 'monthly' | null;
 }
 export interface UsageSummary {
   requests: number;

@@ -4,6 +4,7 @@ import { api } from '../api.ts';
 import { validateDraft } from '../helpers.ts';
 import { Confirm, Field, Form, Modal, statusLabel } from '../ui.tsx';
 import { CredentialDateField } from './CredentialDateField.tsx';
+import { ProviderMetersEditor } from './ProviderMetersEditor.tsx';
 import { createEditorDraft, finishSaved, updateCredential } from './editor-model.ts';
 
 export function EntryEditor({
@@ -363,6 +364,10 @@ export function EntryEditor({
               />
             </Field>
           </details>
+          <ProviderMetersEditor
+            meters={draft.providerUsageMeters ?? []}
+            onChange={(meters) => set('providerUsageMeters', meters)}
+          />
         </Form>
       </Modal>
       {discarding && (

@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS credential_versions (credential_id TEXT NOT NULL REFE
 CREATE TABLE IF NOT EXISTS notifications (id TEXT PRIMARY KEY, credential_id TEXT NOT NULL REFERENCES credentials(id) ON DELETE CASCADE, version INTEGER NOT NULL, stage INTEGER NOT NULL, json TEXT NOT NULL, UNIQUE(credential_id,version,stage));
 CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY CHECK(id=1), json TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS audit_events (id INTEGER PRIMARY KEY, created_at TEXT NOT NULL, action TEXT NOT NULL, details TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS mail_outbox (id TEXT PRIMARY KEY, kind TEXT NOT NULL, epoch TEXT NOT NULL, created_at TEXT NOT NULL, status TEXT NOT NULL, subject TEXT NOT NULL, body TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS mail_outbox_pending ON mail_outbox(status,created_at);
 `;
 export interface Storage {
   db: DatabaseSync;

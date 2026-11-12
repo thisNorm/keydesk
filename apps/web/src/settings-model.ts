@@ -24,6 +24,7 @@ export function settingsPayload(
     };
   return {
     ...base,
+    ...(draft.mailAlerts ? { mailAlerts: draft.mailAlerts } : {}),
     smtp: {
       ...withoutSmtpPassword(draft).smtp,
       ...(smtpPassword ? { password: smtpPassword } : {}),

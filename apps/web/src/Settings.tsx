@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import type { Settings, AuthState, EncryptedBackup } from '@keydesk/contracts';
 import { api } from './api.ts';
 import { Confirm, Field, Form } from './ui.tsx';
+import { MailAlertOptions } from './MailAlertOptions.tsx';
 import {
   parseBackupFile,
   settingsPayload,
@@ -94,7 +95,8 @@ export function SettingsPage({
   function discardActive() {
     if (saved && draft) {
       if (section === 'general') setDraft({ ...draft, timeZone: saved.timeZone });
-      if (section === 'mail') setDraft({ ...draft, smtp: { ...saved.smtp } });
+      if (section === 'mail')
+        setDraft({ ...draft, smtp: { ...saved.smtp }, mailAlerts: saved.mailAlerts });
       if (section === 'server')
         setDraft({
           ...draft,
@@ -459,6 +461,11 @@ export function SettingsPage({
                     />
                     연결 시작부터 TLS 사용
                   </label>
+                  <MailAlertOptions
+                    value={draft.mailAlerts}
+                    timeZone={saved.timeZone}
+                    onChange={(mailAlerts) => setDraft({ ...draft, mailAlerts })}
+                  />
                 </Form>
                 <p className="muted">
                   테스트 메일은 저장된 설정으로만 보냅니다. 위에서 수정한 내용은 먼저 저장해 주세요.

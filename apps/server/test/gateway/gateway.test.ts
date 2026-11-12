@@ -7,10 +7,13 @@ import { readFileSync } from 'node:fs';
 import { getCACertificates, setDefaultCACertificates } from 'node:tls';
 import { once } from 'node:events';
 import Fastify from 'fastify';
+import cookie from '@fastify/cookie';
 import { registerGateway } from '../../src/gateway/index.ts';
 import type { GatewayOptions } from '../../src/gateway/index.ts';
-import { pinDestination } from '../../src/gateway/transport.ts';
+import { pinDestination, providerRequest } from '../../src/gateway/transport.ts';
+import { classifyOperation } from '../../src/gateway/operations.ts';
 import type { CoreContext } from '../../src/context.ts';
+import { digest } from '../../src/crypto.ts';
 async function fixture(
   handler: Parameters<typeof createServer>[0] extends never ? never : any = (_req: any, res: any) =>
     res.end('{"ok":true}'),
@@ -67,6 +70,7 @@ async function fixture(
     audit: () => {},
   };
   const app = Fastify();
+  await app.register(cookie);
   await registerGateway(app, context, options);
   await app.ready();
   const route = async (extra = {}) => {
@@ -111,6 +115,7 @@ async function fixture(
     app,
     db,
     context,
+    providerOrigin: `${secure ? 'https' : 'http'}://127.0.0.1:${port}`,
     route,
     client,
     close: async () => {
@@ -122,6 +127,321 @@ async function fixture(
     },
   };
 }
+test('usage counts API operations separately and excludes request values from its history', async () => {
+  const f = await fixture();
+  try {
+    const route = await f.route({
+      adapter: 'generic',
+      operationRules: [
+        { name: '상세 조회', method: 'GET', path: '/v1/places/{id}' },
+        { name: '검색', method: 'GET', path: '/v1/places/search' },
+      ],
+    });
+    const { client, token } = await f.client([route.id], { dailyRequestLimit: 8 });
+    for (const suffix of [
+      'places/search?q=secret-query',
+      'places/private-id',
+      'places/next',
+      'other',
+    ]) {
+      const response = await f.app.inject({
+        url: '/gw/test/' + suffix,
+        headers: { authorization: 'Bearer ' + token },
+      });
+      assert.equal(response.statusCode, 200);
+    }
+    const response = await f.app.inject({ url: '/api/usage?days=7&projectId=p' });
+    const report = response.json();
+    assert.deepEqual(
+      Object.fromEntries(report.operations.map((row: any) => [row.name ?? '미분류', row.requests])),
+      { 검색: 1, '상세 조회': 2, 미분류: 1 },
+    );
+    assert.equal(report.routeTotals[0].requests, 4);
+    assert.deepEqual(
+      report.dailyLimits.map((row: any) => [row.clientId, row.used, row.max]),
+      [[client.id, 4, 8]],
+    );
+    assert.doesNotMatch(response.body, /private-id|secret-query/);
+    assert.doesNotMatch(
+      JSON.stringify(f.db.prepare('SELECT json FROM gateway_usage').all()),
+      /private-id|secret-query/,
+    );
+  } finally {
+    await f.close();
+  }
+});
+
+test('documented Maps and Local APIs are classified by official target and method', () => {
+  const operation = (url: string, method = 'GET') => classifyOperation(new URL(url), method);
+  const forward = operation('https://maps.apigw.ntruss.com/map-geocode/v2/geocode?query=example');
+  const reverse = operation('https://maps.apigw.ntruss.com/map-reversegeocode/v2/gc');
+  assert.equal(forward?.name, '주소 → 좌표 (Geocoding)');
+  assert.equal(reverse?.name, '좌표 → 주소 (Reverse Geocoding)');
+  assert.notEqual(forward?.id, reverse?.id);
+  const kakao = 'https://dapi.kakao.com/v2/local/search/';
+  const address = operation(kakao + 'address.json');
+  const keyword = operation(kakao + 'keyword.json');
+  const category = operation(kakao + 'category.json');
+  assert.equal(new Set([address?.id, keyword?.id, category?.id]).size, 3);
+  assert.equal(operation(kakao + 'address.xml')?.id, address?.id);
+  assert.equal(operation(kakao + 'address.json', 'POST'), undefined);
+  assert.equal(
+    operation('https://dapi.kakao.com.example.com/v2/local/search/address.json'),
+    undefined,
+  );
+});
+
+test('period summaries include retained records beyond the detail cap', async () => {
+  const f = await fixture();
+  try {
+    const route = await f.route({ adapter: 'generic' });
+    const record = {
+      id: '',
+      projectId: 'p',
+      clientId: 'client',
+      routeId: route.id,
+      createdAt: '2026-11-04T12:00:00Z',
+      model: null,
+      usageSource: '미확인',
+      inputTokens: null,
+      outputTokens: null,
+      costMicros: null,
+    };
+    const insert = f.db.prepare('INSERT INTO gateway_usage VALUES(?,?,?,?,?)');
+    for (let i = 0; i < 1001; i++) {
+      const row = { ...record, id: 'history-' + i };
+      insert.run(row.id, row.projectId, row.clientId, row.createdAt, JSON.stringify(row));
+    }
+    for (const row of [
+      { ...record, id: 'other-project', projectId: 'other' },
+      { ...record, id: 'outside-period', createdAt: '2026-10-20T00:00:00Z' },
+    ]) {
+      insert.run(row.id, row.projectId, row.clientId, row.createdAt, JSON.stringify(row));
+    }
+    const report = (await f.app.inject('/api/usage?projectId=p&days=7')).json();
+    assert.equal(report.records.length, 1000);
+    assert.equal(report.summary.requests, 1001);
+    assert.equal(report.operations[0].requests, 1001);
+    assert.equal(report.operations[0].operationId, null);
+    assert.equal(report.routeTotals[0].requests, 1001);
+  } finally {
+    await f.close();
+  }
+});
+
+test('Gemini usage records the response model and final reported tokens without adding SSE chunks', async () => {
+  const f = await fixture((req: any, res: any) => {
+    if (req.url.includes('incomplete')) {
+      res.setHeader('content-type', 'text/event-stream');
+      res.end(
+        'data: ' +
+          JSON.stringify({
+            modelVersion: 'gemini-incomplete',
+            candidates: [{ index: 0, finishReason: 'STOP' }, { index: 1 }],
+            usageMetadata: { promptTokenCount: 4, candidatesTokenCount: 1, totalTokenCount: 5 },
+          }) +
+          '\n\n',
+      );
+      return;
+    }
+    const modelVersion = req.url.includes('fallback') ? 'gemini-second' : 'gemini-first';
+    if (req.url.includes('stream')) {
+      res.setHeader('content-type', 'text/event-stream');
+      res.write(
+        'data: ' +
+          JSON.stringify({
+            modelVersion,
+            usageMetadata: { promptTokenCount: 4, candidatesTokenCount: 1, totalTokenCount: 5 },
+          }) +
+          '\n\n',
+      );
+      res.end(
+        'data: ' +
+          JSON.stringify({
+            candidates: [{ finishReason: 'STOP' }],
+            usageMetadata: {
+              promptTokenCount: 4,
+              candidatesTokenCount: 3,
+              totalTokenCount: 9,
+              thoughtsTokenCount: 2,
+            },
+          }) +
+          '\n\n',
+      );
+    } else {
+      res.setHeader('content-type', 'application/json');
+      res.end(
+        JSON.stringify({
+          modelVersion,
+          usageMetadata: {
+            promptTokenCount: 8,
+            candidatesTokenCount: 2,
+            totalTokenCount: 10,
+            cachedContentTokenCount: 3,
+          },
+        }),
+      );
+    }
+    assert.equal(req.headers['x-goog-api-key'], 'provider-secret');
+    assert.equal(req.headers.authorization, undefined);
+  });
+  try {
+    const route = await f.route({ adapter: 'gemini' });
+    const { token } = await f.client([route.id]);
+    for (const suffix of ['generate', 'stream-fallback', 'incomplete']) {
+      const response = await f.app.inject({
+        url: '/gw/test/' + suffix,
+        headers: { authorization: 'Bearer ' + token },
+      });
+      assert.equal(response.statusCode, 200);
+    }
+    const { models, records } = (await f.app.inject({ url: '/api/usage' })).json();
+    assert.deepEqual(
+      models
+        .map((row: any) => [
+          row.model,
+          row.requests,
+          row.inputTokens,
+          row.outputTokens,
+          row.totalTokens,
+          row.reasoningTokens,
+          row.cachedInputTokens,
+        ])
+        .sort(),
+      [
+        ['gemini-first', 1, 8, 2, 10, null, 3],
+        ['gemini-incomplete', 1, null, null, null, null, null],
+        ['gemini-second', 1, 4, 3, 9, 2, null],
+      ],
+    );
+    assert.equal(records.find((row: any) => row.model === 'gemini-incomplete')?.outcome, 'error');
+    assert.equal(records.filter((row: any) => row.outcome === 'success').length, 2);
+  } finally {
+    await f.close();
+  }
+});
+
+test('OpenRouter keeps reported model costs and shared key usage separate', async () => {
+  let f: Awaited<ReturnType<typeof fixture>>;
+  const calls: [string, string][] = [];
+  let rotate = false;
+  let logout = false;
+  let malformedKeyReport = false;
+  f = await fixture(
+    (req: any, res: any) => {
+      res.setHeader('content-type', 'application/json');
+      if (req.url === '/api/v1/key') {
+        res.end(
+          malformedKeyReport
+            ? '{"data":{"usage":"NaN","usage_daily":0,"usage_monthly":2.5e-9,"limit":"-1","limit_remaining":"0","limit_reset":[],"free_model_daily_requests":{"used":"0","limit":"1000","remaining":0}}}'
+            : '{"data":{"label":"private-label","usage":0,"limit":null,"limit_remaining":null,"free_model_daily_requests":{"used":0,"limit":1000,"remaining":1000}}}',
+        );
+      } else if (req.url.endsWith('/free')) {
+        res.end(
+          '{"model":"org/selected:free","usage":{"prompt_tokens":5,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens":2,"total_tokens":7,"cost":0}}',
+        );
+      } else {
+        res.end(
+          '{"model":"org/selected-paid","usage":{"prompt_tokens":5,"completion_tokens":2,"total_tokens":7,"cost":2.5e-9}}',
+        );
+      }
+    },
+    {
+      resolveDestination: async () => {
+        if (logout) f.db.prepare('DELETE FROM sessions').run();
+        if (rotate) {
+          const previous = f.context.getCredential;
+          f.context.getCredential = (id) => ({ ...previous(id), version: 3 });
+        }
+        return { address: '93.184.216.34', family: 4 };
+      },
+      requestProvider: (url, _pin, method, headers) => {
+        calls.push([url.href, method]);
+        return providerRequest(
+          new URL(url.pathname, f.providerOrigin),
+          { address: '127.0.0.1', family: 4 },
+          method,
+          headers,
+        );
+      },
+    },
+  );
+  try {
+    f.db.exec(
+      'CREATE TABLE sessions(hash TEXT PRIMARY KEY, csrf TEXT NOT NULL, expires_at TEXT NOT NULL)',
+    );
+    f.db
+      .prepare('INSERT INTO sessions VALUES(?,?,?)')
+      .run(digest('fixture-owner-session'), 'test-csrf', '2026-11-06T12:00:00Z');
+    const route = await f.route({
+      baseUrl: 'https://openrouter.ai/api/v1/',
+      allowPrivateNetwork: false,
+    });
+    const foreign = await f.route({
+      slug: 'foreign',
+      baseUrl: 'https://openrouter.ai.example.com/api/v1/',
+    });
+    const metadata = (id: string) =>
+      f.app.inject({
+        method: 'POST',
+        url: '/api/usage/openrouter/' + id,
+        headers: { cookie: 'keydesk_session=fixture-owner-session' },
+      });
+    assert.equal((await metadata(foreign.id)).statusCode, 400);
+    const result = await metadata(route.id);
+    assert.equal(result.statusCode, 200);
+    assert.doesNotMatch(result.body, /private-label|provider-secret/);
+    assert.deepEqual(result.json().freeRequests, { used: 0, max: 1000, remaining: 1000 });
+    assert.equal(result.json().limitStatus, 'unset');
+    assert.equal(result.json().usage, '0');
+    assert.deepEqual(calls, [['https://openrouter.ai/api/v1/key', 'GET']]);
+    malformedKeyReport = true;
+    const malformed = await metadata(route.id);
+    assert.equal(malformed.statusCode, 200);
+    assert.deepEqual(malformed.json().freeRequests, { used: null, max: null, remaining: 0 });
+    assert.equal(malformed.json().limitStatus, 'unknown');
+    assert.equal(malformed.json().limit, null);
+    assert.equal(malformed.json().limitRemaining, null);
+    assert.equal(malformed.json().limitReset, null);
+    assert.equal(malformed.json().usage, null);
+    assert.equal(malformed.json().usageDaily, '0');
+    assert.equal(malformed.json().usageMonthly, '0.0000000025');
+    const { token } = await f.client([route.id]);
+    for (const suffix of ['free', 'paid']) {
+      assert.equal(
+        (
+          await f.app.inject({
+            method: 'POST',
+            url: '/gw/test/' + suffix,
+            headers: { authorization: 'Bearer ' + token },
+            payload: { model: 'openrouter/auto' },
+          })
+        ).statusCode,
+        200,
+      );
+    }
+    const report = (await f.app.inject('/api/usage')).json();
+    assert.equal(report.summary.requests, 2);
+    assert.deepEqual(
+      report.models
+        .map((row: any) => [row.model, row.reportedCostUsd, row.cachedInputTokens])
+        .sort(),
+      [
+        ['org/selected-paid', '0.0000000025', null],
+        ['org/selected:free', '0', 0],
+      ],
+    );
+    rotate = true;
+    assert.equal((await metadata(route.id)).statusCode, 409);
+    rotate = false;
+    logout = true;
+    assert.equal((await metadata(route.id)).statusCode, 401);
+    assert.equal(calls.length, 4);
+  } finally {
+    await f.close();
+  }
+});
+
 test('generic auth bindings inject paired headers and custom prefixes without caller override', async () => {
   let received: any;
   const f = await fixture((req: any, res: any) => {

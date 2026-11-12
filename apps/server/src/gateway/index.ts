@@ -6,9 +6,11 @@ import type {
   GatewayClient,
   ModelPrice,
   UsageRecord,
-  UsageSummary,
+  UsageReport,
 } from '@keydesk/contracts';
 import type { CoreContext } from '../context.ts';
+import { assertSessionCurrent } from '../auth.ts';
+import { transaction } from '../db.ts';
 import {
   bad,
   parse,
@@ -33,14 +35,10 @@ import {
   replaceQueryAuthentication,
   routeCredentialIds,
 } from './authentication.ts';
-import {
-  UsageParser,
-  priceCost,
-  storedCostUnits,
-  exactMicros,
-  roundedMicros,
-  SCALE,
-} from './usage.ts';
+import { UsageParser, priceCost, storedCostUnits, SCALE } from './usage.ts';
+import { classifyOperation, usageOriginId, usageProvider } from './operations.ts';
+import { readUsageReport } from './report.ts';
+import { openRouterKeyUrl, openRouterSource, readOpenRouterUsage } from './openrouter.ts';
 declare module 'fastify' {
   interface FastifyInstance {
     gatewayWaitForIdle: () => Promise<void>;
@@ -56,6 +54,7 @@ type StoredUsage = UsageRecord & {
 };
 export interface GatewayOptions {
   resolveDestination?: typeof pinDestination;
+  requestProvider?: typeof providerRequest;
   limits?: Partial<import('./limits.ts').GatewayLimits>;
 }
 export async function registerGateway(
@@ -65,6 +64,9 @@ export async function registerGateway(
 ): Promise<void> {
   context.db.exec(
     `CREATE TABLE IF NOT EXISTS gateway_routes(id TEXT PRIMARY KEY,project_id TEXT NOT NULL,credential_id TEXT NOT NULL,json TEXT NOT NULL); CREATE TABLE IF NOT EXISTS gateway_clients(id TEXT PRIMARY KEY,project_id TEXT NOT NULL,token_hash TEXT NOT NULL UNIQUE,json TEXT NOT NULL); CREATE TABLE IF NOT EXISTS gateway_prices(id TEXT PRIMARY KEY,json TEXT NOT NULL); CREATE TABLE IF NOT EXISTS gateway_usage(id TEXT PRIMARY KEY,project_id TEXT NOT NULL,client_id TEXT NOT NULL,created_at TEXT NOT NULL,json TEXT NOT NULL); CREATE INDEX IF NOT EXISTS gateway_usage_created ON gateway_usage(created_at); CREATE INDEX IF NOT EXISTS gateway_usage_client_created ON gateway_usage(client_id,created_at); CREATE TABLE IF NOT EXISTS gateway_daily(client_id TEXT NOT NULL,day TEXT NOT NULL,requests INTEGER NOT NULL,PRIMARY KEY(client_id,day));`,
+  );
+  context.db.exec(
+    'CREATE TABLE IF NOT EXISTS gateway_budget_rollups(route_id TEXT PRIMARY KEY,json TEXT NOT NULL)',
   );
   const all = <T>(table: string): T[] =>
     context.db
@@ -136,9 +138,12 @@ export async function registerGateway(
       createdAt: now,
       updatedAt: now,
     };
-    context.db
-      .prepare('INSERT INTO gateway_routes VALUES(?,?,?,?)')
-      .run(route.id, route.projectId, route.credentialId, JSON.stringify(route));
+    transaction(context.db, () => {
+      context.db
+        .prepare('INSERT INTO gateway_routes VALUES(?,?,?,?)')
+        .run(route.id, route.projectId, route.credentialId, JSON.stringify(route));
+      context.mailAlerts?.routeSaved(route);
+    });
     context.audit('gateway.route.create', {
       id: route.id,
     });
@@ -149,7 +154,11 @@ export async function registerGateway(
   app.put('/api/gateway/routes/:id', async (req) => {
     const id = (req.params as any).id;
     const previous = find<GatewayRoute>('gateway_routes', id);
-    const draft = parse(routeSchema, req.body);
+    const incoming = parse(routeSchema, req.body);
+    const draft =
+      incoming.mailBudget === undefined && previous.mailBudget
+        ? parse(routeSchema, { ...incoming, mailBudget: previous.mailBudget })
+        : incoming;
     checkRoute(draft, id);
     const route = {
       ...draft,
@@ -157,9 +166,12 @@ export async function registerGateway(
       createdAt: previous.createdAt,
       updatedAt: context.now().toISOString(),
     };
-    context.db
-      .prepare('UPDATE gateway_routes SET project_id=?,credential_id=?,json=? WHERE id=?')
-      .run(route.projectId, route.credentialId, JSON.stringify(route), id);
+    transaction(context.db, () => {
+      context.db
+        .prepare('UPDATE gateway_routes SET project_id=?,credential_id=?,json=? WHERE id=?')
+        .run(route.projectId, route.credentialId, JSON.stringify(route), id);
+      context.mailAlerts?.routeSaved(route, previous);
+    });
     context.audit('gateway.route.update', {
       id,
     });
@@ -172,7 +184,10 @@ export async function registerGateway(
     find('gateway_routes', id);
     if (all<GatewayClient>('gateway_clients').some((c) => !c.revoked && c.routeIds.includes(id)))
       bad('클라이언트가 사용하는 경로입니다.', 409);
-    context.db.prepare('DELETE FROM gateway_routes WHERE id=?').run(id);
+    transaction(context.db, () => {
+      context.db.prepare('DELETE FROM gateway_routes WHERE id=?').run(id);
+      context.mailAlerts?.routeDeleted(id);
+    });
     context.audit('gateway.route.delete', {
       id,
     });
@@ -246,57 +261,68 @@ export async function registerGateway(
       price,
     };
   });
-  app.get('/api/usage', async (req) => {
+  app.post<{ Params: { routeId: string } }>('/api/usage/openrouter/:routeId', async (req) => {
+    const { routeId } = req.params;
+    const checkSession = () =>
+      assertSessionCurrent(context, req.cookies?.keydesk_session, context.now);
+    checkSession();
+    function source() {
+      const route = find<GatewayRoute>('gateway_routes', routeId);
+      if (!openRouterSource(route)) bad('활성 OpenRouter 공식 경로를 선택해 주세요.');
+      credentialScope(route.credentialId, route.projectId);
+      const credential = context.getCredential(route.credentialId);
+      if (
+        credential.status !== 'active' ||
+        expired(credential.expiresAt, context.now(), context.getSettings().timeZone)
+      )
+        bad('활성 상태의 만료되지 않은 키가 필요합니다.', 409);
+      return { route, credential };
+    }
+    const initial = source();
+    function current() {
+      checkSession();
+      const next = (() => {
+        try {
+          return source();
+        } catch {
+          bad('연결 설정이 변경되었습니다. 다시 조회해 주세요.', 409);
+        }
+      })();
+      if (
+        JSON.stringify(next.route) !== JSON.stringify(initial.route) ||
+        next.credential.entryId !== initial.credential.entryId ||
+        next.credential.version !== initial.credential.version
+      )
+        bad('연결 설정이 변경되었습니다. 다시 조회해 주세요.', 409);
+      return next.credential.value;
+    }
+    const pin = await (options.resolveDestination ?? pinDestination)(
+      openRouterKeyUrl(),
+      false,
+    ).catch(() => bad('OpenRouter 사용량에 연결할 수 없습니다.', 502));
+    const key = current();
+    const usage = await readOpenRouterUsage(
+      options.requestProvider ?? providerRequest,
+      pin,
+      key,
+    ).catch(() => bad('OpenRouter 사용량을 확인하지 못했습니다.', 502));
+    current();
+    return { ...usage, checkedAt: context.now().toISOString() };
+  });
+  app.get('/api/usage', async (req): Promise<UsageReport> => {
     const q = req.query as Record<string, string>;
     if (Object.keys(q).some((k) => !['projectId', 'days'].includes(k))) bad();
     const days = q.days === undefined ? 30 : Number(q.days);
     if (!Number.isInteger(days) || days < 1 || days > 366) bad();
     if (q.projectId) project(q.projectId);
     prune();
-    const cutoff = new Date(context.now().getTime() - days * 86400000).toISOString();
-    const rows = q.projectId
-      ? context.db
-          .prepare(
-            'SELECT json FROM gateway_usage WHERE created_at>=? AND project_id=? ORDER BY created_at DESC',
-          )
-          .all(cutoff, q.projectId)
-      : context.db
-          .prepare('SELECT json FROM gateway_usage WHERE created_at>=? ORDER BY created_at DESC')
-          .all(cutoff);
-    const records = rows.map((r) => JSON.parse(String(r.json)) as StoredUsage);
-    const summary: UsageSummary = {
-      requests: records.length,
-      inputTokens: 0,
-      outputTokens: 0,
-      unknownUsageCount: 0,
-      costs: [],
-    };
-    const costs = new Map<string, bigint>();
-    for (const r of records) {
-      summary.inputTokens += r.inputTokens ?? 0;
-      summary.outputTokens += r.outputTokens ?? 0;
-      if (r.inputTokens === null || r.outputTokens === null) summary.unknownUsageCount++;
-      const exact = storedCostUnits(r);
-      if (r.currency && exact !== null)
-        costs.set(r.currency, (costs.get(r.currency) ?? 0n) + exact);
-    }
-    for (const [currency, total] of costs) {
-      const amountMicros = roundedMicros(total);
-      const item = {
-        currency,
-        amountMicros,
-        amountExactMicros: exactMicros(total),
-        overflow: amountMicros === null,
-      } as UsageSummary['costs'][number];
-      if (amountMicros !== null && currency === 'USD')
-        item.krwEstimate = (amountMicros / 1e6) * Number(context.getSettings().krwExchangeRate);
-      if (amountMicros !== null && currency === 'KRW') item.krwEstimate = amountMicros / 1e6;
-      summary.costs.push(item);
-    }
-    return {
-      records: records.slice(0, 1000),
-      summary,
-    };
+    return readUsageReport(
+      context,
+      days,
+      q.projectId,
+      all<GatewayRoute>('gateway_routes'),
+      all<GatewayClient>('gateway_clients'),
+    );
   });
   function authorize(req: FastifyRequest): {
     route: GatewayRoute;
@@ -409,6 +435,12 @@ export async function registerGateway(
       if (JSON.stringify(authorized.route) !== previousRoute)
         bad('경로 설정이 변경되었습니다. 다시 요청해 주세요.', 409);
       const { route, client, credential, credentials } = authorized;
+      const provider = usageProvider(url);
+      const operation =
+        route.adapter === 'generic'
+          ? classifyOperation(url, req.method, route.operationRules)
+          : undefined;
+      const originId = route.adapter !== 'generic' ? usageOriginId(url) : undefined;
       let body: Buffer | undefined;
       if (req.body !== undefined) {
         if (Buffer.isBuffer(req.body)) body = req.body;
@@ -416,14 +448,16 @@ export async function registerGateway(
         else body = Buffer.from(JSON.stringify(req.body));
         if (body.length > MAX_REQUEST) bad('요청 크기 제한을 초과했습니다.', 413);
       }
-      const day = localDay(context.now(), context.getSettings().timeZone);
+      const dispatchZone = context.getSettings().timeZone;
+      const day = localDay(context.now(), dispatchZone);
       context.db.prepare('INSERT OR IGNORE INTO gateway_daily VALUES(?,?,0)').run(client.id, day);
       const admitted = context.db
         .prepare(
-          'UPDATE gateway_daily SET requests=requests+1 WHERE client_id=? AND day=? AND (? IS NULL OR requests<?)',
+          'UPDATE gateway_daily SET requests=requests+1 WHERE client_id=? AND day=? AND (? IS NULL OR requests<?) RETURNING requests',
         )
-        .run(client.id, day, client.dailyRequestLimit, client.dailyRequestLimit);
-      if (admitted.changes !== 1) bad('일일 호출 수 제한에 도달했습니다.', 429);
+        .get(client.id, day, client.dailyRequestLimit, client.dailyRequestLimit);
+      if (!admitted) bad('일일 호출 수 제한에 도달했습니다.', 429);
+      const callsUsed = Number(admitted.requests);
       reserved = {
         clientId: client.id,
         day,
@@ -471,12 +505,16 @@ export async function registerGateway(
       let parser: UsageParser | undefined;
       let recorded = false;
       let responseStarted = false;
+      let responseParsed = false;
       function record() {
         if (!dispatched || recorded) return;
         recorded = true;
-        const known = parser?.known === true;
+        const complete = outcome === 'success' && parser?.complete === true && !parser.malformed;
+        const known =
+          responseParsed && parser?.known === true && (route.adapter !== 'gemini' || complete);
+        const observed = known || complete;
         const price = known ? prices.find((p) => p.model === parser!.model) : undefined;
-        const unsupportedCacheWrite = (parser?.cacheCreationInputTokens ?? 0) > 0;
+        const unsupportedCacheWrite = known && (parser?.cacheCreationInputTokens ?? 0) > 0;
         const cost =
           price && !unsupportedCacheWrite
             ? priceCost(price, parser!.input!, parser!.output!, parser!.cached ?? 0)
@@ -489,13 +527,20 @@ export async function registerGateway(
           routeId: route.id,
           credentialId: credential.id,
           credentialVersion: credential.version,
+          adapter: route.adapter,
+          provider,
+          originId,
+          operation,
           model: parser?.model ?? null,
           statusCode,
           durationMs: Math.round(performance.now() - started),
           outcome,
-          inputTokens: known ? parser!.input : null,
-          outputTokens: known ? parser!.output : null,
-          cachedInputTokens: known ? parser!.cached : null,
+          inputTokens: observed ? parser!.input : null,
+          outputTokens: observed ? parser!.output : null,
+          cachedInputTokens: observed ? parser!.cached : null,
+          totalTokens: observed ? parser!.total : null,
+          reasoningTokens: observed ? parser!.reasoning : null,
+          reportedCostUsd: complete ? parser?.reportedCostUsd : undefined,
           usageSource: known ? route.adapter + (parser!.sse ? ' SSE' : ' JSON') : '미확인',
           currency: price?.currency ?? null,
           costMicros: cost?.costMicros ?? null,
@@ -536,13 +581,16 @@ export async function registerGateway(
               r.softAlerts.push(`${r.currency} 일일 예상 비용 알림 한도에 도달했습니다.`);
           }
         }
-        context.db
-          .prepare('INSERT INTO gateway_usage VALUES(?,?,?,?,?)')
-          .run(r.id, r.projectId, r.clientId, r.createdAt, JSON.stringify(r));
+        transaction(context.db, () => {
+          context.db
+            .prepare('INSERT INTO gateway_usage VALUES(?,?,?,?,?)')
+            .run(r.id, r.projectId, r.clientId, r.createdAt, JSON.stringify(r));
+          context.mailAlerts?.recordUsage(r, route, dispatchZone);
+        });
         prune();
       }
       try {
-        upstream = providerRequest(url, pin!, req.method, headers);
+        upstream = (options.requestProvider ?? providerRequest)(url, pin!, req.method, headers);
       } catch {
         bad('제공사 연결을 시작하지 못했습니다.', 502);
       }
@@ -569,6 +617,11 @@ export async function registerGateway(
         const responsePromise = once(upstream, 'response');
         dispatched = true;
         upstream.end(body);
+        try {
+          context.mailAlerts?.recordDispatched(client, callsUsed, day, dispatchZone);
+        } catch {
+          app.log.warn('일일 호출 한도 메일을 대기열에 넣지 못했습니다.');
+        }
         const [response] = (await responsePromise) as [import('node:http').IncomingMessage];
         statusCode = response.statusCode ?? 502;
         if (statusCode >= 300 && statusCode < 400) {
@@ -595,6 +648,7 @@ export async function registerGateway(
           route.adapter,
           contentType.toLowerCase().includes('text/event-stream'),
           detectJsonError,
+          route.adapter === 'openai' && provider === 'openrouter',
         );
         reply.hijack();
         responseStarted = true;
@@ -618,6 +672,7 @@ export async function registerGateway(
             });
         }
         parser.finish();
+        responseParsed = true;
         outcome =
           statusCode < 400 &&
           (!parser.sse || parser.complete) &&

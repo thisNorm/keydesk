@@ -19,8 +19,11 @@ import { entryDraftSchema, credentialDraftSchema } from './vault.ts';
 import { settingsSchema } from './settings.ts';
 import { HttpError } from './errors.ts';
 import { routeSchema, clientSchema, priceSchema } from './gateway/validation.ts';
+import { usdPattern } from './gateway/usage.ts';
 import { validateBase } from './gateway/transport.ts';
 import { routeCredentialIds } from './gateway/authentication.ts';
+import { budgetRollupSchema } from './gateway/mail-budget.ts';
+import { invalidatePendingMail, MAIL_ALERTS_OFF, preserveExpiryHistory } from './mail-outbox.ts';
 const MAX_BYTES = 16 * 1024 * 1024;
 const TABLES = [
   'projects',
@@ -35,6 +38,7 @@ const TABLES = [
   'gateway_prices',
   'gateway_usage',
   'gateway_daily',
+  'gateway_budget_rollups',
 ] as const;
 type Row = Record<string, string | number | null>;
 interface LogicalBackup {
@@ -171,6 +175,7 @@ function verifyCandidate(storage: Storage, candidate: DatabaseSync) {
     candidate.prepare('UPDATE settings SET json=? WHERE id=?').run(
       JSON.stringify({
         ...parsed,
+        ...(parsed.mailAlerts ? { mailAlerts: MAIL_ALERTS_OFF } : {}),
         smtp: {
           ...smtp,
           ...(password
@@ -300,6 +305,32 @@ function verifyCandidate(storage: Storage, candidate: DatabaseSync) {
             .enum(['estimated', 'unpriced', 'unknown-usage', 'unsupported-cache-write', 'overflow'])
             .optional(),
           cacheCreationInputTokens: amount.nullable().optional(),
+          adapter: z.enum(['generic', 'openai', 'anthropic', 'gemini']).optional(),
+          provider: z
+            .enum([
+              'naver-maps',
+              'kakao-local',
+              'kakao-mobility',
+              'openrouter',
+              'gemini',
+              'openai',
+              'anthropic',
+            ])
+            .optional(),
+          originId: z
+            .string()
+            .regex(/^[a-f0-9]{64}$/)
+            .optional(),
+          operation: z
+            .object({
+              id: z.string().regex(/^[a-f0-9]{64}$/),
+              name: z.string().min(1).max(100),
+            })
+            .strict()
+            .optional(),
+          totalTokens: amount.nullable().optional(),
+          reasoningTokens: amount.nullable().optional(),
+          reportedCostUsd: z.string().regex(usdPattern).optional(),
           priceSnapshot: priceRecordSchema.nullable().optional(),
           softAlerts: z.array(z.string().max(500)).max(10).optional(),
         })
@@ -321,6 +352,13 @@ function verifyCandidate(storage: Storage, candidate: DatabaseSync) {
       })
         .strict()
         .parse(row);
+    }
+  if (tableExists(candidate, 'gateway_budget_rollups'))
+    for (const row of candidate.prepare('SELECT * FROM gateway_budget_rollups').all() as Row[]) {
+      const routeId = id.parse(row.route_id);
+      const route = candidate.prepare('SELECT json FROM gateway_routes WHERE id=?').get(routeId);
+      if (!route || !json(route as Row).mailBudget) throw new Error('budget route');
+      budgetRollupSchema.parse(json(row));
     }
   if (candidate.prepare('PRAGMA foreign_key_check').all().length) throw new Error('foreign key');
   if ((candidate.prepare('PRAGMA integrity_check').get() as any).integrity_check !== 'ok')
@@ -378,7 +416,11 @@ export async function restoreBackup(
     }
     if (
       Object.keys(logical.tables).some((name) => !actual.includes(name as any)) ||
-      actual.some((name) => !Array.isArray(logical.tables[name]))
+      actual.some(
+        (name) =>
+          !(name === 'gateway_budget_rollups' && !Object.hasOwn(logical.tables, name)) &&
+          !Array.isArray(logical.tables[name]),
+      )
     )
       throw new Error('tables');
     let count = 0;
@@ -387,7 +429,7 @@ export async function restoreBackup(
         const columns = (candidate!.prepare(`PRAGMA table_info(${name})`).all() as any[]).map(
           (row) => row.name as string,
         );
-        const rows = logical.tables[name];
+        const rows = logical.tables[name] ?? [];
         count += rows.length;
         if (count > 100000) throw new Error('rows');
         const insert = candidate!.prepare(
@@ -418,6 +460,7 @@ export async function restoreBackup(
     );
     transaction(storage.db, () => {
       authorize();
+      preserveExpiryHistory(storage.db);
       for (const name of [...actual].reverse()) storage.db.prepare(`DELETE FROM ${name}`).run();
       for (const name of actual) {
         const rows = validated.get(name)!;
@@ -428,6 +471,8 @@ export async function restoreBackup(
         );
         for (const row of rows) insert.run(...columns.map((key) => row[key]));
       }
+      preserveExpiryHistory(storage.db);
+      invalidatePendingMail(storage.db);
       storage.db.prepare('DELETE FROM sessions').run();
     });
   } catch (error) {

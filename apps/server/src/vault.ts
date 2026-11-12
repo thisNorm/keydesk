@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import type { Credential, Entry, GatewayRoute } from '@keydesk/contracts';
 import type { Storage } from './db.ts';
+import type { MailAlerts } from './mail-alerts.ts';
 import { transaction, tableExists } from './db.ts';
 import { encrypt, decrypt } from './crypto.ts';
 import { validDate } from './dates.ts';
@@ -22,6 +23,24 @@ const url = z
     }
   });
 const date = z.string().max(40).refine(validDate);
+const meterAmount = z
+  .string()
+  .regex(/^(?:0|[1-9]\d{0,15})(?:\.\d{1,9})?$/)
+  .nullable();
+const providerUsageMeterSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120),
+    scope: z.string().trim().min(1).max(200),
+    period: z.string().trim().min(1).max(120),
+    unit: z.string().trim().min(1).max(24),
+    used: meterAmount,
+    max: meterAmount,
+    limitStatus: z.enum(['set', 'unset', 'unknown']),
+    checkedAt: z.string().datetime({ offset: true }),
+    tier: z.enum(['free', 'paid']).optional(),
+  })
+  .strict()
+  .refine((meter) => (meter.limitStatus === 'set') === (meter.max !== null));
 export const credentialDraftSchema = z.object({
   id: z.string().uuid().optional(),
   label: z.string().trim().min(1).max(200),
@@ -44,6 +63,7 @@ export const entryDraftSchema = z.object({
   quota: z.string().max(1000),
   notes: text,
   projectIds: z.array(z.string().uuid()).max(100),
+  providerUsageMeters: z.array(providerUsageMeterSchema).max(20).optional(),
   credentials: z.array(credentialDraftSchema).max(100).default([]),
 });
 export function listEntries(storage: Storage): Entry[] {
@@ -136,6 +156,7 @@ export function writeEntry(storage: Storage, raw: unknown, now: () => Date, id?:
   const { credentials: _, ...fields } = body;
   const entry = {
     ...fields,
+    providerUsageMeters: fields.providerUsageMeters ?? old?.providerUsageMeters,
     id: entryId,
     createdAt: old?.createdAt || at,
     updatedAt: at,
@@ -208,6 +229,7 @@ export async function registerVault(
   storage: Storage,
   now: () => Date,
   audit: (action: string, details: Record<string, unknown>) => void,
+  mail?: MailAlerts,
 ) {
   const { db } = storage;
   app.get('/api/projects', async () => ({
@@ -242,13 +264,22 @@ export async function registerVault(
   });
   app.get('/api/entries', async () => ({ entries: listEntries(storage) }));
   app.post('/api/entries', async (request) => {
-    const entry = transaction(db, () => writeEntry(storage, request.body, now));
+    const entry = transaction(db, () => {
+      const entry = writeEntry(storage, request.body, now);
+      mail?.entriesSaved([{ entry }]);
+      return entry;
+    });
     audit('항목 생성', { id: entry.id });
     return { entry };
   });
   app.put('/api/entries/:id', async (request) => {
     const { id } = z.object({ id: z.string().uuid() }).parse(request.params);
-    const entry = transaction(db, () => writeEntry(storage, request.body, now, id));
+    const entry = transaction(db, () => {
+      const before = mail?.entrySnapshot(id);
+      const entry = writeEntry(storage, request.body, now, id);
+      mail?.entriesSaved([{ before, entry }]);
+      return entry;
+    });
     audit('항목 수정', { id });
     return { entry };
   });
@@ -274,9 +305,14 @@ export async function registerVault(
       .parse(request.body);
     const ids = body.entries.flatMap((entry) => (entry.entryId ? [entry.entryId] : []));
     if (new Set(ids).size !== ids.length) invalid('한 항목을 한 번에 여러 번 가져올 수 없습니다.');
-    const entries = transaction(db, () =>
-      body.entries.map((entry) => writeEntry(storage, entry, now, entry.entryId)),
-    );
+    const entries = transaction(db, () => {
+      const changes = body.entries.map((entry) => ({
+        before: entry.entryId ? mail?.entrySnapshot(entry.entryId) : undefined,
+        entry: writeEntry(storage, entry, now, entry.entryId),
+      }));
+      mail?.entriesSaved(changes, true);
+      return changes.map(({ entry }) => entry);
+    });
     audit('항목 가져오기', { count: entries.length });
     return { entries };
   });

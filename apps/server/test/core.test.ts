@@ -68,12 +68,29 @@ test('additional gateway auth references prevent unlink and deletion and survive
     })
   ).json().project;
   const entries: any[] = [];
+  const providerUsageMeters = [
+    {
+      name: '일일 요청',
+      scope: 'Maps 앱 · 주소 검색',
+      period: '2026-11-11 (KST)',
+      unit: '회',
+      used: '0',
+      max: '1000',
+      limitStatus: 'set',
+      checkedAt: '2026-11-11T05:00:00Z',
+    },
+  ];
   for (const name of ['대표 키', '보조 키']) {
     const response = await app.inject({
       method: 'POST',
       url: '/api/entries',
       headers: auth.headers,
-      payload: { ...draft(name + '-dummy-secret'), name, projectIds: [project.id] },
+      payload: {
+        ...draft(name + '-dummy-secret'),
+        name,
+        projectIds: [project.id],
+        ...(name === '대표 키' ? { providerUsageMeters } : {}),
+      },
     });
     assert.equal(response.statusCode, 200, response.body);
     entries.push(response.json().entry);
@@ -99,6 +116,7 @@ test('additional gateway auth references prevent unlink and deletion and survive
       allowPrivateNetwork: false,
       authBindings,
       detectJsonError: true,
+      operationRules: [{ name: '조회', method: 'GET', path: '/search' }],
     },
   });
   assert.equal(response.statusCode, 200, response.body);
@@ -160,6 +178,16 @@ test('additional gateway auth references prevent unlink and deletion and survive
   );
   assert.deepEqual(restoredRoute.authBindings, authBindings);
   assert.equal(restoredRoute.detectJsonError, true);
+  assert.deepEqual(restoredRoute.operationRules, [
+    { name: '조회', method: 'GET', path: '/search' },
+  ]);
+  const restoredEntry = app.context.db
+    .prepare('SELECT json FROM entries WHERE id=?')
+    .get(entries[0].id);
+  assert.deepEqual(
+    JSON.parse(String(restoredEntry!.json)).providerUsageMeters,
+    providerUsageMeters,
+  );
 });
 test('bootstrap is one use, origin is exact, session and CSRF stay separate from bearer tokens', async (t) => {
   const { app, dataDir } = await fixture(t);
@@ -179,6 +207,26 @@ test('bootstrap is one use, origin is exact, session and CSRF stay separate from
     403,
   );
   const auth = await owner(app, dataDir);
+  assert.equal(
+    (
+      await app.inject({
+        method: 'POST',
+        url: '/api/usage/openrouter/missing',
+        headers: { origin, authorization: 'Bearer gateway-key' },
+      })
+    ).statusCode,
+    401,
+  );
+  assert.equal(
+    (
+      await app.inject({
+        method: 'POST',
+        url: '/api/usage/openrouter/missing',
+        headers: auth.headers,
+      })
+    ).statusCode,
+    404,
+  );
   assert.equal(
     (
       await app.inject({
