@@ -513,11 +513,13 @@ test('logical encrypted backup restores under a different root key and wrong pas
     (await b.app.inject({ url: '/api/entries', headers: authB.headers })).statusCode,
     200,
   );
+  const tampered = Buffer.from(backup.data, 'base64');
+  tampered[0] = tampered[0]! ^ 1;
   assert.equal(
     (
       await request('backup-passphrase', {
         ...backup,
-        data: 'x' + backup.data.slice(1),
+        data: tampered.toString('base64'),
       })
     ).statusCode,
     400,
